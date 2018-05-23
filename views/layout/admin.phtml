@@ -474,7 +474,7 @@
           </li>
 
           <li class="">
-            <a href="#" class="dropdown-toggle">
+            <a data="#" href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-pie-chart"></i>
               <span class="menu-text">
                 Tổng hợp - Báo cáo
@@ -488,7 +488,7 @@
             <ul class="submenu">
               
               <li class="">
-                <a href="#" >
+                <a data="#" href="#" >
                   <i class="menu-icon fa fa-caret-right"></i>
 
                   Phiếu vận chuyển
@@ -499,7 +499,7 @@
             </ul>
           </li>
           <li class="">
-            <a href="#" class="dropdown-toggle">
+            <a data="#" href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-dollar"></i>
               <span class="menu-text">
                 Kế toán - Tài chính
@@ -513,7 +513,7 @@
             <ul class="submenu">
               
               <li class="">
-                <a href="#" class="dropdown-toggle">
+                <a data="#" href="#" class="dropdown-toggle">
                   <i class="menu-icon fa fa-caret-right"></i>
 
                   Tổng hợp
@@ -524,7 +524,7 @@
 
                 <ul class="submenu">
                   <li class="">
-                    <a href="#">
+                    <a data="#" href="#">
                       <i class="menu-icon fa fa-leaf green"></i>
                       Doanh thu
                     </a>
@@ -533,7 +533,7 @@
                   </li>
 
                   <li class="">
-                    <a href="#" class="dropdown-toggle">
+                    <a data="#" href="#" class="dropdown-toggle">
                       <i class="menu-icon fa fa-pencil orange"></i>
 
                       Chi phí
@@ -544,7 +544,7 @@
 
                     <ul class="submenu">
                       <li class="">
-                        <a href="#">
+                        <a data="#" href="#">
                           <i class="menu-icon fa fa-plus purple"></i>
                           Tổng hợp
                         </a>
@@ -553,7 +553,7 @@
                       </li>
 
                       <li class="">
-                        <a href="#">
+                        <a data="#" href="#">
                           <i class="menu-icon fa fa-eye pink"></i>
                           Không hóa đơn
                         </a>
@@ -567,7 +567,7 @@
             </ul>
           </li>
           <li class="">
-            <a href="#" class="dropdown-toggle">
+            <a data="#" href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-th-list"></i>
               <span class="menu-text">
                 Danh mục
@@ -628,7 +628,7 @@
             </ul>
           </li>
           <li class="">
-            <a href="#" class="dropdown-toggle">
+            <a data="#" href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-cogs"></i>
               <span class="menu-text">
                 Hệ thống
@@ -837,7 +837,9 @@
         <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
       </a>
     </div><!-- /.main-container -->
-
+    <div id="ajax_loader" style="position: fixed; left: 50%; top: 50%; margin-left : -16px; margin-top : -16px; z-index:999999;">
+      <img src="<?php echo BASE_URL ?>/public/images/loader-gears.gif">
+    </div>
     <!-- basic scripts -->
 
     
@@ -867,6 +869,41 @@
     <script src="<?php echo BASE_URL ?>/public/assets/js/ace-elements.min.js"></script>
     <script src="<?php echo BASE_URL ?>/public/assets/js/ace.min.js"></script>
 
-    
+    <script type="text/javascript">
+
+      $( document ).ajaxStart(function() {
+
+        $("#ajax_loader").fadeIn(200);
+
+        $('input[type="submit"]').attr('disabled',true);
+        $('button[type="submit"]').attr('disabled',true);
+
+      });
+
+      $( document ).ajaxComplete(function() {
+
+        $("#ajax_loader").fadeOut(200);
+
+        $('input[type="submit"]').attr('disabled',false);
+        $('button[type="submit"]').attr('disabled',false);
+
+      });
+
+      $(window).load(function() { 
+
+        $("#ajax_loader").fadeOut(200);
+
+        var data_permission = jQuery.parseJSON('<?php echo isset($_SESSION["user_permission"])?$_SESSION["user_permission"]:"" ?>');
+
+        $('#sidebar a:not([data="#"])').hide();
+        $.each(data_permission, function(i, item) {
+            $('#sidebar a[data-role="'+data_permission[i]+'"]').show();
+        });
+        $('#sidebar a[data-role="admin"]').show();
+        $('#sidebar a[data-role="support"]').show();
+
+      });
+
+      </script>
   </body>
 </html>

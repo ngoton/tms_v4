@@ -20,6 +20,14 @@ date_default_timezone_set("Asia/Ho_Chi_Minh");
  $registry->router->setPath (__SITE_PATH . '/controller'); 
  $registry->router->loader();
 
- 
+ if (isset($_SESSION['userid_logined'])) {
+    if ($registry->router->controller != "" && $registry->router->controller != "index" && $registry->router->controller != "admin" && $registry->router->controller != "support") {
+        
+        if ($_SESSION['user_permission'] == NULL || $_SESSION['user_permission'] == "" || !in_array($registry->router->controller, json_decode($_SESSION['user_permission']))) {
+            return header('Location:'.BASE_URL.'/admin');
+        }
+    }
+    
+}
 
 ?>

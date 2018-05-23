@@ -70,6 +70,7 @@ class router {
     {
         $this->file = $this->path.'/error404.php';
                 $this->controller = 'error404';
+        header('Location: '.BASE_URL.'');
     }
 
     /*** include the controller ***/

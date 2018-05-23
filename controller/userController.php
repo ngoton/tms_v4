@@ -152,6 +152,8 @@ Class userController Extends baseController {
                                 $_SESSION['user_logined'] = $row->username;
                                 $_SESSION['userid_logined'] = $row->user_id;
                                 $_SESSION['role_logined'] = $row->role;
+                                $_SESSION['user_permission'] = $row->permission;
+                                $_SESSION['user_permission_action'] = $row->permission_action;
                                 echo "Đăng nhập thành công";
 
                                 if (isset($_POST['ghinho']) && $_POST['ghinho'] == 1) { 

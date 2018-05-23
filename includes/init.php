@@ -38,6 +38,8 @@
             $_SESSION['user_logined'] = $row->username;
             $_SESSION['userid_logined'] = $row->user_id;
             $_SESSION['role_logined'] = $row->role;
+            $_SESSION['user_permission'] = $row->permission;
+            $_SESSION['user_permission_action'] = $row->permission_action;
 
             $ipaddress = '';
             if (getenv('HTTP_CLIENT_IP'))
