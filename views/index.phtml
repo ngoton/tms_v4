@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Transportation Management System</title>
+  <link href="<?php BASE_URL ?>/public/images/logo.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/css/AdminLTE.min.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition lockscreen">
+<!-- Automatic element centering -->
+<div class="lockscreen-wrapper">
+  <div class="lockscreen-logo">
+    <a href="<?php echo BASE_URL ?>"><b>HỆ THỐNG QUẢN LÝ VẬN TẢI</b></a>
+  </div>
+  <!-- User name -->
+  <div class="lockscreen-name">
+    WELCOME
+  </div>
+
+  <!-- START LOCK SCREEN ITEM -->
+  <div class="lockscreen-item">
+    <!-- lockscreen image -->
+    <div class="lockscreen-image">
+      <img src="<?php BASE_URL ?>/public/images/logo.png" alt="TMS">
+    </div>
+    <!-- /.lockscreen-image -->
+
+    <!-- lockscreen credentials (contains the form) -->
+    <form class="lockscreen-credentials" action="<?php echo $this->url('admin') ?>">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Hãy nhập tên của bạn" value="<?php echo isset($_SESSION['user_logined'])?$_SESSION['user_logined']:null ?>" >
+
+        <div class="input-group-btn">
+          <button type="submit" class="btn"><i class="fa fa-arrow-right text-muted"></i></button>
+        </div>
+      </div>
+    </form>
+    <!-- /.lockscreen credentials -->
+
+  </div>
+  <!-- /.lockscreen-item -->
+  <div class="help-block text-center">
+    <blockquote>
+      <i>
+        Phần mềm hệ thống quản lý vận tải Transportation Management System - TMS. <br>
+        Công cụ hỗ trợ các đơn vị vận tải trong việc quản lý và điều hành hệ thống các bộ phận, phòng ban. <br>
+        Lập báo cáo, thống kê, dự trù doanh thu, chi phí, sản lượng, lịch bảo trì bảo dưỡng, xuất nhập tồn, lương nhân viên, tài xế...
+      </i>
+    </blockquote>
+  </div>
+  <div class="help-block text-center">
+    <button type="button" class="btn btn-danger btn-arrow-right"><i class="fa fa-line-chart"></i> SALES</button>
+    <button type="button" class="btn btn-default btn-arrow-right"><i class="fa fa-truck"></i> TRANSPORT</button>
+    <button type="button" class="btn btn-info btn-arrow-right"><i class="fa fa-gear"></i> WAREHOUSE</button>
+    <button type="button" class="btn btn-primary btn-arrow-right"><i class="fa fa-dollar"></i> FINANCE</button>
+    <button type="button" class="btn btn-success btn-arrow-right"><i class="fa fa-user"></i> HUMAN RESOURCES</button>
+  </div>
+  <div class="text-center">
+    SUPPORT CENTER <br>
+    <i class="fa fa-phone"></i> +84 129 279 1234  &nbsp; &nbsp; &nbsp; &nbsp; <i class="fa fa-commenting"></i> +84 902 085 911 <br>
+    <i class="fa fa-envelope"></i> ngoton@tinhoctainha.com - ngoton.it@gmail.com <br>
+    <i class="fa fa-globe"></i> www.tinhoctainha.com
+  </div>
+  <div class="lockscreen-footer text-center">
+    Copyright &copy; <?php echo date('Y') ?> <b><a href="http://www.tinhoctainha.com" class="text-black">TMS</a></b>
+  </div>
+</div>
+<!-- /.center -->
+
+<!-- jQuery 2.2.3 -->
+<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery-1.7.2.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<?php BASE_URL ?>/public/js/adminbar/bootstrap/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+.lockscreen-wrapper {
+    max-width: 100%;
+}
+blockquote {
+    padding: 0;
+    margin: 0 0;
+    font-size: 12.5px;
+    border-left: 5px solid #eee;
+    border-right: 5px solid #eee;
+}
+.btn { /* just for this demo. */
+    margin-top: 5px;
+}
+.btn-arrow-right,
+.btn-arrow-left {
+    position: relative;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.btn-arrow-right {
+    padding-left: 36px;
+}
+.btn-arrow-left {
+    padding-right: 36px;
+}
+.btn-arrow-right:before,
+.btn-arrow-right:after,
+.btn-arrow-left:before,
+.btn-arrow-left:after { /* make two squares (before and after), looking similar to the button */
+    content:"";
+    position: absolute;
+    top: 5px; /* move it down because of rounded corners */
+    width: 22px; /* same as height */
+    height: 22px; /* button_outer_height / sqrt(2) */
+    background: inherit; /* use parent background */
+    border: inherit; /* use parent border */
+    border-left-color: transparent; /* hide left border */
+    border-bottom-color: transparent; /* hide bottom border */
+    border-radius: 0px 4px 0px 0px; /* round arrow corner, the shorthand property doesn't accept "inherit" so it is set to 4px */
+    -webkit-border-radius: 0px 4px 0px 0px;
+    -moz-border-radius: 0px 4px 0px 0px;
+}
+.btn-arrow-right:before,
+.btn-arrow-right:after {
+    transform: rotate(45deg); /* rotate right arrow squares 45 deg to point right */
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+.btn-arrow-left:before,
+.btn-arrow-left:after {
+    transform: rotate(225deg); /* rotate left arrow squares 225 deg to point left */
+    -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    -o-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+}
+.btn-arrow-right:before,
+.btn-arrow-left:before { /* align the "before" square to the left */
+    left: -11px;
+}
+.btn-arrow-right:after,
+.btn-arrow-left:after { /* align the "after" square to the right */
+    right: -11px;
+}
+.btn-arrow-right:after,
+.btn-arrow-left:before { /* bring arrow pointers to front */
+    z-index: 1;
+}
+.btn-arrow-right:before,
+.btn-arrow-left:after { /* hide arrow tails background */
+    background-color: #d2d6de;
+}
+</style>
+</body>
+</html>
