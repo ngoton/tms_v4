@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/public/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
     <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="/public/assets/css/jquery-ui.min.css" />
 
     <!-- text fonts -->
     <link rel="stylesheet" href="/public/assets/css/fonts.googleapis.com.css" />
@@ -52,7 +53,7 @@
 
     <script type="text/javascript" src="/public/js/jquery.battatech.excelexport.js"></script>
     <link rel="stylesheet" href="/public/css/head.css">
-    <script type="text/javascript" src="/public/js/head.js?v=9"></script>
+    <script type="text/javascript" src="/public/js/head.js?v=2"></script>
     
     <script type="text/javascript">
     var check_lock_user = 0;
@@ -1786,31 +1787,17 @@
 
             <div class="row">
               <div class="col-xs-12">
-                <div class="widget-box widget-color-blue2" id="widget-box-2">
-                  <div class="widget-header text-uppercase">
+                <div class="widget-box widget-color-grey" id="widget-box">
+                  <div class="widget-header text-uppercase widget-header-small ">
                     <h5 class="widget-title bigger lighter">
                       <i class="ace-icon fa fa-table"></i>
                       <?php echo $title ?>
                     </h5>
 
-                    <div class="widget-toolbar widget-toolbar-dark no-border">
-                      <select id="simple-colorpicker-1" class="hide">
-                        <option data-class="blue" value="#307ECC">#307ECC</option>
-                        <option selected="" data-class="blue2" value="#5090C1">#5090C1</option>
-                        <option data-class="blue3" value="#6379AA">#6379AA</option>
-                        <option data-class="green" value="#82AF6F">#82AF6F</option>
-                        <option data-class="green2" value="#2E8965">#2E8965</option>
-                        <option data-class="green3" value="#5FBC47">#5FBC47</option>
-                        <option data-class="red" value="#E2755F">#E2755F</option>
-                        <option data-class="red2" value="#E04141">#E04141</option>
-                        <option data-class="red3" value="#D15B47">#D15B47</option>
-                        <option data-class="orange" value="#FFC657">#FFC657</option>
-                        <option data-class="purple" value="#7E6EB0">#7E6EB0</option>
-                        <option data-class="pink" value="#CE6F9E">#CE6F9E</option>
-                        <option data-class="dark" value="#404040">#404040</option>
-                        <option data-class="grey" value="#848484">#848484</option>
-                        <option data-class="default" value="#EEE">#EEE</option>
-                      </select>
+                    <div class="widget-toolbar">
+                      <a href="#" data-action="reload" class="green">
+                        <i class="ace-icon fa fa-refresh"></i>
+                      </a>
                       <a href="#" data-action="fullscreen" class="orange2">
                         <i class="ace-icon fa fa-expand"></i>
                       </a>
@@ -1841,7 +1828,7 @@
             <span class="bigger-120">
               &copy; <?php echo date('Y') ?>
               <span class="blue bolder">TMS</span>
-              v4.0 
+              v.4.0 
             </span>
 
             &nbsp; &nbsp;
@@ -1867,6 +1854,7 @@
     <div id="ajax_loader" style="position: fixed; left: 50%; top: 50%; margin-left : -16px; margin-top : -16px; z-index:999999;">
       <img src="/public/images/loader-gears.gif">
     </div>
+    <div id="dialog-message" class="hide"></div><!-- #dialog-message -->
     <!-- basic scripts -->
 
     
@@ -1886,6 +1874,7 @@
     <![endif]-->
     <script src="/public/assets/js/jquery-ui.custom.min.js"></script>
     <script src="/public/assets/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="/public/assets/js/bootbox.js"></script>
     <script src="/public/assets/js/jquery.easypiechart.min.js"></script>
     <script src="/public/assets/js/jquery.sparkline.index.min.js"></script>
     <script src="/public/assets/js/jquery.flot.min.js"></script>
@@ -1898,12 +1887,21 @@
 
     <script type="text/javascript">
       $('a[ data-original-title]').tooltip();
-      $('#simple-colorpicker-1').ace_colorpicker({pull_right:true}).on('change', function(){
-        var color_class = $(this).find('option:selected').data('class');
-        var new_class = 'widget-box';
-        if(color_class != 'default')  new_class += ' widget-color-'+color_class;
-        $(this).closest('.widget-box').attr('class', new_class);
-      });
+    </script>
+
+
+    <script src="/public/assets/js/jquery-ui.min.js"></script>
+
+    <script type="text/javascript">
+      //override dialog's title function to allow for HTML titles
+        $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+          _title: function(title) {
+            var $title = this.options.title || '&nbsp;'
+            if( ("title_html" in this.options) && this.options.title_html == true )
+              title.html($title);
+            else title.text($title);
+          }
+        }));
 
       $(window).load(function() { 
 

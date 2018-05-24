@@ -315,16 +315,8 @@ function del(id)
 window.addEventListener("keydown",function (e) {
     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
         e.preventDefault();
-        $('#search-input').focus();
+        search_click();
 
-        window.addEventListener("keydown",function (e) {
-            if (e.keyCode === 13) { 
-              if ($('#search-input').is(':focus')) {
-                e.preventDefault();
-                $('#search-submit').click();
-              }
-            }
-        });
     }
 });
 var preEl ;
@@ -390,15 +382,88 @@ function limit_change(limit){
       }
   });
 }
-function add_click(){
-
+function add_click(url,title){
+  open_dialog(url,title);
 }
-function search_click(page,cot,sapxep){
-  
+function search_click(){
+  bootbox.prompt("Tìm kiếm", function(result) {
+    if (result === null) {
+      
+    } else {
+      $.ajax({
+          type: "POST",                            // Phương thức gọi là GET
+          url: "#",                 // File xử lý
+          data: 'page=1&keyword='+result,  
+          success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
+          {
+              $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
+              
+              //Enable sidebar toggle
+              $(document).on('click', "[data-toggle='offcanvas']", function (e) {
+                e.preventDefault();
+
+                //Enable sidebar push menu
+                if ($(window).width() > (768 - 1)) {
+                  if ($("body").hasClass('sidebar-collapse')) {
+                    $("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
+                  } else {
+                    $("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
+                  }
+                }
+                //Handle sidebar push menu for small screens
+                else {
+                  if ($("body").hasClass('sidebar-open')) {
+                    $("body").removeClass('sidebar-open').removeClass('sidebar-collapse').trigger('collapsed.pushMenu');
+                  } else {
+                    $("body").addClass('sidebar-open').trigger('expanded.pushMenu');
+                  }
+                }
+              });
+              
+               
+              if ($('input#search-input').hasClass("loading")) {      // Kiểm tra class "loading"
+                  $("input#search-input").removeClass("loading");     // Remove class "loading"
+              }
+      
+          }
+      });
+    }
+  });
 }
 function refresh_click(){
   location.reload();
 }
-function del_click(){
-  
+function del_click(url){
+  if (url == "" || url == undefined) {
+    var url = window.location.href+"/delete";
+  }
+
+  bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+    if(result) {
+      var del = [];
+      ids = $('input:checkbox.checkbox:checked').map(function() { return del.push(this.value); });
+      $.ajax({
+        url: url,   
+        type: 'POST',   
+        data: "xoa="+del,   
+        success:function(answer){ 
+          for(var i=0; i<del.length; i++)
+             $('tr#'+del[i]).remove();
+        }
+      });
+    }
+  });
+}
+
+function open_dialog(url, title){
+  var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
+    autoOpen:false,
+    resizable: false,
+    modal: true,
+    title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
+    title_html: true,
+  });
+  dialog.load(url, function(){
+     dialog.dialog('open');
+ });
 }

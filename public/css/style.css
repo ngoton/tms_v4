@@ -574,7 +574,7 @@ background-image: -webkit-linear-gradient(bottom,#eff8ff,#f7fcfe);
 background-image: -moz-linear-gradient(bottom,#eff8ff,#f7fcfe);
 background-image: -o-linear-gradient(bottom,#eff8ff,#f7fcfe);
 background-image: linear-gradient(to top,#eff8ff,#f7fcfe);
-padding: 5px;
+padding: 2px;
 color: #21759b;
 text-align: center;
 border:1px solid;

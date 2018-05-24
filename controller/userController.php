@@ -240,35 +240,12 @@ Class userController Extends baseController {
 
     }
 
-
-
-    public function add(){
-
-        $this->view->setLayout('admin');
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            return $this->view->redirect('user/login');
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
-
-            return $this->view->redirect('user/login');
-
-        }
-
-        $this->view->data['title'] = 'Đăng ký tài khoản';
-
-        /*Lấy danh sách quyền*/
-
+    public function adduser(){
         $role = $this->model->get('roleModel');
-
-        $this->view->data['role'] = $role->getAllRole();
 
         /*Thêm vào CSDL*/
 
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['username'])) {
 
             if ($_POST['username'] != '' && $_POST['password'] != '' && $_POST['role'] != '') {
 
@@ -312,19 +289,46 @@ Class userController Extends baseController {
 
 
 
-                    $this->view->data['error'] = "Đăng kí thành công";
+                    echo "Đăng kí thành công";
 
                 }
 
                 else{
 
-                     $this->view->data['error'] = "Tên đăng nhập đã tồn tại";
+                     echo "Tên đăng nhập đã tồn tại";
 
                 }
 
             }
 
         }
+    }
+
+    public function add(){
+
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        $this->view->data['title'] = 'Đăng ký tài khoản';
+
+        /*Lấy danh sách quyền*/
+
+        $role = $this->model->get('roleModel');
+
+        $this->view->data['role'] = $role->getAllRole();
+
+        
 
         return $this->view->show('user/add');
 

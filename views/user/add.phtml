@@ -10,55 +10,81 @@ $(document).ready(function(){
 					confirmpassword: {
             equalTo: "#password" //So sánh với trường cpassword với thành trường có id là password
           },
-				}
+				},
+        submitHandler: function(form) {
+                
+          var username = $('#username').val();
+          var password = $('#password').val();
+          var role = $('#role').val();
+          
+       console.log(username);
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/user/adduser", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: {
+                  username: username,
+                  password: password,
+                  role: role,
+                  }, // giá trị post
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error').hide();
+                  $('#error').slideToggle(100); // hiển thị thẻ div success
+                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
 					 
 				 
 			});
 	
 });
 </script>
-<div class="login_form">
-  <div class="goback"><a href="<?php echo $this->url('user') ?>">&larr;</a></div>      
-        <div class="login_body">
-          <h1>ĐĂNG KÝ TÀI KHOẢN</h1>
-              <form id="add" method="post" action="">
-                  <table style="margin-top:20px;">
-                    <tr>
-                        <td>Tên đăng nhập </td>
-                        <td><input type="text" id="username" name="username" tabindex="1" autofocus required="required"></td>
-                        
-                    </tr>
-                    <tr>
-                        <td>Mật khẩu </td>
-                        <td><input type="password" id="password" name="password" tabindex="2" required="required"></td>
-                    </tr>
-                    <tr>
-                        <td>Nhập lại mật khẩu </td>
-                        <td><input type="password" id="confirmpassword" name="confirmpassword" tabindex="2" required="required"></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>Quyền </td>
-                        <td>
-                          <select name="role" id="role" tabindex="4" required="required">
-                            <option value="">--------------Quyền---------------</option>
-                            <?php
-                            foreach ($role as $role) {
-                              echo '<option value="'.$role->role_id.'">'.$role->role_name.'</option>';
-                            }
-                            ?>
-                          </select>
-                        </td>
-                    </tr>
-                    
-                     <tr>
-                        <td ><input type="reset" name="reset" value="Nhập lại" tabindex="6"></td>
-                         <td><input type="submit" name="submit" value="Hoàn tất" tabindex="5"></td>
-                         
-                    </tr>
-                </table> 
-            </form>
-        </div>
-        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
-        </div>
+     
+<div class="login_body">
+  
+      <form id="add" method="post" action="">
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Tên đăng nhập </td>
+                <td><input type="text" id="username" name="username" tabindex="1" autofocus required="required"></td>
+                
+            </tr>
+            <tr>
+                <td>Mật khẩu </td>
+                <td><input type="password" id="password" name="password" tabindex="2" required="required"></td>
+            </tr>
+            <tr>
+                <td>Nhập lại mật khẩu </td>
+                <td><input type="password" id="confirmpassword" name="confirmpassword" tabindex="2" required="required"></td>
+            </tr>
+            
+            <tr>
+                <td>Quyền </td>
+                <td>
+                  <select name="role" id="role" tabindex="4" required="required">
+                    <option value="">-------------Quyền-------------</option>
+                    <?php
+                    foreach ($role as $role) {
+                      echo '<option value="'.$role->role_id.'">'.$role->role_name.'</option>';
+                    }
+                    ?>
+                  </select>
+                </td>
+            </tr>
+            
+             <tr>
+                <td ><input type="reset" name="reset" value="Nhập lại" tabindex="6"></td>
+                 <td><input type="submit" name="submit" value="Hoàn tất" tabindex="5"></td>
+                 
+            </tr>
+        </table> 
+    </form>
+</div>
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
 
