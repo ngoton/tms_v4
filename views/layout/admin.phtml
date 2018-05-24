@@ -7,51 +7,53 @@
 
     <meta name="description" content="Transportation Management System - TMS" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <link href="<?php BASE_URL ?>/public/images/logo.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
+    <link href="/public/images/logo.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
 
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/public/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/public/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
     <!-- page specific plugin styles -->
 
     <!-- text fonts -->
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/fonts.googleapis.com.css" />
+    <link rel="stylesheet" href="/public/assets/css/fonts.googleapis.com.css" />
 
     <!-- ace styles -->
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="/public/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
 
     <!--[if lte IE 9]>
-      <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+      <link rel="stylesheet" href="/public/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
     <![endif]-->
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/ace-skins.min.css" />
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="/public/assets/css/ace-skins.min.css" />
+    <link rel="stylesheet" href="/public/assets/css/ace-rtl.min.css" />
 
     <!--[if lte IE 9]>
-      <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/assets/css/ace-ie.min.css" />
+      <link rel="stylesheet" href="/public/assets/css/ace-ie.min.css" />
     <![endif]-->
 
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
-    <script src="<?php echo BASE_URL ?>/public/assets/js/ace-extra.min.js"></script>
+    <script src="/public/assets/js/ace-extra.min.js"></script>
 
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
     <!--[if lte IE 8]>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/html5shiv.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/respond.min.js"></script>
+    <script src="/public/assets/js/html5shiv.min.js"></script>
+    <script src="/public/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!--[if !IE]> -->
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery-2.1.4.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.validate.min.js"></script>
+    <script src="/public/assets/js/jquery-2.1.4.min.js"></script>
+    <script src="/public/assets/js/jquery.validate.min.js"></script>
 
     <!-- <![endif]-->
+    <link rel="stylesheet" href="/public/css/style.css">
 
-    <link rel="stylesheet" href="<?php echo BASE_URL ?>/public/css/head.css">
-    <script type="text/javascript" src="<?php echo BASE_URL ?>/public/js/head.js"></script>
-    <script type="text/javascript" src="<?php echo BASE_URL ?>/public/js/jquery.battatech.excelexport.js"></script>
+    <script type="text/javascript" src="/public/js/jquery.battatech.excelexport.js"></script>
+    <link rel="stylesheet" href="/public/css/head.css">
+    <script type="text/javascript" src="/public/js/head.js?v=9"></script>
+    
     <script type="text/javascript">
     var check_lock_user = 0;
 
@@ -59,7 +61,7 @@
 
         type: "POST",
 
-        url: "<?php echo BASE_URL ?>/admin/checklockuser",
+        url: "/admin/checklockuser",
 
         data: "data=<?php echo isset($_SESSION['userid_logined'])?$_SESSION['userid_logined']:0 ?>", // or any data you want to send
 
@@ -75,7 +77,7 @@
 
               type: "GET",
 
-              url: "<?php echo BASE_URL ?>/user/logout",
+              url: "/user/logout",
 
               data: "data=1", // or any data you want to send
 
@@ -83,7 +85,7 @@
 
               success: function(html){
 
-                window.location.href = "<?php echo BASE_URL ?>";
+                window.location.href = "";
 
               }
 
@@ -105,7 +107,11 @@
                 $(this).hide();
               }
             });
-
+            $('.fa-trash').each(function(){
+              if ($(this).attr("onclick")) {
+                $(this).hide();
+              }
+            });
         });
       <?php } ?>
     </script>
@@ -124,9 +130,9 @@
         </button>
 
         <div class="navbar-header pull-left">
-          <a href="<?php echo BASE_URL ?>" class="navbar-brand">
+          <a href="" class="navbar-brand">
             <small>
-              <img width="25" height="25" src="<?php echo BASE_URL ?>/public/images/logo.png" alt="Avatar" />
+              <img width="25" height="25" src="/public/images/logo.png" alt="Avatar" />
               TMS
             </small>
           </a>
@@ -295,7 +301,7 @@
                   <ul class="dropdown-menu dropdown-navbar">
                     <li>
                       <a href="#" class="clearfix">
-                        <img src="<?php echo BASE_URL ?>/public/assets/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
+                        <img src="/public/assets/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
                         <span class="msg-body">
                           <span class="msg-title">
                             <span class="blue">Alex:</span>
@@ -312,7 +318,7 @@
 
                     <li>
                       <a href="#" class="clearfix">
-                        <img src="<?php echo BASE_URL ?>/public/assets/images/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
+                        <img src="/public/assets/images/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
                         <span class="msg-body">
                           <span class="msg-title">
                             <span class="blue">Susan:</span>
@@ -329,7 +335,7 @@
 
                     <li>
                       <a href="#" class="clearfix">
-                        <img src="<?php echo BASE_URL ?>/public/assets/images/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
+                        <img src="/public/assets/images/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
                         <span class="msg-body">
                           <span class="msg-title">
                             <span class="blue">Bob:</span>
@@ -346,7 +352,7 @@
 
                     <li>
                       <a href="#" class="clearfix">
-                        <img src="<?php echo BASE_URL ?>/public/assets/images/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
+                        <img src="/public/assets/images/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
                         <span class="msg-body">
                           <span class="msg-title">
                             <span class="blue">Kate:</span>
@@ -363,7 +369,7 @@
 
                     <li>
                       <a href="#" class="clearfix">
-                        <img src="<?php echo BASE_URL ?>/public/assets/images/avatars/avatar5.png" class="msg-photo" alt="Fred's Avatar" />
+                        <img src="/public/assets/images/avatars/avatar5.png" class="msg-photo" alt="Fred's Avatar" />
                         <span class="msg-body">
                           <span class="msg-title">
                             <span class="blue">Fred:</span>
@@ -391,7 +397,7 @@
 
             <li class="light-blue dropdown-modal">
               <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                <img class="nav-user-photo" src="<?php echo BASE_URL ?>/public/assets/images/avatars/avatar.png" alt="Avatar" />
+                <img class="nav-user-photo" src="/public/assets/images/avatars/avatar.png" alt="Avatar" />
                 <span class="user-info">
                   <small>Welcome,</small>
                   <?php echo $_SESSION['user_logined']; ?>
@@ -477,7 +483,7 @@
             <a data="#" href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-pie-chart"></i>
               <span class="menu-text">
-                Tổng hợp - Báo cáo
+                Báo cáo
               </span>
 
               <b class="arrow fa fa-angle-down"></b>
@@ -496,13 +502,609 @@
 
                 <b class="arrow"></b>
               </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Tổng hợp sản lượng
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảng kê sản lượng
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Sản lượng khách hàng
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Chi phí xe
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Sửa chữa bảo dưỡng
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phí sử dụng đường bộ
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phí kiểm định
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảo hiểm
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Báo cáo dầu
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Hoa hồng
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Tạm ứng
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Chi phí hành chính
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Quá trình hoạt động
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-caret-right"></i>
+
+                  Kết quả kinh doanh
+                </a>
+
+                <b class="arrow"></b>
+              </li>
             </ul>
           </li>
           <li class="">
             <a data="#" href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-dollar"></i>
               <span class="menu-text">
-                Kế toán - Tài chính
+                Kế toán
+              </span>
+
+              <b class="arrow fa fa-angle-down"></b>
+            </a>
+
+            <b class="arrow"></b>
+
+            <ul class="submenu">
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-money"></i>
+
+                  Quỹ
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phiếu thu
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phiếu chi
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Chuyển tiền nội bộ
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Sổ quỹ
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-bank"></i>
+
+                  Tiền gửi
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Thu tiền
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Thanh toán
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Sổ tiền gửi
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Tài khoản ngân hàng
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-truck"></i>
+
+                  Lô hàng
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Xuất hóa đơn
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Doanh thu
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="#" href="#" class="dropdown-toggle">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Chi phí
+                      <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <b class="arrow"></b>
+
+                    <ul class="submenu">
+                      <li class="">
+                        <a data="#" href="#">
+                          <i class="menu-icon fa fa-caret-right"></i>
+                          Tổng hợp
+                        </a>
+
+                        <b class="arrow"></b>
+                      </li>
+
+                      <li class="">
+                        <a data="#" href="#">
+                          <i class="menu-icon fa fa-caret-right"></i>
+                          Không hóa đơn
+                        </a>
+
+                        <b class="arrow"></b>
+                      </li>
+                      <li class="">
+                        <a data="#" href="#">
+                          <i class="menu-icon fa fa-caret-right"></i>
+                          Phí cầu đường
+                        </a>
+
+                        <b class="arrow"></b>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Danh mục chi phí
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-user"></i>
+
+                  Công nợ
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phải thu
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phải trả
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Chi hộ
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-database"></i>
+
+                  Kho
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Chi tiết hàng hóa
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Tổng hợp tồn kho
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-file-text-o"></i>
+
+                  Tổng hợp
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Danh mục tài khoản
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phiếu kế toán
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Nhật ký chung
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Sổ chi tiết
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Kết chuyển lãi lỗ
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-calculator"></i>
+
+                  Báo cáo thuế
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảng kê HĐ mua vào
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảng kê HĐ bán ra
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Tờ khai thuế GTGT
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-line-chart"></i>
+
+                  Báo cáo tài chính
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảng cân đối phát sinh
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảng cân đối kế toán
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Báo cáo KQHĐKD
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="">
+            <a data="#" href="#" class="dropdown-toggle">
+              <i class="menu-icon fa fa-clipboard"></i>
+              <span class="menu-text">
+                Kinh doanh
+              </span>
+
+              <b class="arrow fa fa-angle-down"></b>
+            </a>
+
+            <b class="arrow"></b>
+
+            <ul class="submenu">
+              
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-book"></i>
+
+                  Booking
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-file-text-o"></i>
+
+                  Bảng kê vận chuyển
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-file-text-o"></i>
+
+                  Bảng kê chi hộ
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-money"></i>
+
+                  Hoa hồng
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+            </ul>
+          </li>
+          <li class="">
+            <a data="#" href="#" class="dropdown-toggle">
+              <i class="menu-icon fa fa-truck"></i>
+              <span class="menu-text">
+                Điều độ
               </span>
 
               <b class="arrow fa fa-angle-down"></b>
@@ -514,9 +1116,9 @@
               
               <li class="">
                 <a data="#" href="#" class="dropdown-toggle">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-cubes"></i>
 
-                  Tổng hợp
+                  Lô hàng
                   <b class="arrow fa fa-angle-down"></b>
                 </a>
 
@@ -524,45 +1126,354 @@
 
                 <ul class="submenu">
                   <li class="">
-                    <a data="#" href="#">
-                      <i class="menu-icon fa fa-leaf green"></i>
-                      Doanh thu
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-clock-o orange"></i>
+
+                      Đang chờ
                     </a>
 
                     <b class="arrow"></b>
                   </li>
-
                   <li class="">
-                    <a data="#" href="#" class="dropdown-toggle">
-                      <i class="menu-icon fa fa-pencil orange"></i>
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-check green"></i>
 
-                      Chi phí
-                      <b class="arrow fa fa-angle-down"></b>
+                      Đã nhận
                     </a>
 
                     <b class="arrow"></b>
-
-                    <ul class="submenu">
-                      <li class="">
-                        <a data="#" href="#">
-                          <i class="menu-icon fa fa-plus purple"></i>
-                          Tổng hợp
-                        </a>
-
-                        <b class="arrow"></b>
-                      </li>
-
-                      <li class="">
-                        <a data="#" href="#">
-                          <i class="menu-icon fa fa-eye pink"></i>
-                          Không hóa đơn
-                        </a>
-
-                        <b class="arrow"></b>
-                      </li>
-                    </ul>
                   </li>
                 </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-road"></i>
+
+                  Điều xe
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-file-text-o"></i>
+
+                  Phiếu cầu đường
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-arrow-circle-up"></i>
+
+                  Nâng hạ cont
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-exchange"></i>
+
+                  Bàn giao xe
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" >
+                  <i class="menu-icon fa fa-pause-circle-o"></i>
+
+                  Tạm dừng xe
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-eraser"></i>
+
+                  Mooc
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Thay mooc
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Quản lý mooc
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="">
+            <a data="#" href="#" class="dropdown-toggle">
+              <i class="menu-icon fa fa-gear"></i>
+              <span class="menu-text">
+                Vật tư
+              </span>
+
+              <b class="arrow fa fa-angle-down"></b>
+            </a>
+
+            <b class="arrow"></b>
+
+            <ul class="submenu">
+              <li class="">
+                <a data="backup" data-role="backup" href="<?php echo $this->url('backup') ?>">
+                  <i class="menu-icon fa fa-tachometer"></i>
+
+                  Bảng theo dõi
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-database"></i>
+
+                  Kho
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Nhập kho
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Xuất kho
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Tồn kho
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-calendar"></i>
+
+                  Kiểm định, bảo hiểm
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phí sử dụng đường bộ
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phí kiểm định
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phí bảo hiểm
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-wrench"></i>
+
+                  Thay thế phụ tùng
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Tháo lắp phụ tùng
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Chuyển đổi phụ tùng
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Phụ tùng thay ra
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
+                  <i class="menu-icon fa fa-calendar-check-o"></i>
+
+                  Sửa chữa bảo dưỡng
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="permission" data-role="permission" href="<?php echo $this->url('permission') ?>">
+                  <i class="menu-icon fa fa-tint"></i>
+
+                  Đổ dầu
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
+                  <i class="menu-icon fa fa-home"></i>
+
+                  Danh sách kho vật tư
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
+                  <i class="menu-icon fa fa-dropbox"></i>
+
+                  Danh sách vật tư
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+            </ul>
+          </li>
+          <li class="">
+            <a data="#" href="#" class="dropdown-toggle">
+              <i class="menu-icon fa fa-users"></i>
+              <span class="menu-text">
+                Nhân sự
+              </span>
+
+              <b class="arrow fa fa-angle-down"></b>
+            </a>
+
+            <b class="arrow"></b>
+
+            <ul class="submenu">
+              
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-table"></i>
+
+                  Bảng lương
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Lương tài xế
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Lương nhân viên
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
+                <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
+                  <i class="menu-icon fa fa-user"></i>
+
+                  Danh sách nhân viên
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="permission" data-role="permission" href="<?php echo $this->url('permission') ?>">
+                  <i class="menu-icon fa fa-archive"></i>
+
+                  Danh sách phòng ban
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="backup" data-role="backup" href="<?php echo $this->url('backup') ?>">
+                  <i class="menu-icon fa fa-user-secret"></i>
+
+                  Danh sách chức vụ
+                </a>
+
+                <b class="arrow"></b>
               </li>
             </ul>
           </li>
@@ -582,7 +1493,7 @@
               
               <li class="">
                 <a data="info" data-role="info" href="<?php echo $this->url('info') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-car"></i>
 
                   Danh sách xe
                 </a>
@@ -591,7 +1502,7 @@
               </li>
               <li class="">
                 <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-eraser"></i>
 
                   Danh sách mooc
                 </a>
@@ -600,7 +1511,7 @@
               </li>
               <li class="">
                 <a data="permission" data-role="permission" href="<?php echo $this->url('permission') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-home"></i>
 
                   Danh sách kho
                 </a>
@@ -609,7 +1520,7 @@
               </li>
               <li class="">
                 <a data="backup" data-role="backup" href="<?php echo $this->url('backup') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-map-marker"></i>
 
                   Danh sách địa điểm
                 </a>
@@ -618,9 +1529,86 @@
               </li>
               <li class="">
                 <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-user"></i>
 
                   Khách hàng - Đối tác
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-flask"></i>
+
+                  Định mức
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Định mức dầu
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Định mức tuyến đường
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bồi dưỡng kho
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
+              </li>
+              
+              <li class="">
+                <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                  <i class="menu-icon fa fa-tint"></i>
+
+                  Thưởng phạt dầu
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                  <i class="menu-icon fa fa-info-circle"></i>
+
+                  Đơn vị tính
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                  <i class="menu-icon fa fa-ship"></i>
+
+                  Hãng tàu
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                  <i class="menu-icon fa fa-anchor"></i>
+
+                  Cảng
                 </a>
 
                 <b class="arrow"></b>
@@ -643,7 +1631,7 @@
               
               <li class="">
                 <a data="info" data-role="info" href="<?php echo $this->url('info') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-info-circle"></i>
 
                   Thông tin doanh nghiệp
                 </a>
@@ -652,7 +1640,7 @@
               </li>
               <li class="">
                 <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-user"></i>
 
                   Tài khoản
                 </a>
@@ -661,7 +1649,7 @@
               </li>
               <li class="">
                 <a data="permission" data-role="permission" href="<?php echo $this->url('permission') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-lock"></i>
 
                   Phân quyền
                 </a>
@@ -670,7 +1658,7 @@
               </li>
               <li class="">
                 <a data="backup" data-role="backup" href="<?php echo $this->url('backup') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-refresh"></i>
 
                   Sao lưu & Phục hồi
                 </a>
@@ -679,7 +1667,7 @@
               </li>
               <li class="">
                 <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
-                  <i class="menu-icon fa fa-caret-right"></i>
+                  <i class="menu-icon fa fa-hdd-o"></i>
 
                   Cập nhật phần mềm
                 </a>
@@ -775,7 +1763,7 @@
             <ul class="breadcrumb">
               <li>
                 <i class="ace-icon fa fa-home home-icon"></i>
-                <a href="<?php echo BASE_URL ?>">TMS</a>
+                <a href="">TMS</a>
               </li>
               <li class="active"><?php echo $title ?></li>
             </ul><!-- /.breadcrumb -->
@@ -798,10 +1786,49 @@
 
             <div class="row">
               <div class="col-xs-12">
-                <!-- PAGE CONTENT BEGINS -->
-                <?php echo $content; ?>
+                <div class="widget-box widget-color-blue2" id="widget-box-2">
+                  <div class="widget-header text-uppercase">
+                    <h5 class="widget-title bigger lighter">
+                      <i class="ace-icon fa fa-table"></i>
+                      <?php echo $title ?>
+                    </h5>
 
-                <!-- PAGE CONTENT ENDS -->
+                    <div class="widget-toolbar widget-toolbar-dark no-border">
+                      <select id="simple-colorpicker-1" class="hide">
+                        <option data-class="blue" value="#307ECC">#307ECC</option>
+                        <option selected="" data-class="blue2" value="#5090C1">#5090C1</option>
+                        <option data-class="blue3" value="#6379AA">#6379AA</option>
+                        <option data-class="green" value="#82AF6F">#82AF6F</option>
+                        <option data-class="green2" value="#2E8965">#2E8965</option>
+                        <option data-class="green3" value="#5FBC47">#5FBC47</option>
+                        <option data-class="red" value="#E2755F">#E2755F</option>
+                        <option data-class="red2" value="#E04141">#E04141</option>
+                        <option data-class="red3" value="#D15B47">#D15B47</option>
+                        <option data-class="orange" value="#FFC657">#FFC657</option>
+                        <option data-class="purple" value="#7E6EB0">#7E6EB0</option>
+                        <option data-class="pink" value="#CE6F9E">#CE6F9E</option>
+                        <option data-class="dark" value="#404040">#404040</option>
+                        <option data-class="grey" value="#848484">#848484</option>
+                        <option data-class="default" value="#EEE">#EEE</option>
+                      </select>
+                      <a href="#" data-action="fullscreen" class="orange2">
+                        <i class="ace-icon fa fa-expand"></i>
+                      </a>
+                      <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <?php echo $content; ?>
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div>
+                  </div>
+                </div>
               </div><!-- /.col -->
             </div><!-- /.row -->
           </div><!-- /.page-content -->
@@ -838,69 +1865,60 @@
       </a>
     </div><!-- /.main-container -->
     <div id="ajax_loader" style="position: fixed; left: 50%; top: 50%; margin-left : -16px; margin-top : -16px; z-index:999999;">
-      <img src="<?php echo BASE_URL ?>/public/images/loader-gears.gif">
+      <img src="/public/images/loader-gears.gif">
     </div>
     <!-- basic scripts -->
 
     
 
     <!--[if IE]>
-<script src="<?php echo BASE_URL ?>/public/assets/js/jquery-1.11.3.min.js"></script>
+<script src="/public/assets/js/jquery-1.11.3.min.js"></script>
 <![endif]-->
     <script type="text/javascript">
-      if('ontouchstart' in document.documentElement) document.write("<script src='<?php echo BASE_URL ?>/public/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+      if('ontouchstart' in document.documentElement) document.write("<script src='/public/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
     </script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/bootstrap.min.js"></script>
+    <script src="/public/assets/js/bootstrap.min.js"></script>
 
     <!-- page specific plugin scripts -->
 
     <!--[if lte IE 8]>
-      <script src="<?php echo BASE_URL ?>/public/assets/js/excanvas.min.js"></script>
+      <script src="/public/assets/js/excanvas.min.js"></script>
     <![endif]-->
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery-ui.custom.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.ui.touch-punch.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.easypiechart.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.sparkline.index.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.flot.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.flot.pie.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/jquery.flot.resize.min.js"></script>
+    <script src="/public/assets/js/jquery-ui.custom.min.js"></script>
+    <script src="/public/assets/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="/public/assets/js/jquery.easypiechart.min.js"></script>
+    <script src="/public/assets/js/jquery.sparkline.index.min.js"></script>
+    <script src="/public/assets/js/jquery.flot.min.js"></script>
+    <script src="/public/assets/js/jquery.flot.pie.min.js"></script>
+    <script src="/public/assets/js/jquery.flot.resize.min.js"></script>
 
     <!-- ace scripts -->
-    <script src="<?php echo BASE_URL ?>/public/assets/js/ace-elements.min.js"></script>
-    <script src="<?php echo BASE_URL ?>/public/assets/js/ace.min.js"></script>
+    <script src="/public/assets/js/ace-elements.min.js"></script>
+    <script src="/public/assets/js/ace.min.js"></script>
 
     <script type="text/javascript">
-
-      $( document ).ajaxStart(function() {
-
-        $("#ajax_loader").fadeIn(200);
-
-        $('input[type="submit"]').attr('disabled',true);
-        $('button[type="submit"]').attr('disabled',true);
-
-      });
-
-      $( document ).ajaxComplete(function() {
-
-        $("#ajax_loader").fadeOut(200);
-
-        $('input[type="submit"]').attr('disabled',false);
-        $('button[type="submit"]').attr('disabled',false);
-
+      $('a[ data-original-title]').tooltip();
+      $('#simple-colorpicker-1').ace_colorpicker({pull_right:true}).on('change', function(){
+        var color_class = $(this).find('option:selected').data('class');
+        var new_class = 'widget-box';
+        if(color_class != 'default')  new_class += ' widget-color-'+color_class;
+        $(this).closest('.widget-box').attr('class', new_class);
       });
 
       $(window).load(function() { 
 
         $("#ajax_loader").fadeOut(200);
 
-        var data_permission = jQuery.parseJSON('<?php echo isset($_SESSION["user_permission"])?$_SESSION["user_permission"]:"" ?>');
+        <?php if ($_SESSION["user_permission"] != '["all"]') { ?>
+          var data_permission = jQuery.parseJSON('<?php echo $_SESSION["user_permission"] ?>');
 
-        $('#sidebar a:not([data="#"])').hide();
-        $.each(data_permission, function(i, item) {
-            $('#sidebar a[data-role="'+data_permission[i]+'"]').show();
-        });
-        $('#sidebar a[data-role="admin"]').show();
-        $('#sidebar a[data-role="support"]').show();
+          $('#sidebar a:not([data="#"])').hide();
+          $.each(data_permission, function(i, item) {
+              $('#sidebar a[data-role="'+data_permission[i]+'"]').show();
+          });
+          $('#sidebar a[data-role="admin"]').show();
+          $('#sidebar a[data-role="support"]').show();
+        <?php } ?>
 
       });
 

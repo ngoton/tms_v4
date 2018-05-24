@@ -42,7 +42,7 @@ Class userController Extends baseController {
 
             $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'user_id';
 
-            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
+            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
 
