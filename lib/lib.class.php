@@ -152,33 +152,58 @@ class Library{
 	/*
 	4 months, 2 weeks, 3 days, 1 hour, 49 minutes, 15 seconds ago
     */
-	public function time_elapsed_string($datetime, $full = 1) {
-	    $now = new DateTime;
+	public function time_elapsed_string($datetime, $full = 1, $lang = "en") {
+		$now = new DateTime;
 	    $ago = new DateTime($datetime);
 	    $diff = $now->diff($ago);
 
 	    $diff->w = floor($diff->d / 7);
 	    $diff->d -= $diff->w * 7;
 
-	    $string = array(
-	        'y' => 'year',
-	        'm' => 'month',
-	        'w' => 'week',
-	        'd' => 'day',
-	        'h' => 'hour',
-	        'i' => 'minute',
-	        's' => 'second',
-	    );
-	    foreach ($string as $k => &$v) {
-	        if ($diff->$k) {
-	            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-	        } else {
-	            unset($string[$k]);
-	        }
-	    }
+		if ($lang == "vi") {
+			$string = array(
+		        'y' => 'năm',
+		        'm' => 'tháng',
+		        'w' => 'tuần',
+		        'd' => 'ngày',
+		        'h' => 'giờ',
+		        'i' => 'phút',
+		        's' => 'giây',
+		    );
+		    foreach ($string as $k => &$v) {
+		        if ($diff->$k) {
+		            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? '' : '');
+		        } else {
+		            unset($string[$k]);
+		        }
+		    }
 
-	    $string = array_slice($string, 0, $full);
-	    return $string ? implode(', ', $string) . ' ago' : 'just now';
+		    $string = array_slice($string, 0, $full);
+		    return $string ? implode(', ', $string) . ' trước' : 'Vừa xong';
+		}
+		else{
+			$string = array(
+		        'y' => 'year',
+		        'm' => 'month',
+		        'w' => 'week',
+		        'd' => 'day',
+		        'h' => 'hour',
+		        'i' => 'minute',
+		        's' => 'second',
+		    );
+		    foreach ($string as $k => &$v) {
+		        if ($diff->$k) {
+		            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+		        } else {
+		            unset($string[$k]);
+		        }
+		    }
+
+		    $string = array_slice($string, 0, $full);
+		    return $string ? implode(', ', $string) . ' ago' : 'just now';
+		}
+
+	    
 	}
 
 	/*

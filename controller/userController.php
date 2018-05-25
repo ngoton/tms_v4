@@ -154,6 +154,9 @@ Class userController Extends baseController {
                                 $_SESSION['role_logined'] = $row->role;
                                 $_SESSION['user_permission'] = $row->permission;
                                 $_SESSION['user_permission_action'] = $row->permission_action;
+
+                                $user->updateUser(array('lasted_online'=>time()),array('user_id'=>$row->user_id));
+
                                 echo "Đăng nhập thành công";
 
                                 if (isset($_POST['ghinho']) && $_POST['ghinho'] == 1) { 
@@ -219,6 +222,8 @@ Class userController Extends baseController {
 
     public function logout(){
 
+        $user = $this->model->get('userModel');
+        $user->updateUser(array('lasted_online'=>time()),array('user_id'=>$_SESSION['userid_logined']));
 
         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."logout"."\n"."\r\n";
 
@@ -259,37 +264,57 @@ Class userController Extends baseController {
 
                 if (!$r) {
 
-                    $role_permission = $role->getRole(trim($_POST['role']));
+                    $r = $user->getUserByWhere(array('user_email'=>trim($_POST['user_email'])));
 
-                    $time = time();
+                    if (!$r) {
+                        $role_permission = $role->getRole(trim($_POST['role']));
 
-                    $data = array(
+                        $time = time();
 
-                        'username' => trim($_POST['username']),
+                        $data = array(
 
-                        'password' => trim(md5($_POST['password'])),
+                            'username' => trim($_POST['username']),
 
-                        'create_time' => $time,
+                            'password' => trim(md5($_POST['password'])),
 
-                        'role' => trim($_POST['role']),
+                            'user_email' => trim($_POST['user_email']),
 
-                        'permission' => $role_permission->role_permission,
+                            'create_time' => $time,
 
-                        'permission_action' => $role_permission->role_permission_action,
+                            'role' => trim($_POST['role']),
 
+                            'permission' => $role_permission->role_permission,
+
+                            'permission_action' => $role_permission->role_permission_action,
+
+                            );
+
+                        $user->createUser($data);
+
+
+
+                            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$user->getLastUser()->user_id."|user|".$data['username']."\n"."\r\n";
+
+                            $this->lib->ghi_file("action_logs.txt",$text);
+
+
+                        $user_log_model = $this->model->get('userlogModel');
+                        $data_log = array(
+                            'user_log' => $_SESSION['userid_logined'],
+                            'user_log_date' => time(),
+                            'user_log_table' => 'user',
+                            'user_log_table_name' => 'Tài khoản',
+                            'user_log_action' => 'Thêm mới',
+                            'user_log_data' => json_encode($data),
                         );
-
-                    $user->createUser($data);
-
+                        $user_log_model->createUser($data_log);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$user->getLastUser()->user_id."|user|".$data['username']."\n"."\r\n";
-
-                        $this->lib->ghi_file("action_logs.txt",$text);
-
-
-
-                    echo "Đăng kí thành công";
+                        echo "Đăng kí thành công";
+                    }
+                    else{
+                        echo "Email này đã được sử dụng";
+                    }
 
                 }
 
@@ -334,11 +359,92 @@ Class userController Extends baseController {
 
     }
 
+    public function edituser(){
+        $user = $this->model->get('userModel');
+        $role = $this->model->get('roleModel');
+        if (isset($_POST['user_id'])) {
+            $id = $_POST['user_id'];
 
+            $qr = $user->query('SELECT user_id FROM user WHERE user_id != '.$id.' AND user_email = "'.trim($_POST['user_email']).'"');
+            if (!$qr) {
+                if ($_POST['role'] != '') {
+
+                    $role_permission = $role->getRole(trim($_POST['role']));
+
+                    if ($_POST['password'] != '') {
+
+
+                        $data = array(
+
+                            'password' => trim(md5($_POST['password'])),
+
+                            'role' => trim($_POST['role']),
+
+                            'user_email' => trim($_POST['user_email']),
+
+                            'user_lock' => trim($_POST['userlock']),
+
+                            'permission' => $role_permission->role_permission,
+
+                            'permission_action' => $role_permission->role_permission_action,
+
+                            );
+
+                    }
+
+                    else{
+
+
+                        $data = array(
+
+                            'role' => trim($_POST['role']),
+
+                            'user_email' => trim($_POST['user_email']),
+
+                            'user_lock' => trim($_POST['userlock']),
+
+                            'permission' => $role_permission->role_permission,
+
+                            'permission_action' => $role_permission->role_permission_action,
+
+                            );
+
+                    }
+
+                        $user->updateUser($data,array('user_id'=>$id));
+
+
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|user|".implode("-",$data)."\n"."\r\n";
+
+                        $this->lib->ghi_file("action_logs.txt",$text);
+
+                        $user_log_model = $this->model->get('userlogModel');
+                        $data_log = array(
+                            'user_log' => $_SESSION['userid_logined'],
+                            'user_log_date' => time(),
+                            'user_log_table' => 'user',
+                            'user_log_table_name' => 'Tài khoản',
+                            'user_log_action' => 'Cập nhật thông tin',
+                            'user_log_data' => json_encode($data),
+                        );
+                        $user_log_model->createUser($data_log);
+
+                        echo "Cập nhật thành công";
+
+                }
+            }
+            else{
+                echo "Email này đã được sử dụng";
+            }
+
+            
+
+        }
+    }
 
     public function edit($id){
 
-        $this->view->setLayout('admin');
+        $this->view->disableLayout();
 
         if (!isset($_SESSION['userid_logined'])) {
 
@@ -375,7 +481,6 @@ Class userController Extends baseController {
         else {
 
             
-
             
 
             /*Lấy danh sách quyền*/
@@ -386,66 +491,14 @@ Class userController Extends baseController {
 
             $this->view->data['user_role'] = $role_data;
 
+            $this->view->data['user_id'] = $user_data->user_id;
+            $this->view->data['user_email'] = $user_data->user_email;
+
             $this->view->data['role'] = $role->getAllRoleByWhere($role_data->role_id);
 
             /*Thêm vào CSDL*/
 
-            if (isset($_POST['submit'])) {
-
-                if ($_POST['role'] != '') {
-
-                    $role_permission = $role->getRole(trim($_POST['role']));
-
-                    if ($_POST['password'] != '') {
-
-
-                        $data = array(
-
-                            'password' => trim(md5($_POST['password'])),
-
-                            'role' => trim($_POST['role']),
-
-                            'user_lock' => trim($_POST['userlock']),
-
-                            'permission' => $role_permission->role_permission,
-
-                            'permission_action' => $role_permission->role_permission_action,
-
-                            );
-
-                    }
-
-                    else{
-
-
-                        $data = array(
-
-                            'role' => trim($_POST['role']),
-
-                            'user_lock' => trim($_POST['userlock']),
-
-                            'permission' => $role_permission->role_permission,
-
-                            'permission_action' => $role_permission->role_permission_action,
-
-                            );
-
-                    }
-
-                        $user->updateUser($data,array('user_id'=>$id));
-
-
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|user|".implode("-",$data)."\n"."\r\n";
-
-                        $this->lib->ghi_file("action_logs.txt",$text);
-
-
-
-                        $this->view->data['error'] = "Cập nhật thành công";
-
-                }
-
-            }
+            
 
         }
 
@@ -531,6 +584,62 @@ Class userController Extends baseController {
 
     }
 
+    public function changepass(){
+        $user = $this->model->get('userModel');
+
+        if (isset($_POST['password'])) {
+
+             $id = $_POST['user_id'];
+
+            if ($_POST['oldpassword'] != '' && $_POST['password'] != '') {
+
+                $check = $user->getUserByWhere(array('password'=>md5($_POST['oldpassword'])));
+
+                if ($check) {
+
+                    $data = array(
+
+                    'password' => trim(md5($_POST['password'])),
+
+                    );
+
+                    $user->updateUser($data,array('user_id'=>$id));
+
+                    echo "Đổi mật khẩu thành công";
+
+                    $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."changepassword"."|".$id."|user|"."\n"."\r\n";
+
+                    $this->lib->ghi_file("action_logs.txt",$text);
+
+                    $user_log_model = $this->model->get('userlogModel');
+                    $data_log = array(
+                        'user_log' => $_SESSION['userid_logined'],
+                        'user_log_date' => time(),
+                        'user_log_table' => 'user',
+                        'user_log_table_name' => 'Tài khoản',
+                        'user_log_action' => 'Đổi mật khẩu',
+                        'user_log_data' => json_encode($data),
+                    );
+                    $user_log_model->createUser($data_log);
+
+                }
+
+                else{
+
+                    echo "Mật khẩu cũ không đúng";
+
+                }
+
+                
+
+            }
+
+        
+        
+
+        }
+    }
+
     public function info($id){
 
         $this->view->setLayout('admin');
@@ -554,71 +663,30 @@ Class userController Extends baseController {
         }
 
         
-
+        $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Thông tin tài khoản';
 
         $user = $this->model->get('userModel');
 
         $user_data = $user->getUser($id);
 
-        
+        $this->view->data['user_id'] = $id;
+        $this->view->data['user_data'] = $user_data;
+
+        $user_log_model = $this->model->get('userlogModel');
+        $d_log = array(
+            'where'=>'user_log='.$id,
+            'limit'=>10,
+        );
+        $d_join = array('table'=>'user','where'=>'user_log=user_id');
+        $user_logs = $user_log_model->getAllUser($d_log,$d_join);
+        $this->view->data['user_logs'] = $user_logs;
 
         if (!$user_data) {
 
             $this->view->redirect('user');
 
         }
-
-        else {
-
-            
-
-            /*Thêm vào CSDL*/
-
-            if (isset($_POST['submit'])) {
-
-                
-
-                    if ($_POST['oldpassword'] != '' && $_POST['password'] != '') {
-
-                        $check = $user->getUserByWhere(array('password'=>md5($_POST['oldpassword'])));
-
-                        if ($check) {
-
-                            $data = array(
-
-                            'password' => trim(md5($_POST['password'])),
-
-                            );
-
-                            $user->updateUser($data,array('user_id'=>$id));
-
-                            $this->view->data['error'] = "Cập nhật thành công";
-
-                            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."changepassword"."|".$id."|user|"."\n"."\r\n";
-
-                            $this->lib->ghi_file("action_logs.txt",$text);
-
-                        }
-
-                        else{
-
-                            $this->view->data['error'] = "Mật khẩu cũ không đúng";
-
-                        }
-
-                        
-
-                    }
-
-                    
-
-                
-
-            }
-
-        }
-
         
 
         return $this->view->show('user/info');

@@ -385,6 +385,13 @@ function limit_change(limit){
 function add_click(url,title){
   open_dialog(url,title);
 }
+function edit_click(url,title){
+  open_dialog(url,title);
+}
+function info_click(url,title){
+  open_dialog(url,title);
+}
+
 function search_click(){
   bootbox.prompt("Tìm kiếm", function(result) {
     if (result === null) {

@@ -41,6 +41,8 @@
             $_SESSION['user_permission'] = $row->permission;
             $_SESSION['user_permission_action'] = $row->permission_action;
 
+            $user->updateUser(array('lasted_online'=>time()),array('user_id'=>$row->user_id));
+
             $ipaddress = '';
             if (getenv('HTTP_CLIENT_IP'))
                 $ipaddress = getenv('HTTP_CLIENT_IP');

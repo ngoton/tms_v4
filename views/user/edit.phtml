@@ -10,17 +10,46 @@ $(document).ready(function(){
 					confirmpassword: {
             equalTo: "#password" //So sánh với trường cpassword với thành trường có id là password
           },
-				}
+				},
+        submitHandler: function(form) {
+                
+          var user_id = "<?php echo $user_id ?>";
+          var password = $('#password').val();
+          var role = $('#role').val();
+          var userlock = $('input[name="userlock"]:checked').val();
+          var user_email = $('#user_email').val();
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/user/edituser", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: {
+                  user_id: user_id,
+                  password: password,
+                  role: role,
+                  userlock: userlock,
+                  user_email: user_email,
+                  }, // giá trị post
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error').hide();
+                  $('#error').slideToggle(100); // hiển thị thẻ div success
+                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
 					 
 				 
 			});
 	
 });
 </script>
-<div class="login_form">
-        <div class="goback"><a href="<?php echo $this->url('user') ?>">&larr;</a></div>
+
         <div class="login_body">
-          <h1>CẬP NHẬT TÀI KHOẢN</h1>
+         
               <form id="edit" method="post" action="">
                   <table style="margin-top:20px;">
                     
@@ -33,7 +62,11 @@ $(document).ready(function(){
                         <td>Nhập lại mật khẩu mới</td>
                         <td><input type="password" id="confirmpassword" name="confirmpassword" tabindex="2" ></td>
                     </tr>
-                    
+                    <tr>
+                        <td>Email khôi phục</td>
+                        <td><input type="email" id="user_email" name="user_email" tabindex="3" value="<?php echo $user_email ?>" ></td>
+                        
+                    </tr>
                     <tr>
                         <td>Quyền </td>
                         <td>
@@ -56,7 +89,7 @@ $(document).ready(function(){
                     </tr>
                     
                      <tr>
-                        <td ><input type="reset" name="reset" value="Nhập lại" tabindex="6"></td>
+                        <td><input type="reset" name="reset" value="Nhập lại" tabindex="6"></td>
                          <td><input type="submit" name="submit" value="Hoàn tất" tabindex="5"></td>
                          
                     </tr>
@@ -64,5 +97,5 @@ $(document).ready(function(){
             </form>
         </div>
         <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
-        </div>
+
 

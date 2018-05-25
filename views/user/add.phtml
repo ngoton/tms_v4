@@ -16,8 +16,8 @@ $(document).ready(function(){
           var username = $('#username').val();
           var password = $('#password').val();
           var role = $('#role').val();
+          var user_email = $('#user_email').val();
           
-       console.log(username);
           $.ajax({
               type: "POST", // phương thức gởi đi
               url: "<?php echo BASE_URL ?>/user/adduser", // nơi mà dữ liệu sẽ chuyển đến khi submit
@@ -25,6 +25,7 @@ $(document).ready(function(){
                   username: username,
                   password: password,
                   role: role,
+                  user_email: user_email,
                   }, // giá trị post
               success: function(answer){ // if everything goes well
                   //alert(answer);
@@ -60,13 +61,17 @@ $(document).ready(function(){
             </tr>
             <tr>
                 <td>Nhập lại mật khẩu </td>
-                <td><input type="password" id="confirmpassword" name="confirmpassword" tabindex="2" required="required"></td>
+                <td><input type="password" id="confirmpassword" name="confirmpassword" tabindex="3" required="required"></td>
             </tr>
-            
+            <tr>
+                <td>Email </td>
+                <td><input type="email" id="user_email" name="user_email" tabindex="4" ></td>
+                
+            </tr>
             <tr>
                 <td>Quyền </td>
                 <td>
-                  <select name="role" id="role" tabindex="4" required="required">
+                  <select name="role" id="role" tabindex="5" required="required">
                     <option value="">-------------Quyền-------------</option>
                     <?php
                     foreach ($role as $role) {
@@ -78,8 +83,8 @@ $(document).ready(function(){
             </tr>
             
              <tr>
-                <td ><input type="reset" name="reset" value="Nhập lại" tabindex="6"></td>
-                 <td><input type="submit" name="submit" value="Hoàn tất" tabindex="5"></td>
+                <td ><input type="reset" name="reset" value="Nhập lại" tabindex="7"></td>
+                 <td><input type="submit" name="submit" value="Hoàn tất" tabindex="6"></td>
                  
             </tr>
         </table> 

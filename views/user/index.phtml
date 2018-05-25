@@ -43,8 +43,7 @@ $i = $sonews*$page-($sonews-1);
                     <option value="100">100</option>
                     <option value="500">500</option>
                     <option value="1000">1000</option>
-                </select>   
-                <span class="ui-separator"></span>
+                </select>
                 <a class="purpose" data-original-title="Thêm mới">
                     <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("user/add") ?>','Thêm tài khoản mới')"></i>
                 </a>
@@ -73,11 +72,11 @@ $i = $sonews*$page-($sonews-1);
             
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="blue" href="<?php echo $this->url("user/edit/$user->user_id") ?>">
+                    <a class="blue" href="<?php echo $this->url("user/info/$user->user_id") ?>">
                         <i class="ace-icon fa fa-info-circle bigger-130"></i>
                     </a>
 
-                    <a class="green" href="<?php echo $this->url("user/edit/$user->user_id") ?>">
+                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("user/edit/$user->user_id") ?>','Cập nhật tài khoản')">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
 
