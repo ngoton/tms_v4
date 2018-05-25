@@ -46,17 +46,36 @@ $i = $sonews*$page-($sonews-1);
                 </select>
                 <a class="purpose" data-original-title="Thêm mới">
                     <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("user/add") ?>','Thêm tài khoản mới')"></i>
-                </a>
-                <a class="orange" data-original-title="Tìm kiếm">
-                    <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                </a>
-                <a class="green" data-original-title="Tải lại">
-                    <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
-                </a>
+                </a> 
+                <div class="pull-right pos-rel dropdown-hover">
+                    <button class="btn btn-minier bigger" style="line-height: 26px">
+                        <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+                    </button>
 
-                <a class="red" data-original-title="Xóa">
-                    <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                </a>                           
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                        <li>
+                            <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                                <span class="orange">
+                                    <i class="ace-icon fa fa-search bigger-110" onclick="search_click()"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-refresh bigger-110" onclick="refresh_click()"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                                <span class="red">
+                                    <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>                        
             </div>
         </th>
     </tr>
