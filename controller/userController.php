@@ -48,7 +48,7 @@ Class userController Extends baseController {
 
             $keyword = "";
 
-            $limit = 20;
+            $limit = 100;
 
         }
 
@@ -527,12 +527,13 @@ Class userController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $user = $this->model->get('userModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
 
-                $data = explode(',', $_POST['xoa']);
+                $datas = explode(',', $_POST['xoa']);
 
-                foreach ($data as $data) {
+                foreach ($datas as $data) {
 
                     $user->deleteUser($data);
 
@@ -545,6 +546,17 @@ Class userController Extends baseController {
 
                 }
 
+
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'user',
+                    'user_log_table_name' => 'Tài khoản',
+                    'user_log_action' => 'Xóa',
+                    'user_log_data' => json_encode($datas),
+                );
+                $user_log_model->createUser($data_log);
+
                 return true;
 
             }
@@ -552,11 +564,19 @@ Class userController Extends baseController {
             else{
 
                 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|user|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|user|"."\n"."\r\n";
 
-                        $this->lib->ghi_file("action_logs.txt",$text);
+                $this->lib->ghi_file("action_logs.txt",$text);
 
-                        
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'user',
+                    'user_log_table_name' => 'Tài khoản',
+                    'user_log_action' => 'Xóa',
+                    'user_log_data' => json_encode($_POST['data']),
+                );
+                $user_log_model->createUser($data_log);
 
                 return $user->deleteUser($_POST['data']);
 
@@ -676,6 +696,8 @@ Class userController Extends baseController {
         $user_log_model = $this->model->get('userlogModel');
         $d_log = array(
             'where'=>'user_log='.$id,
+            'order_by'=>'user_log_date',
+            'order'=>'DESC',
             'limit'=>10,
         );
         $d_join = array('table'=>'user','where'=>'user_log=user_id');

@@ -290,28 +290,7 @@ function sapxep(page,cot,sapxep){
             }
           });
 }
-function del(id)
-{
-  if($('.add-field') != null)
-  {
-    $('.add-field').slideUp();
-  }
-  var r = confirm("Bạn có chắc chắn muốn xóa không?");
-  if (r == true){
-    
-    $.post(window.location.href+"/delete", {data: id},
-       function(data){
-        //alert(data);
-        if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
-          $('tr#'+id).remove(); 
-          
-        };
-        
-        $("html, body").animate({ scrollTop: 0 }, 100);
-       
-       }); 
-  }
-}
+
 window.addEventListener("keydown",function (e) {
     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
         e.preventDefault();
@@ -385,8 +364,23 @@ function limit_change(limit){
 function add_click(url,title){
   open_dialog(url,title);
 }
-function edit_click(url,title){
-  open_dialog(url,title);
+function edit_click(url,title,id){
+  open_dialog(url+id,title);
+  $('.ui-dialog div.ui-dialog-buttonpane').append('<div class="text-center viewData"><a id="pData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-left"></i></a><a id="nData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-right"></i></a></div>');
+  $('#pData').click(function(){
+    id = parseInt($('tr#'+$(this).attr('data')).prev().attr('id'));
+    if (id > 0) {
+      $(".ui-dialog-content").dialog("close");
+      edit_click(url,title,id);
+    }
+  });
+  $('#nData').click(function(){
+    id = parseInt($('tr#'+$(this).attr('data')).next().attr('id'));
+    if (id > 0) {
+      $(".ui-dialog-content").dialog("close");
+      edit_click(url,title,id);
+    }
+  });
 }
 function info_click(url,title){
   open_dialog(url,title);
@@ -442,9 +436,8 @@ function refresh_click(){
 }
 function del_click(url){
   if (url == "" || url == undefined) {
-    var url = window.location.href+"/delete";
+    var url = window.location.href.split("#")[0]+"/delete";
   }
-
   bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
     if(result) {
       var del = [];
@@ -461,6 +454,26 @@ function del_click(url){
     }
   });
 }
+function del(id,url)
+{
+  if (url == "" || url == undefined) {
+    var url = window.location.href.split("#")[0]+"/delete";
+  }
+  bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+    if(result) {
+      $.ajax({
+        url: url,   
+        type: 'POST',   
+        data: "data="+id,   
+        success:function(data){ 
+          if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
+            $('tr#'+id).remove(); 
+          };
+        }
+      });
+    }
+  });
+}
 
 function open_dialog(url, title){
   var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
@@ -469,8 +482,29 @@ function open_dialog(url, title){
     modal: true,
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
     title_html: true,
+    buttons: [
+      {
+        html: "<i class='ace-icon fa fa-save bigger-110'></i>&nbsp; Hoàn tất",
+        "class" : "btn btn-success",
+        click: function() {
+          $("form").submit();
+        }
+      },
+      {
+        html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; Đóng & tải lại",
+        "class" : "btn btn-danger",
+        click: function() {
+          $( this ).dialog( "close" );
+          refresh_click();
+        }
+      }
+    ],
+    close: function(){
+      $('.viewData').remove();
+    }
   });
   dialog.load(url, function(){
      dialog.dialog('open');
  });
+
 }
