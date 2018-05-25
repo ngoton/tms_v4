@@ -202,10 +202,15 @@ function sapxep(page,cot,sapxep){
         }
           //$('#loading').html("<img src='public/images/loading.gif'/>").fadeIn(500);
           var cot        = cot;
-          var keyword = $('#search-input').val();
+          var keyword = "";
           var ngaytao = "";
           var loc =    $('#chonloc').val();
 
+          if($('#search-input') != null)
+          {
+            var keyword = $('#search-input').val() || "";
+          }
+          
           if($('#chonngaytao') != null)
           {
             var ngaytao = $('#chonngaytao').val();
@@ -254,7 +259,6 @@ function sapxep(page,cot,sapxep){
           {
             var vong = $('#sl_round').val();
           }
-          
           
           $.ajax({
             type: "POST", // phương thức gởi đi
