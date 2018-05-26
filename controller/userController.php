@@ -14,7 +14,7 @@ Class userController Extends baseController {
 
         if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
 
-            return $this->view->redirect('user/login');
+            $this->view->data['disable_control'] = 1;
 
         }
 
@@ -335,13 +335,15 @@ Class userController Extends baseController {
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
         if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
@@ -448,16 +450,17 @@ Class userController Extends baseController {
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
         if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
-
         if (!$id) {
 
             $this->view->redirect('user');
@@ -514,13 +517,15 @@ Class userController Extends baseController {
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
         if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
@@ -676,7 +681,7 @@ Class userController Extends baseController {
 
         }
 
-        if ($_SESSION['role_logined'] != 1 && $_SESSION['userid_logined'] != $id) {
+        if ($_SESSION['userid_logined'] != $id && json_decode($_SESSION['user_permission_action'])->user != "user") {
 
             return $this->view->redirect('user/login');
 
@@ -716,7 +721,46 @@ Class userController Extends baseController {
     }
 
 
+    public function importuser(){
+        if (isset($_FILES['import']['name'])) {
+            $total = count($_FILES['import']['name']);
+            for( $i=0 ; $i < $total ; $i++ ) {
+              $tmpFilePath = $_FILES['import']['name'][$i];
+              echo $tmpFilePath;
+            }
+        }
+    }
+    public function import(){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        $this->view->data['title'] = 'Nhập dữ liệu';
+
+        /*Lấy danh sách quyền*/
+
+        $role = $this->model->get('roleModel');
+
+        $this->view->data['role'] = $role->getAllRole();
+
+        
+
+        return $this->view->show('user/import');
+
+    }
 
 
 }

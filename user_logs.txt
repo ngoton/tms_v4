@@ -69,3 +69,27 @@ Time|User|Action
 
 25/05/2018 10:17:34|admin|login|127.0.0.1
 
+26/05/2018 21:37:24|admin|login|::1
+
+26/05/2018 21:45:25|admin|logout
+
+26/05/2018 21:45:51|admin|login|::1
+
+26/05/2018 21:50:36|admin|logout
+
+26/05/2018 21:51:28|admin|login|::1
+
+26/05/2018 21:59:44|admin|logout
+
+26/05/2018 22:00:05|admin|login|::1
+
+26/05/2018 22:34:25|admin|login|::1
+
+26/05/2018 23:09:58|admin|logout
+
+26/05/2018 23:10:49|admin|login|::1
+
+27/05/2018 02:56:06|admin|logout
+
+27/05/2018 02:56:35|admin|login|::1
+

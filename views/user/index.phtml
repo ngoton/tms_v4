@@ -17,7 +17,7 @@ $i = $sonews*$page-($sonews-1);
 <div id="winpopup"></div>
 <div id="content" style="padding:5px;">
    
-<table class="table_data">
+<table class="table_data" id="tblExport" >
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
@@ -55,14 +55,14 @@ $i = $sonews*$page-($sonews-1);
                         <li>
                             <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
                                 <span class="orange">
-                                    <i class="ace-icon fa fa-search bigger-110" onclick="search_click()"></i>
+                                    <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
                                 </span>
                             </a>
                         </li>
                         <li>
                             <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
                                 <span class="green">
-                                    <i class="ace-icon fa fa-refresh bigger-110" onclick="refresh_click()"></i>
+                                    <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
                                 </span>
                             </a>
                         </li>
@@ -73,6 +73,47 @@ $i = $sonews*$page-($sonews-1);
                                 </span>
                             </a>
                         </li>
+                        <li>
+                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                                <span class="purple">
+                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("user/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            
+                            <div class="text-center pos-rel dropdown-hover">
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                                    <li>
+                                        <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                            <span class="green">
+                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                            <span class="red">
+                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                            <span class="blue">
+                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        
                     </ul>
                 </div>                        
             </div>

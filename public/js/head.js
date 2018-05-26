@@ -1,5 +1,8 @@
 $(function () {
     setNavigation();
+    $('a[data-action="reload"]').click(function(){
+      refresh_click();
+    });
 });
 $( document ).ajaxStart(function() {
 
@@ -365,6 +368,12 @@ function limit_change(limit){
       }
   });
 }
+function info_click(url,title){
+  open_dialog(url,title);
+}
+function refresh_click(){
+  location.reload();
+}
 function add_click(url,title){
   open_dialog(url,title);
 }
@@ -386,9 +395,7 @@ function edit_click(url,title,id){
     }
   });
 }
-function info_click(url,title){
-  open_dialog(url,title);
-}
+
 
 function search_click(){
   bootbox.prompt("Tìm kiếm", function(result) {
@@ -435,9 +442,7 @@ function search_click(){
     }
   });
 }
-function refresh_click(){
-  location.reload();
-}
+
 function del_click(url){
   if (url == "" || url == undefined) {
     var url = window.location.href.split("#")[0]+"/delete";
@@ -450,9 +455,11 @@ function del_click(url){
         url: url,   
         type: 'POST',   
         data: "xoa="+del,   
-        success:function(answer){ 
-          for(var i=0; i<del.length; i++)
-             $('tr#'+del[i]).remove();
+        success:function(data){ 
+          if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
+            for(var i=0; i<del.length; i++)
+               $('tr#'+del[i]).remove();
+           }
         }
       });
     }
@@ -478,12 +485,28 @@ function del(id,url)
     }
   });
 }
+function export_click(type,id,url){
+  if (url == "" || url == undefined) {
+    if (type=="excel") {
+      $("#"+id).battatech_excelexport({
+          containerid: id
+         , datatype: 'table'
+      });
+    }
+  }
+
+  refresh_click();
+}
+function import_click(url,title){
+  open_dialog(url,title);
+}
 
 function open_dialog(url, title){
   var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
     autoOpen:false,
-    resizable: false,
+    resizable: true,
     modal: true,
+    width: "auto",
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
     title_html: true,
     buttons: [

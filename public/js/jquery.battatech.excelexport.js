@@ -86,7 +86,7 @@
         function ConvertFromTable() {
           var tb = $('#' + $settings.containerid);
           tb.addClass('tblChange');
-          $('.tblChange th:hidden, .tblChange td:hidden, .tblChange input').remove();
+          $('.tblChange th:hidden, .tblChange td:hidden, .tblChange input , .tblChange select').remove();
           $(".tblChange a").removeAttr("href");
           $(".tblChange td").each(function () {
             var new_val = $(this).html().replace(/\,/g,'');
