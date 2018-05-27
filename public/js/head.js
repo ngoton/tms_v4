@@ -460,6 +460,9 @@ function del_click(url){
             for(var i=0; i<del.length; i++)
                $('tr#'+del[i]).remove();
            }
+
+          alert_form(data);
+          
         }
       });
     }
@@ -479,7 +482,10 @@ function del(id,url)
         success:function(data){ 
           if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
             $('tr#'+id).remove(); 
-          };
+          }
+          
+          alert_form(data);
+          
         }
       });
     }
@@ -499,6 +505,12 @@ function export_click(type,id,url){
 }
 function import_click(url,title){
   open_dialog(url,title);
+}
+
+function alert_form(message){
+  bootbox.dialog({
+    message: "<i class='ace-icon fa fa-info-circle green'></i> <b>Thông báo</b>: <span class='bigger-110'>"+message+"</span>",
+  });
 }
 
 function open_dialog(url, title){

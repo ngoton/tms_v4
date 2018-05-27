@@ -1,0 +1,156 @@
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="help-block text-center">
+      <button type="button" class="btn btn-danger btn-arrow-right"><i class="fa fa-line-chart"></i> SALES</button>
+      <button type="button" class="btn btn-default btn-arrow-right"><i class="fa fa-truck"></i> TRANSPORT</button>
+      <button type="button" class="btn btn-info btn-arrow-right"><i class="fa fa-gear"></i> WAREHOUSE</button>
+      <button type="button" class="btn btn-primary btn-arrow-right"><i class="fa fa-dollar"></i> FINANCE</button>
+      <button type="button" class="btn btn-success btn-arrow-right"><i class="fa fa-user"></i> HUMAN RESOURCES</button>
+    </div>
+    
+    <div class="text-center">
+      SUPPORT CENTER <br>
+      <i class="fa fa-phone"></i> +84 129 279 1234  &nbsp; &nbsp; &nbsp; &nbsp; <i class="fa fa-commenting"></i> +84 902 085 911 <br>
+      <i class="fa fa-envelope"></i> ngoton@tinhoctainha.com - ngoton.it@gmail.com <br>
+      <i class="fa fa-globe"></i> www.tinhoctainha.com
+    </div>
+
+    <div class="lockscreen-footer text-center">
+      Copyright &copy; <?php echo date('Y') ?> <b><a href="http://www.tinhoctainha.com" class="text-black">TMS</a></b>
+    </div>
+  </div><!-- /.col -->
+</div>
+
+
+<div class="hisella-messages">
+
+  <div class="hisella-messages-outer">
+    
+    <div class="hangout-messages">
+      <g:hangout render="createhangout"
+        invites="[{ id : 'ngoton.it@gmail.com', invite_type : 'EMAIL' }]">
+      </g:hangout>
+    </div>
+    <div id="hisella-minimize">Facebook chat</div>
+    <div id="hisella-facebook" class='fb-page' data-adapt-container-width='true' data-height='300' data-hide-cover='false' data-href='https://www.facebook.com/tinhoctainha/' data-show-facepile='true' data-show-posts='false' data-small-header='false' data-tabs='messages' data-width='250'></div>
+  </div>
+</div>
+<style type="text/css">
+
+.hisella-messages { position: fixed; bottom: 0; right: 0; z-index: 999999; }
+
+.hisella-messages-outer { position: relative; }
+
+#hisella-minimize { background: #3b5998; font-size: 14px; color: #fff; padding: 3px 10px; position: absolute; top: -34px; left: -1px; border: 1px solid #E9EAED; cursor: pointer; }
+
+#hisella-facebook { opacity:0; } .hisella-messages { bottom: -300px; right: -100px; }
+
+</style>
+
+<div id='fb-root'></div>
+
+<script>
+
+(function($) { $(document).ready(function(){ $( '#hisella-minimize' ).click( function() { if( $( '#hisella-facebook' ).css( 'opacity' ) == 0 ) { $( '#hisella-facebook' ).css( 'opacity', 1 ); $( '.hisella-messages' ).animate( { right: '0' } ).animate( { bottom: '0' } ); } else { $( '.hisella-messages' ).animate( { bottom: '-300px' } ).animate( { right: '-100px' }, 400, function(){ $( '#hisella-facebook' ).css( 'opacity', 0 ) } ); } } ) }); })(jQuery);
+
+(function(d, s, id) {
+
+
+
+  var js, fjs = d.getElementsByTagName(s)[0];
+
+
+
+  if (d.getElementById(id)) return;
+
+
+
+  js = d.createElement(s); js.id = id;
+
+
+
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
+
+
+
+  fjs.parentNode.insertBefore(js, fjs);
+
+
+
+}(document, 'script', 'facebook-jssdk'));
+
+</script>
+
+
+
+
+
+
+<style type="text/css">
+.btn { /* just for this demo. */
+    margin-top: 5px;
+}
+.btn-arrow-right,
+.btn-arrow-left {
+    position: relative;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.btn-arrow-right {
+    padding-left: 36px;
+}
+.btn-arrow-left {
+    padding-right: 36px;
+}
+.btn-arrow-right:before,
+.btn-arrow-right:after,
+.btn-arrow-left:before,
+.btn-arrow-left:after { /* make two squares (before and after), looking similar to the button */
+    content:"";
+    position: absolute;
+    top: 5px; /* move it down because of rounded corners */
+    width: 22px; /* same as height */
+    height: 22px; /* button_outer_height / sqrt(2) */
+    background: inherit; /* use parent background */
+    border: inherit; /* use parent border */
+    border-left-color: transparent; /* hide left border */
+    border-bottom-color: transparent; /* hide bottom border */
+    border-radius: 0px 4px 0px 0px; /* round arrow corner, the shorthand property doesn't accept "inherit" so it is set to 4px */
+    -webkit-border-radius: 0px 4px 0px 0px;
+    -moz-border-radius: 0px 4px 0px 0px;
+}
+.btn-arrow-right:before,
+.btn-arrow-right:after {
+    transform: rotate(45deg); /* rotate right arrow squares 45 deg to point right */
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+.btn-arrow-left:before,
+.btn-arrow-left:after {
+    transform: rotate(225deg); /* rotate left arrow squares 225 deg to point left */
+    -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    -o-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+}
+.btn-arrow-right:before,
+.btn-arrow-left:before { /* align the "before" square to the left */
+    left: -11px;
+}
+.btn-arrow-right:after,
+.btn-arrow-left:after { /* align the "after" square to the right */
+    right: -11px;
+}
+.btn-arrow-right:after,
+.btn-arrow-left:before { /* bring arrow pointers to front */
+    z-index: 1;
+}
+.btn-arrow-right:before,
+.btn-arrow-left:after { /* hide arrow tails background */
+    background-color: #ecf0f5;
+}
+</style>

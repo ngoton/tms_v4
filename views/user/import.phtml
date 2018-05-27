@@ -7,7 +7,9 @@ $(document).ready(function(){
           btn_change: null,
           no_icon: 'ace-icon fa fa-cloud-upload',
           droppable: true,
-          thumbnail: 'small'//large | fit
+          thumbnail: 'small',//large | fit
+          allowExt: ["xls", "xlsx"],
+          allowMime: ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
           //,icon_remove:null//set null, to hide remove/reset button
           /**,before_change:function(files, dropped) {
             //Check an example below
@@ -70,7 +72,7 @@ $(document).ready(function(){
   <form id="add" method="post" action="" enctype="multipart/form-data">
     <div class="form-group">
       <div class="col-xs-12">
-        <input multiple="" type="file" id="import" name="import[]" required="required" />
+        <input multiple="" type="file" id="import" name="import[]" required="required" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
       </div>
     </div>
   </form>   

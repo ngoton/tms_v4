@@ -11,12 +11,12 @@ Class userController Extends baseController {
             return $this->view->redirect('user/login');
 
         }
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
-
-            $this->view->data['disable_control'] = 1;
+            return $this->view->redirect('admin');
 
         }
+
 
         $this->view->data['lib'] = $this->lib;
 
@@ -340,7 +340,7 @@ Class userController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->user) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -455,7 +455,7 @@ Class userController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->user) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -522,7 +522,7 @@ Class userController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -562,13 +562,16 @@ Class userController Extends baseController {
                 );
                 $user_log_model->createUser($data_log);
 
+
+                echo "Xóa thành công";
                 return true;
 
             }
 
             else{
 
-                
+                $user->deleteUser($_POST['data']);
+
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|user|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
@@ -583,7 +586,8 @@ Class userController Extends baseController {
                 );
                 $user_log_model->createUser($data_log);
 
-                return $user->deleteUser($_POST['data']);
+                echo "Xóa thành công";
+                return true;
 
             }
 
@@ -681,7 +685,7 @@ Class userController Extends baseController {
 
         }
 
-        if ($_SESSION['userid_logined'] != $id && json_decode($_SESSION['user_permission_action'])->user != "user") {
+        if ($_SESSION['userid_logined'] != $id && !isset(json_decode($_SESSION['user_permission_action'])->user) && $_SESSION['user_permission_action'] != '["all"]') {
 
             return $this->view->redirect('user/login');
 
@@ -741,7 +745,7 @@ Class userController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->user) || json_decode($_SESSION['user_permission_action'])->user != "user") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->user) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
