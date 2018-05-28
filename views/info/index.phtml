@@ -1,0 +1,247 @@
+
+<div id="winpopup"></div>
+
+<!-- Main content -->
+<?php 
+if(count($infos)>0){
+  foreach ($infos as $info) { ?>
+    <!-- general form elements -->
+    <form id="addinfo" role="form" method="post" action="" enctype="multipart/form-data">
+        <div>
+          <div class="col-md-4 col-xs-6">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="info_name">Tên công ty</label>
+                <input class="form-control" type="text" id="info_company" placeholder="Tên công ty" required="required" tabindex="1" value="<?php echo $info->info_company ?>">
+              </div>
+              <div class="form-group">
+                <label for="info_address">Địa chỉ</label>
+                <input class="form-control" type="text" id="info_address" placeholder="Địa chỉ" required="required" tabindex="2" value="<?php echo $info->info_address ?>">
+              </div>
+              
+              <div class="form-group">
+                <label for="info_from">Mã số thuế</label>
+                <input class="form-control" type="text" id="info_mst" class="number" placeholder="Mã số thuế" required="required" tabindex="3" value="<?php echo $info->info_mst ?>">
+              </div>
+              
+              
+            </div>
+            <!-- /.box-body -->
+            
+            
+          </div>
+          <div class="col-md-4 col-xs-6">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="info_phone">Điện thoại</label>
+                <input class="form-control" type="text" id="info_phone" class="numbers" placeholder="Điện thoại" tabindex="4" value="<?php echo $info->info_phone ?>">
+              </div>
+              <div class="form-group">
+                <label for="info_email">Email</label>
+                <input class="form-control" type="email" id="info_email" placeholder="Email" tabindex="5" value="<?php echo $info->info_email ?>">
+              </div>
+              
+            </div>
+            <!-- /.box-body -->
+            
+            
+          </div>
+          <div class="col-md-4 col-xs-6">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="info_director">Giám đốc</label>
+                <input class="form-control" type="text" id="info_director" placeholder="Giám đốc" tabindex="6" value="<?php echo $info->info_director ?>">
+              </div>
+              <div class="form-group">
+                <label for="info_general_accountant">Kế toán trưởng</label>
+                <input class="form-control" type="text" id="info_general_accountant" placeholder="Kế toán trưởng" tabindex="7" value="<?php echo $info->info_general_accountant ?>">
+              </div>
+              <div class="form-group">
+                <label for="info_accountant">Thủ quỹ</label>
+                <input class="form-control" type="text" id="info_accountant" placeholder="Thủ quỹ" tabindex="8" value="<?php echo $info->info_accountant ?>">
+              </div>
+              
+            </div>
+            <!-- /.box-body -->
+            
+            
+          </div>
+      
+
+        </div>
+      <?php if(!isset($disable_control)){ ?>
+      <div>
+        <div class="box-footer">
+          <input type="hidden" id="yes" value="<?php echo $info->info_id ?>" >
+          <button type="submit" class="btn btn-primary" tabindex="9"><i class="ace-icon fa fa-save"></i> Hoàn thành</button>
+          <button type="reset" class="btn" tabindex="10"><i class="ace-icon fa fa-refresh"></i> Nhập lại</button>
+        </div>
+        <div class="box-footer">
+          <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+        </div>
+      </div>
+      <?php } ?>
+    </form>
+<?php } }else{?>
+    <form id="addinfo" role="form" method="post" action="" enctype="multipart/form-data">
+      <div>
+        <div class="col-md-4 col-xs-6">
+          <div class="box-body">
+            <div class="form-group">
+              <label for="info_name">Tên công ty</label>
+              <input class="form-control" type="text" id="info_company" placeholder="Tên công ty" required="required" tabindex="1" >
+            </div>
+            <div class="form-group">
+              <label for="info_address">Địa chỉ</label>
+              <input class="form-control" type="text" id="info_address" placeholder="Địa chỉ" required="required" tabindex="2" >
+            </div>
+            
+            <div class="form-group">
+              <label for="info_from">Mã số thuế</label>
+              <input class="form-control" type="text" id="info_mst" class="number" placeholder="Mã số thuế" required="required" tabindex="3" >
+            </div>
+            
+            
+          </div>
+          <!-- /.box-body -->
+          
+          
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <div class="box-body">
+            <div class="form-group">
+              <label for="info_phone">Điện thoại</label>
+              <input class="form-control" type="text" id="info_phone" class="numbers" placeholder="Điện thoại" tabindex="4" >
+            </div>
+            <div class="form-group">
+              <label for="info_email">Email</label>
+              <input class="form-control" type="email" id="info_email" placeholder="Email" tabindex="5" >
+            </div>
+            
+          </div>
+          <!-- /.box-body -->
+          
+          
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <div class="box-body">
+            <div class="form-group">
+              <label for="info_director">Giám đốc</label>
+              <input class="form-control" type="text" id="info_director" placeholder="Giám đốc" tabindex="6" >
+            </div>
+            <div class="form-group">
+              <label for="info_general_accountant">Kế toán trưởng</label>
+              <input class="form-control" type="text" id="info_general_accountant" placeholder="Kế toán trưởng" tabindex="7" >
+            </div>
+            <div class="form-group">
+              <label for="info_accountant">Thủ quỹ</label>
+              <input class="form-control" type="text" id="info_accountant" placeholder="Thủ quỹ" tabindex="8" >
+            </div>
+            
+          </div>
+          <!-- /.box-body -->
+          
+          
+        </div>
+    
+
+      </div>
+    <?php if(!isset($disable_control)){ ?>
+    <div>
+      <div class="box-footer">
+        <input type="hidden" id="yes" value="" >
+        <button type="submit" class="btn btn-primary" tabindex="9"><i class="ace-icon fa fa-save"></i> Hoàn thành</button>
+        <button type="reset" class="btn" tabindex="10"><i class="ace-icon fa fa-refresh"></i> Nhập lại</button>
+      </div>
+      <div class="box-footer">
+        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+      </div>
+    </div>
+    <?php } ?>
+    </form>
+<?php } ?>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('.numbers').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+            .replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")
+          ;
+        });
+      });
+      $('.number').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+          ;
+        });
+      });
+
+      
+
+    $("#addinfo").validate({
+        errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        rules: {
+            
+        },
+        submitHandler: function(form) {
+            var info_company = $('#info_company').val();
+            var info_address = $('#info_address').val();
+            var info_mst = $('#info_mst').val();
+            var info_phone = $('#info_phone').val();
+            var info_email = $('#info_email').val();
+            var info_director = $('#info_director').val();
+            var info_general_accountant = $('#info_general_accountant').val();
+            var info_accountant = $('#info_accountant').val();
+            
+            var yes = $('#yes').val();
+         
+            $.ajax({
+                type: "POST", // phương thức gởi đi
+                url: "<?php echo BASE_URL ?>/info/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                
+                data: {
+                    info_company: info_company,
+                    info_address: info_address,
+                    info_mst: info_mst,
+                    info_phone: info_phone,
+                    info_email: info_email,
+                    info_director: info_director,
+                    info_general_accountant: info_general_accountant,
+                    info_accountant: info_accountant,
+                    yes: yes,
+                }, // giá trị post
+                success: function(answer){ // if everything goes well
+                    //alert(answer);
+                    var data = JSON.parse(answer);
+
+                    $('#show').html(data.msg);
+                    $('#winpopup').show();
+                    $('#error').hide();
+                    $('#error').slideToggle(100); // hiển thị thẻ div success
+                    $('#error').html('<div class="successbox">'+data.msg+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                    $('#error').fadeOut(10000);
+
+                    $('#yes').val(data.id);
+
+                }
+            });
+            return false;
+             
+         }
+    });
+  });
+
+
+</script>

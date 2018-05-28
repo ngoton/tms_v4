@@ -58,7 +58,7 @@
     <script type="text/javascript" src="/public/js/jquery.battatech.excelexport.js"></script>
 
     <link rel="stylesheet" href="/public/css/head.css">
-    <script type="text/javascript" src="/public/js/head.js?v=5"></script>
+    <script type="text/javascript" src="/public/js/head.js?v=2"></script>
     
     <script type="text/javascript">
     var check_lock_user = 0;
@@ -1663,7 +1663,7 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
-                <a data="backup" data-role="backup" href="<?php echo $this->url('backup') ?>">
+                <a data="adminbackup" data-role="adminbackup" href="<?php echo $this->url('adminbackup') ?>">
                   <i class="menu-icon fa fa-refresh"></i>
 
                   Sao lưu & Phục hồi
@@ -1672,7 +1672,7 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
-                <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                <a data="adminupdate" data-role="adminupdate" href="<?php echo $this->url('adminupdate') ?>">
                   <i class="menu-icon fa fa-hdd-o"></i>
 
                   Cập nhật phần mềm
@@ -1771,7 +1771,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="#" onclick="javascript:window.history.back();" >Trang trước</a>
               </li>
-              <li class="active"><?php echo $title ?></li>
+              <li class="active"><?php echo isset($title)?$title:null ?></li>
             </ul><!-- /.breadcrumb -->
 
             <!-- <div class="nav-search" id="nav-search">
@@ -1796,7 +1796,7 @@
                   <div class="widget-header text-uppercase widget-header-small ">
                     <h5 class="widget-title bigger lighter">
                       <i class="ace-icon fa fa-table"></i>
-                      <?php echo $title ?>
+                      <?php echo isset($title)?$title:null ?>
                     </h5>
 
                     <div class="widget-toolbar">
