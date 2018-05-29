@@ -3,6 +3,13 @@ $(function () {
     $('a[data-action="reload"]').click(function(){
       refresh_click();
     });
+    $(document).on("focus", ".input-mask-date", function () {
+      $(this).mask('dd/mm/yyyy');
+      $(this).datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
+    });
 });
 $( document ).ajaxStart(function() {
 
@@ -31,7 +38,7 @@ function setNavigation() {
         var href = "/"+$(this).attr('data');
         if (path === href) {
             $(this).closest('li').addClass('active');
-            $(this).closest('li').parents('li').addClass('active');
+            $(this).closest('li').parents('li').addClass('active open');
         }
         if (window.location.hash == $(this).attr("data")) {
           var hrefval = $(this).attr("data");
@@ -540,6 +547,23 @@ function open_dialog(url, title){
     ],
     close: function(){
       $('.viewData').remove();
+    },
+    open: function () {
+        if ($.ui && $.ui.dialog && !$.ui.dialog.prototype._allowInteractionRemapped && $(this).closest(".ui-dialog").length) {
+            if ($.ui.dialog.prototype._allowInteraction) {
+                $.ui.dialog.prototype._allowInteraction = function (e) {
+                    if ($(e.target).closest('.ui-dialog, .ui-datepicker, .select2-drop').length) return true;
+                    return ui_dialog_interaction.apply(this, arguments);
+                };
+                $.ui.dialog.prototype._allowInteractionRemapped = true;
+            }
+            else {
+                $.error("You must upgrade jQuery UI or else.");
+            }
+        }
+    },
+    _allowInteraction: function (event) {
+        return !!$(event.target).is(".select2-input") || this._super(event);
     }
   });
   dialog.load(url, function(){

@@ -1,0 +1,142 @@
+<script type="text/javascript">
+$(document).ready(function(){
+  $.mask.definitions['~'] = '([0-9] )?';
+	$('#staff_cmnd').mask('999999999');
+  $("#staff_phone").mask("9999 999 999~");
+  $( ".select2" ).select2();
+			// Validate form
+			$("#add").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/staff/addstaff", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error').hide();
+                  $('#error').slideToggle(100); // hiển thị thẻ div success
+                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+  
+  <form id="add" method="post" action="">
+     <div class="col-md-3">
+        <label for="staff_code">Mã nhân viên</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="staff_code" name="staff_code" required="required" tabindex="1" value="<?php echo $lastID ?>">
+        </div>
+        <label for="staff_name">Tên nhân viên</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="staff_name" name="staff_name" required="required" tabindex="2">
+        </div>
+        <label for="staff_birthday">Ngày sinh</label>
+        <div class="input-group">
+          <input class="form-control input-mask-date" type="text" id="staff_birthday" name="staff_birthday" required="required" tabindex="3">
+        </div>
+        <label for="staff_code">Giới tính</label>
+        <div class="input-group">
+          <label>
+            <input class="form-control ace" type="radio" name="staff_gender" checked="checked" tabindex="4" value="0"> <span class="lbl">Nam</span>
+          </label>
+          &nbsp;
+          <label>
+            <input class="form-control ace" type="radio" name="staff_gender" tabindex="5" value="1"> <span class="lbl">Nữ</span>
+          </label>
+          
+        </div>
+     </div>
+     <div class="col-md-3">
+        <label for="staff_cmnd">Số CMND</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="staff_cmnd" name="staff_cmnd" required="required" tabindex="6">
+        </div>
+        <label for="staff_gplx">Số GPLX</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="staff_gplx" name="staff_gplx" tabindex="7">
+        </div>
+        <label for="staff_address">Địa chỉ</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="staff_address" name="staff_address" required="required" tabindex="8">
+        </div>
+        <label for="staff_position">Chức vụ</label>
+        <div class="input-group">
+          <select class="form-control select2" id="staff_position" name="staff_position" required="required" tabindex="9">
+            <?php foreach ($positions as $position) { ?>
+              <option value="<?php echo $position->position_id ?>"><?php echo $position->position_name ?></option>
+            <?php } ?>
+          </select>
+        </div>
+     </div>
+     <div class="col-md-3">
+        <label for="staff_phone">Số điện thoại</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="staff_phone" name="staff_phone" required="required" tabindex="10">
+        </div>
+        <label for="staff_email">Email</label>
+        <div class="input-group">
+          <input class="form-control" type="email" id="staff_email" name="staff_email" tabindex="11">
+        </div>
+        <label for="staff_bank_account">Số tài khoản</label>
+        <div class="input-group input-daterange">
+          <input class="form-control input-sm" type="text" id="staff_bank_account" name="staff_bank_account" tabindex="12">
+          <span class="input-group-addon">
+            <i class="fa fa-bank"></i>
+          </span>
+          <input class="form-control input-sm" type="text" id="staff_bank" name="staff_bank" tabindex="13">
+        </div>
+        <label for="staff_department">Phòng</label>
+        <div class="input-group">
+          <select class="form-control select2" id="staff_department" name="staff_department" required="required" tabindex="14">
+            <?php foreach ($departments as $department) { ?>
+              <option value="<?php echo $department->department_id ?>"><?php echo $department->department_name ?></option>
+            <?php } ?>
+          </select>
+        </div>
+     </div>
+     <div class="col-md-3">
+        <label for="staff_start_date">Ngày vào làm việc</label>
+        <div class="input-group">
+          <input class="form-control input-mask-date" type="text" id="staff_start_date" name="staff_start_date" required="required" tabindex="15">
+        </div>
+        <label for="staff_end_date">Ngày thôi việc</label>
+        <div class="input-group">
+          <input class="form-control input-mask-date" type="text" id="staff_end_date" name="staff_end_date" tabindex="16">
+        </div>
+        <label for="staff_account">Tên truy cập</label>
+        <div class="input-group">
+          <select class="form-control select2" id="staff_account" name="staff_account" tabindex="17">
+            <option value="">Không sử dụng</option>
+            <?php foreach ($accounts as $account) { ?>
+              <option value="<?php echo $account->user_id ?>"><?php echo $account->username ?></option>
+            <?php } ?>
+          </select>
+        </div>
+     </div>
+  </form>
+</div>
+
+
+

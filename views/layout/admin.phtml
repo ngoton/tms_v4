@@ -51,6 +51,8 @@
     
     <link rel="stylesheet" href="/public/assets/css/select2.min.css" />
     <link rel="stylesheet" href="/public/assets/css/bootstrap-editable.min.css" />
+    <link rel="stylesheet" href="/public/assets/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="/public/assets/css/bootstrap-timepicker.min.css">
 
     <!-- <![endif]-->
     <link rel="stylesheet" href="/public/css/style.css">
@@ -1435,7 +1437,7 @@
 
                 <ul class="submenu">
                   <li class="">
-                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                    <a data="salary/driver" data-role="salary" href="<?php echo $this->url('salary/driver') ?>">
                       <i class="menu-icon fa fa-caret-right"></i>
 
                       Lương tài xế
@@ -1444,7 +1446,7 @@
                     <b class="arrow"></b>
                   </li>
                   <li class="">
-                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                    <a data="salary/staff" data-role="salary" href="<?php echo $this->url('salary/staff') ?>">
                       <i class="menu-icon fa fa-caret-right"></i>
 
                       Lương nhân viên
@@ -1455,7 +1457,7 @@
                 </ul>
               </li>
               <li class="">
-                <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
+                <a data="staff" data-role="staff" href="<?php echo $this->url('staff') ?>">
                   <i class="menu-icon fa fa-user"></i>
 
                   Danh sách nhân viên
@@ -1464,7 +1466,7 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
-                <a data="permission" data-role="permission" href="<?php echo $this->url('permission') ?>">
+                <a data="department" data-role="department" href="<?php echo $this->url('department') ?>">
                   <i class="menu-icon fa fa-archive"></i>
 
                   Danh sách phòng ban
@@ -1473,7 +1475,7 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
-                <a data="backup" data-role="backup" href="<?php echo $this->url('backup') ?>">
+                <a data="position" data-role="position" href="<?php echo $this->url('position') ?>">
                   <i class="menu-icon fa fa-user-secret"></i>
 
                   Danh sách chức vụ
