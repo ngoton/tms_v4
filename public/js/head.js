@@ -4,7 +4,7 @@ $(function () {
       refresh_click();
     });
     $(document).on("focus", ".input-mask-date", function () {
-      $(this).mask('dd/mm/yyyy');
+      //$(this).mask('dd/mm/yyyy');
       $(this).datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true
@@ -159,34 +159,7 @@ function searchall(page,cot,sapxep){
             success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
             {
                 $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
-                
-                //Enable sidebar toggle
-                $(document).on('click', "[data-toggle='offcanvas']", function (e) {
-                  e.preventDefault();
-
-                  //Enable sidebar push menu
-                  if ($(window).width() > (768 - 1)) {
-                    if ($("body").hasClass('sidebar-collapse')) {
-                      $("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
-                    } else {
-                      $("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
-                    }
-                  }
-                  //Handle sidebar push menu for small screens
-                  else {
-                    if ($("body").hasClass('sidebar-open')) {
-                      $("body").removeClass('sidebar-open').removeClass('sidebar-collapse').trigger('collapsed.pushMenu');
-                    } else {
-                      $("body").addClass('sidebar-open').trigger('expanded.pushMenu');
-                    }
-                  }
-                });
-                
                  
-                if ($('input#search-input').hasClass("loading")) {      // Kiểm tra class "loading"
-                    $("input#search-input").removeClass("loading");     // Remove class "loading"
-                }
-        //$('#loading').fadeOut(500); 
             }
         });
   
@@ -278,28 +251,6 @@ function sapxep(page,cot,sapxep){
               
               $('body').html(answer); // đặt kết quả trả về từ test.php vào thẻ div success
               //$('#loading').fadeOut(500);
-
-              //Enable sidebar toggle
-                $(document).on('click', "[data-toggle='offcanvas']", function (e) {
-                  e.preventDefault();
-
-                  //Enable sidebar push menu
-                  if ($(window).width() > (768 - 1)) {
-                    if ($("body").hasClass('sidebar-collapse')) {
-                      $("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
-                    } else {
-                      $("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
-                    }
-                  }
-                  //Handle sidebar push menu for small screens
-                  else {
-                    if ($("body").hasClass('sidebar-open')) {
-                      $("body").removeClass('sidebar-open').removeClass('sidebar-collapse').trigger('collapsed.pushMenu');
-                    } else {
-                      $("body").addClass('sidebar-open').trigger('expanded.pushMenu');
-                    }
-                  }
-                });
                 
             }
           });
@@ -336,42 +287,15 @@ function ChangeTextColor(a_obj,a_color){  ;
 }
 
 /*Dùng cho bảng nhập liệu*/
-function limit_change(limit){
+function limit_change(limit,order_by,order,keyword){
   $.ajax({
       type: "POST",                            // Phương thức gọi là GET
       url: "#",                 // File xử lý
-      data: 'page=1&limit='+limit,  
+      data: 'page=1&limit='+limit+'&order_by='+order_by+'&order='+order+'&keyword='+keyword,  
       success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
       {
           $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
           
-          //Enable sidebar toggle
-          $(document).on('click', "[data-toggle='offcanvas']", function (e) {
-            e.preventDefault();
-
-            //Enable sidebar push menu
-            if ($(window).width() > (768 - 1)) {
-              if ($("body").hasClass('sidebar-collapse')) {
-                $("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
-              } else {
-                $("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
-              }
-            }
-            //Handle sidebar push menu for small screens
-            else {
-              if ($("body").hasClass('sidebar-open')) {
-                $("body").removeClass('sidebar-open').removeClass('sidebar-collapse').trigger('collapsed.pushMenu');
-              } else {
-                $("body").addClass('sidebar-open').trigger('expanded.pushMenu');
-              }
-            }
-          });
-          
-           
-          if ($('input#search-input').hasClass("loading")) {      // Kiểm tra class "loading"
-              $("input#search-input").removeClass("loading");     // Remove class "loading"
-          }
-  
       }
   });
 }
@@ -403,7 +327,9 @@ function edit_click(url,title,id){
   });
 }
 
-
+function filter_click(url,title){
+  open_dialog(url,title);
+}
 function search_click(){
   bootbox.prompt("Tìm kiếm", function(result) {
     if (result === null) {
@@ -417,33 +343,6 @@ function search_click(){
           {
               $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
               
-              //Enable sidebar toggle
-              $(document).on('click', "[data-toggle='offcanvas']", function (e) {
-                e.preventDefault();
-
-                //Enable sidebar push menu
-                if ($(window).width() > (768 - 1)) {
-                  if ($("body").hasClass('sidebar-collapse')) {
-                    $("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
-                  } else {
-                    $("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
-                  }
-                }
-                //Handle sidebar push menu for small screens
-                else {
-                  if ($("body").hasClass('sidebar-open')) {
-                    $("body").removeClass('sidebar-open').removeClass('sidebar-collapse').trigger('collapsed.pushMenu');
-                  } else {
-                    $("body").addClass('sidebar-open').trigger('expanded.pushMenu');
-                  }
-                }
-              });
-              
-               
-              if ($('input#search-input').hasClass("loading")) {      // Kiểm tra class "loading"
-                  $("input#search-input").removeClass("loading");     // Remove class "loading"
-              }
-      
           }
       });
     }

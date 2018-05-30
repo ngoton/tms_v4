@@ -45,7 +45,7 @@ $(document).ready(function(){
 <div class="login_body">
  
   <form id="edit" method="post" action="">
-      <div class="col-md-3">
+      <div class="col-md-3 col-xs-6">
         <label for="staff_code">Mã nhân viên</label>
         <div class="input-group">
           <input class="form-control" type="text" id="staff_code" name="staff_code" required="required" tabindex="1" value="<?php echo $staff_data->staff_code ?>">
@@ -70,7 +70,7 @@ $(document).ready(function(){
           
         </div>
      </div>
-     <div class="col-md-3">
+     <div class="col-md-3 col-xs-6">
         <label for="staff_cmnd">Số CMND</label>
         <div class="input-group">
           <input class="form-control" type="text" id="staff_cmnd" name="staff_cmnd" required="required" tabindex="6" value="<?php echo $staff_data->staff_cmnd ?>">
@@ -92,7 +92,7 @@ $(document).ready(function(){
           </select>
         </div>
      </div>
-     <div class="col-md-3">
+     <div class="col-md-3 col-xs-6">
         <label for="staff_phone">Số điện thoại</label>
         <div class="input-group">
           <input class="form-control" type="text" id="staff_phone" name="staff_phone" required="required" tabindex="10" value="<?php echo $staff_data->staff_phone ?>_">
@@ -118,7 +118,7 @@ $(document).ready(function(){
           </select>
         </div>
      </div>
-     <div class="col-md-3">
+     <div class="col-md-3 col-xs-6">
         <label for="staff_start_date">Ngày vào làm việc</label>
         <div class="input-group">
           <input class="form-control input-mask-date" type="text" id="staff_start_date" name="staff_start_date" required="required" tabindex="15" value="<?php echo $lib->hien_thi_ngay_thang($staff_data->staff_start_date) ?>">

@@ -85,7 +85,7 @@ $(document).ready(function(){
                   <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                     <i class="ace-icon fa fa-circle light-green"></i>
                     &nbsp;
-                    <span class="white">Alex M. Doe</span>
+                    <span class="white"><?php echo isset($staffs->staff_name)?$staffs->staff_name:'NONAME' ?></span>
                   </a>
 
                   <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
@@ -119,15 +119,15 @@ $(document).ready(function(){
               </div>
 
               <div class="profile-contact-info">
-                <div class="profile-contact-links align-left">
+                <div class="profile-contact-links align-center">
                   <a href="#" class="btn btn-link">
-                    <i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
-                    Add as a friend
+                    <i class="ace-icon fa fa-black-tie bigger-120 green"></i>
+                    <?php echo isset($positions)?$positions->position_name:null ?>
                   </a>
 
                   <a href="#" class="btn btn-link">
-                    <i class="ace-icon fa fa-envelope bigger-120 pink"></i>
-                    Send a message
+                    <i class="ace-icon fa fa-building bigger-120 pink"></i>
+                    Phòng <?php echo isset($departments)?$departments->department_name:null ?>
                   </a>
 
                 </div>
@@ -143,8 +143,8 @@ $(document).ready(function(){
                     <i class="middle ace-icon fa fa-twitter-square fa-2x light-blue"></i>
                   </a>
 
-                  <a href="#" class="tooltip-error" title="" data-original-title="Visit my Pinterest">
-                    <i class="middle ace-icon fa fa-pinterest-square fa-2x red"></i>
+                  <a href="#" class="tooltip-error" title="" data-original-title="Visit my G+">
+                    <i class="middle ace-icon fa fa-google-plus-square fa-2x red"></i>
                   </a>
                 </div>
               </div>
@@ -165,34 +165,39 @@ $(document).ready(function(){
 
                 <div class="profile-info-value">
                   <i class="fa fa-map-marker light-orange bigger-110"></i>
-                  <span class="editable" id="country">Netherlands</span>
-                  <span class="editable" id="city">Amsterdam</span>
+                  <span class="editable" id="address"><?php echo isset($staffs->staff_address)?$staffs->staff_address:null ?></span>
                 </div>
               </div>
 
               <div class="profile-info-row">
-                <div class="profile-info-name"> Tuổi </div>
+                <div class="profile-info-name"> Ngày sinh </div>
 
                 <div class="profile-info-value">
-                  <span class="editable" id="age">38</span>
+                  <span class="editable" id="age"><?php echo isset($staffs->staff_birthday)?$lib->hien_thi_ngay_thang($staffs->staff_birthday):null ?></span>
                 </div>
               </div>
+              <div class="profile-info-row">
+                <div class="profile-info-name"> Điện thoại </div>
 
+                <div class="profile-info-value">
+                  <span class="editable" id="phone"><?php echo isset($staffs->staff_phone)?$staffs->staff_phone:null ?></span>
+                </div>
+              </div>
+              <div class="profile-info-row">
+                <div class="profile-info-name"> Email </div>
+
+                <div class="profile-info-value">
+                  <span class="editable" id="email"><?php echo isset($staffs->staff_email)?$staffs->staff_email:null ?></span>
+                </div>
+              </div>
               <div class="profile-info-row">
                 <div class="profile-info-name"> Tham gia </div>
 
                 <div class="profile-info-value">
-                  <span class="editable" id="signup"><?php echo $lib->hien_thi_ngay_thang($user_data->create_time) ?></span>
+                  <span class="editable" id="signup"><?php echo isset($staffs->staff_start_date)?$lib->hien_thi_ngay_thang($staffs->staff_start_date):null ?></span>
                 </div>
               </div>
 
-              <div class="profile-info-row">
-                <div class="profile-info-name"> Email khôi phục </div>
-
-                <div class="profile-info-value">
-                  <span class="editable" id="email"><?php echo $user_data->user_email ?></span>
-                </div>
-              </div>
               <div class="profile-info-row">
                 <div class="profile-info-name"> Truy cập lần cuối </div>
 
@@ -420,7 +425,7 @@ $(document).ready(function(){
     //editables 
     
     //text editable
-      $('#username')
+    $('#username')
     .editable({
       type: 'text',
       name: 'username'    
@@ -431,88 +436,37 @@ $(document).ready(function(){
       type: 'text',
       name: 'email'    
       });
-    
-    //select2 editable
-    var countries = [];
-      $.each({ "CA": "Canada", "IN": "India", "NL": "Netherlands", "TR": "Turkey", "US": "United States"}, function(k, v) {
-          countries.push({id: k, text: v});
+
+    $('#phone')
+    .editable({
+      type: 'text',
+      name: 'email'    
       });
-  
-    var cities = [];
-    cities["CA"] = [];
-    $.each(["Toronto", "Ottawa", "Calgary", "Vancouver"] , function(k, v){
-      cities["CA"].push({id: v, text: v});
-    });
-    cities["IN"] = [];
-    $.each(["Delhi", "Mumbai", "Bangalore"] , function(k, v){
-      cities["IN"].push({id: v, text: v});
-    });
-    cities["NL"] = [];
-    $.each(["Amsterdam", "Rotterdam", "The Hague"] , function(k, v){
-      cities["NL"].push({id: v, text: v});
-    });
-    cities["TR"] = [];
-    $.each(["Ankara", "Istanbul", "Izmir"] , function(k, v){
-      cities["TR"].push({id: v, text: v});
-    });
-    cities["US"] = [];
-    $.each(["New York", "Miami", "Los Angeles", "Chicago", "Wysconsin"] , function(k, v){
-      cities["US"].push({id: v, text: v});
-    });
-    
-    var currentValue = "NL";
-      $('#country').editable({
-      type: 'select2',
-      value : 'NL',
-      //onblur:'ignore',
-          source: countries,
-      select2: {
-        'width': 140
-      },    
-      success: function(response, newValue) {
-        if(currentValue == newValue) return;
-        currentValue = newValue;
-        
-        var new_source = (!newValue || newValue == "") ? [] : cities[newValue];
-        
-        //the destroy method is causing errors in x-editable v1.4.6+
-        //it worked fine in v1.4.5
-        /**     
-        $('#city').editable('destroy').editable({
-          type: 'select2',
-          source: new_source
-        }).editable('setValue', null);
-        */
-        
-        //so we remove it altogether and create a new element
-        var city = $('#city').removeAttr('id').get(0);
-        $(city).clone().attr('id', 'city').text('Select City').editable({
-          type: 'select2',
-          value : null,
-          //onblur:'ignore',
-          source: new_source,
-          select2: {
-            'width': 140
-          }
-        }).insertAfter(city);//insert it after previous instance
-        $(city).remove();//remove previous instance
-        
-      }
+
+    $('#address')
+    .editable({
+      type: 'text',
+      name: 'email'    
       });
-  
-    $('#city').editable({
-      type: 'select2',
-      value : 'Amsterdam',
-      //onblur:'ignore',
-          source: cities[currentValue],
-      select2: {
-        'width': 140
-      }
-      });
-  
-  
+ 
     
     //custom date editable
+    $('#age').editable({
+      type: 'adate',
+      date: {
+        //datepicker plugin options
+            format: 'dd/mm/yyyy',
+        viewformat: 'dd/mm/yyyy',
+         weekStart: 1
+         
+         
+        //,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+        //,format: 'yyyy-mm-dd',
+        //viewformat: 'yyyy-mm-dd'
+      },
+      tpl: '<div class="input-group input-group-compact"><input type="text" class="input-medium date input-mask-date"><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
+    });
+
     $('#signup').editable({
       type: 'adate',
       date: {
@@ -527,37 +481,8 @@ $(document).ready(function(){
         //viewformat: 'yyyy-mm-dd'
       },
       tpl: '<div class="input-group input-group-compact"><input type="text" class="input-medium date input-mask-date"><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
-    })
-  
-      $('#age').editable({
-          type: 'spinner',
-      name : 'age',
-      spinner : {
-        min : 16,
-        max : 99,
-        step: 1,
-        on_sides: true
-        //,nativeUI: true//if true and browser support input[type=number], native browser control will be used
-      }
     });
-    
   
-      $('#login').editable({
-          type: 'slider',
-      name : 'login',
-      
-      slider : {
-         min : 1,
-          max: 50,
-        width: 100
-        //,nativeUI: true//if true and browser support input[type=range], native browser control will be used
-      },
-      success: function(response, newValue) {
-        if(parseInt(newValue) == 1)
-          $(this).html(newValue + " hour ago");
-        else $(this).html(newValue + " hours ago");
-      }
-    });
   
     $('#about').editable({
       mode: 'inline',

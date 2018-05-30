@@ -65,7 +65,23 @@ Class staffController Extends baseController {
 
         $join = array('table'=>'department, position','where'=>'staff_department=department_id AND staff_position=position_id');
 
-        $tongsodong = count($staff_model->getAllStaff(null,$join));
+        $data = array(
+            'where'=>'1=1',
+        );
+
+        if (isset($_POST['filter'])) {
+            if ($_POST['staff_gender'] != '') {
+                $data['where'] .= ' AND staff_gender = '.$_POST['staff_gender'];
+            }
+            if ($_POST['staff_position'] != '') {
+                $data['where'] .= ' AND staff_position = '.$_POST['staff_position'];
+            }
+            if ($_POST['staff_department'] != '') {
+                $data['where'] .= ' AND staff_department = '.$_POST['staff_department'];
+            }
+        }
+
+        $tongsodong = count($staff_model->getAllStaff($data,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -92,7 +108,8 @@ Class staffController Extends baseController {
 
 
         $data = array(
-
+            'where'=>'1=1',
+            
             'order_by'=>$order_by,
 
             'order'=>$order,
@@ -101,7 +118,17 @@ Class staffController Extends baseController {
 
             );
 
-        
+        if (isset($_POST['filter'])) {
+            if ($_POST['staff_gender'] != '') {
+                $data['where'] .= ' AND staff_gender = '.$_POST['staff_gender'];
+            }
+            if ($_POST['staff_position'] != '') {
+                $data['where'] .= ' AND staff_position = '.$_POST['staff_position'];
+            }
+            if ($_POST['staff_department'] != '') {
+                $data['where'] .= ' AND staff_department = '.$_POST['staff_department'];
+            }
+        }
 
         if ($keyword != '') {
 
@@ -329,7 +356,29 @@ Class staffController Extends baseController {
         return $this->view->show('staff/edit');
 
     }
+    public function filter(){
+        $this->view->disableLayout();
 
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Lọc dữ liệu';
+
+        $position_model = $this->model->get('positionModel');
+        $department_model = $this->model->get('departmentModel');
+
+        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
+        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
+
+        $this->view->data['positions'] = $positions;
+        $this->view->data['departments'] = $departments;
+
+        $this->view->data['page'] = $_GET['page'];
+        $this->view->data['order_by'] = $_GET['order_by'];
+        $this->view->data['order'] = $_GET['order'];
+        $this->view->data['limit'] = $_GET['limit'];
+        $this->view->data['keyword'] = $_GET['keyword'];
+
+        return $this->view->show('staff/filter');
+    }
 
 
     public function delete(){

@@ -713,6 +713,21 @@ Class userController Extends baseController {
         $user_logs = $user_log_model->getAllUser($d_log,$d_join);
         $this->view->data['user_logs'] = $user_logs;
 
+        $staff_model = $this->model->get('staffModel');
+        $staffs = $staff_model->getStaffByWhere(array('staff_account'=>$id));
+        $this->view->data['staffs'] = $staffs;
+
+        if ($staffs) {
+            $position_model = $this->model->get('positionModel');
+            $department_model = $this->model->get('departmentModel');
+            $positions = $position_model->getPosition($staffs->staff_position);
+            $departments = $department_model->getDepartment($staffs->staff_department);
+
+            $this->view->data['positions'] = $positions;
+            $this->view->data['departments'] = $departments;
+        }
+        
+
         if (!$user_data) {
 
             $this->view->redirect('user');

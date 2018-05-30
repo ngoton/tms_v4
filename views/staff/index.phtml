@@ -64,7 +64,7 @@ $i = $sonews*$page-($sonews-1);
            
         <th>
             <div class="tools action-buttons pull-right">
-                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val())">
+                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
                     <option value="18446744073709">All</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -89,9 +89,9 @@ $i = $sonews*$page-($sonews-1);
                             </a>
                         </li>
                         <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
                                 <span class="green">
-                                    <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
+                                    <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("staff/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
                                 </span>
                             </a>
                         </li>

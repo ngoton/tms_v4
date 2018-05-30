@@ -35,7 +35,7 @@ $i = $sonews*$page-($sonews-1);
            
         <th>
             <div class="tools action-buttons pull-right">
-                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val())">
+                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
                     <option value="18446744073709">All</option>
                     <option value="10">10</option>
                     <option value="20">20</option>

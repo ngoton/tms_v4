@@ -1,0 +1,49 @@
+<div class="login_body">
+  <form id="add" method="post" action="<?php echo $this->url('staff') ?>" enctype="multipart/form-data">
+    <div class="col-md-4">
+      <label for="staff_gender">Giới tính</label>
+      <div class="input-group">
+        <select class="form-control select2" id="staff_gender" name="staff_gender">
+          <option value="">Tất cả</option>
+          <option value="0">Nam</option>
+          <option value="1">Nữ</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="staff_position">Chức vụ</label>
+      <div class="input-group">
+        <select class="form-control select2" id="staff_position" name="staff_position">
+          <option value="">Tất cả</option>
+          <?php foreach ($positions as $position) { ?>
+            <option value="<?php echo $position->position_id ?>"><?php echo $position->position_name ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="staff_department">Phòng ban</label>
+      <div class="input-group">
+        <select class="form-control select2" id="staff_department" name="staff_department">
+          <option value="">Tất cả</option>
+          <?php foreach ($departments as $department) { ?>
+            <option value="<?php echo $department->department_id ?>"><?php echo $department->department_name ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    <input type="hidden" name="filter">
+    <input type="hidden" name="page" value="<?php echo $page ?>">
+    <input type="hidden" name="order_by" value="<?php echo $order_by ?>">
+    <input type="hidden" name="order" value="<?php echo $order ?>">
+    <input type="hidden" name="limit" value="<?php echo $limit ?>">
+    <input type="hidden" name="keyword" value="<?php echo $keyword ?>">
+  </form>   
+</div>  
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $( ".select2" ).select2();
+});
+</script>
+
