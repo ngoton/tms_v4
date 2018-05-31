@@ -407,6 +407,12 @@ function export_click(type,id,url){
          , datatype: 'table'
       });
     }
+    else if (type=="pdf") {
+      $("#"+id).tableExport({type:'pdf'});
+    }
+    else if (type=="word") {
+      $("#"+id).tableExport({type:'word'});
+    }
   }
 
   refresh_click();

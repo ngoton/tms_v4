@@ -1,6 +1,6 @@
 <?php
 
-Class departmentController Extends baseController {
+Class portController Extends baseController {
 
     public function index() {
 
@@ -20,7 +20,7 @@ Class departmentController Extends baseController {
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý phòng ban';
+        $this->view->data['title'] = 'Quản lý cảng';
 
 
 
@@ -40,7 +40,7 @@ Class departmentController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'department_code';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'port_id';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
@@ -55,7 +55,7 @@ Class departmentController Extends baseController {
 
 
 
-        $department_model = $this->model->get('departmentModel');
+        $port_model = $this->model->get('portModel');
 
         $sonews = $limit;
 
@@ -63,9 +63,9 @@ Class departmentController Extends baseController {
 
         $pagination_stages = 2;
 
-        
+        $join = array('table'=>'province','where'=>'port_province=province_id');
 
-        $tongsodong = count($department_model->getAllDepartment());
+        $tongsodong = count($port_model->getAllPort(null,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -105,7 +105,7 @@ Class departmentController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( department_code LIKE "%'.$keyword.'%" OR department_name LIKE "%'.$keyword.'%" )';
+            $search = '( port_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -113,35 +113,31 @@ Class departmentController Extends baseController {
 
 
 
-        $this->view->data['departments'] = $department_model->getAllDepartment($data);
+        $this->view->data['ports'] = $port_model->getAllPort($data,$join);
 
 
 
-        return $this->view->show('department/index');
+        return $this->view->show('port/index');
 
     }
 
 
-    public function adddepartment(){
-        $department_model = $this->model->get('departmentModel');
+    public function addport(){
+        $port_model = $this->model->get('portModel');
 
-        if (isset($_POST['department_code'])) {
-            if($department_model->getDepartmentByWhere(array('department_code'=>trim($_POST['department_code'])))){
-                echo 'Mã phòng ban đã tồn tại';
-                return false;
-            }
-            if($department_model->getDepartmentByWhere(array('department_name'=>trim($_POST['department_name'])))){
-                echo 'Tên phòng ban đã tồn tại';
+        if (isset($_POST['port_name'])) {
+            if($port_model->getPortByWhere(array('port_name'=>trim($_POST['port_name'])))){
+                echo 'Tên cảng đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'department_code' => trim($_POST['department_code']),
-                'department_name' => trim($_POST['department_name']),
+                'port_province' => trim($_POST['port_province']),
+                'port_name' => trim($_POST['port_name']),
             );
-            $department_model->createDepartment($data);
+            $port_model->createPort($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$department_model->getLastDepartment()->department_id."|department|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$port_model->getLastPort()->port_id."|port|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -149,8 +145,8 @@ Class departmentController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'department',
-                'user_log_table_name' => 'Phòng ban',
+                'user_log_table' => 'port',
+                'user_log_table_name' => 'Cảng',
                 'user_log_action' => 'Thêm mới',
                 'user_log_data' => json_encode($data),
             );
@@ -173,39 +169,39 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->port) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
 
         }
 
-        $this->view->data['title'] = 'Thêm mới phòng ban';
+        $this->view->data['title'] = 'Thêm mới cảng';
 
-        return $this->view->show('department/add');
+        $province = $this->model->get('provinceModel');
+
+        $this->view->data['provinces'] = $province->getAllProvince();
+
+        return $this->view->show('port/add');
     }
 
-    public function editdepartment(){
-        $department_model = $this->model->get('departmentModel');
+    public function editport(){
+        $port_model = $this->model->get('portModel');
 
-        if (isset($_POST['department_id'])) {
-            $id = $_POST['department_id'];
-            if($department_model->getAllDepartmentByWhere($id.' AND department_code = "'.trim($_POST['department_code']).'"')){
-                echo 'Mã phòng ban đã tồn tại';
-                return false;
-            }
-            if($department_model->getAllDepartmentByWhere($id.' AND department_name = "'.trim($_POST['department_name']).'"')){
-                echo 'Tên phòng ban đã tồn tại';
+        if (isset($_POST['port_id'])) {
+            $id = $_POST['port_id'];
+            if($port_model->getAllPortByWhere($id.' AND port_name = "'.trim($_POST['port_name']).'"')){
+                echo 'Tên cảng đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'department_code' => trim($_POST['department_code']),
-                'department_name' => trim($_POST['department_name']),
+                'port_province' => trim($_POST['port_province']),
+                'port_name' => trim($_POST['port_name']),
             );
-            $department_model->updateDepartment($data,array('department_id'=>$id));
+            $port_model->updatePort($data,array('port_id'=>$id));
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|department|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|port|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -213,8 +209,8 @@ Class departmentController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'department',
-                'user_log_table_name' => 'Phòng ban',
+                'user_log_table' => 'port',
+                'user_log_table_name' => 'Cảng',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -236,7 +232,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->port) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -244,26 +240,29 @@ Class departmentController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('department');
+            $this->view->redirect('port');
 
         }
 
-        $this->view->data['title'] = 'Cập nhật phòng ban';
+        $this->view->data['title'] = 'Cập nhật cảng';
 
-        $department_model = $this->model->get('departmentModel');
+        $port_model = $this->model->get('portModel');
 
-        $department_data = $department_model->getDepartment($id);
+        $port_data = $port_model->getPort($id);
 
-        $this->view->data['department_data'] = $department_data;
+        $this->view->data['port_data'] = $port_data;
 
-        if (!$department_data) {
+        if (!$port_data) {
 
-            $this->view->redirect('department');
+            $this->view->redirect('port');
 
         }
 
+        $province = $this->model->get('provinceModel');
 
-        return $this->view->show('department/edit');
+        $this->view->data['provinces'] = $province->getAllProvince();
+
+        return $this->view->show('port/edit');
 
     }
 
@@ -278,7 +277,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->department) || json_decode($_SESSION['user_permission_action'])->department != "department") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->port) || json_decode($_SESSION['user_permission_action'])->port != "port") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -287,7 +286,7 @@ Class departmentController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $department_model = $this->model->get('departmentModel');
+            $port_model = $this->model->get('portModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -296,10 +295,10 @@ Class departmentController Extends baseController {
 
                 foreach ($datas as $data) {
 
-                    $department_model->deleteDepartment($data);
+                    $port_model->deletePort($data);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|department|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|port|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -311,8 +310,8 @@ Class departmentController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'department',
-                    'user_log_table_name' => 'Phòng ban',
+                    'user_log_table' => 'port',
+                    'user_log_table_name' => 'Cảng',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -326,17 +325,17 @@ Class departmentController Extends baseController {
 
             else{
 
-                $department_model->deleteDepartment($_POST['data']);
+                $port_model->deletePort($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|department|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|port|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'department',
-                    'user_log_table_name' => 'Phòng ban',
+                    'user_log_table' => 'port',
+                    'user_log_table_name' => 'Cảng',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );
@@ -353,7 +352,7 @@ Class departmentController Extends baseController {
 
     }
 
-    public function importdepartment(){
+    public function importport(){
         if (isset($_FILES['import']['name'])) {
             $total = count($_FILES['import']['name']);
             for( $i=0 ; $i < $total ; $i++ ) {
@@ -373,7 +372,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->port) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -383,7 +382,7 @@ Class departmentController Extends baseController {
         $this->view->data['title'] = 'Nhập dữ liệu';
 
        
-        return $this->view->show('department/import');
+        return $this->view->show('port/import');
 
     }
 

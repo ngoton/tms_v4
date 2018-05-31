@@ -423,7 +423,7 @@ Class staffController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'user',
+                    'user_log_table' => 'staff',
                     'user_log_table_name' => 'Nhân viên',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
@@ -447,7 +447,7 @@ Class staffController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'user',
+                    'user_log_table' => 'staff',
                     'user_log_table_name' => 'Nhân viên',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),

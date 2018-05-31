@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2018 at 09:02 PM
+-- Generation Time: May 31, 2018 at 07:49 PM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 7.1.17
 
@@ -21,6 +21,248 @@ SET time_zone = "+00:00";
 --
 -- Database: `tms`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `country`
+--
+
+CREATE TABLE `country` (
+  `country_id` int(11) NOT NULL,
+  `country_name` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `country`
+--
+
+INSERT INTO `country` (`country_id`, `country_name`) VALUES
+(1, 'Ả Rập Saudi'),
+(2, 'Afghanistan'),
+(3, 'Ai Cập'),
+(4, 'Albania'),
+(5, 'Algeria'),
+(6, 'Ấn Độ'),
+(7, 'Andorra'),
+(8, 'Angola'),
+(9, 'Anguilla'),
+(10, 'Anh Quốc'),
+(11, 'Antigua và Barbuda'),
+(12, 'Áo'),
+(13, 'Argentina'),
+(14, 'Armenia'),
+(15, 'Aruba'),
+(16, 'Azerbaijan'),
+(17, 'Ba Lan'),
+(18, 'Bahamas'),
+(19, 'Bahrain'),
+(20, 'Bangladesh'),
+(21, 'Barbados'),
+(22, 'Belarus'),
+(23, 'Belize'),
+(24, 'Benin'),
+(25, 'Bermuda'),
+(26, 'Bhutan'),
+(27, 'Bỉ'),
+(28, 'Bờ Biển Ngà'),
+(29, 'Bồ Đào Nha'),
+(30, 'Bolivia'),
+(31, 'Bosna và Hercegovina'),
+(32, 'Botswana'),
+(33, 'Brazil'),
+(34, 'Brunei'),
+(35, 'Bulgaria'),
+(36, 'Burkina Faso'),
+(37, 'Burundi'),
+(38, 'Các tiểu vương quốc Ả rập thống nhất (UEA)'),
+(39, 'Cameroon'),
+(40, 'Campuchia'),
+(41, 'Canada'),
+(42, 'Cape Verde'),
+(43, 'CHDC Congo'),
+(44, 'CHDCND Triều Tiên'),
+(45, 'Chile'),
+(46, 'CHND Trung Hoa'),
+(47, 'Colombia'),
+(48, 'Comoros'),
+(49, 'Cộng hòa Congo'),
+(50, 'Cộng hòa Dominica'),
+(51, 'Cộng hòa Macedonia'),
+(52, 'Cộng hòa Séc'),
+(53, 'Cộng hòa Trung Phi'),
+(54, 'Costa Rica'),
+(55, 'Croatia'),
+(56, 'Cuba'),
+(57, 'Curaçao'),
+(58, 'Đan Mạch'),
+(59, 'Đảo Man'),
+(60, 'Djibouti'),
+(61, 'Dominica'),
+(62, 'Đông Timor'),
+(63, 'Đức'),
+(64, 'Ecuador'),
+(65, 'El Salvador'),
+(66, 'Eritrea'),
+(67, 'Estonia'),
+(68, 'Ethiopia'),
+(69, 'Fiji'),
+(70, 'Gabon'),
+(71, 'Gambia'),
+(72, 'Ghana'),
+(73, 'Gibraltar'),
+(74, 'Greenland'),
+(75, 'Grenada'),
+(76, 'Gruzian11'),
+(77, 'Guam'),
+(78, 'Guatemala'),
+(79, 'Guernsey'),
+(80, 'Guinea'),
+(81, 'Guinea Xích Đạo'),
+(82, 'Guinea-Bissau'),
+(83, 'Guyana'),
+(84, 'Hà Lan'),
+(85, 'Haiti'),
+(86, 'Hàn Quốc'),
+(87, 'Hoa Kỳ'),
+(88, 'Honduras'),
+(89, 'Hồng Kông'),
+(90, 'Hungary'),
+(91, 'Hy Lạp'),
+(92, 'Iceland'),
+(93, 'Indonesia'),
+(94, 'Iran'),
+(95, 'Iraq'),
+(96, 'Ireland'),
+(97, 'Israel'),
+(98, 'Jamaica'),
+(99, 'Jersey'),
+(100, 'Jordan'),
+(101, 'Kazakhstan'),
+(102, 'Kenya'),
+(103, 'Kiribati'),
+(104, 'Kuwait'),
+(105, 'Kyrgyzstan'),
+(106, 'Lào'),
+(107, 'Latvia'),
+(108, 'Lesotho'),
+(109, 'Liban'),
+(110, 'Liberia'),
+(111, 'Libya'),
+(112, 'Liechtenstein'),
+(113, 'Liên bang Micronesia'),
+(114, 'Liên Bang Nga'),
+(115, 'Litva'),
+(116, 'Luxembourg'),
+(117, 'Macau'),
+(118, 'Madagascar'),
+(119, 'Malawi'),
+(120, 'Malaysia'),
+(121, 'Maldives'),
+(122, 'Mali'),
+(123, 'Malta'),
+(124, 'Maroc'),
+(125, 'Mauritania'),
+(126, 'Mauritius'),
+(127, 'Mexico'),
+(128, 'Moldova'),
+(129, 'Monaco'),
+(130, 'Mông Cổ'),
+(131, 'Montenegro'),
+(132, 'Montserrat'),
+(133, 'Mozambique'),
+(134, 'Myanmar'),
+(135, 'Na Uy'),
+(136, 'Nam Phi'),
+(137, 'Nam Sudan'),
+(138, 'Namibia'),
+(139, 'Nauru'),
+(140, 'Nepal'),
+(141, 'New Zealand'),
+(142, 'Nhật Bản'),
+(143, 'Nicaragua'),
+(144, 'Niger'),
+(145, 'Nigeria'),
+(146, 'Niue'),
+(147, 'Oman'),
+(148, 'Pakistan'),
+(149, 'Palau'),
+(150, 'Panama'),
+(151, 'Papua New Guinea'),
+(152, 'Paraguay'),
+(153, 'Peru'),
+(154, 'Phần Lan'),
+(155, 'Pháp'),
+(156, 'Philippines'),
+(157, 'Puerto Rico'),
+(158, 'Qatar'),
+(159, 'Quần đảo Bắc Mariana'),
+(160, 'Quần đảo Cayman'),
+(161, 'Quần đảo Cook'),
+(162, 'Quần đảo Falkland'),
+(163, 'Quần đảo Faroe'),
+(164, 'Quần đảo Marshall'),
+(165, 'Quần đảo Pitcairn'),
+(166, 'Quần đảo Solomon'),
+(167, 'Quần đảo Turks và Caicos'),
+(168, 'Quần đảo Virgin thuộc Anh'),
+(169, 'Quần đảo Virgin thuộc Mỹ'),
+(170, 'Romania'),
+(171, 'Rwanda'),
+(172, 'Saint Helena'),
+(173, 'Saint Kitts và Nevis'),
+(174, 'Saint Lucia'),
+(175, 'Saint Vincent và Grenadines'),
+(176, 'Samoa'),
+(177, 'Samoa thuộc Mỹ'),
+(178, 'San Marino'),
+(179, 'São Tomé và Príncipe'),
+(180, 'Senegal'),
+(181, 'Serbia'),
+(182, 'Seychelles'),
+(183, 'Sierra Leone'),
+(184, 'Singapore'),
+(185, 'Sint Maarten'),
+(186, 'Síp'),
+(187, 'Slovakia'),
+(188, 'Slovenia'),
+(189, 'Somalia'),
+(190, 'Sri Lanka'),
+(191, 'Sudan'),
+(192, 'Suriname'),
+(193, 'Swaziland'),
+(194, 'Syria'),
+(195, 'Tajikistan'),
+(196, 'Tanzania'),
+(197, 'Tây Ban Nha'),
+(198, 'Tây Sahara'),
+(199, 'Tchad'),
+(200, 'Thái Lan'),
+(201, 'Thổ Nhĩ Kỳ'),
+(202, 'Thụy Điển'),
+(203, 'Thụy Sĩ'),
+(204, 'Togo'),
+(205, 'Tokelau'),
+(206, 'Tonga'),
+(207, 'Trinidad và Tobago'),
+(208, 'Trung Hoa Dân Quốc (Đài Loan)'),
+(209, 'Tunisia'),
+(210, 'Turkmenistan'),
+(211, 'Tuvalu'),
+(212, 'Úc'),
+(213, 'Uganda'),
+(214, 'Ukraina'),
+(215, 'Uruguay'),
+(216, 'Uzbekistan'),
+(217, 'Vanuatu'),
+(218, 'Vatican'),
+(219, 'Venezuela'),
+(220, 'Việt Nam'),
+(221, 'Vùng lãnh thổ Palestine'),
+(222, 'Ý'),
+(223, 'Yemen'),
+(224, 'Zambia'),
+(225, 'Zimbabwe');
 
 -- --------------------------------------------------------
 
@@ -70,6 +312,53 @@ INSERT INTO `info` (`info_id`, `info_company`, `info_mst`, `info_address`, `info
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `port`
+--
+
+CREATE TABLE `port` (
+  `port_id` int(11) NOT NULL,
+  `port_name` varchar(50) DEFAULT NULL,
+  `port_province` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `port`
+--
+
+INSERT INTO `port` (`port_id`, `port_name`, `port_province`) VALUES
+(1, 'Cảng An Thới', 33),
+(2, 'Cảng Cam Ranh', 32),
+(3, 'Cảng Cái Lân', 49),
+(4, 'Cảng Cát Lái', 31),
+(5, 'Cảng Cái Mép', 2),
+(6, 'Cảng Cửa Lò', 41),
+(7, 'Cảng Cửa Việt', 50),
+(8, 'Cảng Diêm Điền', 54),
+(9, 'Cảng Dung Quất', 48),
+(10, 'Cảng Đà Nẵng', 15),
+(11, 'Cảng Đình Vũ', 27),
+(12, 'Cảng Nha Trang', 32),
+(13, 'Cảng Hải Phòng', 27),
+(14, 'Cảng Hiệp Phước', 31),
+(15, 'Cảng Hòn Gai', 49),
+(16, 'Cảng Kỳ Hà', 47),
+(17, 'Cảng Nghi Sơn', 56),
+(18, 'Cảng Ninh Phúc', 42),
+(19, 'Cảng Quy Nhơn', 9),
+(20, 'Cảng Sa Kỳ', 48),
+(21, 'Cảng Sài Gòn', 31),
+(22, 'Cảng Sơn Dương', 25),
+(23, 'Cảng Tân Cảng Sài Gòn', 31),
+(24, 'Cảng Thị Vải', 2),
+(25, 'Cảng Tiên Sa', 15),
+(26, 'Cảng Vân Phong', 32),
+(27, 'Cảng Vũng Áng', 25),
+(28, 'Cảng Vũng Rô', 45),
+(29, 'Cảng Vũng Tàu', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `position`
 --
 
@@ -85,6 +374,86 @@ CREATE TABLE `position` (
 
 INSERT INTO `position` (`position_id`, `position_code`, `position_name`) VALUES
 (1, 'GD', 'Giám đốc');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `province`
+--
+
+CREATE TABLE `province` (
+  `province_id` int(11) NOT NULL,
+  `province_name` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `province`
+--
+
+INSERT INTO `province` (`province_id`, `province_name`) VALUES
+(1, 'An Giang'),
+(2, 'Bà Rịa - Vũng Tàu'),
+(3, 'Bạc Liêu'),
+(4, 'Bắc Kạn'),
+(5, 'Bắc Giang'),
+(6, 'Bắc Ninh'),
+(7, 'Bến Tre'),
+(8, 'Bình Dương'),
+(9, 'Bình Định'),
+(10, 'Bình Phước'),
+(11, 'Bình Thuận'),
+(12, 'Cà Mau'),
+(13, 'Cao Bằng'),
+(14, 'Cần Thơ'),
+(15, 'Đà Nẵng'),
+(16, 'Đắk Lắk'),
+(17, 'Đắk Nông'),
+(18, 'Điện Biên'),
+(19, 'Đồng Nai'),
+(20, 'Đồng Tháp'),
+(21, 'Gia Lai'),
+(22, 'Hà Giang'),
+(23, 'Hà Nam'),
+(24, 'Hà Nội'),
+(25, 'Hà Tĩnh'),
+(26, 'Hải Dương'),
+(27, 'Hải Phòng'),
+(28, 'Hậu Giang'),
+(29, 'Hòa Bình'),
+(30, 'Hưng Yên'),
+(31, 'TP. Hồ Chí Minh'),
+(32, 'Khánh Hòa'),
+(33, 'Kiên Giang'),
+(34, 'Kon Tum'),
+(35, 'Lai Châu'),
+(36, 'Lâm Đồng'),
+(37, 'Lạng Sơn'),
+(38, 'Lào Cai'),
+(39, 'Long An'),
+(40, 'Nam Định'),
+(41, 'Nghệ An'),
+(42, 'Ninh Bình'),
+(43, 'Ninh Thuận'),
+(44, 'Phú Thọ'),
+(45, 'Phú Yên'),
+(46, 'Quảng Bình'),
+(47, 'Quảng Nam'),
+(48, 'Quảng Ngãi'),
+(49, 'Quảng Ninh'),
+(50, 'Quảng Trị'),
+(51, 'Sóc Trăng'),
+(52, 'Sơn La'),
+(53, 'Tây Ninh'),
+(54, 'Thái Bình'),
+(55, 'Thái Nguyên'),
+(56, 'Thanh Hóa'),
+(57, 'Thừa Thiên Huế'),
+(58, 'Tiền Giang'),
+(59, 'Trà Vinh'),
+(60, 'Tuyên Quang'),
+(61, 'Vĩnh Long'),
+(62, 'Vĩnh Phúc'),
+(63, 'Yên Bái');
 
 -- --------------------------------------------------------
 
@@ -114,6 +483,26 @@ INSERT INTO `role` (`role_id`, `role_name`, `role_status`, `role_permission`, `r
 (7, 'Nhân sự', 1, '[\"salary\",\"salarybonus\",\"steersman\",\"staff\",\"department\",\"salary\",\"salary\"]', '{\"salary\":\"salary\",\"salarybonus\":\"salarybonus\",\"steersman\":\"steersman\",\"staff\":\"staff\",\"department\":\"department\"}'),
 (8, 'Vật tư, kỹ thuật', 1, '[\"importstock\",\"exportstock\",\"house\",\"sparepart\",\"repair\",\"roadcost\",\"checkingcost\",\"insurancecost\",\"sparevehicle\",\"sparevehiclelist\",\"sparedrap\",\"stock\",\"used\",\"spareparttracking\",\"importstock\",\"exportstock\",\"stock\"]', '{\"importstock\":\"importstock\",\"exportstock\":\"exportstock\",\"house\":\"house\",\"sparepart\":\"sparepart\",\"repair\":\"repair\",\"roadcost\":\"roadcost\",\"checkingcost\":\"checkingcost\",\"insurancecost\":\"insurancecost\",\"sparevehicle\":\"sparevehicle\",\"sparevehiclelist\":\"sparevehiclelist\",\"sparedrap\":\"sparedrap\",\"stock\":\"stock\",\"used\":\"used\",\"spareparttracking\":\"spareparttracking\"}'),
 (9, 'Tài xế', 1, '[\"salary\",\"salary\",\"salary\"]', '{\"salary\":\"salary\"}');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shipping`
+--
+
+CREATE TABLE `shipping` (
+  `shipping_id` int(11) NOT NULL,
+  `shipping_name` varchar(50) DEFAULT NULL,
+  `shipping_country` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `shipping`
+--
+
+INSERT INTO `shipping` (`shipping_id`, `shipping_name`, `shipping_country`) VALUES
+(1, 'MSC', 222),
+(2, 'CMA-CGM', 155);
 
 -- --------------------------------------------------------
 
@@ -151,6 +540,29 @@ INSERT INTO `staff` (`staff_id`, `staff_code`, `staff_name`, `staff_address`, `s
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `unit`
+--
+
+CREATE TABLE `unit` (
+  `unit_id` int(11) NOT NULL,
+  `unit_name` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `unit`
+--
+
+INSERT INTO `unit` (`unit_id`, `unit_name`) VALUES
+(1, 'KG'),
+(2, 'Tấn'),
+(3, 'Cont 20'),
+(4, 'Cont 40'),
+(5, 'Cont 45'),
+(6, 'Chuyến');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -174,7 +586,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `user_email`, `create_time`, `role`, `user_lock`, `user_group`, `user_dept`, `permission`, `permission_action`, `lasted_online`) VALUES
-(1, 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 'ngoton007@yahoo.com', 1527218218, 1, 0, NULL, NULL, '[\"all\"]', '[\"all\"]', 1527598233),
+(1, 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 'ngoton007@yahoo.com', 1527218218, 1, 0, NULL, NULL, '[\"all\"]', '[\"all\"]', 1527773923),
 (3, 'user', '81dc9bdb52d04dc20036dbd8313ed055', 'ngoton008@yahoo.com', 1527444158, 2, NULL, NULL, NULL, '[\"oil\",\"road\",\"warehouse\",\"customer\",\"vehicle\",\"romooc\",\"place\",\"route\",\"salary\",\"salarybonus\",\"steersman\",\"staff\",\"department\",\"importstock\",\"exportstock\",\"house\",\"sparepart\",\"repair\",\"roadcost\",\"checkingcost\",\"insurancecost\",\"sparevehicle\",\"sparevehiclelist\",\"sparedrap\",\"stock\",\"used\",\"spareparttracking\",\"shipment\",\"newshipment\",\"shipmenttemp\",\"driver\",\"vehiclework\",\"vehicleromooc\",\"vehicleromooc\",\"tollcost\",\"marketing\",\"shipmentlist\",\"loanlist\",\"sell\",\"receiptvoucher\",\"paymentvoucher\",\"internaltransfer\",\"bankbalance\",\"receivable\",\"payable\",\"loan\",\"importstock\",\"exportstock\",\"stock\",\"vat\",\"vat\",\"exvat\",\"sales\",\"cost\",\"noinvoice\",\"tolls\",\"salary\",\"salary\",\"repairsalary\",\"costlist\",\"bank\",\"account\",\"trucking\",\"customership\",\"truckinglist\",\"repairlist\",\"roadcostlist\",\"checkingcostlist\",\"insurancecostlist\",\"oilreport\",\"advance\",\"commission\",\"quantity\",\"profit\",\"round\",\"officecost\",\"vehicleanalytics\",\"report\"]', '{\"oil\":\"oil\",\"road\":\"road\",\"warehouse\":\"warehouse\",\"customer\":\"customer\",\"vehicle\":\"vehicle\",\"romooc\":\"romooc\",\"place\":\"place\",\"route\":\"route\",\"salary\":\"salary\",\"salarybonus\":\"salarybonus\",\"steersman\":\"steersman\",\"staff\":\"staff\",\"department\":\"department\",\"importstock\":\"importstock\",\"exportstock\":\"exportstock\",\"house\":\"house\",\"sparepart\":\"sparepart\",\"repair\":\"repair\",\"roadcost\":\"roadcost\",\"checkingcost\":\"checkingcost\",\"insurancecost\":\"insurancecost\",\"sparevehicle\":\"sparevehicle\",\"sparevehiclelist\":\"sparevehiclelist\",\"sparedrap\":\"sparedrap\",\"stock\":\"stock\",\"used\":\"used\",\"spareparttracking\":\"spareparttracking\",\"shipment\":\"shipment\",\"newshipment\":\"newshipment\",\"shipmenttemp\":\"shipmenttemp\",\"driver\":\"driver\",\"vehiclework\":\"vehiclework\",\"vehicleromooc\":\"vehicleromooc\",\"tollcost\":\"tollcost\",\"marketing\":\"marketing\",\"shipmentlist\":\"shipmentlist\",\"loanlist\":\"loanlist\",\"sell\":\"sell\",\"receiptvoucher\":\"receiptvoucher\",\"paymentvoucher\":\"paymentvoucher\",\"internaltransfer\":\"internaltransfer\",\"bankbalance\":\"bankbalance\",\"receivable\":\"receivable\",\"payable\":\"payable\",\"loan\":\"loan\",\"vat\":\"vat\",\"exvat\":\"exvat\",\"sales\":\"sales\",\"cost\":\"cost\",\"noinvoice\":\"noinvoice\",\"tolls\":\"tolls\",\"repairsalary\":\"repairsalary\",\"costlist\":\"costlist\",\"bank\":\"bank\",\"account\":\"account\",\"trucking\":\"trucking\",\"customership\":\"customership\",\"truckinglist\":\"truckinglist\",\"repairlist\":\"repairlist\",\"roadcostlist\":\"roadcostlist\",\"checkingcostlist\":\"checkingcostlist\",\"insurancecostlist\":\"insurancecostlist\",\"oilreport\":\"oilreport\",\"advance\":\"advance\",\"commission\":\"commission\",\"quantity\":\"quantity\",\"profit\":\"profit\",\"round\":\"round\",\"officecost\":\"officecost\",\"vehicleanalytics\":\"vehicleanalytics\",\"report\":\"report\"}', 1527445758);
 
 -- --------------------------------------------------------
@@ -247,11 +659,26 @@ INSERT INTO `user_log` (`user_log_id`, `user_log`, `user_log_date`, `user_log_ta
 (46, 1, 1527618782, 'staff', 'Cập nhật', '{\"staff_code\":\"NV01\",\"staff_name\":\"Nguy\\u1ec5n V\\u0103n A\",\"staff_address\":\"\\u0110\\u1ed3ng Nai\",\"staff_cmnd\":\"121323232\",\"staff_birthday\":1525107600,\"staff_phone\":\"0902 085 911\",\"staff_email\":\"a@a.com\",\"staff_bank_account\":\"12323\",\"staff_bank\":\"ACB\",\"staff_gender\":\"0\",\"staff_position\":\"1\",\"staff_department\":\"3\",\"staff_start_date\":1526317200,\"staff_end_date\":1527613200,\"staff_account\":\"0\",\"staff_gplx\":\"1212232323\"}', 'Nhân viên'),
 (47, 1, 1527618862, 'staff', 'Cập nhật', '{\"staff_code\":\"NV01\",\"staff_name\":\"Nguy\\u1ec5n V\\u0103n A\",\"staff_address\":\"\\u0110\\u1ed3ng Nai\",\"staff_cmnd\":\"121323232\",\"staff_birthday\":1525107600,\"staff_phone\":\"0902 085 911\",\"staff_email\":\"a@a.com\",\"staff_bank_account\":\"12323\",\"staff_bank\":\"ACB\",\"staff_gender\":\"0\",\"staff_position\":\"1\",\"staff_department\":\"3\",\"staff_start_date\":1526317200,\"staff_end_date\":1527613200,\"staff_account\":\"0\",\"staff_gplx\":\"1212232323\"}', 'Nhân viên'),
 (48, 1, 1527620504, 'staff', 'Cập nhật', '{\"staff_code\":\"NV01\",\"staff_name\":\"Nguy\\u1ec5n V\\u0103n A\",\"staff_address\":\"\\u0110\\u1ed3ng Nai\",\"staff_cmnd\":\"121323232\",\"staff_birthday\":1525107600,\"staff_phone\":\"0902 085 911\",\"staff_email\":\"a@a.com\",\"staff_bank_account\":\"12323\",\"staff_bank\":\"ACB\",\"staff_gender\":\"0\",\"staff_position\":\"1\",\"staff_department\":\"3\",\"staff_start_date\":1526317200,\"staff_end_date\":1527613200,\"staff_account\":\"0\",\"staff_gplx\":\"1212232323\"}', 'Nhân viên'),
-(49, 1, 1527620518, 'staff', 'Cập nhật', '{\"staff_code\":\"NV01\",\"staff_name\":\"Nguy\\u1ec5n V\\u0103n A\",\"staff_address\":\"\\u0110\\u1ed3ng Nai\",\"staff_cmnd\":\"121323232\",\"staff_birthday\":1525107600,\"staff_phone\":\"0902 085 911\",\"staff_email\":\"a@a.com\",\"staff_bank_account\":\"12323\",\"staff_bank\":\"ACB\",\"staff_gender\":\"0\",\"staff_position\":\"1\",\"staff_department\":\"3\",\"staff_start_date\":1526317200,\"staff_end_date\":null,\"staff_account\":\"0\",\"staff_gplx\":\"1212232323\"}', 'Nhân viên');
+(49, 1, 1527620518, 'staff', 'Cập nhật', '{\"staff_code\":\"NV01\",\"staff_name\":\"Nguy\\u1ec5n V\\u0103n A\",\"staff_address\":\"\\u0110\\u1ed3ng Nai\",\"staff_cmnd\":\"121323232\",\"staff_birthday\":1525107600,\"staff_phone\":\"0902 085 911\",\"staff_email\":\"a@a.com\",\"staff_bank_account\":\"12323\",\"staff_bank\":\"ACB\",\"staff_gender\":\"0\",\"staff_position\":\"1\",\"staff_department\":\"3\",\"staff_start_date\":1526317200,\"staff_end_date\":null,\"staff_account\":\"0\",\"staff_gplx\":\"1212232323\"}', 'Nhân viên'),
+(50, 1, 1527787021, 'shipping', 'Thêm mới', '{\"shipping_country\":\"222\",\"shipping_name\":\"MSC\"}', 'Hãng tàu'),
+(51, 1, 1527787081, 'shipping', 'Thêm mới', '{\"shipping_country\":\"155\",\"shipping_name\":\"CMA-CMG\"}', 'Hãng tàu'),
+(52, 1, 1527787094, 'shipping', 'Cập nhật', '{\"shipping_country\":\"155\",\"shipping_name\":\"CMA-CGM\"}', 'Hãng tàu'),
+(53, 1, 1527788809, 'unit', 'Thêm mới', '{\"unit_name\":\"KG\"}', 'Đơn vị tính'),
+(54, 1, 1527788818, 'unit', 'Thêm mới', '{\"unit_name\":\"T\\u1ea5n\"}', 'Đơn vị tính'),
+(55, 1, 1527788833, 'unit', 'Thêm mới', '{\"unit_name\":\"Cont 20\"}', 'Đơn vị tính'),
+(56, 1, 1527788839, 'unit', 'Thêm mới', '{\"unit_name\":\"Cont 40\"}', 'Đơn vị tính'),
+(57, 1, 1527788845, 'unit', 'Thêm mới', '{\"unit_name\":\"Cont 45\"}', 'Đơn vị tính'),
+(58, 1, 1527788896, 'unit', 'Thêm mới', '{\"unit_name\":\"Chuy\\u1ebfn\"}', 'Đơn vị tính');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `country`
+--
+ALTER TABLE `country`
+  ADD PRIMARY KEY (`country_id`);
 
 --
 -- Indexes for table `department`
@@ -266,10 +693,22 @@ ALTER TABLE `info`
   ADD PRIMARY KEY (`info_id`);
 
 --
+-- Indexes for table `port`
+--
+ALTER TABLE `port`
+  ADD PRIMARY KEY (`port_id`);
+
+--
 -- Indexes for table `position`
 --
 ALTER TABLE `position`
   ADD PRIMARY KEY (`position_id`);
+
+--
+-- Indexes for table `province`
+--
+ALTER TABLE `province`
+  ADD PRIMARY KEY (`province_id`);
 
 --
 -- Indexes for table `role`
@@ -278,10 +717,22 @@ ALTER TABLE `role`
   ADD PRIMARY KEY (`role_id`);
 
 --
+-- Indexes for table `shipping`
+--
+ALTER TABLE `shipping`
+  ADD PRIMARY KEY (`shipping_id`);
+
+--
 -- Indexes for table `staff`
 --
 ALTER TABLE `staff`
   ADD PRIMARY KEY (`staff_id`);
+
+--
+-- Indexes for table `unit`
+--
+ALTER TABLE `unit`
+  ADD PRIMARY KEY (`unit_id`);
 
 --
 -- Indexes for table `user`
@@ -300,6 +751,12 @@ ALTER TABLE `user_log`
 --
 
 --
+-- AUTO_INCREMENT for table `country`
+--
+ALTER TABLE `country`
+  MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
+
+--
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
@@ -312,10 +769,22 @@ ALTER TABLE `info`
   MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `port`
+--
+ALTER TABLE `port`
+  MODIFY `port_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
 -- AUTO_INCREMENT for table `position`
 --
 ALTER TABLE `position`
-  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `province`
+--
+ALTER TABLE `province`
+  MODIFY `province_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -324,10 +793,22 @@ ALTER TABLE `role`
   MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
+-- AUTO_INCREMENT for table `shipping`
+--
+ALTER TABLE `shipping`
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
   MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `unit`
+--
+ALTER TABLE `unit`
+  MODIFY `unit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -339,7 +820,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `user_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `user_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

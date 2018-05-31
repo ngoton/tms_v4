@@ -1,6 +1,6 @@
 <?php
 
-Class departmentController Extends baseController {
+Class shippingController Extends baseController {
 
     public function index() {
 
@@ -20,7 +20,7 @@ Class departmentController Extends baseController {
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý phòng ban';
+        $this->view->data['title'] = 'Quản lý hãng tàu';
 
 
 
@@ -40,7 +40,7 @@ Class departmentController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'department_code';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'shipping_name';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
@@ -55,7 +55,7 @@ Class departmentController Extends baseController {
 
 
 
-        $department_model = $this->model->get('departmentModel');
+        $shipping_model = $this->model->get('shippingModel');
 
         $sonews = $limit;
 
@@ -63,9 +63,9 @@ Class departmentController Extends baseController {
 
         $pagination_stages = 2;
 
-        
+        $join = array('table'=>'country','where'=>'shipping_country=country_id');
 
-        $tongsodong = count($department_model->getAllDepartment());
+        $tongsodong = count($shipping_model->getAllShipping(null,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -105,7 +105,7 @@ Class departmentController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( department_code LIKE "%'.$keyword.'%" OR department_name LIKE "%'.$keyword.'%" )';
+            $search = '( shipping_name LIKE "%'.$keyword.'%" OR country_name LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -113,35 +113,31 @@ Class departmentController Extends baseController {
 
 
 
-        $this->view->data['departments'] = $department_model->getAllDepartment($data);
+        $this->view->data['shippings'] = $shipping_model->getAllShipping($data,$join);
 
 
 
-        return $this->view->show('department/index');
+        return $this->view->show('shipping/index');
 
     }
 
 
-    public function adddepartment(){
-        $department_model = $this->model->get('departmentModel');
+    public function addshipping(){
+        $shipping_model = $this->model->get('shippingModel');
 
-        if (isset($_POST['department_code'])) {
-            if($department_model->getDepartmentByWhere(array('department_code'=>trim($_POST['department_code'])))){
-                echo 'Mã phòng ban đã tồn tại';
-                return false;
-            }
-            if($department_model->getDepartmentByWhere(array('department_name'=>trim($_POST['department_name'])))){
-                echo 'Tên phòng ban đã tồn tại';
+        if (isset($_POST['shipping_name'])) {
+            if($shipping_model->getShippingByWhere(array('shipping_name'=>trim($_POST['shipping_name'])))){
+                echo 'Tên hãng tàu đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'department_code' => trim($_POST['department_code']),
-                'department_name' => trim($_POST['department_name']),
+                'shipping_country' => trim($_POST['shipping_country']),
+                'shipping_name' => trim($_POST['shipping_name']),
             );
-            $department_model->createDepartment($data);
+            $shipping_model->createshipping($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$department_model->getLastDepartment()->department_id."|department|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$shipping_model->getLastShipping()->shipping_id."|shipping|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -149,8 +145,8 @@ Class departmentController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'department',
-                'user_log_table_name' => 'Phòng ban',
+                'user_log_table' => 'shipping',
+                'user_log_table_name' => 'Hãng tàu',
                 'user_log_action' => 'Thêm mới',
                 'user_log_data' => json_encode($data),
             );
@@ -173,39 +169,39 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->shipping) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
 
         }
 
-        $this->view->data['title'] = 'Thêm mới phòng ban';
+        $this->view->data['title'] = 'Thêm mới hãng tàu';
 
-        return $this->view->show('department/add');
+        $country = $this->model->get('countryModel');
+
+        $this->view->data['countrys'] = $country->getAllCountry();
+
+        return $this->view->show('shipping/add');
     }
 
-    public function editdepartment(){
-        $department_model = $this->model->get('departmentModel');
+    public function editshipping(){
+        $shipping_model = $this->model->get('shippingModel');
 
-        if (isset($_POST['department_id'])) {
-            $id = $_POST['department_id'];
-            if($department_model->getAllDepartmentByWhere($id.' AND department_code = "'.trim($_POST['department_code']).'"')){
-                echo 'Mã phòng ban đã tồn tại';
-                return false;
-            }
-            if($department_model->getAllDepartmentByWhere($id.' AND department_name = "'.trim($_POST['department_name']).'"')){
-                echo 'Tên phòng ban đã tồn tại';
+        if (isset($_POST['shipping_id'])) {
+            $id = $_POST['shipping_id'];
+            if($shipping_model->getAllShippingByWhere($id.' AND shipping_name = "'.trim($_POST['shipping_name']).'"')){
+                echo 'Tên hãng tàu đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'department_code' => trim($_POST['department_code']),
-                'department_name' => trim($_POST['department_name']),
+                'shipping_country' => trim($_POST['shipping_country']),
+                'shipping_name' => trim($_POST['shipping_name']),
             );
-            $department_model->updateDepartment($data,array('department_id'=>$id));
+            $shipping_model->updateShipping($data,array('shipping_id'=>$id));
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|department|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|shipping|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -213,8 +209,8 @@ Class departmentController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'department',
-                'user_log_table_name' => 'Phòng ban',
+                'user_log_table' => 'shipping',
+                'user_log_table_name' => 'Hãng tàu',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -236,7 +232,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->shipping) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -244,26 +240,29 @@ Class departmentController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('department');
+            $this->view->redirect('shipping');
 
         }
 
-        $this->view->data['title'] = 'Cập nhật phòng ban';
+        $this->view->data['title'] = 'Cập nhật hãng tàu';
 
-        $department_model = $this->model->get('departmentModel');
+        $shipping_model = $this->model->get('shippingModel');
 
-        $department_data = $department_model->getDepartment($id);
+        $shipping_data = $shipping_model->getShipping($id);
 
-        $this->view->data['department_data'] = $department_data;
+        $this->view->data['shipping_data'] = $shipping_data;
 
-        if (!$department_data) {
+        if (!$shipping_data) {
 
-            $this->view->redirect('department');
+            $this->view->redirect('shipping');
 
         }
 
+        $country = $this->model->get('countryModel');
 
-        return $this->view->show('department/edit');
+        $this->view->data['countrys'] = $country->getAllCountry();
+
+        return $this->view->show('shipping/edit');
 
     }
 
@@ -278,7 +277,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->department) || json_decode($_SESSION['user_permission_action'])->department != "department") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->shipping) || json_decode($_SESSION['user_permission_action'])->shipping != "shipping") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -287,7 +286,7 @@ Class departmentController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $department_model = $this->model->get('departmentModel');
+            $shipping_model = $this->model->get('shippingModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -296,10 +295,10 @@ Class departmentController Extends baseController {
 
                 foreach ($datas as $data) {
 
-                    $department_model->deleteDepartment($data);
+                    $shipping_model->deleteShipping($data);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|department|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|shipping|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -311,8 +310,8 @@ Class departmentController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'department',
-                    'user_log_table_name' => 'Phòng ban',
+                    'user_log_table' => 'shipping',
+                    'user_log_table_name' => 'Hãng tàu',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -326,17 +325,17 @@ Class departmentController Extends baseController {
 
             else{
 
-                $department_model->deleteDepartment($_POST['data']);
+                $shipping_model->deleteShipping($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|department|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|shipping|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'department',
-                    'user_log_table_name' => 'Phòng ban',
+                    'user_log_table' => 'shipping',
+                    'user_log_table_name' => 'Hãng tàu',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );
@@ -353,7 +352,7 @@ Class departmentController Extends baseController {
 
     }
 
-    public function importdepartment(){
+    public function importshipping(){
         if (isset($_FILES['import']['name'])) {
             $total = count($_FILES['import']['name']);
             for( $i=0 ; $i < $total ; $i++ ) {
@@ -373,7 +372,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->shipping) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -383,7 +382,7 @@ Class departmentController Extends baseController {
         $this->view->data['title'] = 'Nhập dữ liệu';
 
        
-        return $this->view->show('department/import');
+        return $this->view->show('shipping/import');
 
     }
 

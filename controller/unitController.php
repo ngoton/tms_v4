@@ -1,6 +1,6 @@
 <?php
 
-Class departmentController Extends baseController {
+Class unitController Extends baseController {
 
     public function index() {
 
@@ -20,7 +20,7 @@ Class departmentController Extends baseController {
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý phòng ban';
+        $this->view->data['title'] = 'Quản lý đơn vị tính';
 
 
 
@@ -40,7 +40,7 @@ Class departmentController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'department_code';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'unit_name';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
@@ -55,7 +55,7 @@ Class departmentController Extends baseController {
 
 
 
-        $department_model = $this->model->get('departmentModel');
+        $unit_model = $this->model->get('unitModel');
 
         $sonews = $limit;
 
@@ -65,7 +65,7 @@ Class departmentController Extends baseController {
 
         
 
-        $tongsodong = count($department_model->getAllDepartment());
+        $tongsodong = count($unit_model->getAllUnit());
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -105,7 +105,7 @@ Class departmentController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( department_code LIKE "%'.$keyword.'%" OR department_name LIKE "%'.$keyword.'%" )';
+            $search = '( unit_name LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -113,35 +113,30 @@ Class departmentController Extends baseController {
 
 
 
-        $this->view->data['departments'] = $department_model->getAllDepartment($data);
+        $this->view->data['units'] = $unit_model->getAllUnit($data);
 
 
 
-        return $this->view->show('department/index');
+        return $this->view->show('unit/index');
 
     }
 
 
-    public function adddepartment(){
-        $department_model = $this->model->get('departmentModel');
+    public function addunit(){
+        $unit_model = $this->model->get('unitModel');
 
-        if (isset($_POST['department_code'])) {
-            if($department_model->getDepartmentByWhere(array('department_code'=>trim($_POST['department_code'])))){
-                echo 'Mã phòng ban đã tồn tại';
-                return false;
-            }
-            if($department_model->getDepartmentByWhere(array('department_name'=>trim($_POST['department_name'])))){
-                echo 'Tên phòng ban đã tồn tại';
+        if (isset($_POST['unit_name'])) {
+            if($unit_model->getUnitByWhere(array('unit_name'=>trim($_POST['unit_name'])))){
+                echo 'Tên đơn vị tính đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'department_code' => trim($_POST['department_code']),
-                'department_name' => trim($_POST['department_name']),
+                'unit_name' => trim($_POST['unit_name']),
             );
-            $department_model->createDepartment($data);
+            $unit_model->createunit($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$department_model->getLastDepartment()->department_id."|department|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$unit_model->getLastUnit()->unit_id."|unit|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -149,8 +144,8 @@ Class departmentController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'department',
-                'user_log_table_name' => 'Phòng ban',
+                'user_log_table' => 'unit',
+                'user_log_table_name' => 'Đơn vị tính',
                 'user_log_action' => 'Thêm mới',
                 'user_log_data' => json_encode($data),
             );
@@ -173,39 +168,34 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->unit) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
 
         }
 
-        $this->view->data['title'] = 'Thêm mới phòng ban';
+        $this->view->data['title'] = 'Thêm mới đơn vị tính';
 
-        return $this->view->show('department/add');
+        return $this->view->show('unit/add');
     }
 
-    public function editdepartment(){
-        $department_model = $this->model->get('departmentModel');
+    public function editunit(){
+        $unit_model = $this->model->get('unitModel');
 
-        if (isset($_POST['department_id'])) {
-            $id = $_POST['department_id'];
-            if($department_model->getAllDepartmentByWhere($id.' AND department_code = "'.trim($_POST['department_code']).'"')){
-                echo 'Mã phòng ban đã tồn tại';
-                return false;
-            }
-            if($department_model->getAllDepartmentByWhere($id.' AND department_name = "'.trim($_POST['department_name']).'"')){
-                echo 'Tên phòng ban đã tồn tại';
+        if (isset($_POST['unit_id'])) {
+            $id = $_POST['unit_id'];
+            if($unit_model->getAllUnitByWhere($id.' AND unit_name = "'.trim($_POST['unit_name']).'"')){
+                echo 'Tên đơn vị tính đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'department_code' => trim($_POST['department_code']),
-                'department_name' => trim($_POST['department_name']),
+                'unit_name' => trim($_POST['unit_name']),
             );
-            $department_model->updateDepartment($data,array('department_id'=>$id));
+            $unit_model->updateUnit($data,array('unit_id'=>$id));
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|department|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|unit|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -213,8 +203,8 @@ Class departmentController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'department',
-                'user_log_table_name' => 'Phòng ban',
+                'user_log_table' => 'unit',
+                'user_log_table_name' => 'Đơn vị tính',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -236,7 +226,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->unit) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -244,26 +234,26 @@ Class departmentController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('department');
+            $this->view->redirect('unit');
 
         }
 
-        $this->view->data['title'] = 'Cập nhật phòng ban';
+        $this->view->data['title'] = 'Cập nhật đơn vị tính';
 
-        $department_model = $this->model->get('departmentModel');
+        $unit_model = $this->model->get('unitModel');
 
-        $department_data = $department_model->getDepartment($id);
+        $unit_data = $unit_model->getUnit($id);
 
-        $this->view->data['department_data'] = $department_data;
+        $this->view->data['unit_data'] = $unit_data;
 
-        if (!$department_data) {
+        if (!$unit_data) {
 
-            $this->view->redirect('department');
+            $this->view->redirect('unit');
 
         }
 
 
-        return $this->view->show('department/edit');
+        return $this->view->show('unit/edit');
 
     }
 
@@ -278,7 +268,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->department) || json_decode($_SESSION['user_permission_action'])->department != "department") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->unit) || json_decode($_SESSION['user_permission_action'])->unit != "unit") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -287,7 +277,7 @@ Class departmentController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $department_model = $this->model->get('departmentModel');
+            $unit_model = $this->model->get('unitModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -296,10 +286,10 @@ Class departmentController Extends baseController {
 
                 foreach ($datas as $data) {
 
-                    $department_model->deleteDepartment($data);
+                    $unit_model->deleteUnit($data);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|department|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|unit|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -311,8 +301,8 @@ Class departmentController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'department',
-                    'user_log_table_name' => 'Phòng ban',
+                    'user_log_table' => 'unit',
+                    'user_log_table_name' => 'Đơn vị tính',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -326,17 +316,17 @@ Class departmentController Extends baseController {
 
             else{
 
-                $department_model->deleteDepartment($_POST['data']);
+                $unit_model->deleteUnit($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|department|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|unit|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'department',
-                    'user_log_table_name' => 'Phòng ban',
+                    'user_log_table' => 'unit',
+                    'user_log_table_name' => 'đơn vị tính',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );
@@ -353,7 +343,7 @@ Class departmentController Extends baseController {
 
     }
 
-    public function importdepartment(){
+    public function importunit(){
         if (isset($_FILES['import']['name'])) {
             $total = count($_FILES['import']['name']);
             for( $i=0 ; $i < $total ; $i++ ) {
@@ -373,7 +363,7 @@ Class departmentController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->department) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->unit) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -383,7 +373,7 @@ Class departmentController Extends baseController {
         $this->view->data['title'] = 'Nhập dữ liệu';
 
        
-        return $this->view->show('department/import');
+        return $this->view->show('unit/import');
 
     }
 
