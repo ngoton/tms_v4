@@ -70,14 +70,14 @@ Class staffController Extends baseController {
         );
 
         if (isset($_POST['filter'])) {
-            if ($_POST['staff_gender'] != '') {
-                $data['where'] .= ' AND staff_gender = '.$_POST['staff_gender'];
+            if (isset($_POST['staff_gender'])) {
+                $data['where'] .= ' AND staff_gender IN ('.implode(',',$_POST['staff_gender']).')';
             }
-            if ($_POST['staff_position'] != '') {
-                $data['where'] .= ' AND staff_position = '.$_POST['staff_position'];
+            if (isset($_POST['staff_position'])) {
+                $data['where'] .= ' AND staff_position IN ('.implode(',',$_POST['staff_position']).')';
             }
-            if ($_POST['staff_department'] != '') {
-                $data['where'] .= ' AND staff_department = '.$_POST['staff_department'];
+            if (isset($_POST['staff_department'])) {
+                $data['where'] .= ' AND staff_department IN ('.implode(',',$_POST['staff_department']).')';
             }
         }
 
@@ -119,14 +119,14 @@ Class staffController Extends baseController {
             );
 
         if (isset($_POST['filter'])) {
-            if ($_POST['staff_gender'] != '') {
-                $data['where'] .= ' AND staff_gender = '.$_POST['staff_gender'];
+            if (isset($_POST['staff_gender'])) {
+                $data['where'] .= ' AND staff_gender IN ('.implode(',',$_POST['staff_gender']).')';
             }
-            if ($_POST['staff_position'] != '') {
-                $data['where'] .= ' AND staff_position = '.$_POST['staff_position'];
+            if (isset($_POST['staff_position'])) {
+                $data['where'] .= ' AND staff_position IN ('.implode(',',$_POST['staff_position']).')';
             }
-            if ($_POST['staff_department'] != '') {
-                $data['where'] .= ' AND staff_department = '.$_POST['staff_department'];
+            if (isset($_POST['staff_department'])) {
+                $data['where'] .= ' AND staff_department IN ('.implode(',',$_POST['staff_department']).')';
             }
         }
 

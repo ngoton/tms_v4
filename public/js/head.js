@@ -17,6 +17,7 @@ $( document ).ajaxStart(function() {
 
   $('input[type="submit"]').attr('disabled',true);
   $('button[type="submit"]').attr('disabled',true);
+  $('.ui-dialog-buttonset .btn-success').attr('disabled',true);
 
 });
 
@@ -26,6 +27,7 @@ $( document ).ajaxComplete(function() {
 
   $('input[type="submit"]').attr('disabled',false);
   $('button[type="submit"]').attr('disabled',false);
+  $('.ui-dialog-buttonset .btn-success').attr('disabled',false);
 
 });
 
@@ -451,7 +453,7 @@ function open_dialog(url, title){
         if ($.ui && $.ui.dialog && !$.ui.dialog.prototype._allowInteractionRemapped && $(this).closest(".ui-dialog").length) {
             if ($.ui.dialog.prototype._allowInteraction) {
                 $.ui.dialog.prototype._allowInteraction = function (e) {
-                    if ($(e.target).closest('.ui-dialog, .ui-datepicker, .select2-drop').length) return true;
+                    if ($(e.target).closest('.ui-dialog, .ui-datepicker, .select2-drop, .ui-multiselect-menu').length) return true;
                     return ui_dialog_interaction.apply(this, arguments);
                 };
                 $.ui.dialog.prototype._allowInteractionRemapped = true;
