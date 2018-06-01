@@ -126,15 +126,72 @@ Class bonusController Extends baseController {
         $bonus_model = $this->model->get('bonusModel');
 
         if (isset($_POST['bonus_start_date'])) {
-            
+            if($bonus_model->getBonusByWhere(array('bonus_start_date'=>strtotime(str_replace('/', '-', $_POST['bonus_start_date']))))){
+                echo 'Thông tin đã tồn tại';
+                return false;
+            }
 
             $data = array(
                 'bonus_start_date' => strtotime(str_replace('/', '-', $_POST['bonus_start_date'])),
-                'bonus_end_date' => $_POST['bonus_end_date']!="dd/mm/yyyy"?strtotime(str_replace('/', '-', $_POST['bonus_end_date'])):null,
+                'bonus_end_date' => $_POST['bonus_end_date']!=""?strtotime(str_replace('/', '-', $_POST['bonus_end_date'])):null,
                 'bonus_plus' => str_replace(',', '', $_POST['bonus_plus']),
                 'bonus_minus' => str_replace(',', '', $_POST['bonus_minus']),
             );
-            $bonus_model->createBonus($data);
+
+            $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['bonus_start_date']).' -1 day')));
+
+            if ($data['bonus_end_date'] == null) {
+                $bonus_model->queryBonus('UPDATE bonus SET bonus_end_date = '.$ngaytruoc.' WHERE (bonus_end_date IS NULL OR bonus_end_date = 0)');
+                $bonus_model->createBonus($data);
+            }
+            else{
+                $dm1 = $bonus_model->queryBonus('SELECT * FROM bonus WHERE bonus_start_date <= '.$data['bonus_start_date'].' AND bonus_end_date <= '.$data['bonus_end_date'].' AND bonus_end_date >= '.$data['bonus_start_date'].' ORDER BY bonus_end_date ASC LIMIT 1');
+                $dm2 = $bonus_model->queryBonus('SELECT * FROM bonus WHERE bonus_end_date >= '.$data['bonus_end_date'].' AND bonus_start_date >= '.$data['bonus_start_date'].' AND bonus_start_date <= '.$data['bonus_end_date'].' ORDER BY bonus_end_date ASC LIMIT 1');
+                $dm3 = $bonus_model->queryBonus('SELECT * FROM bonus WHERE bonus_start_date <= '.$data['bonus_start_date'].' AND bonus_end_date >= '.$data['bonus_end_date'].' ORDER BY bonus_end_date ASC LIMIT 1');
+
+                if ($dm3) {
+                    foreach ($dm3 as $row) {
+                        $d = array(
+                            'bonus_end_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['bonus_start_date']).' -1 day'))),
+                            );
+                        $bonus_model->updateBonus($d,array('bonus_id'=>$row->bonus_id));
+
+                        $c = array(
+                            'bonus_plus' => $row->bonus_plus,
+                            'bonus_minus' => $row->bonus_minus,
+                            'bonus_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['bonus_end_date']).' +1 day'))),
+                            'bonus_end_date' => $row->bonus_end_date,
+                            );
+                        $bonus_model->createBonus($c);
+
+                    }
+                    $bonus_model->createBonus($data);
+
+                }
+                else if ($dm1 || $dm2) {
+                    if($dm1){
+                        foreach ($dm1 as $row) {
+                            $d = array(
+                                'bonus_end_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['bonus_start_date']).' -1 day'))),
+                                );
+                            $bonus_model->updateBonus($d,array('bonus_id'=>$row->bonus_id));
+                        }
+                    }
+                    if($dm2){
+                        foreach ($dm2 as $row) {
+                            $d = array(
+                                'bonus_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['bonus_end_date']).' +1 day'))),
+                                );
+                            $bonus_model->updateBonus($d,array('bonus_id'=>$row->bonus_id));
+                        }
+                    }
+                    $bonus_model->createBonus($data);
+                }
+                else{
+                    $bonus_model->createBonus($data);
+                }
+            }
+            
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$bonus_model->getLastBonus()->bonus_id."|bonus|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -188,11 +245,13 @@ Class bonusController Extends baseController {
             
             $data = array(
                 'bonus_start_date' => strtotime(str_replace('/', '-', $_POST['bonus_start_date'])),
-                'bonus_end_date' => $_POST['bonus_end_date']!="dd/mm/yyyy"?strtotime(str_replace('/', '-', $_POST['bonus_end_date'])):null,
+                'bonus_end_date' => $_POST['bonus_end_date']!=""?strtotime(str_replace('/', '-', $_POST['bonus_end_date'])):null,
                 'bonus_plus' => str_replace(',', '', $_POST['bonus_plus']),
                 'bonus_minus' => str_replace(',', '', $_POST['bonus_minus']),
             );
+
             $bonus_model->updateBonus($data,array('bonus_id'=>$id));
+            
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|bonus|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -237,6 +296,7 @@ Class bonusController Extends baseController {
 
         }
 
+        $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Cập nhật thưởng phạt dầu';
 
         $bonus_model = $this->model->get('bonusModel');

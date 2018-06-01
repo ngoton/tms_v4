@@ -10,6 +10,16 @@ $(function () {
         autoclose: true
       });
     });
+    $(document).on("focus", ".numbers", function () {
+      $(this).inputmask("numeric", {
+          radixPoint: ".",
+          groupSeparator: ",",
+          digits: 6,
+          autoGroup: true,
+          rightAlign: true,
+          oncleared: function () { self.Value(''); }
+      });
+    });
 });
 $( document ).ajaxStart(function() {
 
@@ -29,16 +39,6 @@ $( document ).ajaxComplete(function() {
   $('button[type="submit"]').attr('disabled',false);
   $('.ui-dialog-buttonset .btn-success').attr('disabled',false);
 
-});
-
-$('.numbers').keyup(function(event) {
-  // format number
-  $(this).val(function(index, value) {
-    return value
-      .replace(/[^0-9-.]/g, "")
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    ;
-  });
 });
 
 function setNavigation() {

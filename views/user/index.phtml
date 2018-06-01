@@ -3,7 +3,7 @@
 $url_order = 'DESC';
 if ($order_by == 'user_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-if ($order_by == 'username')
+elseif ($order_by == 'username')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'create_time')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';

@@ -3,7 +3,7 @@
 $url_order = 'DESC';
 if ($order_by == 'department_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-if ($order_by == 'department_name')
+elseif ($order_by == 'department_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'department_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';

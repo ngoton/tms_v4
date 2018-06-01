@@ -3,7 +3,7 @@
 $url_order = 'DESC';
 if ($order_by == 'port_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-if ($order_by == 'port_name')
+elseif ($order_by == 'port_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'province_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';

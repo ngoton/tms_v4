@@ -182,7 +182,7 @@ Class staffController Extends baseController {
                 'staff_position' => trim($_POST['staff_position']),
                 'staff_department' => trim($_POST['staff_department']),
                 'staff_start_date' => strtotime(str_replace('/', '-', $_POST['staff_start_date'])),
-                'staff_end_date' => $_POST['staff_end_date']!="dd/mm/yyyy"?strtotime(str_replace('/', '-', $_POST['staff_end_date'])):null,
+                'staff_end_date' => $_POST['staff_end_date']!=""?strtotime(str_replace('/', '-', $_POST['staff_end_date'])):null,
                 'staff_account' => trim($_POST['staff_account']),
                 'staff_gplx' => trim($_POST['staff_gplx']),
             );
@@ -277,7 +277,7 @@ Class staffController Extends baseController {
                 'staff_position' => trim($_POST['staff_position']),
                 'staff_department' => trim($_POST['staff_department']),
                 'staff_start_date' => strtotime(str_replace('/', '-', $_POST['staff_start_date'])),
-                'staff_end_date' => $_POST['staff_end_date']!="dd/mm/yyyy"?strtotime(str_replace('/', '-', $_POST['staff_end_date'])):null,
+                'staff_end_date' => $_POST['staff_end_date']!=""?strtotime(str_replace('/', '-', $_POST['staff_end_date'])):null,
                 'staff_account' => trim($_POST['staff_account']),
                 'staff_gplx' => trim($_POST['staff_gplx']),
             );

@@ -1,11 +1,9 @@
 
 <?php
 $url_order = 'DESC';
-if ($order_by == 'position_id')
+if ($order_by == 'romooc_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'position_name')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'position_code')
+elseif ($order_by == 'romooc_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
@@ -19,12 +17,10 @@ $i = $sonews*$page-($sonews-1);
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'position_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'romooc_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_code','<?php echo $url_order ?>')">Mã chức vụ <?php if ($order_by == 'position_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_name','<?php echo $url_order ?>')">Tên chức vụ <?php if ($order_by == 'position_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_number','<?php echo $url_order ?>')">Số mooc <?php if ($order_by == 'romooc_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
            
         <th>
@@ -38,7 +34,7 @@ $i = $sonews*$page-($sonews-1);
                     <option value="500">500</option>
                 </select>
                 <a class="purpose" data-original-title="Thêm mới">
-                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("position/add") ?>','Thêm chức vụ mới')"></i>
+                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới')"></i>
                 </a> 
                 <div class="pull-right pos-rel dropdown-hover">
                     <button class="btn btn-minier bigger" style="line-height: 26px">
@@ -70,7 +66,7 @@ $i = $sonews*$page-($sonews-1);
                         <li>
                             <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
                                 <span class="purple">
-                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("position/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("romooc/import") ?>','Nhập dữ liệu từ file Excel')"></i>
                                 </span>
                             </a>
                         </li>
@@ -115,21 +111,20 @@ $i = $sonews*$page-($sonews-1);
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($positions as $position) : ?>
-        <tr id="<?php echo $position->position_id ?>" class="edit_tr">
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $position->position_id ?>"><span class="lbl"></span></td>
+    <?php foreach ($romoocs as $romooc) : ?>
+        <tr id="<?php echo $romooc->romooc_id ?>" class="edit_tr">
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $romooc->romooc_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $position->position_code; ?></td>
-            <td><?php echo $position->position_name; ?></td>
+            <td><?php echo $romooc->romooc_number; ?></td>
             
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("position/edit/") ?>','Cập nhật chức vụ',<?php echo $position->position_id ?>)">
+                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("romooc/edit/") ?>','Cập nhật mooc',<?php echo $romooc->romooc_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
 
                     <a class="red" href="#">
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $position->position_id ?>)"></i>
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $romooc->romooc_id ?>)"></i>
                     </a>
                 </div>
             </td>

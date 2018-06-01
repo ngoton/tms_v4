@@ -1276,3 +1276,4 @@ border-radius: 3px;
 }
 .edit_tr .tools{display:none}
 .edit_tr:hover .tools{display:block}
+.numbers{text-align: right;}

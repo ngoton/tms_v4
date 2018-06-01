@@ -1,11 +1,13 @@
 
 <?php
 $url_order = 'DESC';
-if ($order_by == 'position_id')
+if ($order_by == 'place_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'position_name')
+elseif ($order_by == 'place_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'position_code')
+elseif ($order_by == 'place_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'province_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
@@ -15,16 +17,19 @@ $i = $sonews*$page-($sonews-1);
 <div id="winpopup"></div>
 <div id="content" style="padding:5px;">
    
-<table class="table_data" id="tblExport" >
+<table class="table_data" id="tblexport" >
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'position_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'place_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_code','<?php echo $url_order ?>')">Mã chức vụ <?php if ($order_by == 'position_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_code','<?php echo $url_order ?>')">Mã kho hàng <?php if ($order_by == 'place_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_name','<?php echo $url_order ?>')">Tên chức vụ <?php if ($order_by == 'position_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_name','<?php echo $url_order ?>')">Tên kho hàng <?php if ($order_by == 'place_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','province_name','<?php echo $url_order ?>')">Tỉnh/TP <?php if ($order_by == 'province_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
            
         <th>
@@ -38,7 +43,7 @@ $i = $sonews*$page-($sonews-1);
                     <option value="500">500</option>
                 </select>
                 <a class="purpose" data-original-title="Thêm mới">
-                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("position/add") ?>','Thêm chức vụ mới')"></i>
+                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới')"></i>
                 </a> 
                 <div class="pull-right pos-rel dropdown-hover">
                     <button class="btn btn-minier bigger" style="line-height: 26px">
@@ -70,7 +75,7 @@ $i = $sonews*$page-($sonews-1);
                         <li>
                             <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
                                 <span class="purple">
-                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("position/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("place/import") ?>','Nhập dữ liệu từ file Excel')"></i>
                                 </span>
                             </a>
                         </li>
@@ -86,21 +91,21 @@ $i = $sonews*$page-($sonews-1);
                                     <li>
                                         <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
                                             <span class="green">
-                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblexport')"></i>
                                             </span>
                                         </a>
                                     </li>
                                     <li>
                                         <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
                                             <span class="red">
-                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblexport')"></i>
                                             </span>
                                         </a>
                                     </li>
                                     <li>
                                         <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
                                             <span class="blue">
-                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblexport')"></i>
                                             </span>
                                         </a>
                                     </li>
@@ -115,21 +120,23 @@ $i = $sonews*$page-($sonews-1);
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($positions as $position) : ?>
-        <tr id="<?php echo $position->position_id ?>" class="edit_tr">
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $position->position_id ?>"><span class="lbl"></span></td>
+    <?php foreach ($places as $place) : ?>
+        <tr id="<?php echo $place->place_id ?>" class="edit_tr">
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $place->place_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $position->position_code; ?></td>
-            <td><?php echo $position->position_name; ?></td>
+            <td><?php echo $place->place_code; ?></td>
+            <td><?php echo $place->place_name; ?></td>
+            <td><?php echo $place->province_name; ?></td>
+            
             
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("position/edit/") ?>','Cập nhật chức vụ',<?php echo $position->position_id ?>)">
+                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("place/edit/") ?>','Cập nhật kho hàng',<?php echo $place->place_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
 
                     <a class="red" href="#">
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $position->position_id ?>)"></i>
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $place->place_id ?>)"></i>
                     </a>
                 </div>
             </td>
