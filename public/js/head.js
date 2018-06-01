@@ -31,6 +31,16 @@ $( document ).ajaxComplete(function() {
 
 });
 
+$('.numbers').keyup(function(event) {
+  // format number
+  $(this).val(function(index, value) {
+    return value
+      .replace(/[^0-9-.]/g, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+});
+
 function setNavigation() {
     var path = window.location.pathname;
     path = path.replace(/\/$/, "");

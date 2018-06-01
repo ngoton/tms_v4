@@ -1,0 +1,65 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	
+			// Validate form
+			$("#add").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/bonus/addbonus", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error').hide();
+                  $('#error').slideToggle(100); // hiển thị thẻ div success
+                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+<div class="login_body">
+  
+      <form id="add" method="post" action="" autocomplete="off">
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Thưởng/lit </td>
+                <td><input type="text" id="bonus_plus" name="bonus_plus" tabindex="1" autofocus class="numbers"></td>
+                
+            </tr>
+            <tr>
+                <td>Phạt/lit </td>
+                <td><input type="text" id="bonus_minus" name="bonus_minus" tabindex="2" class="numbers"></td>
+            </tr>
+            <tr>
+                <td>Ngày áp dụng </td>
+                <td><input type="text" id="bonus_start_date" name="bonus_start_date" tabindex="3" class="input-mask-date" required="required"></td>
+            </tr>
+            <tr>
+                <td>Ngày hết hạn </td>
+                <td><input type="text" id="bonus_end_date" name="bonus_end_date" tabindex="4" class="input-mask-date"></td>
+            </tr>
+        </table> 
+    </form>
+</div>
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+
