@@ -1,0 +1,25 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    <tr>
+                        <td>Tên hãng tàu</td>
+                        <td><input type="text" id="shipping_name" name="shipping_name" tabindex="1" required="required" value="<?php echo $shipping_data->shipping_name ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>Quốc gia</td>
+                        <td>
+                          <select class="form-control select2" id="shipping_country" name="shipping_country" required="required" tabindex="2">
+                            <?php foreach ($countrys as $country) { ?>
+                              <option value="<?php echo $country->country_id ?>" <?php echo $shipping_data->shipping_country==$country->country_id?'selected="selected"':null ?> ><?php echo $country->country_name ?></option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        
+                    </tr>
+                </table> 
+          
+        </div>
+        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

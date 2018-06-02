@@ -1,0 +1,86 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#edit").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+          
+          var formData = new FormData($("#edit")[0]);
+          formData.append('vehicle_id', '<?php echo $vehicle_data->vehicle_id ?>');
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/vehicle/editvehicle", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error').hide();
+                  $('#error').slideToggle(100); // hiển thị thẻ div success
+                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+ 
+      <form id="edit" method="post" action="" autocomplete="off">
+        <div class="col-xs-7">
+          <label for="vehicle_number">Số xe</label>
+          <div class="input-group">
+            <input type="text" id="vehicle_number" name="vehicle_number" tabindex="1" autofocus required="required" value="<?php echo $vehicle_data->vehicle_number ?>">
+          </div>
+          <label for="vehicle_model">Model</label>
+          <div class="input-group">
+            <input type="text" id="vehicle_model" name="vehicle_model" tabindex="4" value="<?php echo $vehicle_data->vehicle_model ?>">
+          </div>
+          <label for="vehicle_year">Năm sản xuất</label>
+          <div class="input-group">
+            <input type="text" id="vehicle_year" name="vehicle_year" tabindex="5" value="<?php echo $vehicle_data->vehicle_year ?>">
+          </div>
+          
+        </div>
+        <div class="col-xs-5">
+          <label for="vehicle_brand">Nhãn hiệu</label>
+          <div class="input-group">
+            <select class="form-control select2" id="vehicle_brand" name="vehicle_brand" required="required" tabindex="2" >
+              <?php foreach ($brands as $brand) { ?>
+                <option value="<?php echo $brand->brand_id ?>" <?php echo $vehicle_data->vehicle_brand==$brand->brand_id?'selected="selected"':null ?> ><?php echo $brand->brand_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="vehicle_country">Xuất xứ</label>
+          <div class="input-group">
+            <select class="form-control select2" id="vehicle_country" name="vehicle_country" tabindex="3" >
+              <?php foreach ($countrys as $country) { ?>
+                <option value="<?php echo $country->country_id ?>" <?php echo $vehicle_data->vehicle_country==$country->country_id?'selected="selected"':null ?> ><?php echo $country->country_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="vehicle_owner">Xe thuê</label>
+          <div class="input-group">
+            <input type="checkbox" id="vehicle_owner" name="vehicle_owner" tabindex="6" class="ace ace-switch ace-switch-6" value="1" <?php echo $vehicle_data->vehicle_owner==1?'checked="checked"':null ?> ><span class="lbl"></span>
+          </div>
+        </div>
+          
+    </form>
+</div>
+        
+
+

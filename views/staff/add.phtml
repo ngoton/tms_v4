@@ -3,7 +3,7 @@ $(document).ready(function(){
   $.mask.definitions['~'] = '([0-9] )?';
 	$('#staff_cmnd').mask('999999999');
   $("#staff_phone").mask("9999 999 999~");
-  $( ".select2" ).select2();
+  $( ".select2" ).select2({dropdownAutoWidth : true});
 			// Validate form
 			$("#add").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi

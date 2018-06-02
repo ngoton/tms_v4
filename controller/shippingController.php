@@ -266,7 +266,50 @@ Class shippingController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('shipping');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin hãng tàu';
+
+        $shipping_model = $this->model->get('shippingModel');
+
+        $shipping_data = $shipping_model->getShipping($id);
+
+        $this->view->data['shipping_data'] = $shipping_data;
+
+        if (!$shipping_data) {
+
+            $this->view->redirect('shipping');
+
+        }
+
+        $country = $this->model->get('countryModel');
+
+        $this->view->data['countrys'] = $country->getAllCountry();
+
+        return $this->view->show('shipping/view');
+
+    }
 
     public function delete(){
 

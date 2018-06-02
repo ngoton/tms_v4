@@ -125,6 +125,9 @@ $i = $sonews*$page-($sonews-1);
             
             <td class="text-right">
                 <div class="tools action-buttons">
+                    <a class="blue" href="#" onclick="view_click('<?php echo $this->url("port/view/") ?>','Thông tin cảng',<?php echo $port->port_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
                     <a class="green" href="#" onclick="edit_click('<?php echo $this->url("port/edit/") ?>','Cập nhật cảng',<?php echo $port->port_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>

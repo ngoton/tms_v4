@@ -316,7 +316,48 @@ Class bonusController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('bonus');
+
+        }
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Thông tin thưởng phạt dầu';
+
+        $bonus_model = $this->model->get('bonusModel');
+
+        $bonus_data = $bonus_model->getBonus($id);
+
+        $this->view->data['bonus_data'] = $bonus_data;
+
+        if (!$bonus_data) {
+
+            $this->view->redirect('bonus');
+
+        }
+
+
+        return $this->view->show('bonus/view');
+
+    }
 
     public function delete(){
 

@@ -1,0 +1,20 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    
+                    <tr>
+                        <td>Mã phòng ban</td>
+                        <td><input type="text" id="department_code" name="department_code" tabindex="1" required="required" autofocus value="<?php echo $department_data->department_code ?>"></td>
+                        
+                    </tr>
+                    <tr>
+                        <td>Tên phòng ban</td>
+                        <td><input type="text" id="department_name" name="department_name" tabindex="2" required="required" value="<?php echo $department_data->department_name ?>"></td>
+                    </tr>
+                </table> 
+           
+        </div>
+        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

@@ -1,31 +1,31 @@
 <div class="login_body">
-  <form id="add" method="post" action="<?php echo $this->url('staff') ?>" enctype="multipart/form-data">
+  <form id="add" method="post" action="<?php echo $this->url('vehicle') ?>" enctype="multipart/form-data">
     <div class="col-xs-4">
-      <label for="staff_gender">Giới tính</label>
+      <label for="vehicle_brand">Nhãn hiệu</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="staff_gender" name="staff_gender[]" multiple="">
-          <option value="0">Nam</option>
-          <option value="1">Nữ</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-4">
-      <label for="staff_position">Chức vụ</label>
-      <div class="input-group">
-        <select class="form-control multiselect" id="staff_position" name="staff_position[]" multiple="">
-          <?php foreach ($positions as $position) { ?>
-            <option value="<?php echo $position->position_id ?>"><?php echo $position->position_name ?></option>
+        <select class="form-control multiselect" id="vehicle_brand" name="vehicle_brand[]" multiple="">
+          <?php foreach ($brands as $brand) { ?>
+            <option value="<?php echo $brand->brand_id ?>"><?php echo $brand->brand_name ?></option>
           <?php } ?>
         </select>
       </div>
     </div>
     <div class="col-xs-4">
-      <label for="staff_department">Phòng ban</label>
+      <label for="vehicle_country">Xuất xứ</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="staff_department" name="staff_department[]" multiple="">
-          <?php foreach ($departments as $department) { ?>
-            <option value="<?php echo $department->department_id ?>"><?php echo $department->department_name ?></option>
+        <select class="form-control multiselect" id="vehicle_country" name="vehicle_country[]" multiple="">
+          <?php foreach ($countrys as $country) { ?>
+            <option value="<?php echo $country->country_id ?>"><?php echo $country->country_name ?></option>
           <?php } ?>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <label for="vehicle_owner">Loại</label>
+      <div class="input-group">
+        <select class="form-control multiselect" id="vehicle_owner" name="vehicle_owner[]" multiple="">
+          <option value="0">Xe công ty</option>
+          <option value="1">Xe thuê ngoài</option>
         </select>
       </div>
     </div>
@@ -70,7 +70,7 @@ $('.ui-dialog-content').on('click' , '.dropdown-toggle', function(event){
     $(dropDown).css({position:'fixed', top: selfOffset.top + selfHeight , left: selfOffset.left, right: selfOffsetRigth ,  width: '180px'});
 });
 
-function fixDropdownPosition(){
+function fixDropdownposition(){
     var openDropdownButton = $('.dropdown-toggle');
     if($(openDropdownButton).length){
         var selfHeight = $(openDropdownButton).height();
@@ -84,17 +84,17 @@ function fixDropdownPosition(){
 
 $(".ui-dialog-content").unbind("scroll");
 $(".ui-dialog-content").scroll(function(){
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 
 $( window ).resize(function() {
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 $( window ).scroll(function() {
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 $(".ui-dialog").resize(function() {
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 </script>
 <style type="text/css">

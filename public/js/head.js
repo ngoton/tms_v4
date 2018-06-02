@@ -338,6 +338,25 @@ function edit_click(url,title,id){
     }
   });
 }
+function view_click(url,title,id){
+  open_dialog(url+id,title);
+  $('.ui-dialog div.ui-dialog-buttonpane').append('<div class="text-center viewData"><a id="pData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-left"></i></a><a id="nData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-right"></i></a></div>');
+  $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').hide();
+  $('#pData').click(function(){
+    id = parseInt($('tr#'+$(this).attr('data')).prev().attr('id'));
+    if (id > 0) {
+      $(".ui-dialog-content").dialog("close");
+      view_click(url,title,id);
+    }
+  });
+  $('#nData').click(function(){
+    id = parseInt($('tr#'+$(this).attr('data')).next().attr('id'));
+    if (id > 0) {
+      $(".ui-dialog-content").dialog("close");
+      view_click(url,title,id);
+    }
+  });
+}
 
 function filter_click(url,title){
   open_dialog(url,title);
@@ -441,6 +460,7 @@ function open_dialog(url, title){
   var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
     autoOpen:false,
     resizable: true,
+    autoResize:true,
     modal: true,
     width: "auto",
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
@@ -464,6 +484,7 @@ function open_dialog(url, title){
     ],
     close: function(){
       $('.viewData').remove();
+      $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').show();
     },
     open: function () {
         if ($.ui && $.ui.dialog && !$.ui.dialog.prototype._allowInteractionRemapped && $(this).closest(".ui-dialog").length) {

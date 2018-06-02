@@ -266,7 +266,50 @@ Class portController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('port');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin cảng';
+
+        $port_model = $this->model->get('portModel');
+
+        $port_data = $port_model->getPort($id);
+
+        $this->view->data['port_data'] = $port_data;
+
+        if (!$port_data) {
+
+            $this->view->redirect('port');
+
+        }
+
+        $province = $this->model->get('provinceModel');
+
+        $this->view->data['provinces'] = $province->getAllProvince();
+
+        return $this->view->show('port/view');
+
+    }
 
     public function delete(){
 

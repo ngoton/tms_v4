@@ -257,7 +257,47 @@ Class unitController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('unit');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin đơn vị tính';
+
+        $unit_model = $this->model->get('unitModel');
+
+        $unit_data = $unit_model->getUnit($id);
+
+        $this->view->data['unit_data'] = $unit_data;
+
+        if (!$unit_data) {
+
+            $this->view->redirect('unit');
+
+        }
+
+
+        return $this->view->show('unit/view');
+
+    }
 
     public function delete(){
 

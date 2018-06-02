@@ -267,7 +267,47 @@ Class departmentController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('department');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin phòng ban';
+
+        $department_model = $this->model->get('departmentModel');
+
+        $department_data = $department_model->getDepartment($id);
+
+        $this->view->data['department_data'] = $department_data;
+
+        if (!$department_data) {
+
+            $this->view->redirect('department');
+
+        }
+
+
+        return $this->view->show('department/view');
+
+    }
 
     public function delete(){
 

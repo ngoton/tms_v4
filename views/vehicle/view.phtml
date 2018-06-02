@@ -1,0 +1,46 @@
+
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+ 
+        <div class="col-xs-7">
+          <label for="vehicle_number">Số xe</label>
+          <div class="input-group">
+            <input type="text" id="vehicle_number" name="vehicle_number" tabindex="1" autofocus required="required" value="<?php echo $vehicle_data->vehicle_number ?>">
+          </div>
+          <label for="vehicle_model">Model</label>
+          <div class="input-group">
+            <input type="text" id="vehicle_model" name="vehicle_model" tabindex="4" value="<?php echo $vehicle_data->vehicle_model ?>">
+          </div>
+          <label for="vehicle_year">Năm sản xuất</label>
+          <div class="input-group">
+            <input type="text" id="vehicle_year" name="vehicle_year" tabindex="5" value="<?php echo $vehicle_data->vehicle_year ?>">
+          </div>
+          
+        </div>
+        <div class="col-xs-5">
+          <label for="vehicle_brand">Nhãn hiệu</label>
+          <div class="input-group">
+            <select class="form-control select2" id="vehicle_brand" name="vehicle_brand" required="required" tabindex="2" >
+              <?php foreach ($brands as $brand) { ?>
+                <option value="<?php echo $brand->brand_id ?>" <?php echo $vehicle_data->vehicle_brand==$brand->brand_id?'selected="selected"':null ?> ><?php echo $brand->brand_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="vehicle_country">Xuất xứ</label>
+          <div class="input-group">
+            <select class="form-control select2" id="vehicle_country" name="vehicle_country" tabindex="3" >
+              <?php foreach ($countrys as $country) { ?>
+                <option value="<?php echo $country->country_id ?>" <?php echo $vehicle_data->vehicle_country==$country->country_id?'selected="selected"':null ?> ><?php echo $country->country_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="vehicle_owner">Xe thuê</label>
+          <div class="input-group">
+            <input type="checkbox" id="vehicle_owner" name="vehicle_owner" tabindex="6" class="ace ace-switch ace-switch-6" value="1" <?php echo $vehicle_data->vehicle_owner==1?'checked="checked"':null ?> ><span class="lbl"></span>
+          </div>
+        </div>
+          
+</div>
+        
+
+

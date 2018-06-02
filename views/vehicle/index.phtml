@@ -1,9 +1,19 @@
 
 <?php
 $url_order = 'DESC';
-if ($order_by == 'romooc_id')
+if ($order_by == 'vehicle_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'romooc_number')
+elseif ($order_by == 'vehicle_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'vehicle_model')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'brand_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'country_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'vehicle_year')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'vehicle_owner')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
@@ -13,14 +23,28 @@ $i = $sonews*$page-($sonews-1);
 <div id="winpopup"></div>
 <div id="content" style="padding:5px;">
    
-<table class="table_data" id="tblExport" >
+<table class="table_data" id="tblexport" >
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'romooc_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
-        
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'vehicle_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_number','<?php echo $url_order ?>')">Số mooc <?php if ($order_by == 'romooc_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Số xe <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','brand_name','<?php echo $url_order ?>')">Nhãn hiệu <?php if ($order_by == 'brand_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_model','<?php echo $url_order ?>')">Model <?php if ($order_by == 'vehicle_model'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_year','<?php echo $url_order ?>')">Năm sản xuất <?php if ($order_by == 'vehicle_year'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','country_name','<?php echo $url_order ?>')">Xuất xứ <?php if ($order_by == 'country_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_owner','<?php echo $url_order ?>')">Xe thuê <?php if ($order_by == 'vehicle_owner'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
            
         <th>
@@ -34,7 +58,7 @@ $i = $sonews*$page-($sonews-1);
                     <option value="500">500</option>
                 </select>
                 <a class="purpose" data-original-title="Thêm mới">
-                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới')"></i>
+                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới')"></i>
                 </a> 
                 <div class="pull-right pos-rel dropdown-hover">
                     <button class="btn btn-minier bigger" style="line-height: 26px">
@@ -50,9 +74,9 @@ $i = $sonews*$page-($sonews-1);
                             </a>
                         </li>
                         <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
                                 <span class="green">
-                                    <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
+                                    <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("vehicle/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
                                 </span>
                             </a>
                         </li>
@@ -66,7 +90,7 @@ $i = $sonews*$page-($sonews-1);
                         <li>
                             <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
                                 <span class="purple">
-                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("romooc/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("vehicle/import") ?>','Nhập dữ liệu từ file Excel')"></i>
                                 </span>
                             </a>
                         </li>
@@ -82,21 +106,21 @@ $i = $sonews*$page-($sonews-1);
                                     <li>
                                         <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
                                             <span class="green">
-                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblexport')"></i>
                                             </span>
                                         </a>
                                     </li>
                                     <li>
                                         <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
                                             <span class="red">
-                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblexport')"></i>
                                             </span>
                                         </a>
                                     </li>
                                     <li>
                                         <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
                                             <span class="blue">
-                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblexport')"></i>
                                             </span>
                                         </a>
                                     </li>
@@ -111,23 +135,28 @@ $i = $sonews*$page-($sonews-1);
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($romoocs as $romooc) : ?>
-        <tr id="<?php echo $romooc->romooc_id ?>" class="edit_tr">
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $romooc->romooc_id ?>"><span class="lbl"></span></td>
+    <?php foreach ($vehicles as $vehicle) : ?>
+        <tr id="<?php echo $vehicle->vehicle_id ?>" class="edit_tr">
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $vehicle->vehicle_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $romooc->romooc_number; ?></td>
+            <td><?php echo $vehicle->vehicle_number; ?></td>
+            <td><?php echo $vehicle->brand_name; ?></td>
+            <td><?php echo $vehicle->vehicle_model; ?></td>
+            <td><?php echo $vehicle->vehicle_year; ?></td>
+            <td><?php echo $vehicle->country_name; ?></td>
+            <td class="text-center"><input type="checkbox" id="vehicle_owner" name="vehicle_owner" class="ace ace-checkbox-2" <?php echo $vehicle->vehicle_owner==1?'checked="checked"':null ?> ><span class="lbl"></td>
             
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="blue" href="#" onclick="view_click('<?php echo $this->url("romooc/view/") ?>','Thông tin mooc',<?php echo $romooc->romooc_id ?>)">
+                    <a class="blue" href="#" onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $vehicle->vehicle_id ?>)">
                         <i class="ace-icon fa fa-info-circle bigger-130"></i>
                     </a>
-                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("romooc/edit/") ?>','Cập nhật mooc',<?php echo $romooc->romooc_id ?>)">
+                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("vehicle/edit/") ?>','Cập nhật xe',<?php echo $vehicle->vehicle_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
 
                     <a class="red" href="#">
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $romooc->romooc_id ?>)"></i>
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $vehicle->vehicle_id ?>)"></i>
                     </a>
                 </div>
             </td>

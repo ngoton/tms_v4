@@ -276,7 +276,50 @@ Class placeController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('place');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin kho hàng';
+
+        $place_model = $this->model->get('placeModel');
+
+        $place_data = $place_model->getPlace($id);
+
+        $this->view->data['place_data'] = $place_data;
+
+        if (!$place_data) {
+
+            $this->view->redirect('place');
+
+        }
+
+        $province = $this->model->get('provinceModel');
+
+        $this->view->data['provinces'] = $province->getAllProvince();
+
+        return $this->view->show('place/view');
+
+    }
 
     public function delete(){
 

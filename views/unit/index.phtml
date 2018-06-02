@@ -119,6 +119,9 @@ $i = $sonews*$page-($sonews-1);
             
             <td class="text-right">
                 <div class="tools action-buttons">
+                    <a class="blue" href="#" onclick="view_click('<?php echo $this->url("unit/view/") ?>','Thông tin đơn vị tính',<?php echo $unit->unit_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
                     <a class="green" href="#" onclick="edit_click('<?php echo $this->url("unit/edit/") ?>','Cập nhật đơn vị tính',<?php echo $unit->unit_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>

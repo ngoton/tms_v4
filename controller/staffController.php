@@ -356,6 +356,59 @@ Class staffController Extends baseController {
         return $this->view->show('staff/edit');
 
     }
+    public function view($id){
+
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('staff');
+
+        }
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Thông tin nhân viên';
+
+        $staff_model = $this->model->get('staffModel');
+
+        $staff_data = $staff_model->getStaff($id);
+
+        $this->view->data['staff_data'] = $staff_data;
+
+        if (!$staff_data) {
+
+            $this->view->redirect('staff');
+
+        }
+
+        $position_model = $this->model->get('positionModel');
+        $department_model = $this->model->get('departmentModel');
+        $user_model = $this->model->get('userModel');
+
+        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
+        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
+        $accounts = $user_model->getAllUser(array('order_by'=>'username','order'=>'ASC'));
+
+        $this->view->data['positions'] = $positions;
+        $this->view->data['departments'] = $departments;
+        $this->view->data['accounts'] = $accounts;
+
+        return $this->view->show('staff/view');
+
+    }
     public function filter(){
         $this->view->disableLayout();
 

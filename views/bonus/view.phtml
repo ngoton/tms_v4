@@ -1,0 +1,27 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    <tr>
+                        <td>Thưởng/lit </td>
+                        <td><input type="text" id="bonus_plus" name="bonus_plus" tabindex="1" autofocus class="numbers" value="<?php echo $lib->formatMoney($bonus_data->bonus_plus) ?>"></td>
+                        
+                    </tr>
+                    <tr>
+                        <td>Phạt/lit </td>
+                        <td><input type="text" id="bonus_minus" name="bonus_minus" tabindex="2" class="numbers" value="<?php echo $lib->formatMoney($bonus_data->bonus_minus) ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>Ngày áp dụng </td>
+                        <td><input type="text" id="bonus_start_date" name="bonus_start_date" tabindex="3" class="input-mask-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($bonus_data->bonus_start_date) ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>Ngày hết hạn </td>
+                        <td><input type="text" id="bonus_end_date" name="bonus_end_date" tabindex="4" class="input-mask-date" value="<?php echo $lib->hien_thi_ngay_thang($bonus_data->bonus_end_date) ?>"></td>
+                    </tr>
+                </table> 
+            
+        </div>
+        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

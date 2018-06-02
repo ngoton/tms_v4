@@ -266,7 +266,50 @@ Class routeController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('route');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin địa điểm';
+
+        $route_model = $this->model->get('routeModel');
+
+        $route_data = $route_model->getRoute($id);
+
+        $this->view->data['route_data'] = $route_data;
+
+        if (!$route_data) {
+
+            $this->view->redirect('route');
+
+        }
+
+        $province = $this->model->get('provinceModel');
+
+        $this->view->data['provinces'] = $province->getAllProvince();
+
+        return $this->view->show('route/view');
+
+    }
 
     public function delete(){
 

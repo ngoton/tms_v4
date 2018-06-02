@@ -1,0 +1,25 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    <tr>
+                        <td>Tên địa điểm</td>
+                        <td><input type="text" id="route_name" name="route_name" tabindex="1" required="required" value="<?php echo $route_data->route_name ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>Tỉnh/TP</td>
+                        <td>
+                          <select class="form-control select2" id="route_province" name="route_province" required="required" tabindex="2">
+                            <?php foreach ($provinces as $province) { ?>
+                              <option value="<?php echo $province->province_id ?>" <?php echo $route_data->route_province==$province->province_id?'selected="selected"':null ?> ><?php echo $province->province_name ?></option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        
+                    </tr>
+                </table> 
+           
+        </div>
+        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

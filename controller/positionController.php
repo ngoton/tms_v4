@@ -267,7 +267,47 @@ Class positionController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('position');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin chức vụ';
+
+        $position_model = $this->model->get('positionModel');
+
+        $position_data = $position_model->getPosition($id);
+
+        $this->view->data['position_data'] = $position_data;
+
+        if (!$position_data) {
+
+            $this->view->redirect('position');
+
+        }
+
+
+        return $this->view->show('position/view');
+
+    }
 
     public function delete(){
 

@@ -257,7 +257,47 @@ Class romoocController Extends baseController {
 
     }
 
+    public function view($id){
 
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('romooc');
+
+        }
+
+        $this->view->data['title'] = 'Thông tin mooc';
+
+        $romooc_model = $this->model->get('romoocModel');
+
+        $romooc_data = $romooc_model->getRomooc($id);
+
+        $this->view->data['romooc_data'] = $romooc_data;
+
+        if (!$romooc_data) {
+
+            $this->view->redirect('romooc');
+
+        }
+
+
+        return $this->view->show('romooc/view');
+
+    }
 
     public function delete(){
 
