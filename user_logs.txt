@@ -151,3 +151,5 @@ Time|User|Action
 
 02/06/2018 07:46:08|admin|login|127.0.0.1
 
+03/06/2018 19:45:37|admin|login|::1
+

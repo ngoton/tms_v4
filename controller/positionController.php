@@ -309,6 +309,20 @@ Class positionController Extends baseController {
 
     }
 
+    public function getposition(){
+        $position_model = $this->model->get('positionModel');
+
+        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($positions as $position) {
+            $result[$i]['id'] = $position->position_id;
+            $result[$i]['text'] = $position->position_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

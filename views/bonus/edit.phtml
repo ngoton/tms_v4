@@ -2,13 +2,13 @@
 $(document).ready(function(){
 
 			// Validate form
-			$("#edit").validate({
+			$("#edit_bonus").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
 				rules: {
 				},
         submitHandler: function(form) {
           
-          var formData = new FormData($("#edit")[0]);
+          var formData = new FormData($("#edit_bonus")[0]);
           formData.append('bonus_id', '<?php echo $bonus_data->bonus_id ?>');
           
           $.ajax({
@@ -20,10 +20,10 @@ $(document).ready(function(){
               processData: false,
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error').hide();
-                  $('#error').slideToggle(100); // hiển thị thẻ div success
-                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error').fadeOut(10000);
+                  $('#error_bonus').hide();
+                  $('#error_bonus').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_bonus').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_bonus').fadeOut(10000);
 
               }
           });
@@ -39,7 +39,7 @@ $(document).ready(function(){
 
         <div class="login_body">
          
-              <form id="edit" method="post" action="" autocomplete="off">
+              <form id="edit_bonus" method="post" action="" autocomplete="off">
                   <table style="margin-top:20px;">
                     <tr>
                         <td>Thưởng/lit </td>
@@ -61,6 +61,6 @@ $(document).ready(function(){
                 </table> 
             </form>
         </div>
-        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+        <div id="error_bonus" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
 

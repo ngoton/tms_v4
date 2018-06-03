@@ -511,7 +511,21 @@ Class userController Extends baseController {
 
     }
 
+    public function getuser(){
+        $user_model = $this->model->get('userModel');
 
+        $users = $user_model->getAllUser(array('order_by'=>'username','order'=>'ASC'));
+        $result = array();
+        $result[0]['id'] = "";
+        $result[0]['text'] = "Không sử dụng";
+        $i = 1;
+        foreach ($users as $user) {
+            $result[$i]['id'] = $user->user_id;
+            $result[$i]['text'] = $user->username;
+            $i++;
+        }
+        echo json_encode($result);
+    }
 
     public function delete(){
 

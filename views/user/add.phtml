@@ -2,7 +2,7 @@
 $(document).ready(function(){
 	
 			// Validate form
-			$("#add").validate({
+			$("#add_user").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
 				rules: {
 					username: { rangelength: [2,10] }, //Chiều dài chuỗi trong khoảng từ 4 - 10 ký tự
@@ -29,10 +29,10 @@ $(document).ready(function(){
                   }, // giá trị post
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error').hide();
-                  $('#error').slideToggle(100); // hiển thị thẻ div success
-                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error').fadeOut(10000);
+                  $('#error_user').hide();
+                  $('#error_user').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_user').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_user').fadeOut(10000);
 
               }
           });
@@ -48,7 +48,7 @@ $(document).ready(function(){
      
 <div class="login_body">
   
-      <form id="add" method="post" action="" autocomplete="off">
+      <form id="add_user" method="post" action="" autocomplete="off">
           <table style="margin-top:20px;">
             <tr>
                 <td>Tên đăng nhập </td>
@@ -85,6 +85,6 @@ $(document).ready(function(){
         </table> 
     </form>
 </div>
-<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div id="error_user" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
 

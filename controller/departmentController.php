@@ -309,6 +309,20 @@ Class departmentController Extends baseController {
 
     }
 
+    public function getdepartment(){
+        $department_model = $this->model->get('departmentModel');
+
+        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($departments as $department) {
+            $result[$i]['id'] = $department->department_id;
+            $result[$i]['text'] = $department->department_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

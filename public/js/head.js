@@ -10,6 +10,10 @@ $(function () {
         autoclose: true
       });
     });
+    $(document).on("focus", ".input-mask-phone", function () {
+      $.mask.definitions['~'] = '([0-9] )?';
+      $(this).mask("9999 999 999~");
+    });
     $(document).on("focus", ".numbers", function () {
       $(this).inputmask("numeric", {
           radixPoint: ".",
@@ -502,6 +506,75 @@ function open_dialog(url, title){
     },
     _allowInteraction: function (event) {
         return !!$(event.target).is(".select2-input") || this._super(event);
+    }
+  });
+  dialog.load(url, function(){
+     dialog.dialog('open');
+ });
+
+}
+
+function add_click_other(url,title,id,data,form){
+  open_dialog_other(url,title,id,data,form);
+}
+function open_dialog_other(url, title, id, data, form){
+  var dialog = $( "#dialog-message-other" ).removeClass('hide').dialog({
+    autoOpen:false,
+    resizable: true,
+    autoResize:true,
+    modal: true,
+    width: "auto",
+    title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
+    title_html: true,
+    dialogClass: 'custom-ui-widget-header-accessible',
+    buttons: [
+      {
+        html: "<i class='ace-icon fa fa-save bigger-110'></i>&nbsp; Hoàn tất",
+        "class" : "btn btn-success",
+        click: function() {
+          $('#'+form).submit();
+        }
+      },
+      {
+        html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; Đóng & tải lại",
+        "class" : "btn btn-danger",
+        click: function() {
+          $( this ).dialog( "close" );
+          $.fn.select2.amd.define('select2/data/customAdapter', ['select2/data/array', 'select2/utils'],
+              function (ArrayAdapter, Utils) {
+                  function CustomDataAdapter ($element, options) {
+                    CustomDataAdapter.__super__.constructor.call(this, $element, options);
+                  }
+                  Utils.Extend(CustomDataAdapter, ArrayAdapter);
+              CustomDataAdapter.prototype.updateOptions = function (data) {
+                      this.$element.find('option').remove();
+                      this.addOptions(this.convertToOptions(data));
+                  }        
+                  return CustomDataAdapter;
+              }
+          );
+
+          var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
+
+          var select = $('#'+id).select2({dataAdapter: customAdapter});
+          $.ajax({
+              type: "GET",
+              url: data,
+              success: function(answer){
+                select.data('select2').dataAdapter.updateOptions($.parseJSON(answer));
+              }
+          });
+        }
+      }
+    ],
+    open: function () {
+      $(this).find('.viewData').remove();
+      $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").find(".widget-header").removeClass('blue');
+        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").find(".widget-header").css({'background':'#E5E5E5','color':'#2B7DBC'});
+    },
+    close: function(){
+      $( this ).dialog( "close" );
+      
     }
   });
   dialog.load(url, function(){

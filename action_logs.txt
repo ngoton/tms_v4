@@ -179,3 +179,13 @@
 
 02/06/2018 08:37:36|admin|edit|1|vehicle|7-A01-2018-86-1-51B-2943
 
+03/06/2018 21:14:34|admin|add|2|position|PGD-Phó giám đốc
+
+03/06/2018 21:34:17|admin|add|3|position|TP-Trưởng phòng
+
+03/06/2018 21:34:24|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-3-3-1526317200--0-1212232323
+
+03/06/2018 21:34:50|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-3-3-1526317200--Không sử dụng-1212232323
+
+04/06/2018 01:19:47|admin|add|1|customer|KH01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-023-ACB-Đồng Nai-1-1
+

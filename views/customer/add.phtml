@@ -1,0 +1,371 @@
+<script type="text/javascript">
+$(document).ready(function(){
+
+  $( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_customer").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+          var contact_person = [];
+
+          var contact_person_name = [];
+          var contact_person_phone = [];
+          var contact_person_email = [];
+          var contact_person_birthday = [];
+          var contact_person_mobile = [];
+          var contact_person_address = [];
+          var contact_person_position = [];
+          var contact_person_department = [];
+          var id_contact_person = [];
+
+          $('.contact_person_name').each(function() { 
+              contact_person_name.push($(this).val());
+              id_contact_person.push($(this).attr('data') || "");
+          });
+          $('.contact_person_phone').each(function() { 
+              contact_person_phone.push($(this).val());
+          });
+          $('.contact_person_mobile').each(function() { 
+              contact_person_mobile.push($(this).val());
+          });
+          $('.contact_person_email').each(function() { 
+              contact_person_email.push($(this).val());
+          });
+          $('.contact_person_birthday').each(function() { 
+              contact_person_birthday.push($(this).val());
+          });
+          $('.contact_person_address').each(function() { 
+              contact_person_address.push($(this).val());
+          });
+          $('.contact_person_position').each(function() { 
+              contact_person_position.push($(this).val());
+          });
+          $('.contact_person_department').each(function() { 
+              contact_person_department.push($(this).val());
+          });
+
+          for (var i = 0; i < contact_person_name.length; i++) {
+              contact_person.push({'contact_person_name':contact_person_name[i], 'id_contact_person':id_contact_person[i], 'contact_person_phone':contact_person_phone[i], 'contact_person_mobile':contact_person_mobile[i], 'contact_person_email':contact_person_email[i], 'contact_person_birthday':contact_person_birthday[i], 'contact_person_address':contact_person_address[i], 'contact_person_position':contact_person_position[i], 'contact_person_department':contact_person_department[i]});
+              
+              
+          };
+
+          var formData = new FormData($("#add_customer")[0]);
+          formData.append('contact_person', JSON.stringify(contact_person));
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/customer/addcustomer", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_customer').hide();
+                  $('#error_customer').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_customer').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_customer').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+
+  $('input[name="customer_type"]').click(function(){
+    var val = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "<?php echo $this->url('customer/getlastcustomercode') ?>",
+        data: {customer_type:val},
+        success: function(answer){
+          $('#customer_code').val(answer);
+        }
+    });
+  });
+
+  var tag_input = $('#customer_sub');
+  try{
+    tag_input.tag(
+      {
+      placeholder:tag_input.attr('placeholder'),
+      //enable typeahead by specifying the source array
+      //source: ace.vars['US_STATES'],//defined in ace.js >> ace.enable_search_ahead
+      
+      //or fetch data from database, fetch those that match "query"
+      source: function(query, process) {
+        $.ajax({url: '<?php echo $this->url("customer/getcustomersub") ?>?q='+encodeURIComponent(query)})
+        .done(function(result_items){
+        process($.parseJSON(result_items));
+        });
+      }
+      
+      }
+    )
+
+    //programmatically add/remove a tag
+    //var $tag_obj = $('#customer_sub').data('tag');
+    //$tag_obj.add('Programmatically Added');
+    
+    //var index = $tag_obj.inValues('some tag');
+    //$tag_obj.remove(index);
+  }
+  catch(e) {
+    //display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+    tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+    //autosize($('#form-field-tags'));
+  }
+	
+});
+</script>
+     
+<div id="error_customer" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+  
+  <form id="add_customer" method="post" action="" autocomplete="off">
+     <div class="col-md-3 col-xs-6">
+        <label for="customer_code">Mã</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_code" name="customer_code" required="required" tabindex="1" value="<?php echo $lastID ?>">
+        </div>
+        <label for="customer_name">Tên</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_name" name="customer_name" required="required" tabindex="2">
+        </div>
+        <label for="customer_company">Công ty</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_company" name="customer_company"tabindex="3">
+        </div>
+        <label for="customer_code">Loại</label>
+        <div class="input-group">
+          <label>
+            <input class="form-control ace" type="radio" name="customer_type" checked="checked" tabindex="4" value="1"> <span class="lbl">Khách hàng</span>
+          </label>
+          &nbsp;
+          <label>
+            <input class="form-control ace" type="radio" name="customer_type" tabindex="5" value="2"> <span class="lbl">Đối tác</span>
+          </label>
+          &nbsp;
+          <label>
+            <input class="form-control ace" type="radio" name="customer_type" tabindex="6" value="3"> <span class="lbl">Cá nhân</span>
+          </label>
+        </div>
+     </div>
+     <div class="col-md-3 col-xs-6">
+        <label for="customer_phone">Số điện thoại</label>
+        <div class="input-group">
+          <input class="form-control input-mask-phone" type="text" id="customer_phone" name="customer_phone" tabindex="10">
+        </div>
+        <label for="customer_mst">MST</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_mst" name="customer_mst" tabindex="7">
+        </div>
+        <label for="customer_address">Địa chỉ</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_address" name="customer_address" tabindex="8">
+        </div>
+        <label for="customer_province">Tỉnh/TP</label>
+        <div class="input-group">
+          <select class="form-control select2" id="customer_province" name="customer_province" required="required" tabindex="9">
+            <?php foreach ($provinces as $province) { ?>
+              <option value="<?php echo $province->province_id ?>"><?php echo $province->province_name ?></option>
+            <?php } ?>
+          </select>
+        </div>
+        
+     </div>
+     <div class="col-md-3 col-xs-6">
+        <label for="customer_mobile">Di động</label>
+        <div class="input-group">
+          <input class="form-control input-mask-phone" type="text" id="customer_mobile" name="customer_mobile" tabindex="11">
+        </div>
+        <label for="customer_email">Email</label>
+        <div class="input-group">
+          <input class="form-control" type="email" id="customer_email" name="customer_email" tabindex="12">
+        </div>
+        <label for="customer_bank_account">Số tài khoản</label>
+        <div class="input-group input-daterange">
+          <input class="form-control input-sm" type="text" id="customer_bank_account" name="customer_bank_account" tabindex="13">
+          <span class="input-group-addon">
+            <i class="fa fa-bank"></i>
+          </span>
+          <input class="form-control input-sm" type="text" id="customer_bank_name" name="customer_bank_name" tabindex="14" placeholder="Tại Ngân hàng">
+        </div>
+        <label for="customer_bank_branch">Chi nhánh</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_bank_branch" name="customer_bank_branch" tabindex="15">
+        </div>
+     </div>
+     <div class="col-md-3 col-xs-6">
+        
+        <label for="customer_sub">Loại hàng</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="customer_sub" name="customer_sub" tabindex="16">
+        </div>
+     </div>
+     <div class="clearFix"></div>
+     <div class="col-xs-12">
+        <fieldset class="groupbox">
+          <legend>
+              <span><h4>Người liên hệ</h4></span>
+          </legend>
+
+          <table id="dataTable" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px">
+              <tbody>
+              <tr>
+                  <td><input type="checkbox" name="chk"></td>
+                  <td>
+                      <table style="width:100%">
+                          <tbody><tr>
+                              <td>
+                                <label>Họ tên</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_name" name="contact_person_name[]" tabindex="17">
+                                </div>
+                              </td>
+                              <td>
+                                <label>SĐT</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_phone input-mask-phone" name="contact_person_phone[]" tabindex="20">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Chức vụ</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_position" name="contact_person_position[]" tabindex="23">
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              
+                              <td>
+                                <label>Email</label>
+                                <div class="input-group">
+                                  <input type="email" class="contact_person_email" name="contact_person_email[]" tabindex="18">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Ngày sinh</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_birthday input-mask-date" name="contact_person_birthday[]" tabindex="21">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Bộ phận</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_department" name="contact_person_department[]" tabindex="24">
+                                </div>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>
+                                <label>Di động</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_mobile input-mask-phone" name="contact_person_mobile[]" tabindex="19">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Địa chỉ</label>
+                                <div class="input-group">
+                                  <input type="text" class="contact_person_address" name="contact_person_address[]" tabindex="22">
+                                </div>
+                              </td>
+                            
+                              
+                          </tr>
+                      </tbody></table>
+                  </td>
+              </tr>
+          </tbody>
+          </table>
+      </fieldset>
+          <input type="button" value="Thêm" onclick="addRow('dataTable')">
+
+          <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+      </div>
+  </form>
+</div>
+
+
+
+<script type="text/javascript">
+  function addRow(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.contact_person_name:last').attr('disabled',false);
+    $('.contact_person_name:last').attr('data',"");
+    $('.contact_person_name:last').val("");
+    $('.contact_person_phone:last').val("");
+    $('.contact_person_mobile:last').val("");
+    $('.contact_person_email:last').val("");
+    $('.contact_person_birthday:last').val("");
+    $('.contact_person_address:last').val("");
+    $('.contact_person_position:last').val("");
+    $('.contact_person_department:last').val("");
+    $('.contact_person_birthday').removeClass("hasDatepicker");
+    $('.contact_person_birthday').attr("id","");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+
+}
+function deleteRow(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        var r = confirm("Bạn có chắc chắn không?");
+        if (r == true){
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var customer = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/customer/deletecontact", {data: data, customer: customer},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+        }
+    }
+    catch(e){
+        alert(e);
+    }
+}
+</script>

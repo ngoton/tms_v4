@@ -2,13 +2,13 @@
 $(document).ready(function(){
 	$( ".select2" ).select2({dropdownAutoWidth : true});
 			// Validate form
-			$("#add").validate({
+			$("#add_shipping").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
 				rules: {
 				},
         submitHandler: function(form) {
                 
-          var formData = new FormData($("#add")[0]);
+          var formData = new FormData($("#add_shipping")[0]);
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -19,10 +19,10 @@ $(document).ready(function(){
               processData: false,
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error').hide();
-                  $('#error').slideToggle(100); // hiển thị thẻ div success
-                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error').fadeOut(10000);
+                  $('#error_shipping').hide();
+                  $('#error_shipping').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_shipping').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_shipping').fadeOut(10000);
 
               }
           });
@@ -38,7 +38,7 @@ $(document).ready(function(){
      
 <div class="login_body">
   
-      <form id="add" method="post" action="" autocomplete="off">
+      <form id="add_shipping" method="post" action="" autocomplete="off">
           <table style="margin-top:20px;">
             <tr>
                 <td>Tên hãng tàu </td>
@@ -58,6 +58,6 @@ $(document).ready(function(){
         </table> 
     </form>
 </div>
-<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div id="error_shipping" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
 

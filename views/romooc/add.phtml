@@ -2,13 +2,13 @@
 $(document).ready(function(){
 	
 			// Validate form
-			$("#add").validate({
+			$("#add_romooc").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
 				rules: {
 				},
         submitHandler: function(form) {
                 
-          var formData = new FormData($("#add")[0]);
+          var formData = new FormData($("#add_romooc")[0]);
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -19,10 +19,10 @@ $(document).ready(function(){
               processData: false,
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error').hide();
-                  $('#error').slideToggle(100); // hiển thị thẻ div success
-                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error').fadeOut(10000);
+                  $('#error_romooc').hide();
+                  $('#error_romooc').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_romooc').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_romooc').fadeOut(10000);
 
               }
           });
@@ -38,7 +38,7 @@ $(document).ready(function(){
      
 <div class="login_body">
   
-      <form id="add" method="post" action="" autocomplete="off">
+      <form id="add_romooc" method="post" action="" autocomplete="off">
           <table style="margin-top:20px;">
             <tr>
                 <td>Số mooc </td>
@@ -47,6 +47,6 @@ $(document).ready(function(){
         </table> 
     </form>
 </div>
-<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div id="error_romooc" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
 

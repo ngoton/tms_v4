@@ -2,13 +2,13 @@
 $(document).ready(function(){
 	$( ".select2" ).select2({dropdownAutoWidth : true});
 			// Validate form
-			$("#edit").validate({
+			$("#edit_vehicle").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
 				rules: {
 				},
         submitHandler: function(form) {
           
-          var formData = new FormData($("#edit")[0]);
+          var formData = new FormData($("#edit_vehicle")[0]);
           formData.append('vehicle_id', '<?php echo $vehicle_data->vehicle_id ?>');
           
           $.ajax({
@@ -20,10 +20,10 @@ $(document).ready(function(){
               processData: false,
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error').hide();
-                  $('#error').slideToggle(100); // hiển thị thẻ div success
-                  $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error').fadeOut(10000);
+                  $('#error_vehicle').hide();
+                  $('#error_vehicle').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_vehicle').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_vehicle').fadeOut(10000);
 
               }
           });
@@ -37,10 +37,10 @@ $(document).ready(function(){
 });
 </script>
 
-<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div id="error_vehicle" class="error"><?php echo isset($error) ? $error : null; ?></div>
 <div class="login_body">
  
-      <form id="edit" method="post" action="" autocomplete="off">
+      <form id="edit_vehicle" method="post" action="" autocomplete="off">
         <div class="col-xs-7">
           <label for="vehicle_number">Số xe</label>
           <div class="input-group">
