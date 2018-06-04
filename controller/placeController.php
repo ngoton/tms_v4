@@ -321,6 +321,20 @@ Class placeController Extends baseController {
 
     }
 
+    public function getplace(){
+        $place_model = $this->model->get('placeModel');
+
+        $places = $place_model->getAllPlace(array('order_by'=>'place_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($places as $place) {
+            $result[$i]['id'] = $place->place_id;
+            $result[$i]['text'] = $place->place_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

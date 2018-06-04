@@ -52,11 +52,11 @@ $(document).ready(function(){
                     </tr>
                     <tr>
                         <td>Ngày áp dụng </td>
-                        <td><input type="text" id="bonus_start_date" name="bonus_start_date" tabindex="3" class="input-mask-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($bonus_data->bonus_start_date) ?>"></td>
+                        <td><input type="text" id="bonus_start_date" name="bonus_start_date" tabindex="3" class="start-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($bonus_data->bonus_start_date) ?>"></td>
                     </tr>
                     <tr>
                         <td>Ngày hết hạn </td>
-                        <td><input type="text" id="bonus_end_date" name="bonus_end_date" tabindex="4" class="input-mask-date" value="<?php echo $lib->hien_thi_ngay_thang($bonus_data->bonus_end_date) ?>"></td>
+                        <td><input type="text" id="bonus_end_date" name="bonus_end_date" tabindex="4" class="end-date" value="<?php echo $lib->hien_thi_ngay_thang($bonus_data->bonus_end_date) ?>"></td>
                     </tr>
                 </table> 
             </form>

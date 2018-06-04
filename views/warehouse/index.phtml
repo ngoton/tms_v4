@@ -1,0 +1,199 @@
+
+<?php
+$url_order = 'DESC';
+if ($order_by == 'warehouse_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'place_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_cont')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_ton')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_add')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_weight')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_clean')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_gate')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_start_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_end_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblExport" >
+<thead>
+    <tr>
+    	<th rowspan="2"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th rowspan="2"><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'warehouse_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th rowspan="2">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_name','<?php echo $url_order ?>')">Kho <?php if ($order_by == 'place_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th colspan="5">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_cont','<?php echo $url_order ?>')">Bồi dưỡng cont <?php if ($order_by == 'warehouse_cont'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th rowspan="2">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_ton','<?php echo $url_order ?>')">Bồi dưỡng tấn <?php if ($order_by == 'warehouse_ton'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        <th rowspan="2">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_start_date','<?php echo $url_order ?>')">Ngày áp dụng <?php if ($order_by == 'warehouse_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th rowspan="2">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_end_date','<?php echo $url_order ?>')">Ngày hết hạn <?php if ($order_by == 'warehouse_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+           
+        <th rowspan="2">
+            <div class="tools action-buttons pull-right">
+                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+                    <option value="18446744073709">All</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                </select>
+                <a class="purpose" data-original-title="Thêm mới">
+                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("warehouse/add") ?>','Thêm bồi dưỡng kho mới')"></i>
+                </a> 
+                <div class="pull-right pos-rel dropdown-hover">
+                    <button class="btn btn-minier bigger" style="line-height: 26px">
+                        <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                        <li>
+                            <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                                <span class="orange">
+                                    <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("warehouse/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                                <span class="red">
+                                    <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                                <span class="purple">
+                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("warehouse/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            
+                            <div class="text-center pos-rel dropdown-hover">
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                                    <li>
+                                        <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                            <span class="green">
+                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                            <span class="red">
+                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                            <span class="blue">
+                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>                        
+            </div>
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_add','<?php echo $url_order ?>')">Bồi dưỡng <?php if ($order_by == 'warehouse_add'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_weight','<?php echo $url_order ?>')">Cân xe <?php if ($order_by == 'warehouse_weight'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_clean','<?php echo $url_order ?>')">Quét cont <?php if ($order_by == 'warehouse_clean'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_gate','<?php echo $url_order ?>')">Vé cổng <?php if ($order_by == 'warehouse_gate'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_cont','<?php echo $url_order ?>')">Tổng <?php if ($order_by == 'warehouse_cont'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+    </tr>
+   </thead>
+   <tbody>
+    <?php foreach ($warehouses as $warehouse) : ?>
+        <tr id="<?php echo $warehouse->warehouse_id ?>" class="edit_tr" <?php echo ($warehouse->warehouse_end_date=="" || $warehouse->warehouse_end_date==0 || $warehouse->warehouse_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $warehouse->warehouse_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $warehouse->place_name; ?></td>
+            <td><?php echo $lib->formatMoney($warehouse->warehouse_add); ?></td>
+            <td><?php echo $lib->formatMoney($warehouse->warehouse_weight); ?></td>
+            <td><?php echo $lib->formatMoney($warehouse->warehouse_clean); ?></td>
+            <td><?php echo $lib->formatMoney($warehouse->warehouse_gate); ?></td>
+            <td><?php echo $lib->formatMoney($warehouse->warehouse_cont); ?></td>
+            <td><?php echo $lib->formatMoney($warehouse->warehouse_ton); ?></td>
+            
+            <td><?php echo $lib->hien_thi_ngay_thang($warehouse->warehouse_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($warehouse->warehouse_end_date); ?></td>
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue" href="#" onclick="view_click('<?php echo $this->url("warehouse/view/") ?>','Thông tin bồi dưỡng kho',<?php echo $warehouse->warehouse_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("warehouse/edit/") ?>','Cập nhật bồi dưỡng kho',<?php echo $warehouse->warehouse_id ?>)">
+                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
+
+                    <a class="red" href="#">
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $warehouse->warehouse_id ?>)"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+</div>
+<script type="text/javascript">
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+</script>

@@ -39,6 +39,7 @@ $(document).ready(function(){
 <div class="login_body">
   
       <form id="add_place" method="post" action="" autocomplete="off">
+        <div class="col-xs-4">
           <table style="margin-top:20px;">
             <tr>
                 <td>Mã kho hàng </td>
@@ -53,16 +54,52 @@ $(document).ready(function(){
             <tr>
                 <td>Tỉnh/TP </td>
                 <td>
-                  <select class="form-control select2" id="place_province" name="place_province" required="required" tabindex="2">
+                  <select class="form-control select2" id="place_province" name="place_province" required="required" tabindex="3">
                     <?php foreach ($provinces as $province) { ?>
                       <option value="<?php echo $province->province_id ?>"><?php echo $province->province_name ?></option>
                     <?php } ?>
                   </select>
                 </td>
             </tr>
+            
         </table> 
+        </div>
+        <div class="col-xs-8">
+          <div id="map_canvas" style="width:500px;height:200px;"></div>
+          <table>
+            <tr>
+              <td>Lat</td>
+              <td><input type="text" id="place_lat" name="place_lat" tabindex="4"></td>
+            
+              <td>Long</td>
+              <td><input type="text" id="place_long" name="place_long" tabindex="5"></td>
+            </tr>
+          </table>
+          
+        </div>
+          
     </form>
 </div>
+
 <div id="error_place" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=initialize"></script>
+<script>
+var directionsDisplay,
+    directionsService,
+    map;
 
+function initialize() {
+  var directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  var chicago = new google.maps.LatLng(41.850033, -87.6500523);
+  var mapOptions = { zoom:7, mapTypeId: google.maps.MapTypeId.ROADMAP, center: chicago }
+  map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+  directionsDisplay.setMap(map);
+   google.maps.event.addListener(map, 'click', function(event) {
+     marker = new google.maps.Marker({position: event.latLng, map: map});
+     console.log(event.latLng);   // Get latlong info as object.
+     console.log( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng()); // Get separate lat long.
+ });
+}
 
+</script>

@@ -117,11 +117,11 @@ $(document).ready(function(){
      <div class="col-md-3 col-xs-6">
         <label for="staff_start_date">Ngày vào làm việc</label>
         <div class="input-group">
-          <input class="form-control input-mask-date" type="text" id="staff_start_date" name="staff_start_date" required="required" tabindex="15">
+          <input class="form-control start-date" type="text" id="staff_start_date" name="staff_start_date" required="required" tabindex="15">
         </div>
         <label for="staff_end_date">Ngày thôi việc</label>
         <div class="input-group">
-          <input class="form-control input-mask-date" type="text" id="staff_end_date" name="staff_end_date" tabindex="16">
+          <input class="form-control end-date" type="text" id="staff_end_date" name="staff_end_date" tabindex="16">
         </div>
         <label for="staff_account">Tên truy cập <a href="#" title="Thêm tài khoản mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("user/add") ?>','Thêm tài khoản mới','staff_account','<?php echo $this->url("user/getuser") ?>','add_user')"></i></a></label>
         <div class="input-group">

@@ -126,7 +126,7 @@ $i = $sonews*$page-($sonews-1);
    </thead>
    <tbody>
     <?php foreach ($bonuss as $bonus) : ?>
-        <tr id="<?php echo $bonus->bonus_id ?>" class="edit_tr" <?php echo ($bonus->bonus_end_date=="" || $bonus->bonus_end_date==0 || $bonus->bonus_end_date>=strtotime(date('d-m-Y')))?'style="color: green"':'style="color:#999"' ?> >
+        <tr id="<?php echo $bonus->bonus_id ?>" class="edit_tr" <?php echo ($bonus->bonus_end_date=="" || $bonus->bonus_end_date==0 || $bonus->bonus_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $bonus->bonus_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $lib->formatMoney($bonus->bonus_plus); ?></td>

@@ -78,11 +78,11 @@
      <div class="col-md-3 col-xs-6">
         <label for="staff_start_date">Ngày vào làm việc</label>
         <div class="input-group">
-          <input class="form-control input-mask-date" type="text" id="staff_start_date" name="staff_start_date" required="required" tabindex="15" value="<?php echo $lib->hien_thi_ngay_thang($staff_data->staff_start_date) ?>">
+          <input class="form-control start-date" type="text" id="staff_start_date" name="staff_start_date" required="required" tabindex="15" value="<?php echo $lib->hien_thi_ngay_thang($staff_data->staff_start_date) ?>">
         </div>
         <label for="staff_end_date">Ngày thôi việc</label>
         <div class="input-group">
-          <input class="form-control input-mask-date" type="text" id="staff_end_date" name="staff_end_date" tabindex="16" value="<?php echo $lib->hien_thi_ngay_thang($staff_data->staff_end_date) ?>">
+          <input class="form-control end-date" type="text" id="staff_end_date" name="staff_end_date" tabindex="16" value="<?php echo $lib->hien_thi_ngay_thang($staff_data->staff_end_date) ?>">
         </div>
         <label for="staff_account">Tên truy cập</label>
         <div class="input-group">

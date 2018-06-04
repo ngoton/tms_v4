@@ -14,13 +14,21 @@
                     <tr>
                         <td>Tỉnh/TP</td>
                         <td>
-                          <select class="form-control select2" id="place_province" name="place_province" required="required" tabindex="2">
+                          <select class="form-control select2" id="place_province" name="place_province" required="required" tabindex="3">
                             <?php foreach ($provinces as $province) { ?>
                               <option value="<?php echo $province->province_id ?>" <?php echo $place_data->place_province==$province->province_id?'selected="selected"':null ?> ><?php echo $province->province_name ?></option>
                             <?php } ?>
                           </select>
                         </td>
                         
+                    </tr>
+                    <tr>
+                      <td>Lat</td>
+                      <td><input type="text" id="place_lat" name="place_lat" tabindex="4" value="<?php echo $place_data->place_lat ?>"></td>
+                    </tr>
+                    <tr>
+                      <td>Long</td>
+                      <td><input type="text" id="place_long" name="place_long" tabindex="5" value="<?php echo $place_data->place_long ?>"></td>
                     </tr>
                 </table> 
             

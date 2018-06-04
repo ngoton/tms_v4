@@ -10,6 +10,40 @@ $(function () {
         autoclose: true
       });
     });
+    $(document).on("focus", ".start-date", function () {
+      $(this).datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      }).on('changeDate', function (selected) {
+          var minDate = new Date(selected.date.valueOf());
+          $('.end-date').datepicker('setStartDate', minDate);
+      });
+      $('.end-date').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
+      
+    });
+    $(document).on("focus", ".end-date", function () {
+      $(this).datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      }).on('changeDate', function (selected) {
+          var maxDate = new Date(selected.date.valueOf());
+          $('.start-date').datepicker('setEndDate', maxDate);
+
+          var from = $(".start-date").val().split("/");
+          var startDate = new Date(from[2], from[1] - 1, from[0]);
+          if (startDate > maxDate){
+            $('.start-date').val($('.end-date').val());
+          }
+      });
+      $('.start-date').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
+      
+    });
     $(document).on("focus", ".input-mask-phone", function () {
       $.mask.definitions['~'] = '([0-9] )?';
       $(this).mask("9999 999 999~");
