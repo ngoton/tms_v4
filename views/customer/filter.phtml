@@ -1,30 +1,31 @@
 <div class="login_body">
-  <form id="add" method="post" action="<?php echo $this->url('staff') ?>" enctype="multipart/form-data">
+  <form id="add" method="post" action="<?php echo $this->url('customer') ?>" enctype="multipart/form-data">
     <div class="col-xs-4">
-      <label for="staff_gender">Giới tính</label>
+      <label for="customer_type">Loại</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="staff_gender" name="staff_gender[]" multiple="">
-          <option value="0">Nam</option>
-          <option value="1">Nữ</option>
+        <select class="form-control multiselect" id="customer_type" name="customer_type[]" multiple="">
+          <option value="1">Khách hàng</option>
+          <option value="2">Đối tác</option>
+          <option value="3">Cá nhân</option>
         </select>
       </div>
     </div>
     <div class="col-xs-4">
-      <label for="staff_position">Chức vụ</label>
+      <label for="customer_province">Địa chỉ</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="staff_position" name="staff_position[]" multiple="">
-          <?php foreach ($positions as $position) { ?>
-            <option value="<?php echo $position->position_id ?>"><?php echo $position->position_name ?></option>
+        <select class="form-control multiselect" id="customer_province" name="customer_province[]" multiple="">
+          <?php foreach ($provinces as $province) { ?>
+            <option value="<?php echo $province->province_id ?>"><?php echo $province->province_name ?></option>
           <?php } ?>
         </select>
       </div>
     </div>
     <div class="col-xs-4">
-      <label for="staff_department">Phòng ban</label>
+      <label for="customer_sub">Mặt hàng</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="staff_department" name="staff_department[]" multiple="">
-          <?php foreach ($departments as $department) { ?>
-            <option value="<?php echo $department->department_id ?>"><?php echo $department->department_name ?></option>
+        <select class="form-control multiselect" id="customer_sub" name="customer_sub[]" multiple="">
+          <?php foreach ($customer_subs as $customer_sub) { ?>
+            <option value="<?php echo $customer_sub->customer_sub_id ?>"><?php echo $customer_sub->customer_sub_name ?></option>
           <?php } ?>
         </select>
       </div>
@@ -70,7 +71,7 @@ $('.ui-dialog-content').on('click' , '.dropdown-toggle', function(event){
     $(dropDown).css({position:'fixed', top: selfOffset.top + selfHeight , left: selfOffset.left, right: selfOffsetRigth ,  width: '180px'});
 });
 
-function fixDropdownPosition(){
+function fixDropdownposition(){
     var openDropdownButton = $('.dropdown-toggle');
     if($(openDropdownButton).length){
         var selfHeight = $(openDropdownButton).height();
@@ -84,17 +85,17 @@ function fixDropdownPosition(){
 
 $(".ui-dialog-content").unbind("scroll");
 $(".ui-dialog-content").scroll(function(){
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 
 $( window ).resize(function() {
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 $( window ).scroll(function() {
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 $(".ui-dialog").resize(function() {
-    fixDropdownPosition();
+    fixDropdownposition();
 });
 </script>
 <style type="text/css">

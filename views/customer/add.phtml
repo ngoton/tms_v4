@@ -126,169 +126,186 @@ $(document).ready(function(){
 </script>
      
 <div id="error_customer" class="error"><?php echo isset($error) ? $error : null; ?></div>
-<div class="login_body">
-  
+<div class="tabbable">
   <form id="add_customer" method="post" action="" autocomplete="off">
-     <div class="col-md-3 col-xs-6">
-        <label for="customer_code">Mã</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_code" name="customer_code" required="required" tabindex="1" value="<?php echo $lastID ?>">
-        </div>
-        <label for="customer_name">Tên</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_name" name="customer_name" required="required" tabindex="2">
-        </div>
-        <label for="customer_company">Công ty</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_company" name="customer_company"tabindex="3">
-        </div>
-        <label for="customer_code">Loại</label>
-        <div class="input-group">
-          <label>
-            <input class="form-control ace" type="radio" name="customer_type" checked="checked" tabindex="4" value="1"> <span class="lbl">Khách hàng</span>
-          </label>
-          &nbsp;
-          <label>
-            <input class="form-control ace" type="radio" name="customer_type" tabindex="5" value="2"> <span class="lbl">Đối tác</span>
-          </label>
-          &nbsp;
-          <label>
-            <input class="form-control ace" type="radio" name="customer_type" tabindex="6" value="3"> <span class="lbl">Cá nhân</span>
-          </label>
-        </div>
-     </div>
-     <div class="col-md-3 col-xs-6">
-        <label for="customer_phone">Số điện thoại</label>
-        <div class="input-group">
-          <input class="form-control input-mask-phone" type="text" id="customer_phone" name="customer_phone" tabindex="10">
-        </div>
-        <label for="customer_mst">MST</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_mst" name="customer_mst" tabindex="7">
-        </div>
-        <label for="customer_address">Địa chỉ</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_address" name="customer_address" tabindex="8">
-        </div>
-        <label for="customer_province">Tỉnh/TP</label>
-        <div class="input-group">
-          <select class="form-control select2" id="customer_province" name="customer_province" required="required" tabindex="9">
-            <?php foreach ($provinces as $province) { ?>
-              <option value="<?php echo $province->province_id ?>"><?php echo $province->province_name ?></option>
-            <?php } ?>
-          </select>
-        </div>
-        
-     </div>
-     <div class="col-md-3 col-xs-6">
-        <label for="customer_mobile">Di động</label>
-        <div class="input-group">
-          <input class="form-control input-mask-phone" type="text" id="customer_mobile" name="customer_mobile" tabindex="11">
-        </div>
-        <label for="customer_email">Email</label>
-        <div class="input-group">
-          <input class="form-control" type="email" id="customer_email" name="customer_email" tabindex="12">
-        </div>
-        <label for="customer_bank_account">Số tài khoản</label>
-        <div class="input-group input-daterange">
-          <input class="form-control input-sm" type="text" id="customer_bank_account" name="customer_bank_account" tabindex="13">
-          <span class="input-group-addon">
-            <i class="fa fa-bank"></i>
-          </span>
-          <input class="form-control input-sm" type="text" id="customer_bank_name" name="customer_bank_name" tabindex="14" placeholder="Tại Ngân hàng">
-        </div>
-        <label for="customer_bank_branch">Chi nhánh</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_bank_branch" name="customer_bank_branch" tabindex="15">
-        </div>
-     </div>
-     <div class="col-md-3 col-xs-6">
-        
-        <label for="customer_sub">Loại hàng</label>
-        <div class="input-group">
-          <input class="form-control" type="text" id="customer_sub" name="customer_sub" tabindex="16">
-        </div>
-     </div>
-     <div class="clearFix"></div>
-     <div class="col-xs-12">
-        <fieldset class="groupbox">
-          <legend>
-              <span><h4>Người liên hệ</h4></span>
-          </legend>
+    <ul class="nav nav-tabs padding-18">
+      <li class="active">
+        <a data-toggle="tab" href="#home">
+          <i class="green ace-icon fa fa-home bigger-120"></i>
+          Thông tin
+        </a>
+      </li>
 
-          <table id="dataTable" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px">
-              <tbody>
-              <tr>
-                  <td><input type="checkbox" name="chk"></td>
-                  <td>
-                      <table style="width:100%">
-                          <tbody><tr>
-                              <td>
-                                <label>Họ tên</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_name" name="contact_person_name[]" tabindex="17">
-                                </div>
-                              </td>
-                              <td>
-                                <label>SĐT</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_phone input-mask-phone" name="contact_person_phone[]" tabindex="20">
-                                </div>
-                              </td>
-                              <td>
-                                <label>Chức vụ</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_position" name="contact_person_position[]" tabindex="23">
-                                </div>
-                              </td>
+      <li>
+        <a data-toggle="tab" href="#contact">
+          <i class="orange ace-icon fa fa-user bigger-120"></i>
+          Liên hệ
+        </a>
+      </li>
+
+    </ul>
+    <div class="tab-content no-border ">
+      <div id="home" class="tab-pane in active">
+        <div class="col-md-3 col-xs-6">
+          <label for="customer_code">Mã</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_code" name="customer_code" required="required" tabindex="1" value="<?php echo $lastID ?>">
+          </div>
+          <label for="customer_name">Tên</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_name" name="customer_name" required="required" tabindex="2">
+          </div>
+          <label for="customer_company">Công ty</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_company" name="customer_company" tabindex="3">
+          </div>
+          <label for="customer_code">Loại</label>
+          <div class="input-group">
+            <label>
+              <input class="form-control ace" type="radio" name="customer_type" checked="checked" tabindex="4" value="1"> <span class="lbl">Khách hàng</span>
+            </label>
+            &nbsp;
+            <label>
+              <input class="form-control ace" type="radio" name="customer_type" tabindex="5" value="2"> <span class="lbl">Đối tác</span>
+            </label>
+            &nbsp;
+            <label>
+              <input class="form-control ace" type="radio" name="customer_type" tabindex="6" value="3"> <span class="lbl">Cá nhân</span>
+            </label>
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <label for="customer_phone">Số điện thoại</label>
+          <div class="input-group">
+            <input class="form-control input-mask-phone" type="text" id="customer_phone" name="customer_phone" tabindex="10">
+          </div>
+          <label for="customer_mst">MST</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_mst" name="customer_mst" tabindex="7">
+          </div>
+          <label for="customer_address">Địa chỉ</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_address" name="customer_address" tabindex="8">
+          </div>
+          <label for="customer_province">Tỉnh/TP</label>
+          <div class="input-group">
+            <select class="form-control select2" id="customer_province" name="customer_province" required="required" tabindex="9">
+              <?php foreach ($provinces as $province) { ?>
+                <option value="<?php echo $province->province_id ?>"><?php echo $province->province_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <label for="customer_mobile">Di động</label>
+          <div class="input-group">
+            <input class="form-control input-mask-phone" type="text" id="customer_mobile" name="customer_mobile" tabindex="11">
+          </div>
+          <label for="customer_email">Email</label>
+          <div class="input-group">
+            <input class="form-control" type="email" id="customer_email" name="customer_email" tabindex="12">
+          </div>
+          <label for="customer_bank_account">Số tài khoản</label>
+          <div class="input-group input-daterange">
+            <input class="form-control input-sm" type="text" id="customer_bank_account" name="customer_bank_account" tabindex="13">
+            <span class="input-group-addon">
+              <i class="fa fa-bank"></i>
+            </span>
+            <input class="form-control input-sm" type="text" id="customer_bank_name" name="customer_bank_name" tabindex="14" placeholder="Tại Ngân hàng">
+          </div>
+          <label for="customer_bank_branch">Chi nhánh</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_bank_branch" name="customer_bank_branch" tabindex="15">
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          
+          <label for="customer_sub">Mặt hàng</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="customer_sub" name="customer_sub" tabindex="16">
+          </div>
+       </div>
+      </div>
+      <div id="contact" class="tab-pane">
+        <div class="col-xs-12">
+            <table id="dataTable" style="width: 100%;">
+                <tbody>
+                <tr>
+                    <td style="padding-right: 10px"><input type="checkbox" name="chk"></td>
+                    <td>
+                        <table style="width:100%;">
+                            <tbody><tr>
+                                <td>
+                                  <label>Họ tên</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_name" name="contact_person_name[]" tabindex="17">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>SĐT</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_phone input-mask-phone" name="contact_person_phone[]" tabindex="20">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Chức vụ</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_position" name="contact_person_position[]" tabindex="23">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                
+                                <td>
+                                  <label>Email</label>
+                                  <div class="input-group">
+                                    <input type="email" class="contact_person_email" name="contact_person_email[]" tabindex="18">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Ngày sinh</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_birthday input-mask-date" name="contact_person_birthday[]" tabindex="21">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Bộ phận</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_department" name="contact_person_department[]" tabindex="24">
+                                  </div>
+                                </td>
                             </tr>
                             <tr>
+                                <td>
+                                  <label>Di động</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_mobile input-mask-phone" name="contact_person_mobile[]" tabindex="19">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Địa chỉ</label>
+                                  <div class="input-group">
+                                    <input type="text" class="contact_person_address" name="contact_person_address[]" tabindex="22">
+                                  </div>
+                                </td>
                               
-                              <td>
-                                <label>Email</label>
-                                <div class="input-group">
-                                  <input type="email" class="contact_person_email" name="contact_person_email[]" tabindex="18">
-                                </div>
-                              </td>
-                              <td>
-                                <label>Ngày sinh</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_birthday input-mask-date" name="contact_person_birthday[]" tabindex="21">
-                                </div>
-                              </td>
-                              <td>
-                                <label>Bộ phận</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_department" name="contact_person_department[]" tabindex="24">
-                                </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                <label>Di động</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_mobile input-mask-phone" name="contact_person_mobile[]" tabindex="19">
-                                </div>
-                              </td>
-                              <td>
-                                <label>Địa chỉ</label>
-                                <div class="input-group">
-                                  <input type="text" class="contact_person_address" name="contact_person_address[]" tabindex="22">
-                                </div>
-                              </td>
-                            
-                              
-                          </tr>
-                      </tbody></table>
-                  </td>
-              </tr>
-          </tbody>
-          </table>
-      </fieldset>
-          <input type="button" value="Thêm" onclick="addRow('dataTable')">
+                                
+                            </tr>
+                        </tbody></table>
+                        <div class="hr hr-18 dotted hr-double"></div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+            </table>
+        
+            <input type="button" value="Thêm" onclick="addRow('dataTable')">
 
-          <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+        </div>
       </div>
+    </div>
   </form>
 </div>
 

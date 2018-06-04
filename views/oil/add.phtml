@@ -1,0 +1,56 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	
+			// Validate form
+			$("#add_oil").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add_oil")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/oil/addoil", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_oil').hide();
+                  $('#error_oil').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_oil').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_oil').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+<div class="login_body">
+  
+      <form id="add_oil" method="post" action="" autocomplete="off">
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Chiều đi </td>
+                <td><input type="text" id="oil_way" name="oil_way" tabindex="1" required="required"></td>
+            </tr>
+            <tr>
+                <td>Số lit / km </td>
+                <td><input type="text" id="oil_lit" name="oil_lit" tabindex="2" required="required" class="numbers"></td>
+            </tr>
+        </table> 
+    </form>
+</div>
+<div id="error_oil" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

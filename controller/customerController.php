@@ -77,7 +77,8 @@ Class customerController Extends baseController {
                 $data['where'] .= ' AND customer_province IN ('.implode(',',$_POST['customer_province']).')';
             }
             if (isset($_POST['customer_sub'])) {
-                $data['where'] .= ' AND customer_sub IN ('.implode(',',$_POST['customer_sub']).')';
+                $str = implode(',', $_POST['customer_sub']);
+                $data['where'] .= ' AND (customer_sub LIKE "'.$str.'" OR customer_sub LIKE "'.$str.',%" OR customer_sub LIKE "%,'.$str.',%" OR customer_sub LIKE "%,'.$str.'")';
             }
         }
 
@@ -126,7 +127,8 @@ Class customerController Extends baseController {
                 $data['where'] .= ' AND customer_province IN ('.implode(',',$_POST['customer_province']).')';
             }
             if (isset($_POST['customer_sub'])) {
-                $data['where'] .= ' AND customer_sub IN ('.implode(',',$_POST['customer_sub']).')';
+                $str = implode(',', $_POST['customer_sub']);
+                $data['where'] .= ' AND (customer_sub LIKE "'.$str.'" OR customer_sub LIKE "'.$str.',%" OR customer_sub LIKE "%,'.$str.',%" OR customer_sub LIKE "%,'.$str.'")';
             }
         }
 
@@ -228,23 +230,23 @@ Class customerController Extends baseController {
 
             $contact_person_model = $this->model->get('contactpersonModel');
 
-            $contact_person = $_POST['contact_person'];
+            $contact_person = json_decode($_POST['contact_person']);
             if (isset($id_customer)) {
                 foreach ($contact_person as $v) {
                     $data_contact_person = array(
-                        'contact_person_name' => trim($v['contact_person_name']),
-                        'contact_person_phone' => trim(str_replace('_', '', $v['contact_person_phone'])),
-                        'contact_person_mobile' => trim(str_replace('_', '', $v['contact_person_mobile'])),
-                        'contact_person_email' => trim($v['contact_person_email']),
-                        'contact_person_birthday' => strtotime(str_replace('/', '-', $v['contact_person_birthday'])),
-                        'contact_person_address' => trim($v['contact_person_address']),
-                        'contact_person_position' => trim($v['contact_person_position']),
-                        'contact_person_department' => trim($v['contact_person_department']),
+                        'contact_person_name' => trim($v->contact_person_name),
+                        'contact_person_phone' => trim(str_replace('_', '', $v->contact_person_phone)),
+                        'contact_person_mobile' => trim(str_replace('_', '', $v->contact_person_mobile)),
+                        'contact_person_email' => trim($v->contact_person_email),
+                        'contact_person_birthday' => strtotime(str_replace('/', '-', $v->contact_person_birthday)),
+                        'contact_person_address' => trim($v->contact_person_address),
+                        'contact_person_position' => trim($v->contact_person_position),
+                        'contact_person_department' => trim($v->contact_person_department),
                         'contact_person_customer' => $id_customer,
                     );
 
-                    if ($v['id_contact_person']>0) {
-                        $contact_person_model->updateCustomer($data_contact_person,array('contact_person_id'=>$v['id_contact_person']));
+                    if ($v->id_contact_person>0) {
+                        $contact_person_model->updateCustomer($data_contact_person,array('contact_person_id'=>$v->id_contact_person));
                     }
                     else{
                         if ($data_contact_person['contact_person_name']!="") {
@@ -384,23 +386,23 @@ Class customerController Extends baseController {
 
             $contact_person_model = $this->model->get('contactpersonModel');
 
-            $contact_person = $_POST['contact_person'];
+            $contact_person = json_decode($_POST['contact_person']);
             if (isset($id_customer)) {
                 foreach ($contact_person as $v) {
                     $data_contact_person = array(
-                        'contact_person_name' => trim($v['contact_person_name']),
-                        'contact_person_phone' => trim(str_replace('_', '', $v['contact_person_phone'])),
-                        'contact_person_mobile' => trim(str_replace('_', '', $v['contact_person_mobile'])),
-                        'contact_person_email' => trim($v['contact_person_email']),
-                        'contact_person_birthday' => strtotime(str_replace('/', '-', $v['contact_person_birthday'])),
-                        'contact_person_address' => trim($v['contact_person_address']),
-                        'contact_person_position' => trim($v['contact_person_position']),
-                        'contact_person_department' => trim($v['contact_person_department']),
+                        'contact_person_name' => trim($v->contact_person_name),
+                        'contact_person_phone' => trim(str_replace('_', '', $v->contact_person_phone)),
+                        'contact_person_mobile' => trim(str_replace('_', '', $v->contact_person_mobile)),
+                        'contact_person_email' => trim($v->contact_person_email),
+                        'contact_person_birthday' => strtotime(str_replace('/', '-', $v->contact_person_birthday)),
+                        'contact_person_address' => trim($v->contact_person_address),
+                        'contact_person_position' => trim($v->contact_person_position),
+                        'contact_person_department' => trim($v->contact_person_department),
                         'contact_person_customer' => $id_customer,
                     );
 
-                    if ($v['id_contact_person']>0) {
-                        $contact_person_model->updateCustomer($data_contact_person,array('contact_person_id'=>$v['id_contact_person']));
+                    if ($v->id_contact_person>0) {
+                        $contact_person_model->updateCustomer($data_contact_person,array('contact_person_id'=>$v->id_contact_person));
                     }
                     else{
                         if ($data_contact_person['contact_person_name']!="") {
@@ -476,6 +478,26 @@ Class customerController Extends baseController {
 
         $this->view->data['provinces'] = $provinces;
 
+        $contact_person_model = $this->model->get('contactpersonModel');
+        $contact_persons = $contact_person_model->getAllCustomer(array('where'=>'contact_person_customer = '.$id));
+        $this->view->data['contact_persons'] = $contact_persons;
+
+        $customer_sub_model = $this->model->get('customersubModel');
+
+        $customer_sub = "";
+        $sts = explode(',', $customer_data->customer_sub);
+        foreach ($sts as $key) {
+            $subs = $customer_sub_model->getCustomer($key);
+            if($subs){
+                if ($customer_sub == "")
+                    $customer_sub .= $subs->customer_sub_name;
+                else
+                    $customer_sub .= ','.$subs->customer_sub_name;
+            }
+            
+        }
+        $this->view->data['customer_sub'] = $customer_sub;
+
         return $this->view->show('customer/edit');
 
     }
@@ -523,6 +545,26 @@ Class customerController Extends baseController {
 
         $this->view->data['provinces'] = $provinces;
 
+        $contact_person_model = $this->model->get('contactpersonModel');
+        $contact_persons = $contact_person_model->getAllCustomer(array('where'=>'contact_person_customer = '.$id));
+        $this->view->data['contact_persons'] = $contact_persons;
+
+        $customer_sub_model = $this->model->get('customersubModel');
+
+        $customer_sub = "";
+        $sts = explode(',', $customer_data->customer_sub);
+        foreach ($sts as $key) {
+            $subs = $customer_sub_model->getCustomer($key);
+            if($subs){
+                if ($customer_sub == "")
+                    $customer_sub .= $subs->customer_sub_name;
+                else
+                    $customer_sub .= ','.$subs->customer_sub_name;
+            }
+            
+        }
+        $this->view->data['customer_sub'] = $customer_sub;
+
         return $this->view->show('customer/view');
 
     }
@@ -537,6 +579,12 @@ Class customerController Extends baseController {
         $provinces = $province_model->getAllProvince();
 
         $this->view->data['provinces'] = $provinces;
+
+        $customer_sub_model = $this->model->get('customersubModel');
+
+        $customer_subs = $customer_sub_model->getAllCustomer(array('order_by'=>'customer_sub_name','order'=>'ASC'));
+
+        $this->view->data['customer_subs'] = $customer_subs;
 
         $this->view->data['page'] = $_GET['page'];
         $this->view->data['order_by'] = $_GET['order_by'];

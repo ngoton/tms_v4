@@ -1,0 +1,19 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    
+                    <tr>
+                        <td>Chiều đi</td>
+                        <td><input type="text" id="oil_way" name="oil_way" tabindex="1" required="required" value="<?php echo $oil_data->oil_way ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>Số lit / km</td>
+                        <td><input type="text" id="oil_lit" name="oil_lit" tabindex="2" required="required" value="<?php echo $oil_data->oil_lit ?>" class="numbers"></td>
+                    </tr>
+                </table> 
+           
+        </div>
+        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+
