@@ -134,6 +134,8 @@ Class routeController Extends baseController {
             $data = array(
                 'route_province' => trim($_POST['route_province']),
                 'route_name' => trim($_POST['route_name']),
+                'route_lat' => trim($_POST['route_lat']),
+                'route_long' => trim($_POST['route_long']),
             );
             $route_model->createRoute($data);
 
@@ -198,6 +200,8 @@ Class routeController Extends baseController {
             $data = array(
                 'route_province' => trim($_POST['route_province']),
                 'route_name' => trim($_POST['route_name']),
+                'route_lat' => trim($_POST['route_lat']),
+                'route_long' => trim($_POST['route_long']),
             );
             $route_model->updateRoute($data,array('route_id'=>$id));
 

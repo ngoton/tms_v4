@@ -37,41 +37,190 @@ $(document).ready(function(){
 });
 </script>
 
-        <div class="login_body">
-         
-              <form id="edit_place" method="post" action="" autocomplete="off">
-                  <table style="margin-top:20px;">
-                    <tr>
-                        <td>Mã kho hàng </td>
-                        <td><input type="text" id="place_code" name="place_code" tabindex="1" autofocus required="required" value="<?php echo $place_data->place_code ?>"></td>
-                        
-                    </tr>
-                    <tr>
-                        <td>Tên kho hàng</td>
-                        <td><input type="text" id="place_name" name="place_name" tabindex="2" required="required" value="<?php echo $place_data->place_name ?>"></td>
-                    </tr>
-                    <tr>
-                        <td>Tỉnh/TP</td>
-                        <td>
-                          <select class="form-control select2" id="place_province" name="place_province" required="required" tabindex="3">
-                            <?php foreach ($provinces as $province) { ?>
-                              <option value="<?php echo $province->province_id ?>" <?php echo $place_data->place_province==$province->province_id?'selected="selected"':null ?> ><?php echo $province->province_name ?></option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        
-                    </tr>
-                    <tr>
-                      <td>Lat</td>
-                      <td><input type="text" id="place_lat" name="place_lat" tabindex="4" value="<?php echo $place_data->place_lat ?>"></td>
-                    </tr>
-                    <tr>
-                      <td>Long</td>
-                      <td><input type="text" id="place_long" name="place_long" tabindex="5" value="<?php echo $place_data->place_long ?>"></td>
-                    </tr>
-                </table> 
-            </form>
+<div id="error_place" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+ 
+      <form id="edit_place" method="post" action="" autocomplete="off">
+        <div class="col-xs-12">
+          <table>
+            <tr>
+                <td>Mã kho hàng </td>
+                <td><input type="text" id="place_code" name="place_code" tabindex="1" autofocus required="required" value="<?php echo $place_data->place_code ?>"></td>
+                
+            </tr>
+            <tr>
+                <td>Tên kho hàng</td>
+                <td><input type="text" id="place_name" name="place_name" tabindex="2" required="required" value="<?php echo $place_data->place_name ?>"></td>
+            </tr>
+            <tr>
+                <td>Tỉnh/TP</td>
+                <td>
+                  <select class="form-control select2" id="place_province" name="place_province" required="required" tabindex="3">
+                    <?php foreach ($provinces as $province) { ?>
+                      <option value="<?php echo $province->province_id ?>" <?php echo $place_data->place_province==$province->province_id?'selected="selected"':null ?> ><?php echo $province->province_name ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+                
+            </tr>
+        </table> 
         </div>
-        <div id="error_place" class="error"><?php echo isset($error) ? $error : null; ?></div>
+        <div class="col-xs-12">
+          <div id="map_canvas" style="width:100%;height:200px;"></div>
+          <table>
+            <tr>
+              <td>Latitude</td>
+              <td><input type="text" id="place_lat" name="place_lat" tabindex="4" value="<?php echo $place_data->place_lat ?>"></td>
+            
+              <td>Longitude</td>
+              <td><input type="text" id="place_long" name="place_long" tabindex="5" value="<?php echo $place_data->place_long ?>"></td>
+            </tr>
+          </table>
+          
+        </div>
+    </form>
+</div>
+        
 
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initialize"></script>
+<script>
+var styles = [
+  {
+    "featureType": "administrative.province",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      { "visibility": "on" },
+      { "weight": 2.5 },
+      { "color": "#24b0e2" }
+    ]
+  },{
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },{
+    "featureType": "administrative.locality",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },{
+    "featureType": "road",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  }
+];
+var lat = null;
+var lng = null;
+var map = null;
+var geocoder = null;
+var marker = null;
+var myListener = null;
+
+$(document).ready(function() {
+  lat = $('#place_lat').val();
+  lng = $('#place_long').val();
+  $('#place_province').on('select2:select', function (e) {
+    var data = e.params.data;
+    codeAddress($('#place_name').val()+", "+data.text);
+  });
+  $('#place_name').keyup(function(){
+    codeAddress($(this).val()+", "+$('#place_province option:selected').text());
+  });
+  $('#place_long').keyup(function(){
+    lat = $('#place_lat').val();
+    lng = $('#place_long').val();
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    map.setCenter(myLatlng);
+    marker.setPosition(myLatlng);
+    updatePosition(myLatlng);
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+      updatePosition(marker.getPosition());
+    });
+  });
+  $('#place_lat').keyup(function(){
+    lat = $('#place_lat').val();
+    lng = $('#place_long').val();
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    map.setCenter(myLatlng);
+    marker.setPosition(myLatlng);
+    updatePosition(myLatlng);
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+      updatePosition(marker.getPosition());
+    });
+  });
+});
+
+function initialize() {
+
+  geocoder = new google.maps.Geocoder();
+
+  if (lat != '' && lng != '') {
+    var latLng = new google.maps.LatLng(lat, lng);
+  } else {
+    var latLng = new google.maps.LatLng(10.5215836, 105.1258955);
+  }
+  var myOptions = {
+    center: latLng,
+    zoom: 9,
+    gestureHandling: 'greedy',
+    styles:styles,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+  marker = new google.maps.Marker({
+    map: map,
+    position: latLng,
+    draggable: true
+  });
+  google.maps.event.addListener(marker, 'dragend', function() {
+    updatePosition(marker.getPosition());
+  });
+  updatePosition(latLng);
+  google.maps.event.addListener(map, 'click', function(event) {
+    if (marker) {
+      marker.setPosition(event.latLng)
+    } else {
+      marker = new google.maps.Marker({
+        map: map,
+        position: event.latLng,
+        draggable: true
+      });
+    }
+    updatePosition(event.latLng);
+  });
+
+}
+
+function codeAddress(value) {
+
+  var address = value;
+  geocoder.geocode({
+    'address': address
+  }, function(results, status) {
+
+    if (status == google.maps.GeocoderStatus.OK) {
+      map.setCenter(results[0].geometry.location);
+      marker.setPosition(results[0].geometry.location);
+      updatePosition(results[0].geometry.location);
+
+      google.maps.event.addListener(marker, 'dragend', function() {
+        updatePosition(marker.getPosition());
+      });
+    } 
+  });
+}
+
+function updatePosition(latLng) {
+
+  $('#place_lat').val(latLng.lat());
+  $('#place_long').val(latLng.lng());
+
+}
+</script>

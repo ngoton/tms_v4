@@ -139,6 +139,8 @@ Class placeController Extends baseController {
                 'place_province' => trim($_POST['place_province']),
                 'place_name' => trim($_POST['place_name']),
                 'place_code' => trim($_POST['place_code']),
+                'place_lat' => trim($_POST['place_lat']),
+                'place_long' => trim($_POST['place_long']),
             );
             $place_model->createPlace($data);
 
@@ -208,6 +210,8 @@ Class placeController Extends baseController {
                 'place_province' => trim($_POST['place_province']),
                 'place_name' => trim($_POST['place_name']),
                 'place_code' => trim($_POST['place_code']),
+                'place_lat' => trim($_POST['place_lat']),
+                'place_long' => trim($_POST['place_long']),
             );
             $place_model->updatePlace($data,array('place_id'=>$id));
 

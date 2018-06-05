@@ -1,7 +1,9 @@
-
+<div id="error_route" class="error"><?php echo isset($error) ? $error : null; ?></div>
         <div class="login_body">
          
-                  <table style="margin-top:20px;">
+              <form id="edit_route" method="post" action="" autocomplete="off">
+                <div class="col-xs-12">
+                  <table>
                     <tr>
                         <td>Tên địa điểm</td>
                         <td><input type="text" id="route_name" name="route_name" tabindex="1" required="required" value="<?php echo $route_data->route_name ?>"></td>
@@ -18,8 +20,163 @@
                         
                     </tr>
                 </table> 
-           
+                </div>
+                <div class="col-xs-12">
+                  <div id="map_canvas" style="width:100%;height:200px;"></div>
+                  <table>
+                    <tr>
+                      <td>Latitude</td>
+                      <td><input type="text" id="route_lat" name="route_lat" tabindex="4" value="<?php echo $route_data->route_lat ?>"></td>
+                    
+                      <td>Longitude</td>
+                      <td><input type="text" id="route_long" name="route_long" tabindex="5" value="<?php echo $route_data->route_long ?>"></td>
+                    </tr>
+                  </table>
+                  
+                </div>
+            </form>
         </div>
-        <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+        
 
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initialize"></script>
+<script>
+var styles = [
+  {
+    "featureType": "administrative.province",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      { "visibility": "on" },
+      { "weight": 2.5 },
+      { "color": "#24b0e2" }
+    ]
+  },{
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },{
+    "featureType": "administrative.locality",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },{
+    "featureType": "road",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  }
+];
+var lat = null;
+var lng = null;
+var map = null;
+var geocoder = null;
+var marker = null;
+var myListener = null;
+
+$(document).ready(function() {
+  lat = $('#route_lat').val();
+  lng = $('#route_long').val();
+  $('#route_province').on('select2:select', function (e) {
+    var data = e.params.data;
+    codeAddress($('#route_name').val()+", "+data.text);
+  });
+  $('#route_name').keyup(function(){
+    codeAddress($(this).val()+", "+$('#route_province option:selected').text());
+  });
+  $('#route_long').keyup(function(){
+    lat = $('#route_lat').val();
+    lng = $('#route_long').val();
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    map.setCenter(myLatlng);
+    marker.setPosition(myLatlng);
+    updatePosition(myLatlng);
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+      updatePosition(marker.getPosition());
+    });
+  });
+  $('#route_lat').keyup(function(){
+    lat = $('#route_lat').val();
+    lng = $('#route_long').val();
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    map.setCenter(myLatlng);
+    marker.setPosition(myLatlng);
+    updatePosition(myLatlng);
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+      updatePosition(marker.getPosition());
+    });
+  });
+});
+
+function initialize() {
+
+  geocoder = new google.maps.Geocoder();
+
+  if (lat != '' && lng != '') {
+    var latLng = new google.maps.LatLng(lat, lng);
+  } else {
+    var latLng = new google.maps.LatLng(10.5215836, 105.1258955);
+  }
+  var myOptions = {
+    center: latLng,
+    zoom: 9,
+    gestureHandling: 'greedy',
+    styles:styles,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+  marker = new google.maps.Marker({
+    map: map,
+    position: latLng,
+    draggable: true
+  });
+  google.maps.event.addListener(marker, 'dragend', function() {
+    updatePosition(marker.getPosition());
+  });
+  updatePosition(latLng);
+  google.maps.event.addListener(map, 'click', function(event) {
+    if (marker) {
+      marker.setPosition(event.latLng)
+    } else {
+      marker = new google.maps.Marker({
+        map: map,
+        position: event.latLng,
+        draggable: true
+      });
+    }
+    updatePosition(event.latLng);
+  });
+
+}
+
+function codeAddress(value) {
+
+  var address = value;
+  geocoder.geocode({
+    'address': address
+  }, function(results, status) {
+
+    if (status == google.maps.GeocoderStatus.OK) {
+      map.setCenter(results[0].geometry.location);
+      marker.setPosition(results[0].geometry.location);
+      updatePosition(results[0].geometry.location);
+
+      google.maps.event.addListener(marker, 'dragend', function() {
+        updatePosition(marker.getPosition());
+      });
+    } 
+  });
+}
+
+function updatePosition(latLng) {
+
+  $('#route_lat').val(latLng.lat());
+  $('#route_long').val(latLng.lng());
+
+}
+</script>

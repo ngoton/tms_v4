@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0.1
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 04, 2018 at 08:06 PM
--- Server version: 10.1.32-MariaDB
--- PHP Version: 7.1.17
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th6 05, 2018 lúc 12:02 PM
+-- Phiên bản máy phục vụ: 10.1.29-MariaDB
+-- Phiên bản PHP: 7.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `tms`
+-- Cơ sở dữ liệu: `tms`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bonus`
+-- Cấu trúc bảng cho bảng `bonus`
 --
 
 CREATE TABLE `bonus` (
@@ -37,7 +37,7 @@ CREATE TABLE `bonus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `bonus`
+-- Đang đổ dữ liệu cho bảng `bonus`
 --
 
 INSERT INTO `bonus` (`bonus_id`, `bonus_plus`, `bonus_minus`, `bonus_start_date`, `bonus_end_date`) VALUES
@@ -47,7 +47,7 @@ INSERT INTO `bonus` (`bonus_id`, `bonus_plus`, `bonus_minus`, `bonus_start_date`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `brand`
+-- Cấu trúc bảng cho bảng `brand`
 --
 
 CREATE TABLE `brand` (
@@ -56,7 +56,7 @@ CREATE TABLE `brand` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `brand`
+-- Đang đổ dữ liệu cho bảng `brand`
 --
 
 INSERT INTO `brand` (`brand_id`, `brand_name`) VALUES
@@ -110,7 +110,7 @@ INSERT INTO `brand` (`brand_id`, `brand_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact_person`
+-- Cấu trúc bảng cho bảng `contact_person`
 --
 
 CREATE TABLE `contact_person` (
@@ -127,7 +127,7 @@ CREATE TABLE `contact_person` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `contact_person`
+-- Đang đổ dữ liệu cho bảng `contact_person`
 --
 
 INSERT INTO `contact_person` (`contact_person_id`, `contact_person_name`, `contact_person_address`, `contact_person_phone`, `contact_person_mobile`, `contact_person_birthday`, `contact_person_email`, `contact_person_position`, `contact_person_department`, `contact_person_customer`) VALUES
@@ -136,7 +136,7 @@ INSERT INTO `contact_person` (`contact_person_id`, `contact_person_name`, `conta
 -- --------------------------------------------------------
 
 --
--- Table structure for table `country`
+-- Cấu trúc bảng cho bảng `country`
 --
 
 CREATE TABLE `country` (
@@ -145,7 +145,7 @@ CREATE TABLE `country` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `country`
+-- Đang đổ dữ liệu cho bảng `country`
 --
 
 INSERT INTO `country` (`country_id`, `country_name`) VALUES
@@ -378,7 +378,7 @@ INSERT INTO `country` (`country_id`, `country_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `customer`
+-- Cấu trúc bảng cho bảng `customer`
 --
 
 CREATE TABLE `customer` (
@@ -400,7 +400,7 @@ CREATE TABLE `customer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `customer`
+-- Đang đổ dữ liệu cho bảng `customer`
 --
 
 INSERT INTO `customer` (`customer_id`, `customer_code`, `customer_name`, `customer_company`, `customer_mst`, `customer_address`, `customer_province`, `customer_phone`, `customer_mobile`, `customer_email`, `customer_bank_account`, `customer_bank_name`, `customer_bank_branch`, `customer_sub`, `customer_type`) VALUES
@@ -409,7 +409,7 @@ INSERT INTO `customer` (`customer_id`, `customer_code`, `customer_name`, `custom
 -- --------------------------------------------------------
 
 --
--- Table structure for table `customer_sub`
+-- Cấu trúc bảng cho bảng `customer_sub`
 --
 
 CREATE TABLE `customer_sub` (
@@ -418,7 +418,7 @@ CREATE TABLE `customer_sub` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `customer_sub`
+-- Đang đổ dữ liệu cho bảng `customer_sub`
 --
 
 INSERT INTO `customer_sub` (`customer_sub_id`, `customer_sub_name`) VALUES
@@ -428,7 +428,7 @@ INSERT INTO `customer_sub` (`customer_sub_id`, `customer_sub_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `department`
+-- Cấu trúc bảng cho bảng `department`
 --
 
 CREATE TABLE `department` (
@@ -438,7 +438,7 @@ CREATE TABLE `department` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `department`
+-- Đang đổ dữ liệu cho bảng `department`
 --
 
 INSERT INTO `department` (`department_id`, `department_code`, `department_name`) VALUES
@@ -448,7 +448,7 @@ INSERT INTO `department` (`department_id`, `department_code`, `department_name`)
 -- --------------------------------------------------------
 
 --
--- Table structure for table `info`
+-- Cấu trúc bảng cho bảng `info`
 --
 
 CREATE TABLE `info` (
@@ -464,7 +464,7 @@ CREATE TABLE `info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `info`
+-- Đang đổ dữ liệu cho bảng `info`
 --
 
 INSERT INTO `info` (`info_id`, `info_company`, `info_mst`, `info_address`, `info_phone`, `info_email`, `info_director`, `info_general_accountant`, `info_accountant`) VALUES
@@ -473,7 +473,7 @@ INSERT INTO `info` (`info_id`, `info_company`, `info_mst`, `info_address`, `info
 -- --------------------------------------------------------
 
 --
--- Table structure for table `oil`
+-- Cấu trúc bảng cho bảng `oil`
 --
 
 CREATE TABLE `oil` (
@@ -483,7 +483,7 @@ CREATE TABLE `oil` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `oil`
+-- Đang đổ dữ liệu cho bảng `oil`
 --
 
 INSERT INTO `oil` (`oil_id`, `oil_way`, `oil_lit`) VALUES
@@ -492,7 +492,7 @@ INSERT INTO `oil` (`oil_id`, `oil_way`, `oil_lit`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `place`
+-- Cấu trúc bảng cho bảng `place`
 --
 
 CREATE TABLE `place` (
@@ -505,17 +505,17 @@ CREATE TABLE `place` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `place`
+-- Đang đổ dữ liệu cho bảng `place`
 --
 
 INSERT INTO `place` (`place_id`, `place_code`, `place_name`, `place_province`, `place_lat`, `place_long`) VALUES
-(1, 'SS', 'Samsung', 31, NULL, NULL),
-(2, 'PEP', 'PEPSI', 31, NULL, NULL);
+(1, 'SS', 'Samsung', 31, '10.823099', '106.629664'),
+(2, 'PEP', 'PEPSI', 19, '11.068631', '107.167598');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `port`
+-- Cấu trúc bảng cho bảng `port`
 --
 
 CREATE TABLE `port` (
@@ -525,7 +525,7 @@ CREATE TABLE `port` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `port`
+-- Đang đổ dữ liệu cho bảng `port`
 --
 
 INSERT INTO `port` (`port_id`, `port_name`, `port_province`) VALUES
@@ -562,7 +562,7 @@ INSERT INTO `port` (`port_id`, `port_name`, `port_province`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `position`
+-- Cấu trúc bảng cho bảng `position`
 --
 
 CREATE TABLE `position` (
@@ -572,7 +572,7 @@ CREATE TABLE `position` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `position`
+-- Đang đổ dữ liệu cho bảng `position`
 --
 
 INSERT INTO `position` (`position_id`, `position_code`, `position_name`) VALUES
@@ -583,7 +583,7 @@ INSERT INTO `position` (`position_id`, `position_code`, `position_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `province`
+-- Cấu trúc bảng cho bảng `province`
 --
 
 CREATE TABLE `province` (
@@ -592,7 +592,7 @@ CREATE TABLE `province` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `province`
+-- Đang đổ dữ liệu cho bảng `province`
 --
 
 INSERT INTO `province` (`province_id`, `province_name`) VALUES
@@ -663,7 +663,7 @@ INSERT INTO `province` (`province_id`, `province_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `role`
+-- Cấu trúc bảng cho bảng `role`
 --
 
 CREATE TABLE `role` (
@@ -675,7 +675,7 @@ CREATE TABLE `role` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `role`
+-- Đang đổ dữ liệu cho bảng `role`
 --
 
 INSERT INTO `role` (`role_id`, `role_name`, `role_status`, `role_permission`, `role_permission_action`) VALUES
@@ -692,7 +692,7 @@ INSERT INTO `role` (`role_id`, `role_name`, `role_status`, `role_permission`, `r
 -- --------------------------------------------------------
 
 --
--- Table structure for table `romooc`
+-- Cấu trúc bảng cho bảng `romooc`
 --
 
 CREATE TABLE `romooc` (
@@ -701,7 +701,7 @@ CREATE TABLE `romooc` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `romooc`
+-- Đang đổ dữ liệu cho bảng `romooc`
 --
 
 INSERT INTO `romooc` (`romooc_id`, `romooc_number`) VALUES
@@ -710,26 +710,28 @@ INSERT INTO `romooc` (`romooc_id`, `romooc_number`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `route`
+-- Cấu trúc bảng cho bảng `route`
 --
 
 CREATE TABLE `route` (
   `route_id` int(11) NOT NULL,
   `route_name` varchar(50) DEFAULT NULL,
-  `route_province` int(11) DEFAULT NULL
+  `route_province` int(11) DEFAULT NULL,
+  `route_lat` decimal(10,6) DEFAULT NULL,
+  `route_long` decimal(10,6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `route`
+-- Đang đổ dữ liệu cho bảng `route`
 --
 
-INSERT INTO `route` (`route_id`, `route_name`, `route_province`) VALUES
-(1, 'Ngã 3 Vũng Tàu', 19);
+INSERT INTO `route` (`route_id`, `route_name`, `route_province`, `route_lat`, `route_long`) VALUES
+(1, 'Ngã 3 Vũng Tàu', 19, '10.905751', '106.848631');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `shipping`
+-- Cấu trúc bảng cho bảng `shipping`
 --
 
 CREATE TABLE `shipping` (
@@ -739,7 +741,7 @@ CREATE TABLE `shipping` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `shipping`
+-- Đang đổ dữ liệu cho bảng `shipping`
 --
 
 INSERT INTO `shipping` (`shipping_id`, `shipping_name`, `shipping_country`) VALUES
@@ -749,7 +751,7 @@ INSERT INTO `shipping` (`shipping_id`, `shipping_name`, `shipping_country`) VALU
 -- --------------------------------------------------------
 
 --
--- Table structure for table `staff`
+-- Cấu trúc bảng cho bảng `staff`
 --
 
 CREATE TABLE `staff` (
@@ -773,7 +775,7 @@ CREATE TABLE `staff` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `staff`
+-- Đang đổ dữ liệu cho bảng `staff`
 --
 
 INSERT INTO `staff` (`staff_id`, `staff_code`, `staff_name`, `staff_address`, `staff_cmnd`, `staff_birthday`, `staff_phone`, `staff_email`, `staff_bank_account`, `staff_bank`, `staff_gender`, `staff_position`, `staff_department`, `staff_start_date`, `staff_end_date`, `staff_account`, `staff_gplx`) VALUES
@@ -782,7 +784,7 @@ INSERT INTO `staff` (`staff_id`, `staff_code`, `staff_name`, `staff_address`, `s
 -- --------------------------------------------------------
 
 --
--- Table structure for table `unit`
+-- Cấu trúc bảng cho bảng `unit`
 --
 
 CREATE TABLE `unit` (
@@ -791,7 +793,7 @@ CREATE TABLE `unit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `unit`
+-- Đang đổ dữ liệu cho bảng `unit`
 --
 
 INSERT INTO `unit` (`unit_id`, `unit_name`) VALUES
@@ -805,7 +807,7 @@ INSERT INTO `unit` (`unit_id`, `unit_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Cấu trúc bảng cho bảng `user`
 --
 
 CREATE TABLE `user` (
@@ -824,17 +826,17 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `user`
+-- Đang đổ dữ liệu cho bảng `user`
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `user_email`, `create_time`, `role`, `user_lock`, `user_group`, `user_dept`, `permission`, `permission_action`, `lasted_online`) VALUES
-(1, 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 'ngoton007@yahoo.com', 1527218218, 1, 0, NULL, NULL, '[\"all\"]', '[\"all\"]', 1528075008),
+(1, 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 'ngoton007@yahoo.com', 1527218218, 1, 0, NULL, NULL, '[\"all\"]', '[\"all\"]', 1528183058),
 (3, 'user', '81dc9bdb52d04dc20036dbd8313ed055', 'ngoton008@yahoo.com', 1527444158, 2, NULL, NULL, NULL, '[\"oil\",\"road\",\"warehouse\",\"customer\",\"vehicle\",\"romooc\",\"place\",\"route\",\"salary\",\"salarybonus\",\"steersman\",\"staff\",\"department\",\"importstock\",\"exportstock\",\"house\",\"sparepart\",\"repair\",\"roadcost\",\"checkingcost\",\"insurancecost\",\"sparevehicle\",\"sparevehiclelist\",\"sparedrap\",\"stock\",\"used\",\"spareparttracking\",\"shipment\",\"newshipment\",\"shipmenttemp\",\"driver\",\"vehiclework\",\"vehicleromooc\",\"vehicleromooc\",\"tollcost\",\"marketing\",\"shipmentlist\",\"loanlist\",\"sell\",\"receiptvoucher\",\"paymentvoucher\",\"internaltransfer\",\"bankbalance\",\"receivable\",\"payable\",\"loan\",\"importstock\",\"exportstock\",\"stock\",\"vat\",\"vat\",\"exvat\",\"sales\",\"cost\",\"noinvoice\",\"tolls\",\"salary\",\"salary\",\"repairsalary\",\"costlist\",\"bank\",\"account\",\"trucking\",\"customership\",\"truckinglist\",\"repairlist\",\"roadcostlist\",\"checkingcostlist\",\"insurancecostlist\",\"oilreport\",\"advance\",\"commission\",\"quantity\",\"profit\",\"round\",\"officecost\",\"vehicleanalytics\",\"report\"]', '{\"oil\":\"oil\",\"road\":\"road\",\"warehouse\":\"warehouse\",\"customer\":\"customer\",\"vehicle\":\"vehicle\",\"romooc\":\"romooc\",\"place\":\"place\",\"route\":\"route\",\"salary\":\"salary\",\"salarybonus\":\"salarybonus\",\"steersman\":\"steersman\",\"staff\":\"staff\",\"department\":\"department\",\"importstock\":\"importstock\",\"exportstock\":\"exportstock\",\"house\":\"house\",\"sparepart\":\"sparepart\",\"repair\":\"repair\",\"roadcost\":\"roadcost\",\"checkingcost\":\"checkingcost\",\"insurancecost\":\"insurancecost\",\"sparevehicle\":\"sparevehicle\",\"sparevehiclelist\":\"sparevehiclelist\",\"sparedrap\":\"sparedrap\",\"stock\":\"stock\",\"used\":\"used\",\"spareparttracking\":\"spareparttracking\",\"shipment\":\"shipment\",\"newshipment\":\"newshipment\",\"shipmenttemp\":\"shipmenttemp\",\"driver\":\"driver\",\"vehiclework\":\"vehiclework\",\"vehicleromooc\":\"vehicleromooc\",\"tollcost\":\"tollcost\",\"marketing\":\"marketing\",\"shipmentlist\":\"shipmentlist\",\"loanlist\":\"loanlist\",\"sell\":\"sell\",\"receiptvoucher\":\"receiptvoucher\",\"paymentvoucher\":\"paymentvoucher\",\"internaltransfer\":\"internaltransfer\",\"bankbalance\":\"bankbalance\",\"receivable\":\"receivable\",\"payable\":\"payable\",\"loan\":\"loan\",\"vat\":\"vat\",\"exvat\":\"exvat\",\"sales\":\"sales\",\"cost\":\"cost\",\"noinvoice\":\"noinvoice\",\"tolls\":\"tolls\",\"repairsalary\":\"repairsalary\",\"costlist\":\"costlist\",\"bank\":\"bank\",\"account\":\"account\",\"trucking\":\"trucking\",\"customership\":\"customership\",\"truckinglist\":\"truckinglist\",\"repairlist\":\"repairlist\",\"roadcostlist\":\"roadcostlist\",\"checkingcostlist\":\"checkingcostlist\",\"insurancecostlist\":\"insurancecostlist\",\"oilreport\":\"oilreport\",\"advance\":\"advance\",\"commission\":\"commission\",\"quantity\":\"quantity\",\"profit\":\"profit\",\"round\":\"round\",\"officecost\":\"officecost\",\"vehicleanalytics\":\"vehicleanalytics\",\"report\":\"report\"}', 1527445758);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_log`
+-- Cấu trúc bảng cho bảng `user_log`
 --
 
 CREATE TABLE `user_log` (
@@ -848,7 +850,7 @@ CREATE TABLE `user_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `user_log`
+-- Đang đổ dữ liệu cho bảng `user_log`
 --
 
 INSERT INTO `user_log` (`user_log_id`, `user_log`, `user_log_date`, `user_log_table`, `user_log_action`, `user_log_data`, `user_log_table_name`) VALUES
@@ -949,12 +951,15 @@ INSERT INTO `user_log` (`user_log_id`, `user_log`, `user_log_date`, `user_log_ta
 (94, 1, 1528127723, 'warehouse', 'Cập nhật', '{\"warehouse_place\":\"1\",\"warehouse_start_date\":1527786000,\"warehouse_end_date\":null,\"warehouse_cont\":\"480000\",\"warehouse_ton\":\"150000\",\"warehouse_add\":\"200000\",\"warehouse_weight\":\"20000\",\"warehouse_clean\":\"10000\",\"warehouse_gate\":\"250000\"}', 'Bồi dưỡng kho'),
 (95, 1, 1528127993, 'place', 'Thêm mới', '{\"place_province\":\"31\",\"place_name\":\"PEPSI\",\"place_code\":\"PEP\"}', 'Kho hàng'),
 (96, 1, 1528128129, 'warehouse', 'Cập nhật', '{\"warehouse_place\":\"2\",\"warehouse_start_date\":1527786000,\"warehouse_end_date\":null,\"warehouse_cont\":\"480000\",\"warehouse_ton\":\"150000\",\"warehouse_add\":\"200000\",\"warehouse_weight\":\"20000\",\"warehouse_clean\":\"10000\",\"warehouse_gate\":\"250000\"}', 'Bồi dưỡng kho'),
-(97, 1, 1528128136, 'warehouse', 'Cập nhật', '{\"warehouse_place\":\"1\",\"warehouse_start_date\":1527786000,\"warehouse_end_date\":null,\"warehouse_cont\":\"480000\",\"warehouse_ton\":\"150000\",\"warehouse_add\":\"200000\",\"warehouse_weight\":\"20000\",\"warehouse_clean\":\"10000\",\"warehouse_gate\":\"250000\"}', 'Bồi dưỡng kho');
+(97, 1, 1528128136, 'warehouse', 'Cập nhật', '{\"warehouse_place\":\"1\",\"warehouse_start_date\":1527786000,\"warehouse_end_date\":null,\"warehouse_cont\":\"480000\",\"warehouse_ton\":\"150000\",\"warehouse_add\":\"200000\",\"warehouse_weight\":\"20000\",\"warehouse_clean\":\"10000\",\"warehouse_gate\":\"250000\"}', 'Bồi dưỡng kho'),
+(98, 1, 1528189705, 'place', 'Cập nhật', '{\"place_province\":\"19\",\"place_name\":\"PEPSI\",\"place_code\":\"PEP\",\"place_lat\":\"11.0686305\",\"place_long\":\"107.16759760000002\"}', 'Kho hàng'),
+(99, 1, 1528189751, 'place', 'Cập nhật', '{\"place_province\":\"31\",\"place_name\":\"Samsung\",\"place_code\":\"SS\",\"place_lat\":\"10.8230989\",\"place_long\":\"106.6296638\"}', 'Kho hàng'),
+(100, 1, 1528190578, 'route', 'Cập nhật', '{\"route_province\":\"19\",\"route_name\":\"Ng\\u00e3 3 V\\u0169ng T\\u00e0u\",\"route_lat\":\"10.905750648800774\",\"route_long\":\"106.84863129220412\"}', 'Địa điểm');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `vehicle`
+-- Cấu trúc bảng cho bảng `vehicle`
 --
 
 CREATE TABLE `vehicle` (
@@ -968,7 +973,7 @@ CREATE TABLE `vehicle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `vehicle`
+-- Đang đổ dữ liệu cho bảng `vehicle`
 --
 
 INSERT INTO `vehicle` (`vehicle_id`, `vehicle_number`, `vehicle_brand`, `vehicle_model`, `vehicle_year`, `vehicle_country`, `vehicle_owner`) VALUES
@@ -977,7 +982,7 @@ INSERT INTO `vehicle` (`vehicle_id`, `vehicle_number`, `vehicle_brand`, `vehicle
 -- --------------------------------------------------------
 
 --
--- Table structure for table `warehouse`
+-- Cấu trúc bảng cho bảng `warehouse`
 --
 
 CREATE TABLE `warehouse` (
@@ -994,292 +999,292 @@ CREATE TABLE `warehouse` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `warehouse`
+-- Đang đổ dữ liệu cho bảng `warehouse`
 --
 
 INSERT INTO `warehouse` (`warehouse_id`, `warehouse_place`, `warehouse_cont`, `warehouse_ton`, `warehouse_add`, `warehouse_weight`, `warehouse_clean`, `warehouse_gate`, `warehouse_start_date`, `warehouse_end_date`) VALUES
 (1, 1, '480000.00', '150000.00', '200000.00', '20000.00', '10000.00', '250000.00', 1527786000, NULL);
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `bonus`
+-- Chỉ mục cho bảng `bonus`
 --
 ALTER TABLE `bonus`
   ADD PRIMARY KEY (`bonus_id`);
 
 --
--- Indexes for table `brand`
+-- Chỉ mục cho bảng `brand`
 --
 ALTER TABLE `brand`
   ADD PRIMARY KEY (`brand_id`);
 
 --
--- Indexes for table `contact_person`
+-- Chỉ mục cho bảng `contact_person`
 --
 ALTER TABLE `contact_person`
   ADD PRIMARY KEY (`contact_person_id`);
 
 --
--- Indexes for table `country`
+-- Chỉ mục cho bảng `country`
 --
 ALTER TABLE `country`
   ADD PRIMARY KEY (`country_id`);
 
 --
--- Indexes for table `customer`
+-- Chỉ mục cho bảng `customer`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_id`);
 
 --
--- Indexes for table `customer_sub`
+-- Chỉ mục cho bảng `customer_sub`
 --
 ALTER TABLE `customer_sub`
   ADD PRIMARY KEY (`customer_sub_id`);
 
 --
--- Indexes for table `department`
+-- Chỉ mục cho bảng `department`
 --
 ALTER TABLE `department`
   ADD PRIMARY KEY (`department_id`);
 
 --
--- Indexes for table `info`
+-- Chỉ mục cho bảng `info`
 --
 ALTER TABLE `info`
   ADD PRIMARY KEY (`info_id`);
 
 --
--- Indexes for table `oil`
+-- Chỉ mục cho bảng `oil`
 --
 ALTER TABLE `oil`
   ADD PRIMARY KEY (`oil_id`);
 
 --
--- Indexes for table `place`
+-- Chỉ mục cho bảng `place`
 --
 ALTER TABLE `place`
   ADD PRIMARY KEY (`place_id`);
 
 --
--- Indexes for table `port`
+-- Chỉ mục cho bảng `port`
 --
 ALTER TABLE `port`
   ADD PRIMARY KEY (`port_id`);
 
 --
--- Indexes for table `position`
+-- Chỉ mục cho bảng `position`
 --
 ALTER TABLE `position`
   ADD PRIMARY KEY (`position_id`);
 
 --
--- Indexes for table `province`
+-- Chỉ mục cho bảng `province`
 --
 ALTER TABLE `province`
   ADD PRIMARY KEY (`province_id`);
 
 --
--- Indexes for table `role`
+-- Chỉ mục cho bảng `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`role_id`);
 
 --
--- Indexes for table `romooc`
+-- Chỉ mục cho bảng `romooc`
 --
 ALTER TABLE `romooc`
   ADD PRIMARY KEY (`romooc_id`);
 
 --
--- Indexes for table `route`
+-- Chỉ mục cho bảng `route`
 --
 ALTER TABLE `route`
   ADD PRIMARY KEY (`route_id`);
 
 --
--- Indexes for table `shipping`
+-- Chỉ mục cho bảng `shipping`
 --
 ALTER TABLE `shipping`
   ADD PRIMARY KEY (`shipping_id`);
 
 --
--- Indexes for table `staff`
+-- Chỉ mục cho bảng `staff`
 --
 ALTER TABLE `staff`
   ADD PRIMARY KEY (`staff_id`);
 
 --
--- Indexes for table `unit`
+-- Chỉ mục cho bảng `unit`
 --
 ALTER TABLE `unit`
   ADD PRIMARY KEY (`unit_id`);
 
 --
--- Indexes for table `user`
+-- Chỉ mục cho bảng `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`);
 
 --
--- Indexes for table `user_log`
+-- Chỉ mục cho bảng `user_log`
 --
 ALTER TABLE `user_log`
   ADD PRIMARY KEY (`user_log_id`);
 
 --
--- Indexes for table `vehicle`
+-- Chỉ mục cho bảng `vehicle`
 --
 ALTER TABLE `vehicle`
   ADD PRIMARY KEY (`vehicle_id`);
 
 --
--- Indexes for table `warehouse`
+-- Chỉ mục cho bảng `warehouse`
 --
 ALTER TABLE `warehouse`
   ADD PRIMARY KEY (`warehouse_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `bonus`
+-- AUTO_INCREMENT cho bảng `bonus`
 --
 ALTER TABLE `bonus`
   MODIFY `bonus_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `brand`
+-- AUTO_INCREMENT cho bảng `brand`
 --
 ALTER TABLE `brand`
   MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
--- AUTO_INCREMENT for table `contact_person`
+-- AUTO_INCREMENT cho bảng `contact_person`
 --
 ALTER TABLE `contact_person`
   MODIFY `contact_person_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `country`
+-- AUTO_INCREMENT cho bảng `country`
 --
 ALTER TABLE `country`
   MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
 
 --
--- AUTO_INCREMENT for table `customer`
+-- AUTO_INCREMENT cho bảng `customer`
 --
 ALTER TABLE `customer`
   MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `customer_sub`
+-- AUTO_INCREMENT cho bảng `customer_sub`
 --
 ALTER TABLE `customer_sub`
   MODIFY `customer_sub_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `department`
+-- AUTO_INCREMENT cho bảng `department`
 --
 ALTER TABLE `department`
   MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `info`
+-- AUTO_INCREMENT cho bảng `info`
 --
 ALTER TABLE `info`
   MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `oil`
+-- AUTO_INCREMENT cho bảng `oil`
 --
 ALTER TABLE `oil`
   MODIFY `oil_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `place`
+-- AUTO_INCREMENT cho bảng `place`
 --
 ALTER TABLE `place`
   MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `port`
+-- AUTO_INCREMENT cho bảng `port`
 --
 ALTER TABLE `port`
   MODIFY `port_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
--- AUTO_INCREMENT for table `position`
+-- AUTO_INCREMENT cho bảng `position`
 --
 ALTER TABLE `position`
   MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `province`
+-- AUTO_INCREMENT cho bảng `province`
 --
 ALTER TABLE `province`
   MODIFY `province_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
--- AUTO_INCREMENT for table `role`
+-- AUTO_INCREMENT cho bảng `role`
 --
 ALTER TABLE `role`
   MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `romooc`
+-- AUTO_INCREMENT cho bảng `romooc`
 --
 ALTER TABLE `romooc`
   MODIFY `romooc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `route`
+-- AUTO_INCREMENT cho bảng `route`
 --
 ALTER TABLE `route`
   MODIFY `route_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `shipping`
+-- AUTO_INCREMENT cho bảng `shipping`
 --
 ALTER TABLE `shipping`
   MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `staff`
+-- AUTO_INCREMENT cho bảng `staff`
 --
 ALTER TABLE `staff`
   MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `unit`
+-- AUTO_INCREMENT cho bảng `unit`
 --
 ALTER TABLE `unit`
   MODIFY `unit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `user_log`
+-- AUTO_INCREMENT cho bảng `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `user_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `user_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
--- AUTO_INCREMENT for table `vehicle`
+-- AUTO_INCREMENT cho bảng `vehicle`
 --
 ALTER TABLE `vehicle`
   MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `warehouse`
+-- AUTO_INCREMENT cho bảng `warehouse`
 --
 ALTER TABLE `warehouse`
   MODIFY `warehouse_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
