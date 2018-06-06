@@ -574,30 +574,51 @@ function open_dialog_other(url, title, id, data, form){
         "class" : "btn btn-danger",
         click: function() {
           $( this ).dialog( "close" );
-          $.fn.select2.amd.define('select2/data/customAdapter', ['select2/data/array', 'select2/utils'],
-              function (ArrayAdapter, Utils) {
-                  function CustomDataAdapter ($element, options) {
-                    CustomDataAdapter.__super__.constructor.call(this, $element, options);
-                  }
-                  Utils.Extend(CustomDataAdapter, ArrayAdapter);
-              CustomDataAdapter.prototype.updateOptions = function (data) {
-                      this.$element.find('option').remove();
-                      this.addOptions(this.convertToOptions(data));
-                  }        
-                  return CustomDataAdapter;
-              }
-          );
+          if (id.charAt(0) == ".") {
+            $.ajax({
+                type: "GET",
+                url: data,
+                success: function(answer){
+                  var data = $.parseJSON(answer);
+                  var str = "";
+                  $.each(data, function(index, value) {
+                    $(id).each(function(){
+                      $(this).find(":selected").attr('data');
+                    });
+                    str += '<option value="'+value.id+'" data="'+value.data+'">'+value.text+'</option>';
+                  });
+                  $(id).html(str);
+                }
+            });
+          }
+          else{
+            $.fn.select2.amd.define('select2/data/customAdapter', ['select2/data/array', 'select2/utils'],
+                function (ArrayAdapter, Utils) {
+                    function CustomDataAdapter ($element, options) {
+                      CustomDataAdapter.__super__.constructor.call(this, $element, options);
+                    }
+                    Utils.Extend(CustomDataAdapter, ArrayAdapter);
+                CustomDataAdapter.prototype.updateOptions = function (data) {
+                        this.$element.find('option').remove();
+                        this.addOptions(this.convertToOptions(data));
+                    }        
+                    return CustomDataAdapter;
+                }
+            );
 
-          var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
+            var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
 
-          var select = $('#'+id).select2({dataAdapter: customAdapter});
-          $.ajax({
-              type: "GET",
-              url: data,
-              success: function(answer){
-                select.data('select2').dataAdapter.updateOptions($.parseJSON(answer));
-              }
-          });
+            var select = $('#'+id).select2({dataAdapter: customAdapter});
+            $.ajax({
+                type: "GET",
+                url: data,
+                success: function(answer){
+                  var data = $.parseJSON(answer);
+                  select.data('select2').dataAdapter.updateOptions(data);
+                }
+            });
+          }
+          
         }
       }
     ],

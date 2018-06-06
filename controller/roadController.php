@@ -133,7 +133,7 @@ Class roadController Extends baseController {
 
 
 
-        $this->view->data['roads'] = $road_model->getAllRoad($data,$join);
+        $this->view->data['roads'] = $road_model->getAllRoad($data);
 
 
 
@@ -270,6 +270,18 @@ Class roadController Extends baseController {
 
         $this->view->data['places'] = $places;
 
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute();
+
+        $this->view->data['routes'] = $routes;
+
+        $oil_model = $this->model->get('oilModel');
+
+        $oils = $oil_model->getAllOil();
+
+        $this->view->data['oils'] = $oils;
+
         return $this->view->show('road/add');
     }
 
@@ -357,6 +369,18 @@ Class roadController Extends baseController {
         $places = $place_model->getAllPlace();
 
         $this->view->data['places'] = $places;
+
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute();
+
+        $this->view->data['routes'] = $routes;
+
+        $oil_model = $this->model->get('oilModel');
+
+        $oils = $oil_model->getAllOil();
+
+        $this->view->data['oils'] = $oils;
 
 
         return $this->view->show('road/edit');

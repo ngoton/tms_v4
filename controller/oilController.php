@@ -301,6 +301,21 @@ Class oilController Extends baseController {
 
     }
 
+    public function getoil(){
+        $oil_model = $this->model->get('oilModel');
+
+        $oils = $oil_model->getAllOil();
+        $result = array();
+        $i = 0;
+        foreach ($oils as $oil) {
+            $result[$i]['id'] = $oil->oil_id;
+            $result[$i]['text'] = $oil->oil_way;
+            $result[$i]['data'] = $oil->oil_lit;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

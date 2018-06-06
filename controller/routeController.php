@@ -315,6 +315,20 @@ Class routeController Extends baseController {
 
     }
 
+    public function getroute(){
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($routes as $route) {
+            $result[$i]['id'] = $route->route_id;
+            $result[$i]['text'] = $route->route_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

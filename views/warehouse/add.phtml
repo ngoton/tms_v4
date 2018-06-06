@@ -34,61 +34,33 @@ $(document).ready(function(){
 			});
 
     $('#warehouse_add').keyup(function(){
-        $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add') || 0) + parseFloat(get_number('#warehouse_clean') || 0) + parseFloat(get_number('#warehouse_weight') || 0) + parseFloat(get_number('#warehouse_gate') || 0) );
-
-        $('#warehouse_cont').inputmask("numeric", {
-          radixPoint: ".",
-          groupSeparator: ",",
-          digits: 6,
-          autoGroup: true,
-          rightAlign: true,
-          oncleared: function () { self.Value(''); }
-        });
-        
+        sum_cost();
     });
     $('#warehouse_weight').keyup(function(){
-        $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add') || 0) + parseFloat(get_number('#warehouse_clean') || 0) + parseFloat(get_number('#warehouse_weight') || 0) + parseFloat(get_number('#warehouse_gate') || 0) );
-
-        $('#warehouse_cont').inputmask("numeric", {
-          radixPoint: ".",
-          groupSeparator: ",",
-          digits: 6,
-          autoGroup: true,
-          rightAlign: true,
-          oncleared: function () { self.Value(''); }
-        });
-        
+        sum_cost();
     });
     $('#warehouse_clean').keyup(function(){
-        $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add') || 0) + parseFloat(get_number('#warehouse_clean') || 0) + parseFloat(get_number('#warehouse_weight') || 0) + parseFloat(get_number('#warehouse_gate') || 0) );
-
-        $('#warehouse_cont').inputmask("numeric", {
-          radixPoint: ".",
-          groupSeparator: ",",
-          digits: 6,
-          autoGroup: true,
-          rightAlign: true,
-          oncleared: function () { self.Value(''); }
-        });
-        
+        sum_cost();
     });
     $('#warehouse_gate').keyup(function(){
-        $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add') || 0) + parseFloat(get_number('#warehouse_clean') || 0) + parseFloat(get_number('#warehouse_weight') || 0) + parseFloat(get_number('#warehouse_gate') || 0) );
-
-        $('#warehouse_cont').inputmask("numeric", {
-          radixPoint: ".",
-          groupSeparator: ",",
-          digits: 6,
-          autoGroup: true,
-          rightAlign: true,
-          oncleared: function () { self.Value(''); }
-        });
-        
+        sum_cost();
     });
 
 	
 });
 
+function sum_cost(){
+  $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add') || 0) + parseFloat(get_number('#warehouse_clean') || 0) + parseFloat(get_number('#warehouse_weight') || 0) + parseFloat(get_number('#warehouse_gate') || 0) );
+
+  $('#warehouse_cont').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
 function get_number(id){
     return $(id).val().replace(/\,/g,'');
 }

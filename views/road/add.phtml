@@ -1,0 +1,404 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_road").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add_road")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/road/addroad", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_road').hide();
+                  $('#error_road').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_road').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_road').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+
+      $('#road_km').click(function(){
+        $('a[href="#distance"]').trigger('click');
+      });
+      $('#road_oil').click(function(){
+        $('a[href="#distance"]').trigger('click');
+      });
+      $('#road_bridge').click(function(){
+        $('a[href="#bridge"]').trigger('click');
+      });
+
+      $('.road_oil_km').keyup(function(){
+        get_oil($(this));
+      });
+      $('.road_oil_way').change(function(){
+        get_oil($(this));
+      });
+	
+});
+function get_oil(ele){
+  var row = ele.parent().parent().parent().parent().parent().parent().parent();
+  var rowIndex = row[0].rowIndex;
+  var way = parseFloat($('.road_oil_way:eq('+rowIndex+') option:selected').attr('data') || 0);
+  var km = parseFloat(get_number('.road_oil_km:eq('+rowIndex+')') || 0);
+  var oil = way*km;
+  $('.road_oil_lit:eq('+rowIndex+')').val(oil);
+  $('.road_oil_lit:eq('+rowIndex+')').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+
+  var sum = 0;
+  var km = 0 ;
+  $('.road_oil_lit').each(function(){
+    sum += parseFloat(get_number(this));
+  });
+  $('.road_oil_km').each(function(){
+    km += parseFloat(get_number(this));
+  });
+
+  $('#road_oil').val(sum);
+  $('#road_km').val(km);
+
+  $('#road_oil').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+  $('#road_km').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+</script>
+
+<div id="error_road" class="error"><?php echo isset($error) ? $error : null; ?></div>     
+<div class="tabbable">
+  <form id="add_road" method="post" action="" autocomplete="off">
+      <ul class="nav nav-tabs padding-18">
+      <li class="active">
+        <a data-toggle="tab" href="#home">
+          <i class="green ace-icon fa fa-file-text-o bigger-120"></i>
+          Thông tin
+        </a>
+      </li>
+
+      <li>
+        <a data-toggle="tab" href="#distance">
+          <i class="blue ace-icon fa fa-road bigger-120"></i>
+          Khoảng cách
+        </a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#bridge">
+          <i class="orange ace-icon fa fa-bank bigger-120"></i>
+          Trạm thu phí
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content no-border ">
+      <div id="home" class="tab-pane in active">
+        <div class="col-md-3 col-xs-6">
+          <label for="road_place_from"><a href="#" title="Thêm kho hàng mới" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','road_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"><i class="ace-icon fa fa-home blue" ></i> Kho đi</a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="road_place_from" name="road_place_from" required="required" tabindex="1">
+              <?php foreach ($places as $place) { ?>
+                <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="road_place_to"><a href="#" title="Thêm kho hàng mới" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','road_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"><i class="ace-icon fa fa-home blue" ></i> Kho đến</a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="road_place_to" name="road_place_to" required="required" tabindex="2">
+              <?php foreach ($places as $place) { ?>
+                <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="road_route_from"><a href="#" title="Thêm địa điểm mới" onclick="add_click_other('<?php echo $this->url("route/add") ?>','Thêm địa điểm mới','road_route_from','<?php echo $this->url("route/getroute") ?>','add_route')"><i class="ace-icon fa fa-map-marker red" ></i> Điểm đi</a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="road_route_from" name="road_route_from" required="required" tabindex="3">
+              <?php foreach ($routes as $route) { ?>
+                <option value="<?php echo $route->route_id ?>"><?php echo $route->route_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="road_route_to"><a href="#" title="Thêm địa điểm mới" onclick="add_click_other('<?php echo $this->url("route/add") ?>','Thêm địa điểm mới','road_route_to','<?php echo $this->url("route/getroute") ?>','add_route')"><i class="ace-icon fa fa-map-marker red" ></i> Điểm đến</a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="road_route_to" name="road_route_to" required="required" tabindex="4">
+              <?php foreach ($routes as $route) { ?>
+                <option value="<?php echo $route->route_id ?>"><?php echo $route->route_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <label for="road_time">Thời gian chạy (ngày)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_time" name="road_time" tabindex="5">
+          </div>
+          <label for="road_km">Khoảng cách (km)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_km" name="road_km" tabindex="6" readonly>
+          </div>
+          <label for="road_oil">Định mức dầu (lit)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_oil" name="road_oil" tabindex="7" readonly>
+          </div>
+          <label for="road_oil_ton">Định mức dầu (lit/tấn)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_oil_ton" name="road_oil_ton" tabindex="8">
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <label for="road_bridge">Cầu đường</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_bridge" name="road_bridge" tabindex="9" readonly>
+          </div>
+          <label for="road_police">Công an</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_police" name="road_police" tabindex="10">
+          </div>
+          <label for="road_tire">Vá vỏ - Rửa xe</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_tire" name="road_tire" tabindex="11">
+          </div>
+          <label for="road_over">Vượt tải (đ/kg)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_over" name="road_over" tabindex="12">
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <label for="road_add">Tiền đi đường</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_add" name="road_add" tabindex="13">
+          </div>
+          <label for="road_salary">Lương chuyến</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_salary" name="road_salary" tabindex="14">
+          </div>
+          <label for="road_start_date">Ngày áp dụng</label>
+          <div class="input-group">
+            <input class="form-control start-date" type="text" id="road_start_date" name="road_start_date" required="required" tabindex="15">
+          </div>
+          <label for="road_end_date">Ngày hết hạn</label>
+          <div class="input-group">
+            <input class="form-control end-date" type="text" id="road_end_date" name="road_end_date" tabindex="16">
+          </div>
+       </div>
+     </div>
+     <div id="distance" class="tab-pane">
+        <div class="col-xs-12">
+            <table id="dataTable" style="width: 100%;">
+                <tbody>
+                <tr>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                    <td>
+                        <table style="width:100%;">
+                            <tbody><tr>
+                                <td>
+                                  <label>Chiều đi <a href="#" title="Thêm định mức dầu mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("oil/add") ?>','Thêm định mức dầu mới','.road_oil_way','<?php echo $this->url("oil/getoil") ?>','add_oil')"></i></a></label>
+                                  <div class="input-group">
+                                    <select class="form-control road_oil_way" name="road_oil_way[]" tabindex="17">
+                                      <?php foreach ($oils as $oil) { ?>
+                                        <option value="<?php echo $oil->oil_id ?>" data="<?php echo $oil->oil_lit ?>"><?php echo $oil->oil_way ?></option>
+                                      <?php } ?>
+                                    </select>
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Khoảng cách (km)</label>
+                                  <div class="input-group">
+                                    <input type="text" class="road_oil_km numbers" name="road_oil_km[]" tabindex="18">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Định mức dầu (lit)</label>
+                                  <div class="input-group">
+                                    <input type="text" class="road_oil_lit numbers" name="road_oil_lit[]" tabindex="19" readonly>
+                                  </div>
+                                </td>
+                              </tr>
+                              
+                        </tbody></table>
+                        <div class="hr hr-18 dotted hr-double"></div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+            </table>
+        
+            <input type="button" value="Thêm" onclick="addRow('dataTable')">
+
+            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+        </div>
+      </div>
+   </div>
+  </form>
+</div>
+
+
+
+<script type="text/javascript">
+function addRow(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.road_oil_km:last').val("");
+    $('.road_oil_lit:last').val("");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+
+    $('.road_oil_km').keyup(function(){
+      get_oil($(this));
+    });
+    $('.road_oil_way').change(function(){
+      get_oil($(this));
+    });
+}
+function deleteRow(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        var r = confirm("Bạn có chắc chắn không?");
+        if (r == true){
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var road = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/road/deleteroadoil", {data: data, road: road},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+        }
+    }
+    catch(e){
+        alert(e);
+    }
+}
+function addRow2(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.road_oil_km:last').val("");
+    $('.road_oil_lit:last').val("");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+
+}
+function deleteRow2(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        var r = confirm("Bạn có chắc chắn không?");
+        if (r == true){
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var road = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/road/deleteroadoil", {data: data, road: road},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+        }
+    }
+    catch(e){
+        alert(e);
+    }
+}
+</script>
