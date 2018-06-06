@@ -146,7 +146,7 @@ Class roadController Extends baseController {
         $road_model = $this->model->get('roadModel');
 
         if (isset($_POST['road_place'])) {
-            if($road_model->getRoadByWhere(array('road_place'=>$_POST['road_place'],'road_start_date'=>strtotime(str_replace('/', '-', $_POST['road_start_date']))))){
+            if($road_model->getRoadByWhere(array('road_place_from'=>$_POST['road_place_from'],'road_place_to'=>$_POST['road_place_to'],'road_route_from'=>$_POST['road_route_from'],'road_route_to'=>$_POST['road_route_to'],'road_start_date'=>strtotime(str_replace('/', '-', $_POST['road_start_date']))))){
                 echo 'Thông tin đã tồn tại';
                 return false;
             }
@@ -282,6 +282,12 @@ Class roadController Extends baseController {
 
         $this->view->data['oils'] = $oils;
 
+        $toll_model = $this->model->get('tollModel');
+
+        $tolls = $toll_model->getAllToll(array('order_by'=>'toll_code','order'=>'ASC'));
+
+        $this->view->data['tolls'] = $tolls;
+
         return $this->view->show('road/add');
     }
 
@@ -382,6 +388,12 @@ Class roadController Extends baseController {
 
         $this->view->data['oils'] = $oils;
 
+        $toll_model = $this->model->get('tollModel');
+
+        $tolls = $toll_model->getAllToll(array('order_by'=>'toll_code','order'=>'ASC'));
+
+        $this->view->data['tolls'] = $tolls;
+
 
         return $this->view->show('road/edit');
 
@@ -431,6 +443,24 @@ Class roadController Extends baseController {
 
         $this->view->data['places'] = $places;
 
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute();
+
+        $this->view->data['routes'] = $routes;
+
+        $oil_model = $this->model->get('oilModel');
+
+        $oils = $oil_model->getAllOil();
+
+        $this->view->data['oils'] = $oils;
+
+        $toll_model = $this->model->get('tollModel');
+
+        $tolls = $toll_model->getAllToll(array('order_by'=>'toll_code','order'=>'ASC'));
+
+        $this->view->data['tolls'] = $tolls;
+
 
         return $this->view->show('road/view');
 
@@ -458,6 +488,21 @@ Class roadController Extends baseController {
         $this->view->data['keyword'] = $_GET['keyword'];
 
         return $this->view->show('road/filter');
+    }
+
+    public function deleteroadoil(){
+        if (isset($_POST['data'])) {
+            $road_oil_model = $this->model->get('roadoilModel');
+
+            $road_oil_model->queryRoad('DELETE FROM road_oil WHERE road_oil_id='.$_POST['data'].' AND road='.$_POST['road']);
+        }
+    }
+    public function deleteroadtoll(){
+        if (isset($_POST['data'])) {
+            $road_toll_model = $this->model->get('roadtollModel');
+
+            $road_toll_model->queryRoad('DELETE FROM road_toll WHERE road_toll_id='.$_POST['data'].' AND road='.$_POST['road']);
+        }
     }
 
     public function delete(){

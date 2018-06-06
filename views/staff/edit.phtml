@@ -81,7 +81,7 @@ $(document).ready(function(){
         <div class="input-group">
           <input class="form-control" type="text" id="staff_address" name="staff_address" required="required" tabindex="8" value="<?php echo $staff_data->staff_address ?>">
         </div>
-        <label for="staff_position">Chức vụ <a href="#" title="Thêm chức vụ mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("position/add") ?>','Thêm chức vụ mới','staff_position','<?php echo $this->url("position/getposition") ?>','add_position')"></i></a></label>
+        <label for="staff_position">Chức vụ <a title="Thêm chức vụ mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("position/add") ?>','Thêm chức vụ mới','staff_position','<?php echo $this->url("position/getposition") ?>','add_position')"></i></a></label>
         <div class="input-group">
           <select class="form-control select2" id="staff_position" name="staff_position" required="required" tabindex="9">
             <?php foreach ($positions as $position) { ?>
@@ -107,7 +107,7 @@ $(document).ready(function(){
           </span>
           <input class="form-control input-sm" type="text" id="staff_bank" name="staff_bank" tabindex="13" value="<?php echo $staff_data->staff_bank ?>" placeholder="Tại Ngân hàng">
         </div>
-        <label for="staff_department">Phòng <a href="#" title="Thêm phòng ban mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("department/add") ?>','Thêm phòng ban mới','staff_department','<?php echo $this->url("department/getdepartment") ?>','add_department')"></i></a></label>
+        <label for="staff_department">Phòng <a title="Thêm phòng ban mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("department/add") ?>','Thêm phòng ban mới','staff_department','<?php echo $this->url("department/getdepartment") ?>','add_department')"></i></a></label>
         <div class="input-group">
           <select class="form-control select2" id="staff_department" name="staff_department" required="required" tabindex="14">
             <?php foreach ($departments as $department) { ?>
@@ -125,7 +125,7 @@ $(document).ready(function(){
         <div class="input-group">
           <input class="form-control end-date" type="text" id="staff_end_date" name="staff_end_date" tabindex="16" value="<?php echo $lib->hien_thi_ngay_thang($staff_data->staff_end_date) ?>">
         </div>
-        <label for="staff_account">Tên truy cập <a href="#" title="Thêm tài khoản mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("user/add") ?>','Thêm tài khoản mới','staff_account','<?php echo $this->url("user/getuser") ?>','add_user')"></i></a></label>
+        <label for="staff_account">Tên truy cập <a title="Thêm tài khoản mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("user/add") ?>','Thêm tài khoản mới','staff_account','<?php echo $this->url("user/getuser") ?>','add_user')"></i></a></label>
         <div class="input-group">
           <select class="form-control select2" id="staff_account" name="staff_account" tabindex="17">
             <option value="0">Không sử dụng</option>

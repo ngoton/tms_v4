@@ -1,0 +1,253 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#edit_toll").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+          
+          var formData = new FormData($("#edit_toll")[0]);
+          formData.append('toll_id', '<?php echo $toll_data->toll_id ?>');
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/toll/edittoll", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_toll').hide();
+                  $('#error_toll').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_toll').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_toll').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+
+<div id="error_toll" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+ 
+      <form id="edit_toll" method="post" action="" autocomplete="off">
+        <div class="col-xs-6">
+          <table>
+            <tr>
+                <td>Tên trạm thu phí </td>
+                <td><input type="text" id="toll_code" name="toll_code" tabindex="1" autofocus required="required" value="<?php echo $toll_data->toll_code ?>"></td>
+                
+            </tr>
+            <tr>
+                <td>Tên đơn vị</td>
+                <td><input type="text" id="toll_name" name="toll_name" tabindex="2" value="<?php echo $toll_data->toll_name ?>"></td>
+            </tr>
+            <tr>
+                <td>Mã số thuế </td>
+                <td><input type="text" id="toll_mst" name="toll_mst" tabindex="3" value="<?php echo $toll_data->toll_mst ?>"></td>
+                
+            </tr>
+        </table> 
+        </div>
+        <div class="col-xs-6">
+          <table>
+            <tr>
+                <td>Loại vé </td>
+                <td>
+                  <label>
+                    <input class="form-control ace" type="radio" name="toll_type" <?php echo $toll_data->toll_type==1?'checked="checked"':null ?> tabindex="4" value="1"> <span class="lbl">Vé thu phí</span>
+                  </label>
+                  &nbsp;
+                  <label>
+                    <input class="form-control ace" type="radio" name="toll_type" <?php echo $toll_data->toll_type==2?'checked="checked"':null ?> tabindex="5" value="2"> <span class="lbl">Cước đường bộ</span>
+                  </label>
+                </td>
+                
+            </tr>
+            <tr>
+                <td>Mẫu số </td>
+                <td><input type="text" id="toll_symbol" name="toll_symbol" tabindex="6" value="<?php echo $toll_data->toll_symbol ?>"></td>
+                
+            </tr>
+            <tr>
+                <td>Tỉnh/TP</td>
+                <td>
+                  <select class="form-control select2" id="toll_province" name="toll_province" required="required" tabindex="7">
+                    <?php foreach ($provinces as $province) { ?>
+                      <option value="<?php echo $province->province_id ?>" <?php echo $toll_data->toll_province==$province->province_id?'selected="selected"':null ?> ><?php echo $province->province_name ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+                
+            </tr>
+        </table> 
+        </div>
+        <div class="col-xs-12">
+          <div id="map_canvas" style="width:100%;height:200px;"></div>
+          <table>
+            <tr>
+              <td>Latitude</td>
+              <td><input type="text" id="toll_lat" name="toll_lat" tabindex="8" value="<?php echo $toll_data->toll_lat ?>"></td>
+            
+              <td>Longitude</td>
+              <td><input type="text" id="toll_long" name="toll_long" tabindex="9" value="<?php echo $toll_data->toll_long ?>"></td>
+            </tr>
+          </table>
+          
+        </div>
+    </form>
+</div>
+        
+
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyC3lStXX-NOBTp-Rh9wPzK723fnjt-akdM&callback=initialize"></script>
+<script>
+var styles = [
+  {
+    "featureType": "administrative.province",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      { "visibility": "on" },
+      { "weight": 2.5 },
+      { "color": "#24b0e2" }
+    ]
+  },{
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },{
+    "featureType": "administrative.locality",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },{
+    "featureType": "road",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  }
+];
+var lat = null;
+var lng = null;
+var map = null;
+var geocoder = null;
+var marker = null;
+var myListener = null;
+
+$(document).ready(function() {
+  lat = $('#toll_lat').val();
+  lng = $('#toll_long').val();
+  $('#toll_province').on('select2:select', function (e) {
+    var data = e.params.data;
+    codeAddress($('#toll_name').val()+", "+data.text);
+  });
+  $('#toll_name').keyup(function(){
+    codeAddress($(this).val()+", "+$('#toll_province option:selected').text());
+  });
+  $('#toll_long').keyup(function(){
+    lat = $('#toll_lat').val();
+    lng = $('#toll_long').val();
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    map.setCenter(myLatlng);
+    marker.setPosition(myLatlng);
+    updatePosition(myLatlng);
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+      updatePosition(marker.getPosition());
+    });
+  });
+  $('#toll_lat').keyup(function(){
+    lat = $('#toll_lat').val();
+    lng = $('#toll_long').val();
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    map.setCenter(myLatlng);
+    marker.setPosition(myLatlng);
+    updatePosition(myLatlng);
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+      updatePosition(marker.getPosition());
+    });
+  });
+});
+
+function initialize() {
+
+  geocoder = new google.maps.Geocoder();
+
+  if (lat != '' && lng != '') {
+    var latLng = new google.maps.LatLng(lat, lng);
+  } else {
+    var latLng = new google.maps.LatLng(10.5215836, 105.1258955);
+  }
+  var myOptions = {
+    center: latLng,
+    zoom: 9,
+    gestureHandling: 'greedy',
+    styles:styles,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+  marker = new google.maps.Marker({
+    map: map,
+    position: latLng,
+    draggable: true
+  });
+  google.maps.event.addListener(marker, 'dragend', function() {
+    updatePosition(marker.getPosition());
+  });
+  updatePosition(latLng);
+  google.maps.event.addListener(map, 'click', function(event) {
+    if (marker) {
+      marker.setPosition(event.latLng)
+    } else {
+      marker = new google.maps.Marker({
+        map: map,
+        position: event.latLng,
+        draggable: true
+      });
+    }
+    updatePosition(event.latLng);
+  });
+
+}
+
+function codeAddress(value) {
+
+  var address = value;
+  geocoder.geocode({
+    'address': address
+  }, function(results, status) {
+
+    if (status == google.maps.GeocoderStatus.OK) {
+      map.setCenter(results[0].geometry.location);
+      marker.setPosition(results[0].geometry.location);
+      updatePosition(results[0].geometry.location);
+
+      google.maps.event.addListener(marker, 'dragend', function() {
+        updatePosition(marker.getPosition());
+      });
+    } 
+  });
+}
+
+function updatePosition(latLng) {
+
+  $('#toll_lat').val(latLng.lat());
+  $('#toll_long').val(latLng.lng());
+
+}
+</script>

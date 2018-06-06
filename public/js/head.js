@@ -580,14 +580,22 @@ function open_dialog_other(url, title, id, data, form){
                 url: data,
                 success: function(answer){
                   var data = $.parseJSON(answer);
-                  var str = "";
-                  $.each(data, function(index, value) {
+                  
+                  
                     $(id).each(function(){
-                      $(this).find(":selected").attr('data');
+                      var $this = $(this);
+                      var str = "";
+                      $.each(data, function(index, value) {
+                        var sl = $this.find(":selected").attr('value');
+                        if (value.id==sl) {
+                          str += '<option selected value="'+value.id+'" data="'+value.data+'">'+value.text+'</option>';
+                        }
+                        else{
+                          str += '<option value="'+value.id+'" data="'+value.data+'">'+value.text+'</option>';
+                        }
+                      });
+                      $this.html(str);
                     });
-                    str += '<option value="'+value.id+'" data="'+value.data+'">'+value.text+'</option>';
-                  });
-                  $(id).html(str);
                 }
             });
           }
@@ -609,12 +617,14 @@ function open_dialog_other(url, title, id, data, form){
             var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
 
             var select = $('#'+id).select2({dataAdapter: customAdapter});
+            var select_class = $('.'+id).select2({dataAdapter: customAdapter});
             $.ajax({
                 type: "GET",
                 url: data,
                 success: function(answer){
                   var data = $.parseJSON(answer);
                   select.data('select2').dataAdapter.updateOptions(data);
+                  select_class.data('select2').dataAdapter.updateOptions(data);
                 }
             });
           }

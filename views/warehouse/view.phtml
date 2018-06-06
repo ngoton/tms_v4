@@ -3,7 +3,7 @@
 <div class="login_body">
   
       <div class="col-md-4 col-xs-6">
-        <label for="warehouse_place">Kho hàng <a href="#" title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','warehouse_place','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
+        <label for="warehouse_place">Kho hàng <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','warehouse_place','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
         <div class="input-group">
           <select class="form-control select2" id="warehouse_place" name="warehouse_place" required="required" tabindex="1">
             <?php foreach ($places as $place) { ?>

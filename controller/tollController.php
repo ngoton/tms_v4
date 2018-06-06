@@ -1,6 +1,6 @@
 <?php
 
-Class routeController Extends baseController {
+Class tollController Extends baseController {
 
     public function index() {
 
@@ -20,7 +20,7 @@ Class routeController Extends baseController {
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý địa điểm';
+        $this->view->data['title'] = 'Quản lý trạm thu phí';
 
 
 
@@ -40,7 +40,7 @@ Class routeController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'route_name';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'toll_code';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
@@ -55,7 +55,7 @@ Class routeController Extends baseController {
 
 
 
-        $route_model = $this->model->get('routeModel');
+        $toll_model = $this->model->get('tollModel');
 
         $sonews = $limit;
 
@@ -63,9 +63,9 @@ Class routeController Extends baseController {
 
         $pagination_stages = 2;
 
-        $join = array('table'=>'province','where'=>'route_province=province_id');
+        $join = array('table'=>'province','where'=>'toll_province=province_id');
 
-        $tongsodong = count($route_model->getAllRoute(null,$join));
+        $tongsodong = count($toll_model->getAllToll(null,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -105,7 +105,7 @@ Class routeController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( route_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
+            $search = '( toll_code LIKE "%'.$keyword.'%" OR toll_name LIKE "%'.$keyword.'%" OR toll_mst LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -113,33 +113,37 @@ Class routeController Extends baseController {
 
 
 
-        $this->view->data['routes'] = $route_model->getAllRoute($data,$join);
+        $this->view->data['tolls'] = $toll_model->getAllToll($data,$join);
 
 
 
-        return $this->view->show('route/index');
+        return $this->view->show('toll/index');
 
     }
 
 
-    public function addroute(){
-        $route_model = $this->model->get('routeModel');
+    public function addtoll(){
+        $toll_model = $this->model->get('tollModel');
 
-        if (isset($_POST['route_name'])) {
-            if($route_model->getRouteByWhere(array('route_name'=>trim($_POST['route_name']),'route_province'=>trim($_POST['route_province'])))){
-                echo 'Tên địa điểm đã tồn tại';
+        if (isset($_POST['toll_code'])) {
+            if($toll_model->getTollByWhere(array('toll_code'=>trim($_POST['toll_code']),'toll_province'=>trim($_POST['toll_province'])))){
+                echo 'Tên trạm thu phí đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'route_province' => trim($_POST['route_province']),
-                'route_name' => trim($_POST['route_name']),
-                'route_lat' => trim($_POST['route_lat']),
-                'route_long' => trim($_POST['route_long']),
+                'toll_province' => trim($_POST['toll_province']),
+                'toll_name' => trim($_POST['toll_name']),
+                'toll_code' => trim($_POST['toll_code']),
+                'toll_mst' => trim($_POST['toll_mst']),
+                'toll_type' => trim($_POST['toll_type']),
+                'toll_symbol' => trim($_POST['toll_symbol']),
+                'toll_lat' => trim($_POST['toll_lat']),
+                'toll_long' => trim($_POST['toll_long']),
             );
-            $route_model->createRoute($data);
+            $toll_model->createToll($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$route_model->getLastRoute()->route_id."|route|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$toll_model->getLastToll()->toll_id."|toll|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -147,8 +151,8 @@ Class routeController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'route',
-                'user_log_table_name' => 'Địa điểm',
+                'user_log_table' => 'toll',
+                'user_log_table_name' => 'Trạm thu phí',
                 'user_log_action' => 'Thêm mới',
                 'user_log_data' => json_encode($data),
             );
@@ -171,41 +175,45 @@ Class routeController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->route) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->toll) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
 
         }
 
-        $this->view->data['title'] = 'Thêm mới địa điểm';
+        $this->view->data['title'] = 'Thêm mới trạm thu phí';
 
         $province = $this->model->get('provinceModel');
 
         $this->view->data['provinces'] = $province->getAllProvince();
 
-        return $this->view->show('route/add');
+        return $this->view->show('toll/add');
     }
 
-    public function editroute(){
-        $route_model = $this->model->get('routeModel');
+    public function edittoll(){
+        $toll_model = $this->model->get('tollModel');
 
-        if (isset($_POST['route_id'])) {
-            $id = $_POST['route_id'];
-            if($route_model->getAllRouteByWhere($id.' AND route_name = "'.trim($_POST['route_name']).'"'.' AND route_province = '.trim($_POST['route_province']))){
-                echo 'Tên địa điểm đã tồn tại';
+        if (isset($_POST['toll_id'])) {
+            $id = $_POST['toll_id'];
+            if($toll_model->getAllTollByWhere($id.' AND toll_code = "'.trim($_POST['toll_code']).'"'.' AND toll_province = '.trim($_POST['toll_province']))){
+                echo 'Tên trạm thu phí đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'route_province' => trim($_POST['route_province']),
-                'route_name' => trim($_POST['route_name']),
-                'route_lat' => trim($_POST['route_lat']),
-                'route_long' => trim($_POST['route_long']),
+                'toll_province' => trim($_POST['toll_province']),
+                'toll_name' => trim($_POST['toll_name']),
+                'toll_code' => trim($_POST['toll_code']),
+                'toll_mst' => trim($_POST['toll_mst']),
+                'toll_type' => trim($_POST['toll_type']),
+                'toll_symbol' => trim($_POST['toll_symbol']),
+                'toll_lat' => trim($_POST['toll_lat']),
+                'toll_long' => trim($_POST['toll_long']),
             );
-            $route_model->updateRoute($data,array('route_id'=>$id));
+            $toll_model->updateToll($data,array('toll_id'=>$id));
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|route|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|toll|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -213,8 +221,8 @@ Class routeController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'route',
-                'user_log_table_name' => 'Địa điểm',
+                'user_log_table' => 'toll',
+                'user_log_table_name' => 'Trạm thu phí',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -236,7 +244,7 @@ Class routeController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->route) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->toll) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -244,21 +252,21 @@ Class routeController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('route');
+            $this->view->redirect('toll');
 
         }
 
-        $this->view->data['title'] = 'Cập nhật địa điểm';
+        $this->view->data['title'] = 'Cập nhật trạm thu phí';
 
-        $route_model = $this->model->get('routeModel');
+        $toll_model = $this->model->get('tollModel');
 
-        $route_data = $route_model->getRoute($id);
+        $toll_data = $toll_model->getToll($id);
 
-        $this->view->data['route_data'] = $route_data;
+        $this->view->data['toll_data'] = $toll_data;
 
-        if (!$route_data) {
+        if (!$toll_data) {
 
-            $this->view->redirect('route');
+            $this->view->redirect('toll');
 
         }
 
@@ -266,7 +274,7 @@ Class routeController Extends baseController {
 
         $this->view->data['provinces'] = $province->getAllProvince();
 
-        return $this->view->show('route/edit');
+        return $this->view->show('toll/edit');
 
     }
 
@@ -289,21 +297,21 @@ Class routeController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('route');
+            $this->view->redirect('toll');
 
         }
 
-        $this->view->data['title'] = 'Thông tin địa điểm';
+        $this->view->data['title'] = 'Thông tin trạm thu phí';
 
-        $route_model = $this->model->get('routeModel');
+        $toll_model = $this->model->get('tollModel');
 
-        $route_data = $route_model->getRoute($id);
+        $toll_data = $toll_model->getToll($id);
 
-        $this->view->data['route_data'] = $route_data;
+        $this->view->data['toll_data'] = $toll_data;
 
-        if (!$route_data) {
+        if (!$toll_data) {
 
-            $this->view->redirect('route');
+            $this->view->redirect('toll');
 
         }
 
@@ -311,19 +319,19 @@ Class routeController Extends baseController {
 
         $this->view->data['provinces'] = $province->getAllProvince();
 
-        return $this->view->show('route/view');
+        return $this->view->show('toll/view');
 
     }
 
-    public function getroute(){
-        $route_model = $this->model->get('routeModel');
+    public function gettoll(){
+        $toll_model = $this->model->get('tollModel');
 
-        $routes = $route_model->getAllRoute();
+        $tolls = $toll_model->getAllToll(array('order_by'=>'toll_code','order'=>'ASC'));
         $result = array();
         $i = 0;
-        foreach ($routes as $route) {
-            $result[$i]['id'] = $route->route_id;
-            $result[$i]['text'] = $route->route_name;
+        foreach ($tolls as $toll) {
+            $result[$i]['id'] = $toll->toll_id;
+            $result[$i]['text'] = $toll->toll_code;
             $i++;
         }
         echo json_encode($result);
@@ -338,7 +346,7 @@ Class routeController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->route) || json_decode($_SESSION['user_permission_action'])->route != "route") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->toll) || json_decode($_SESSION['user_permission_action'])->toll != "toll") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -347,7 +355,7 @@ Class routeController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $route_model = $this->model->get('routeModel');
+            $toll_model = $this->model->get('tollModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -356,10 +364,10 @@ Class routeController Extends baseController {
 
                 foreach ($datas as $data) {
 
-                    $route_model->deleteRoute($data);
+                    $toll_model->deleteToll($data);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|route|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|toll|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -371,8 +379,8 @@ Class routeController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'route',
-                    'user_log_table_name' => 'Địa điểm',
+                    'user_log_table' => 'toll',
+                    'user_log_table_name' => 'Trạm thu phí',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -386,17 +394,17 @@ Class routeController Extends baseController {
 
             else{
 
-                $route_model->deleteRoute($_POST['data']);
+                $toll_model->deleteToll($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|route|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|toll|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'route',
-                    'user_log_table_name' => 'Địa điểm',
+                    'user_log_table' => 'toll',
+                    'user_log_table_name' => 'Trạm thu phí',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );
@@ -413,7 +421,7 @@ Class routeController Extends baseController {
 
     }
 
-    public function importroute(){
+    public function importtoll(){
         if (isset($_FILES['import']['name'])) {
             $total = count($_FILES['import']['name']);
             for( $i=0 ; $i < $total ; $i++ ) {
@@ -433,7 +441,7 @@ Class routeController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->route) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->toll) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -443,7 +451,7 @@ Class routeController Extends baseController {
         $this->view->data['title'] = 'Nhập dữ liệu';
 
        
-        return $this->view->show('route/import');
+        return $this->view->show('toll/import');
 
     }
 

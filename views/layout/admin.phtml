@@ -55,9 +55,9 @@
     <link rel="stylesheet" href="/public/assets/css/bootstrap-timepicker.min.css">
 
     <!-- <![endif]-->
-    <link rel="stylesheet" href="/public/css/style.css?v=2">
-    <link rel="stylesheet" href="/public/css/head.css">
-    <script type="text/javascript" src="/public/js/head.js?v=2"></script>
+    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="/public/css/head.css?v=2">
+    <script type="text/javascript" src="/public/js/head.js?v=1"></script>
     
     <script type="text/javascript">
     $("#ajax_loader").fadeIn(200);
@@ -1526,6 +1526,15 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
+                <a data="toll" data-role="toll" href="<?php echo $this->url('toll') ?>">
+                  <i class="menu-icon fa fa-bus"></i>
+
+                  Trạm thu phí
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
                 <a data="shipping" data-role="shipping" href="<?php echo $this->url('shipping') ?>">
                   <i class="menu-icon fa fa-ship"></i>
 
@@ -1564,7 +1573,7 @@
                     <b class="arrow"></b>
                   </li>
                   <li class="">
-                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                    <a data="road" data-role="road" href="<?php echo $this->url('road') ?>">
                       <i class="menu-icon fa fa-caret-right"></i>
 
                       Định mức tuyến đường
