@@ -79,6 +79,7 @@ Class staffController Extends baseController {
             if (isset($_POST['staff_department'])) {
                 $data['where'] .= ' AND staff_department IN ('.implode(',',$_POST['staff_department']).')';
             }
+            $this->view->data['filter'] = 1;
         }
 
         $tongsodong = count($staff_model->getAllStaff($data,$join));

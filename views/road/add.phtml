@@ -7,7 +7,7 @@ $(document).ready(function(){
 				rules: {
 				},
         submitHandler: function(form) {
-          var road_oil = [];    
+          var road_oil_data = [];    
 
           var road_oil_way = [];  
           var road_oil_km = []; 
@@ -26,10 +26,10 @@ $(document).ready(function(){
           });
 
           for (var i = 0; i < road_oil_km.length; i++) {
-              road_oil.push({'road_oil_way':road_oil_way[i], 'road_oil_lit':road_oil_lit[i], 'road_oil_km':road_oil_km[i], 'id_road_oil':id_road_oil[i]});
+              road_oil_data.push({'road_oil_way':road_oil_way[i], 'road_oil_lit':road_oil_lit[i], 'road_oil_km':road_oil_km[i], 'id_road_oil':id_road_oil[i]});
           };
 
-          var road_toll = [];    
+          var road_toll_data = [];    
 
           var toll = [];  
           var road_toll_money = []; 
@@ -40,7 +40,12 @@ $(document).ready(function(){
               toll.push($(this).val());
           });
           $('.road_toll_vat').each(function() { 
-              road_toll_vat.push($(this).is(':checked').val());
+            if($(this).is(':checked')){
+              road_toll_vat.push($(this).val());
+            }
+            else{
+              road_toll_vat.push(0);
+            }
           });
           $('.road_toll_money').each(function() { 
               road_toll_money.push($(this).val());
@@ -48,12 +53,12 @@ $(document).ready(function(){
           });
 
           for (var j = 0; j < road_toll_money.length; j++) {
-              road_oil.push({'toll':toll[j], 'road_toll_vat':road_toll_vat[j], 'road_toll_money':road_toll_money[j], 'id_road_toll':id_road_toll[j]});
+              road_toll_data.push({'toll':toll[j], 'road_toll_vat':road_toll_vat[j], 'road_toll_money':road_toll_money[j], 'id_road_toll':id_road_toll[j]});
           };
 
           var formData = new FormData($("#add_road")[0]);
-          formData.append('road_oil', JSON.stringify(road_oil));
-          formData.append('road_toll', JSON.stringify(road_toll));
+          formData.append('road_oil_data', JSON.stringify(road_oil_data));
+          formData.append('road_toll_data', JSON.stringify(road_toll_data));
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -356,7 +361,7 @@ function get_number(id){
                                 <td>
                                   <label>VAT</label>
                                   <div class="input-group">
-                                    <input type="checkbox" class="ace ace-checkbox-2 road_toll_vat" name="road_toll_vat[]" tabindex="22"><span class="lbl">
+                                    <input type="checkbox" class="ace ace-checkbox-2 road_toll_vat" name="road_toll_vat[]" tabindex="22" value="1"><span class="lbl">
                                   </div>
                                 </td>
                               </tr>

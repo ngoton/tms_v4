@@ -53,6 +53,11 @@ $i = $sonews*$page-($sonews-1);
            
         <th rowspan="2">
             <div class="tools action-buttons pull-right">
+                <?php
+                if (isset($filter)) {
+                    echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+                }
+                ?>
                 <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
                     <option value="18446744073709">All</option>
                     <option value="10">10</option>
@@ -161,12 +166,12 @@ $i = $sonews*$page-($sonews-1);
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $warehouse->warehouse_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $warehouse->place_name; ?></td>
-            <td><?php echo $lib->formatMoney($warehouse->warehouse_add); ?></td>
-            <td><?php echo $lib->formatMoney($warehouse->warehouse_weight); ?></td>
-            <td><?php echo $lib->formatMoney($warehouse->warehouse_clean); ?></td>
-            <td><?php echo $lib->formatMoney($warehouse->warehouse_gate); ?></td>
-            <td><?php echo $lib->formatMoney($warehouse->warehouse_cont); ?></td>
-            <td><?php echo $lib->formatMoney($warehouse->warehouse_ton); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_add); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_weight); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_clean); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_gate); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_cont); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_ton); ?></td>
             
             <td><?php echo $lib->hien_thi_ngay_thang($warehouse->warehouse_start_date); ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($warehouse->warehouse_end_date); ?></td>

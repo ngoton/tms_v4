@@ -59,13 +59,16 @@ $i = $sonews*$page-($sonews-1);
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_route_to','<?php echo $url_order ?>')">Điểm đến <?php if ($order_by == 'road_route_to'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_km','<?php echo $url_order ?>')">Khoảng cách <?php if ($order_by == 'road_km'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_km','<?php echo $url_order ?>')">Km <?php if ($order_by == 'road_km'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_oil','<?php echo $url_order ?>')">Lit dầu <?php if ($order_by == 'road_oil'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_oil_ton','<?php echo $url_order ?>')">Lit dầu/tấn<?php if ($order_by == 'road_oil_ton'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_oil_ton','<?php echo $url_order ?>')">Lit/tấn <?php if ($order_by == 'road_oil_ton'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_bridge','<?php echo $url_order ?>')">Cầu đường <?php if ($order_by == 'road_bridge'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_add','<?php echo $url_order ?>')">Đi đường <?php if ($order_by == 'road_add'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -82,6 +85,11 @@ $i = $sonews*$page-($sonews-1);
            
         <th>
             <div class="tools action-buttons pull-right">
+                <?php
+                if (isset($filter)) {
+                    echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+                }
+                ?>
                 <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
                     <option value="18446744073709">All</option>
                     <option value="10">10</option>
@@ -168,38 +176,52 @@ $i = $sonews*$page-($sonews-1);
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($roads as $road) : ?>
-        <tr id="<?php echo $road->road_id ?>" class="edit_tr" <?php echo ($road->road_end_date=="" || $road->road_end_date==0 || $road->road_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $road->road_id ?>"><span class="lbl"></span></td>
-            <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo isset($place_data[$road->road_place_from])?$place_data[$road->road_place_from]:null; ?></td>
-            <td><?php echo isset($place_data[$road->road_place_to])?$place_data[$road->road_place_to]:null; ?></td>
-            <td><?php echo isset($route_data[$road->road_route_from])?$route_data[$road->road_route_from]:null; ?></td>
-            <td><?php echo isset($route_data[$road->road_route_to])?$route_data[$road->road_route_to]:null; ?></td>
-            <td><?php echo $lib->formatMoney($road->road_km); ?></td>
-            <td><?php echo $lib->formatMoney($road->road_oil); ?></td>
-            <td><?php echo $lib->formatMoney($road->road_oil_ton); ?></td>
-            <td><?php echo $lib->formatMoney($road->road_add); ?></td>
-            <td><?php echo $lib->formatMoney($road->road_salary); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($road->road_start_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($road->road_end_date); ?></td>
-            
-            <td class="text-right">
-                <div class="tools action-buttons">
-                    <a class="blue" href="#" onclick="view_click('<?php echo $this->url("road/view/") ?>','Thông tin định mức tuyến đường',<?php echo $road->road_id ?>)">
-                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
-                    </a>
-                    <a class="green" href="#" onclick="edit_click('<?php echo $this->url("road/edit/") ?>','Cập nhật định mức tuyến đường',<?php echo $road->road_id ?>)">
-                        <i class="ace-icon fa fa-pencil bigger-130"></i>
-                    </a>
-
-                    <a class="red" href="#">
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $road->road_id ?>)"></i>
-                    </a>
-                </div>
-            </td>
+    <?php $l=1;
+        foreach ($arr as $key => $value) { ?>
+        <tr style="font-weight: bold; background: #96d7f170">
+            <td><a class="tr_parent" data="tr_<?php echo $l ?>" title="Ẩn/Hiện"><i class="fa fa-angle-down ace-icon bigger-150"></i></a></td>
+            <td><?php echo $l++; ?></td>
+            <td><?php echo $key; ?></td>
+            <td><?php echo key($value); ?></td>
+            <td colspan="11"></td>
         </tr>
-    <?php endforeach; ?>
+        <?php $h=1;
+            foreach ($value as $key1) { 
+                foreach($key1 as $road){
+                ?>
+                <tr id="<?php echo $road->road_id ?>" class="edit_tr tr_<?php echo ($l-1) ?>" <?php echo ($road->road_end_date=="" || $road->road_end_date==0 || $road->road_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+                    <td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $road->road_id ?>"><span class="lbl"></span></td>
+                    <td class="text-center"><?php echo $h++; ?></td>
+                    <td></td>
+                    <td></td>
+                    <td><?php echo isset($route_data[$road->road_route_from])?$route_data[$road->road_route_from]:null; ?></td>
+                    <td><?php echo isset($route_data[$road->road_route_to])?$route_data[$road->road_route_to]:null; ?></td>
+                    <td class="text-right"><?php echo $lib->formatMoney($road->road_km,2); ?></td>
+                    <td class="text-right"><?php echo $lib->formatMoney($road->road_oil,2); ?></td>
+                    <td class="text-right"><?php echo $lib->formatMoney($road->road_oil_ton,2); ?></td>
+                    <td class="text-right"><?php echo $lib->formatMoney($road->road_bridge); ?></td>
+                    <td class="text-right"><?php echo $lib->formatMoney($road->road_add); ?></td>
+                    <td class="text-right"><?php echo $lib->formatMoney($road->road_salary); ?></td>
+                    <td><?php echo $lib->hien_thi_ngay_thang($road->road_start_date); ?></td>
+                    <td><?php echo $lib->hien_thi_ngay_thang($road->road_end_date); ?></td>
+                    
+                    <td class="text-right">
+                        <div class="tools action-buttons">
+                            <a class="blue" href="#" onclick="view_click('<?php echo $this->url("road/view/") ?>','Thông tin định mức tuyến đường',<?php echo $road->road_id ?>)">
+                                <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                            </a>
+                            <a class="green" href="#" onclick="edit_click('<?php echo $this->url("road/edit/") ?>','Cập nhật định mức tuyến đường',<?php echo $road->road_id ?>)">
+                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                            </a>
+
+                            <a class="red" href="#">
+                                <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $road->road_id ?>)"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+    <?php  } } }?>
+    
    </tbody>
 </table>
 <?php
@@ -209,4 +231,8 @@ $this->helper('slidePaginator');
 <script type="text/javascript">
     var ch = "<?php echo $limit ?>";
 $('#chonloc option[value='+ch+']').attr('selected','selected');
+
+$('.tr_parent').on('click', function(event) {        
+     $('.'+$(this).attr('data')).toggle('show');
+});
 </script>

@@ -130,6 +130,7 @@ Class customerController Extends baseController {
                 $str = implode(',', $_POST['customer_sub']);
                 $data['where'] .= ' AND (customer_sub LIKE "'.$str.'" OR customer_sub LIKE "'.$str.',%" OR customer_sub LIKE "%,'.$str.',%" OR customer_sub LIKE "%,'.$str.'")';
             }
+            $this->view->data['filter'] = 1;
         }
 
         if ($keyword != '') {

@@ -40,7 +40,7 @@ Class warehouseController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'warehouse_start_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'place_name,warehouse_start_date';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
 
@@ -75,6 +75,7 @@ Class warehouseController Extends baseController {
             if (isset($_POST['warehouse_province'])) {
                 $data['where'] .= ' AND warehouse_place IN (SELECT place_id FROM place WHERE place_province IN ('.implode(',',$_POST['warehouse_province']).'))';
             }
+            $this->view->data['filter'] = 1;
         }
 
         $tongsodong = count($warehouse_model->getAllWarehouse($data,$join));

@@ -67,6 +67,11 @@ $i = $sonews*$page-($sonews-1);
            
         <th>
             <div class="tools action-buttons pull-right">
+                <?php
+                if (isset($filter)) {
+                    echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+                }
+                ?>
                 <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
                     <option value="18446744073709">All</option>
                     <option value="10">10</option>

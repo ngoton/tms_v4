@@ -1,22 +1,42 @@
 <div class="login_body">
-  <form id="add" method="post" action="<?php echo $this->url('warehouse') ?>" enctype="multipart/form-data">
+  <form id="add" method="post" action="<?php echo $this->url('road') ?>" enctype="multipart/form-data">
     
-    <div class="col-xs-6">
-      <label for="warehouse_place">Kho</label>
+    <div class="col-xs-3">
+      <label for="road_place_from">Kho đi</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="warehouse_place" name="warehouse_place[]" multiple="">
+        <select class="form-control multiselect" id="road_place_from" name="road_place_from[]" multiple="">
           <?php foreach ($places as $place) { ?>
             <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
           <?php } ?>
         </select>
       </div>
     </div>
-    <div class="col-xs-6">
-      <label for="warehouse_province">Tỉnh/TP</label>
+    <div class="col-xs-3">
+      <label for="road_place_to">Kho đến</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="warehouse_province" name="warehouse_province[]" multiple="">
-          <?php foreach ($provinces as $province) { ?>
-            <option value="<?php echo $province->province_id ?>"><?php echo $province->province_name ?></option>
+        <select class="form-control multiselect" id="road_place_to" name="road_place_to[]" multiple="">
+          <?php foreach ($places as $place) { ?>
+            <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <label for="road_route_from">Điểm đi</label>
+      <div class="input-group">
+        <select class="form-control multiselect" id="road_route_from" name="road_route_from[]" multiple="">
+          <?php foreach ($routes as $route) { ?>
+            <option value="<?php echo $route->route_id ?>"><?php echo $route->route_name ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <label for="road_route_to">Điểm đến</label>
+      <div class="input-group">
+        <select class="form-control multiselect" id="road_route_to" name="road_route_to[]" multiple="">
+          <?php foreach ($routes as $route) { ?>
+            <option value="<?php echo $route->route_id ?>"><?php echo $route->route_name ?></option>
           <?php } ?>
         </select>
       </div>

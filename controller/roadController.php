@@ -40,7 +40,7 @@ Class roadController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'road_start_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'road_place_from,road_start_date';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
 
@@ -52,7 +52,27 @@ Class roadController Extends baseController {
 
         }
 
+        $place_model = $this->model->get('placeModel');
 
+        $places = $place_model->getAllPlace();
+        $place_data = array();
+
+        foreach ($places as $place) {
+            $place_data[$place->place_id] = $place->place_name;
+        }
+
+        $this->view->data['place_data'] = $place_data;
+
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute();
+        $route_data = array();
+
+        foreach ($routes as $route) {
+            $route_data[$route->route_id] = $route->route_name;
+        }
+
+        $this->view->data['route_data'] = $route_data;
 
 
         $road_model = $this->model->get('roadModel');
@@ -68,12 +88,20 @@ Class roadController Extends baseController {
         );
 
         if (isset($_POST['filter'])) {
-            if (isset($_POST['road_place'])) {
-                $data['where'] .= ' AND road_place IN ('.implode(',',$_POST['road_place']).')';
+            if (isset($_POST['road_place_from'])) {
+                $data['where'] .= ' AND road_place_from IN ('.implode(',',$_POST['road_place_from']).')';
             }
-            if (isset($_POST['road_province'])) {
-                $data['where'] .= ' AND road_place IN (SELECT place_id FROM place WHERE place_province IN ('.implode(',',$_POST['road_province']).'))';
+            if (isset($_POST['road_place_to'])) {
+                $data['where'] .= ' AND road_place_to IN ('.implode(',',$_POST['road_place_to']).')';
             }
+            if (isset($_POST['road_route_from'])) {
+                $data['where'] .= ' AND road_route_from IN ('.implode(',',$_POST['road_route_from']).')';
+            }
+            if (isset($_POST['road_route_to'])) {
+                $data['where'] .= ' AND road_route_to IN ('.implode(',',$_POST['road_route_to']).')';
+            }
+
+            $this->view->data['filter'] = 1;
         }
 
         $tongsodong = count($road_model->getAllRoad($data));
@@ -114,27 +142,42 @@ Class roadController Extends baseController {
             );
 
         if (isset($_POST['filter'])) {
-            if (isset($_POST['road_place'])) {
-                $data['where'] .= ' AND road_place IN ('.implode(',',$_POST['road_place']).')';
+            if (isset($_POST['road_place_from'])) {
+                $data['where'] .= ' AND road_place_from IN ('.implode(',',$_POST['road_place_from']).')';
             }
-            if (isset($_POST['road_province'])) {
-                $data['where'] .= ' AND road_place IN (SELECT place_id FROM place WHERE place_province IN ('.implode(',',$_POST['road_province']).'))';
+            if (isset($_POST['road_place_to'])) {
+                $data['where'] .= ' AND road_place_to IN ('.implode(',',$_POST['road_place_to']).')';
+            }
+            if (isset($_POST['road_route_from'])) {
+                $data['where'] .= ' AND road_route_from IN ('.implode(',',$_POST['road_route_from']).')';
+            }
+            if (isset($_POST['road_route_to'])) {
+                $data['where'] .= ' AND road_route_to IN ('.implode(',',$_POST['road_route_to']).')';
             }
         }
         
 
         if ($keyword != '') {
 
-            $search = '( place_name LIKE "%'.$keyword.'%" )';
+            $search = '( road_place_from IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
+                        OR road_place_to IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
+                        OR road_route_from IN (SELECT route_id FROM route WHERE route_name LIKE "%'.$keyword.'%") 
+                        OR road_route_to IN (SELECT route_id FROM route WHERE route_name LIKE "%'.$keyword.'%") 
+                    )';
 
             $data['where'] = $search;
 
         }
 
+        $roads = $road_model->getAllRoad($data);
 
+        $this->view->data['roads'] = $roads;
 
-        $this->view->data['roads'] = $road_model->getAllRoad($data);
-
+        $arr = array();
+        foreach ($roads as $road) {
+            $arr[$place_data[$road->road_place_from]][$place_data[$road->road_place_to]][] = $road; 
+        }
+        $this->view->data['arr'] = $arr;
 
 
         return $this->view->show('road/index');
@@ -145,34 +188,41 @@ Class roadController Extends baseController {
     public function addroad(){
         $road_model = $this->model->get('roadModel');
 
-        if (isset($_POST['road_place'])) {
+        if (isset($_POST['road_place_from']) && isset($_POST['road_place_to']) && isset($_POST['road_route_from']) && isset($_POST['road_route_to'])) {
             if($road_model->getRoadByWhere(array('road_place_from'=>$_POST['road_place_from'],'road_place_to'=>$_POST['road_place_to'],'road_route_from'=>$_POST['road_route_from'],'road_route_to'=>$_POST['road_route_to'],'road_start_date'=>strtotime(str_replace('/', '-', $_POST['road_start_date']))))){
                 echo 'Thông tin đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'road_place'=>trim($_POST['road_place']),
+                'road_place_from'=>trim($_POST['road_place_from']),
+                'road_place_to'=>trim($_POST['road_place_to']),
+                'road_route_from'=>trim($_POST['road_route_from']),
+                'road_route_to'=>trim($_POST['road_route_to']),
                 'road_start_date' => strtotime(str_replace('/', '-', $_POST['road_start_date'])),
                 'road_end_date' => $_POST['road_end_date']!=""?strtotime(str_replace('/', '-', $_POST['road_end_date'])):null,
-                'road_cont' => str_replace(',', '', $_POST['road_cont']),
-                'road_ton' => str_replace(',', '', $_POST['road_ton']),
+                'road_time' => str_replace(',', '', $_POST['road_time']),
+                'road_km' => str_replace(',', '', $_POST['road_km']),
+                'road_oil' => str_replace(',', '', $_POST['road_oil']),
+                'road_oil_ton' => str_replace(',', '', $_POST['road_oil_ton']),
+                'road_bridge' => str_replace(',', '', $_POST['road_bridge']),
+                'road_police' => str_replace(',', '', $_POST['road_police']),
+                'road_tire' => str_replace(',', '', $_POST['road_tire']),
+                'road_over' => str_replace(',', '', $_POST['road_over']),
                 'road_add' => str_replace(',', '', $_POST['road_add']),
-                'road_weight' => str_replace(',', '', $_POST['road_weight']),
-                'road_clean' => str_replace(',', '', $_POST['road_clean']),
-                'road_gate' => str_replace(',', '', $_POST['road_gate']),
+                'road_salary' => str_replace(',', '', $_POST['road_salary']),
             );
 
             $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['road_start_date']).' -1 day')));
 
             if ($data['road_end_date'] == null) {
-                $road_model->queryRoad('UPDATE road SET road_end_date = '.$ngaytruoc.' WHERE road_place='.$data['road_place'].' AND (road_end_date IS NULL OR road_end_date = 0)');
+                $road_model->queryRoad('UPDATE road SET road_end_date = '.$ngaytruoc.' WHERE road_place_from='.$data['road_place_from'].' AND road_place_to='.$data['road_place_to'].' AND road_route_from='.$data['road_route_from'].' AND road_route_to='.$data['road_route_to'].' AND (road_end_date IS NULL OR road_end_date = 0)');
                 $road_model->createRoad($data);
             }
             else{
-                $dm1 = $road_model->queryRoad('SELECT * FROM road WHERE road_place='.$data['road_place'].' AND road_start_date <= '.$data['road_start_date'].' AND road_end_date <= '.$data['road_end_date'].' AND road_end_date >= '.$data['road_start_date'].' ORDER BY road_end_date ASC LIMIT 1');
-                $dm2 = $road_model->queryRoad('SELECT * FROM road WHERE road_place='.$data['road_place'].' AND road_end_date >= '.$data['road_end_date'].' AND road_start_date >= '.$data['road_start_date'].' AND road_start_date <= '.$data['road_end_date'].' ORDER BY road_end_date ASC LIMIT 1');
-                $dm3 = $road_model->queryRoad('SELECT * FROM road WHERE road_place='.$data['road_place'].' AND road_start_date <= '.$data['road_start_date'].' AND road_end_date >= '.$data['road_end_date'].' ORDER BY road_end_date ASC LIMIT 1');
+                $dm1 = $road_model->queryRoad('SELECT * FROM road WHERE road_place_from='.$data['road_place_from'].' AND road_place_to='.$data['road_place_to'].' AND road_route_from='.$data['road_route_from'].' AND road_route_to='.$data['road_route_to'].' AND road_start_date <= '.$data['road_start_date'].' AND road_end_date <= '.$data['road_end_date'].' AND road_end_date >= '.$data['road_start_date'].' ORDER BY road_end_date ASC LIMIT 1');
+                $dm2 = $road_model->queryRoad('SELECT * FROM road WHERE road_place_from='.$data['road_place_from'].' AND road_place_to='.$data['road_place_to'].' AND road_route_from='.$data['road_route_from'].' AND road_route_to='.$data['road_route_to'].' AND road_end_date >= '.$data['road_end_date'].' AND road_start_date >= '.$data['road_start_date'].' AND road_start_date <= '.$data['road_end_date'].' ORDER BY road_end_date ASC LIMIT 1');
+                $dm3 = $road_model->queryRoad('SELECT * FROM road WHERE road_place_from='.$data['road_place_from'].' AND road_place_to='.$data['road_place_to'].' AND road_route_from='.$data['road_route_from'].' AND road_route_to='.$data['road_route_to'].' AND road_start_date <= '.$data['road_start_date'].' AND road_end_date >= '.$data['road_end_date'].' ORDER BY road_end_date ASC LIMIT 1');
 
                 if ($dm3) {
                     foreach ($dm3 as $row) {
@@ -182,13 +232,20 @@ Class roadController Extends baseController {
                         $road_model->updateRoad($d,array('road_id'=>$row->road_id));
 
                         $c = array(
-                            'road_place' => $row->road_place,
-                            'road_cont' => $row->road_cont,
-                            'road_ton' => $row->road_ton,
+                            'road_place_from' => $row->road_place_from,
+                            'road_place_to' => $row->road_place_to,
+                            'road_route_from' => $row->road_route_from,
+                            'road_route_to' => $row->road_route_to,
+                            'road_time' => $row->road_time,
+                            'road_km' => $row->road_km,
+                            'road_oil' => $row->road_oil,
+                            'road_oil_ton' => $row->road_oil_ton,
+                            'road_bridge' => $row->road_bridge,
+                            'road_police' => $row->road_police,
+                            'road_tire' => $row->road_tire,
+                            'road_over' => $row->road_over,
                             'road_add' => $row->road_add,
-                            'road_weight' => $row->road_weight,
-                            'road_clean' => $row->road_clean,
-                            'road_gate' => $row->road_gate,
+                            'road_salary' => $row->road_salary,
                             'road_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['road_end_date']).' +1 day'))),
                             'road_end_date' => $row->road_end_date,
                             );
@@ -221,9 +278,55 @@ Class roadController Extends baseController {
                     $road_model->createRoad($data);
                 }
             }
-            
+            $id_road = $road_model->getLastRoad()->road_id;
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$road_model->getLastRoad()->road_id."|road|".implode("-",$data)."\n"."\r\n";
+            $road_oil_model = $this->model->get('roadoilModel');
+            $road_toll_model = $this->model->get('roadtollModel');
+
+            $road_oil_data = json_decode($_POST['road_oil_data']);
+            $road_toll_data = json_decode($_POST['road_toll_data']);
+
+            if (isset($id_road)) {
+                foreach ($road_oil_data as $v) {
+                    $data_road_oil = array(
+                        'road' => $id_road,
+                        'road_oil_way' => trim($v->road_oil_way),
+                        'road_oil_km' => str_replace(',', '', $v->road_oil_km),
+                        'road_oil_lit' => str_replace(',', '', $v->road_oil_lit),
+                    );
+
+                    if ($v->id_road_oil>0) {
+                        $road_oil_model->updateRoad($data_road_oil,array('road_oil_id'=>$v->id_road_oil));
+                    }
+                    else{
+                        if ($data_road_oil['road_oil_km']!="") {
+                            $road_oil_model->createRoad($data_road_oil);
+                        }
+                        
+                    }
+                }
+
+                foreach ($road_toll_data as $v2) {
+                    $data_road_toll = array(
+                        'road' => $id_road,
+                        'toll' => trim($v2->toll),
+                        'road_toll_money' => str_replace(',', '', $v2->road_toll_money),
+                        'road_toll_vat' => trim($v2->road_toll_vat),
+                    );
+
+                    if ($v2->id_road_toll>0) {
+                        $road_toll_model->updateRoad($data_road_toll,array('road_toll_id'=>$v2->id_road_toll));
+                    }
+                    else{
+                        if ($data_road_toll['road_toll_money']!="") {
+                            $road_toll_model->createRoad($data_road_toll);
+                        }
+                        
+                    }
+                }
+            }
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_road."|road|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -298,19 +401,73 @@ Class roadController Extends baseController {
             $id = $_POST['road_id'];
             
             $data = array(
-                'road_place'=>trim($_POST['road_place']),
+                'road_place_from'=>trim($_POST['road_place_from']),
+                'road_place_to'=>trim($_POST['road_place_to']),
+                'road_route_from'=>trim($_POST['road_route_from']),
+                'road_route_to'=>trim($_POST['road_route_to']),
                 'road_start_date' => strtotime(str_replace('/', '-', $_POST['road_start_date'])),
                 'road_end_date' => $_POST['road_end_date']!=""?strtotime(str_replace('/', '-', $_POST['road_end_date'])):null,
-                'road_cont' => str_replace(',', '', $_POST['road_cont']),
-                'road_ton' => str_replace(',', '', $_POST['road_ton']),
+                'road_time' => str_replace(',', '', $_POST['road_time']),
+                'road_km' => str_replace(',', '', $_POST['road_km']),
+                'road_oil' => str_replace(',', '', $_POST['road_oil']),
+                'road_oil_ton' => str_replace(',', '', $_POST['road_oil_ton']),
+                'road_bridge' => str_replace(',', '', $_POST['road_bridge']),
+                'road_police' => str_replace(',', '', $_POST['road_police']),
+                'road_tire' => str_replace(',', '', $_POST['road_tire']),
+                'road_over' => str_replace(',', '', $_POST['road_over']),
                 'road_add' => str_replace(',', '', $_POST['road_add']),
-                'road_weight' => str_replace(',', '', $_POST['road_weight']),
-                'road_clean' => str_replace(',', '', $_POST['road_clean']),
-                'road_gate' => str_replace(',', '', $_POST['road_gate']),
+                'road_salary' => str_replace(',', '', $_POST['road_salary']),
             );
 
             $road_model->updateRoad($data,array('road_id'=>$id));
             
+            $id_road = $id;
+
+            $road_oil_model = $this->model->get('roadoilModel');
+            $road_toll_model = $this->model->get('roadtollModel');
+
+            $road_oil_data = json_decode($_POST['road_oil_data']);
+            $road_toll_data = json_decode($_POST['road_toll_data']);
+
+            if (isset($id_road)) {
+                foreach ($road_oil_data as $v) {
+                    $data_road_oil = array(
+                        'road' => $id_road,
+                        'road_oil_way' => trim($v->road_oil_way),
+                        'road_oil_km' => str_replace(',', '', $v->road_oil_km),
+                        'road_oil_lit' => str_replace(',', '', $v->road_oil_lit),
+                    );
+
+                    if ($v->id_road_oil>0) {
+                        $road_oil_model->updateRoad($data_road_oil,array('road_oil_id'=>$v->id_road_oil));
+                    }
+                    else{
+                        if ($data_road_oil['road_oil_km']!="") {
+                            $road_oil_model->createRoad($data_road_oil);
+                        }
+                        
+                    }
+                }
+
+                foreach ($road_toll_data as $v2) {
+                    $data_road_toll = array(
+                        'road' => $id_road,
+                        'toll' => trim($v2->toll),
+                        'road_toll_money' => str_replace(',', '', $v2->road_toll_money),
+                        'road_toll_vat' => trim($v2->road_toll_vat),
+                    );
+
+                    if ($v2->id_road_toll>0) {
+                        $road_toll_model->updateRoad($data_road_toll,array('road_toll_id'=>$v2->id_road_toll));
+                    }
+                    else{
+                        if ($data_road_toll['road_toll_money']!="") {
+                            $road_toll_model->createRoad($data_road_toll);
+                        }
+                        
+                    }
+                }
+            }
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|road|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -369,6 +526,15 @@ Class roadController Extends baseController {
             $this->view->redirect('road');
 
         }
+
+        $road_oil_model = $this->model->get('roadoilModel');
+        $road_toll_model = $this->model->get('roadtollModel');
+
+        $road_oils = $road_oil_model->getAllRoad(array('where'=>'road='.$id));
+        $this->view->data['road_oils'] = $road_oils;
+
+        $road_tolls = $road_toll_model->getAllRoad(array('where'=>'road='.$id));
+        $this->view->data['road_tolls'] = $road_tolls;
 
         $place_model = $this->model->get('placeModel');
 
@@ -437,6 +603,16 @@ Class roadController Extends baseController {
 
         }
 
+        $road_oil_model = $this->model->get('roadoilModel');
+        $road_toll_model = $this->model->get('roadtollModel');
+
+        $road_oils = $road_oil_model->getAllRoad(array('where'=>'road='.$id));
+        $this->view->data['road_oils'] = $road_oils;
+
+        $road_tolls = $road_toll_model->getAllRoad(array('where'=>'road='.$id));
+        $this->view->data['road_tolls'] = $road_tolls;
+
+        
         $place_model = $this->model->get('placeModel');
 
         $places = $place_model->getAllPlace();
@@ -472,13 +648,13 @@ Class roadController Extends baseController {
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Lọc dữ liệu';
 
-        $province_model = $this->model->get('provinceModel');
+        $route_model = $this->model->get('routeModel');
         $place_model = $this->model->get('placeModel');
 
-        $provinces = $province_model->getAllProvince();
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
         $places = $place_model->getAllPlace(array('order_by'=>'place_code','order'=>'ASC'));
 
-        $this->view->data['provinces'] = $provinces;
+        $this->view->data['routes'] = $routes;
         $this->view->data['places'] = $places;
 
         $this->view->data['page'] = $_GET['page'];

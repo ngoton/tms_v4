@@ -85,6 +85,7 @@ Class vehicleController Extends baseController {
                 }
                 
             }
+            $this->view->data['filter'] = 1;
         }
 
         $tongsodong = count($vehicle_model->getAllVehicle(null,$join));
