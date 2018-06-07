@@ -1,0 +1,31 @@
+
+<div id="error_costlist" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+  
+        <div class="col-xs-12">
+          <table>
+            <tr>
+                <td>Mã chi phí </td>
+                <td><input type="text" id="cost_list_code" name="cost_list_code" tabindex="1" autofocus required="required" value="<?php echo $cost_list_data->cost_list_code ?>"></td>
+                
+            </tr>
+            <tr>
+                <td>Tên chi phí </td>
+                <td><input type="text" id="cost_list_name" name="cost_list_name" tabindex="2" required="required" value="<?php echo $cost_list_data->cost_list_name ?>"></td>
+                
+            </tr>
+            <tr>
+                <td>Loại chi phí </td>
+                <td>
+                  <select class="form-control select2" id="cost_list_type" name="cost_list_type" required="required" tabindex="3">
+                    <?php foreach ($cost_types as $cost_type) { ?>
+                      <option value="<?php echo $cost_type->cost_type_id ?>" <?php echo $cost_list_data->cost_list_type==$cost_type->cost_type_id?'selected="selected"':null ?> ><?php echo $cost_type->cost_type_name ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            
+        </table> 
+        </div>
+          
+</div>
