@@ -573,7 +573,7 @@ function open_dialog_other(url, title, id, data, form){
         html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; Đóng & tải lại",
         "class" : "btn btn-danger",
         click: function() {
-          $( this ).dialog( "close" );
+          
           if (id.charAt(0) == ".") {
             $.ajax({
                 type: "GET",
@@ -617,17 +617,24 @@ function open_dialog_other(url, title, id, data, form){
             var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
 
             var select = $('#'+id).select2({dataAdapter: customAdapter});
-            var select_class = $('.'+id).select2({dataAdapter: customAdapter});
+            if ($('.'+id).length) {
+              var select_class = $('.'+id).select2({dataAdapter: customAdapter});
+            }
+            
             $.ajax({
                 type: "GET",
                 url: data,
                 success: function(answer){
                   var data = $.parseJSON(answer);
                   select.data('select2').dataAdapter.updateOptions(data);
-                  select_class.data('select2').dataAdapter.updateOptions(data);
+                  if (select_class) {
+                    select_class.data('select2').dataAdapter.updateOptions(data);
+                  }
                 }
             });
           }
+
+          $( this ).dialog( "close" );
           
         }
       }
@@ -639,7 +646,7 @@ function open_dialog_other(url, title, id, data, form){
     },
     close: function(){
       $( this ).dialog( "close" );
-      
+      $(this).dialog('destroy');
     }
   });
   dialog.load(url, function(){

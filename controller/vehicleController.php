@@ -395,6 +395,20 @@ Class vehicleController Extends baseController {
         return $this->view->show('vehicle/filter');
     }
 
+    public function getvehicle(){
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($vehicles as $vehicle) {
+            $result[$i]['id'] = $vehicle->vehicle_id;
+            $result[$i]['text'] = $vehicle->vehicle_number;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

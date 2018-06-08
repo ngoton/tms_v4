@@ -174,7 +174,7 @@ Class costlistController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->cost_list) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->costlist) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -242,7 +242,7 @@ Class costlistController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->cost_list) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->costlist) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -344,7 +344,7 @@ Class costlistController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->cost_list) || json_decode($_SESSION['user_permission_action'])->cost_list != "cost_list") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->costlist) || json_decode($_SESSION['user_permission_action'])->costlist != "costlist") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -439,7 +439,7 @@ Class costlistController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->cost_list) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->costlist) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;

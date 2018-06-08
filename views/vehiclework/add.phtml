@@ -1,0 +1,66 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_vehiclework").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add_vehiclework")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/vehiclework/addvehiclework", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_vehiclework').hide();
+                  $('#error_vehiclework').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_vehiclework').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_vehiclework').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+<div class="login_body">
+  
+      <form id="add_vehiclework" method="post" action="" autocomplete="off">
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="vehicle" name="vehicle" required="required" tabindex="1">
+                    <?php foreach ($vehicles as $vehicle) { ?>
+                      <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Ngày dừng chạy </td>
+                <td><input type="text" id="vehicle_work_start_date" name="vehicle_work_start_date" tabindex="2" class="start-date" required="required"></td>
+            </tr>
+            <tr>
+                <td>Ngày thôi dừng </td>
+                <td><input type="text" id="vehicle_work_end_date" name="vehicle_work_end_date" tabindex="3" class="end-date"></td>
+            </tr>
+        </table> 
+    </form>
+</div>
+<div id="error_vehiclework" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

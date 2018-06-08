@@ -434,6 +434,20 @@ Class staffController Extends baseController {
         return $this->view->show('staff/filter');
     }
 
+    public function getstaff(){
+        $staff_model = $this->model->get('staffModel');
+
+        $staffs = $staff_model->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($staffs as $staff) {
+            $result[$i]['id'] = $staff->staff_id;
+            $result[$i]['text'] = $staff->staff_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
 
     public function delete(){
 

@@ -1,0 +1,36 @@
+
+<div class="login_body">
+  
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','driver_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="driver_vehicle" name="driver_vehicle" required="required" tabindex="1">
+                    <?php foreach ($vehicles as $vehicle) { ?>
+                      <option value="<?php echo $vehicle->vehicle_id ?>" <?php echo $driver_data->driver_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?>><?php echo $vehicle->vehicle_number ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Tài xế <a title="Thêm tài xế mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("staff/add") ?>','Thêm tài xế mới','driver_staff','<?php echo $this->url("staff/getstaff") ?>','add_staff')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="driver_staff" name="driver_staff" required="required" tabindex="2">
+                    <?php foreach ($staffs as $staff) { ?>
+                      <option value="<?php echo $staff->staff_id ?>" <?php echo $driver_data->driver_staff==$staff->staff_id?'selected="selected"':null ?>><?php echo $staff->staff_name ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Ngày nhận xe </td>
+                <td><input type="text" id="driver_start_date" name="driver_start_date" tabindex="3" class="start-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($driver_data->driver_start_date) ?>"></td>
+            </tr>
+            <tr>
+                <td>Ngày trả xe </td>
+                <td><input type="text" id="driver_end_date" name="driver_end_date" tabindex="4" class="end-date" value="<?php echo $lib->hien_thi_ngay_thang($driver_data->driver_end_date) ?>"></td>
+            </tr>
+        </table> 
+
+</div>
+<div id="error_driver" class="error"><?php echo isset($error) ? $error : null; ?></div>

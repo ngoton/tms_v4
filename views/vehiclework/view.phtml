@@ -1,0 +1,26 @@
+
+<div class="login_body">
+  
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="vehicle" name="vehicle" required="required" tabindex="1">
+                    <?php foreach ($vehicles as $vehicle) { ?>
+                      <option value="<?php echo $vehicle->vehicle_id ?>" <?php echo $vehicle_data->vehicle==$vehicle->vehicle_id?'selected="selected"':null ?>><?php echo $vehicle->vehicle_number ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Ngày dừng chạy </td>
+                <td><input type="text" id="vehicle_work_start_date" name="vehicle_work_start_date" tabindex="2" class="start-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($vehicle_data->vehicle_work_start_date) ?>"></td>
+            </tr>
+            <tr>
+                <td>Ngày thôi dừng </td>
+                <td><input type="text" id="vehicle_work_end_date" name="vehicle_work_end_date" tabindex="3" class="end-date" value="<?php echo $lib->hien_thi_ngay_thang($vehicle_data->vehicle_work_end_date) ?>"></td>
+            </tr>
+        </table> 
+    
+</div>
+<div id="error_vehiclework" class="error"><?php echo isset($error) ? $error : null; ?></div>
