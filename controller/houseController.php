@@ -1,6 +1,6 @@
 <?php
 
-Class romoocController Extends baseController {
+Class houseController Extends baseController {
 
     public function index() {
 
@@ -20,7 +20,7 @@ Class romoocController Extends baseController {
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý mooc';
+        $this->view->data['title'] = 'Quản lý kho vật tư';
 
 
 
@@ -40,7 +40,7 @@ Class romoocController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'romooc_number';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'house_code';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
@@ -55,7 +55,7 @@ Class romoocController Extends baseController {
 
 
 
-        $romooc_model = $this->model->get('romoocModel');
+        $house_model = $this->model->get('houseModel');
 
         $sonews = $limit;
 
@@ -65,7 +65,7 @@ Class romoocController Extends baseController {
 
         
 
-        $tongsodong = count($romooc_model->getAllRomooc());
+        $tongsodong = count($house_model->getAllHouse());
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -105,7 +105,7 @@ Class romoocController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( romooc_number LIKE "%'.$keyword.'%" )';
+            $search = '( house_code LIKE "%'.$keyword.'%" OR house_name LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -113,30 +113,35 @@ Class romoocController Extends baseController {
 
 
 
-        $this->view->data['romoocs'] = $romooc_model->getAllRomooc($data);
+        $this->view->data['houses'] = $house_model->getAllHouse($data);
 
 
 
-        return $this->view->show('romooc/index');
+        return $this->view->show('house/index');
 
     }
 
 
-    public function addromooc(){
-        $romooc_model = $this->model->get('romoocModel');
+    public function addhouse(){
+        $house_model = $this->model->get('houseModel');
 
-        if (isset($_POST['romooc_number'])) {
-            if($romooc_model->getRomoocByWhere(array('romooc_number'=>trim($_POST['romooc_number'])))){
-                echo 'Tên mooc đã tồn tại';
+        if (isset($_POST['house_code'])) {
+            if($house_model->getHouseByWhere(array('house_code'=>trim($_POST['house_code'])))){
+                echo 'Mã kho vật tư đã tồn tại';
+                return false;
+            }
+            if($house_model->getHouseByWhere(array('house_name'=>trim($_POST['house_name'])))){
+                echo 'Tên kho vật tư đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'romooc_number' => trim($_POST['romooc_number']),
+                'house_code' => trim($_POST['house_code']),
+                'house_name' => trim($_POST['house_name']),
             );
-            $romooc_model->createRomooc($data);
+            $house_model->createHouse($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$romooc_model->getLastRomooc()->romooc_id."|romooc|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$house_model->getLastHouse()->house_id."|house|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -144,8 +149,8 @@ Class romoocController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'romooc',
-                'user_log_table_name' => 'Mooc',
+                'user_log_table' => 'house',
+                'user_log_table_name' => 'Kho vật tư',
                 'user_log_action' => 'Thêm mới',
                 'user_log_data' => json_encode($data),
             );
@@ -168,34 +173,39 @@ Class romoocController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->romooc) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->house) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
 
         }
 
-        $this->view->data['title'] = 'Thêm mới mooc';
+        $this->view->data['title'] = 'Thêm mới kho vật tư';
 
-        return $this->view->show('romooc/add');
+        return $this->view->show('house/add');
     }
 
-    public function editromooc(){
-        $romooc_model = $this->model->get('romoocModel');
+    public function edithouse(){
+        $house_model = $this->model->get('houseModel');
 
-        if (isset($_POST['romooc_id'])) {
-            $id = $_POST['romooc_id'];
-            if($romooc_model->getAllRomoocByWhere($id.' AND romooc_number = "'.trim($_POST['romooc_number']).'"')){
-                echo 'Tên mooc đã tồn tại';
+        if (isset($_POST['house_id'])) {
+            $id = $_POST['house_id'];
+            if($house_model->getAllHouseByWhere($id.' AND house_code = "'.trim($_POST['house_code']).'"')){
+                echo 'Mã kho vật tư đã tồn tại';
+                return false;
+            }
+            if($house_model->getAllHouseByWhere($id.' AND house_name = "'.trim($_POST['house_name']).'"')){
+                echo 'Tên kho vật tư đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'romooc_number' => trim($_POST['romooc_number']),
+                'house_code' => trim($_POST['house_code']),
+                'house_name' => trim($_POST['house_name']),
             );
-            $romooc_model->updateRomooc($data,array('romooc_id'=>$id));
+            $house_model->updateHouse($data,array('house_id'=>$id));
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|romooc|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|house|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -203,8 +213,8 @@ Class romoocController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'romooc',
-                'user_log_table_name' => 'Mooc',
+                'user_log_table' => 'house',
+                'user_log_table_name' => 'Kho vật tư',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -226,7 +236,7 @@ Class romoocController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->romooc) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->house) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -234,26 +244,26 @@ Class romoocController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('romooc');
+            $this->view->redirect('house');
 
         }
 
-        $this->view->data['title'] = 'Cập nhật mooc';
+        $this->view->data['title'] = 'Cập nhật kho vật tư';
 
-        $romooc_model = $this->model->get('romoocModel');
+        $house_model = $this->model->get('houseModel');
 
-        $romooc_data = $romooc_model->getRomooc($id);
+        $house_data = $house_model->getHouse($id);
 
-        $this->view->data['romooc_data'] = $romooc_data;
+        $this->view->data['house_data'] = $house_data;
 
-        if (!$romooc_data) {
+        if (!$house_data) {
 
-            $this->view->redirect('romooc');
+            $this->view->redirect('house');
 
         }
 
 
-        return $this->view->show('romooc/edit');
+        return $this->view->show('house/edit');
 
     }
 
@@ -276,38 +286,38 @@ Class romoocController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('romooc');
+            $this->view->redirect('house');
 
         }
 
-        $this->view->data['title'] = 'Thông tin mooc';
+        $this->view->data['title'] = 'Thông tin kho vật tư';
 
-        $romooc_model = $this->model->get('romoocModel');
+        $house_model = $this->model->get('houseModel');
 
-        $romooc_data = $romooc_model->getRomooc($id);
+        $house_data = $house_model->getHouse($id);
 
-        $this->view->data['romooc_data'] = $romooc_data;
+        $this->view->data['house_data'] = $house_data;
 
-        if (!$romooc_data) {
+        if (!$house_data) {
 
-            $this->view->redirect('romooc');
+            $this->view->redirect('house');
 
         }
 
 
-        return $this->view->show('romooc/view');
+        return $this->view->show('house/view');
 
     }
 
-    public function getromooc(){
-        $romooc_model = $this->model->get('romoocModel');
+    public function gethouse(){
+        $house_model = $this->model->get('houseModel');
 
-        $romoocs = $romooc_model->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+        $houses = $house_model->getAllHouse(array('order_by'=>'house_code','order'=>'ASC'));
         $result = array();
         $i = 0;
-        foreach ($romoocs as $romooc) {
-            $result[$i]['id'] = $romooc->romooc_id;
-            $result[$i]['text'] = $romooc->romooc_number;
+        foreach ($houses as $house) {
+            $result[$i]['id'] = $house->house_id;
+            $result[$i]['text'] = $house->house_name;
             $i++;
         }
         echo json_encode($result);
@@ -322,7 +332,7 @@ Class romoocController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->romooc) || json_decode($_SESSION['user_permission_action'])->romooc != "romooc") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->house) || json_decode($_SESSION['user_permission_action'])->house != "house") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -331,7 +341,7 @@ Class romoocController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $romooc_model = $this->model->get('romoocModel');
+            $house_model = $this->model->get('houseModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -340,10 +350,10 @@ Class romoocController Extends baseController {
 
                 foreach ($datas as $data) {
 
-                    $romooc_model->deleteRomooc($data);
+                    $house_model->deleteHouse($data);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|romooc|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|house|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -355,8 +365,8 @@ Class romoocController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'romooc',
-                    'user_log_table_name' => 'Mooc',
+                    'user_log_table' => 'house',
+                    'user_log_table_name' => 'Kho vật tư',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -370,17 +380,17 @@ Class romoocController Extends baseController {
 
             else{
 
-                $romooc_model->deleteRomooc($_POST['data']);
+                $house_model->deleteHouse($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|romooc|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|house|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'romooc',
-                    'user_log_table_name' => 'Mooc',
+                    'user_log_table' => 'house',
+                    'user_log_table_name' => 'Kho vật tư',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );
@@ -397,7 +407,7 @@ Class romoocController Extends baseController {
 
     }
 
-    public function importromooc(){
+    public function importhouse(){
         if (isset($_FILES['import']['name'])) {
             $total = count($_FILES['import']['name']);
             for( $i=0 ; $i < $total ; $i++ ) {
@@ -417,7 +427,7 @@ Class romoocController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->romooc) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->house) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -427,7 +437,7 @@ Class romoocController Extends baseController {
         $this->view->data['title'] = 'Nhập dữ liệu';
 
        
-        return $this->view->show('romooc/import');
+        return $this->view->show('house/import');
 
     }
 

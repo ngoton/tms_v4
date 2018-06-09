@@ -40,6 +40,11 @@ $i = $sonews*$page-($sonews-1);
            
         <th>
             <div class="tools action-buttons pull-right">
+                <?php
+                if (isset($filter)) {
+                    echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+                }
+                ?>
                 <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
                     <option value="18446744073709">All</option>
                     <option value="10">10</option>
@@ -130,8 +135,8 @@ $i = $sonews*$page-($sonews-1);
         <tr id="<?php echo $vehicle->driver_id ?>" class="edit_tr" <?php echo ($vehicle->driver_end_date=="" || $vehicle->driver_end_date==0 || $vehicle->driver_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $vehicle->driver_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $vehicle->vehicle_number; ?></td>
-            <td><?php echo $vehicle->staff_name; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $vehicle->driver_vehicle ?>,'none')"><?php echo $vehicle->vehicle_number; ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("staff/view/") ?>','Thông tin tài xế',<?php echo $vehicle->driver_staff ?>,'none')"><?php echo $vehicle->staff_name; ?></a></td>
             <td><?php echo $lib->hien_thi_ngay_thang($vehicle->driver_start_date); ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($vehicle->driver_end_date); ?></td>
             

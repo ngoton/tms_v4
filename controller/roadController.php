@@ -59,6 +59,7 @@ Class roadController Extends baseController {
 
         foreach ($places as $place) {
             $place_data[$place->place_id] = $place->place_name;
+            $place_data['name'][$place->place_name] = $place->place_id;
         }
 
         $this->view->data['place_data'] = $place_data;

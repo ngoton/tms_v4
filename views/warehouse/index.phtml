@@ -165,7 +165,7 @@ $i = $sonews*$page-($sonews-1);
         <tr id="<?php echo $warehouse->warehouse_id ?>" class="edit_tr" <?php echo ($warehouse->warehouse_end_date=="" || $warehouse->warehouse_end_date==0 || $warehouse->warehouse_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $warehouse->warehouse_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $warehouse->place_name; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $warehouse->warehouse_place ?>,'none')"><?php echo $warehouse->place_name; ?></a></td>
             <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_add); ?></td>
             <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_weight); ?></td>
             <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_clean); ?></td>

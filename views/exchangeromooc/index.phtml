@@ -1,0 +1,292 @@
+
+  <div id="content" style="padding:5px;">
+
+    <div class="tablenav top">
+        <div class="alignleft actions">
+          <div class="form-group">
+            <label for="ngay">Ngày thực hiện</label>
+            <input style="width:100px" type="text"  class="input-mask-date" id="ngay" name="ngay" value="<?php echo date('d/m/Y') ?>" required="required">
+            <input type="submit" value="Hoàn thành" id="update">
+          </div>
+        </div>
+
+      </div>
+
+  </div>
+</div>
+<div class="clearfix"></div>
+<div id="dropZone">
+    <div class="stack">
+        <div class="stackHdr">
+            Đầu
+        </div>
+        <div class="stackDrop1">
+            
+        </div>
+    </div>
+    
+    <div class="stack">
+        <div class="stackHdr">
+            Mooc
+        </div>
+        <div class="stackDrop2">
+            
+        </div>
+    </div>
+</div>
+<form id="spare_form" action="" method="post">
+<div id="launchPad2">  
+  <div>Danh sách Mooc</div>
+  <div>
+    <select id="romooc" name="romooc" class="select2" >
+      <option value="0">Mooc</option>
+      <?php foreach ($romooc_lists as $romooc) { ?>
+        <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+      <?php } ?>
+    </select>
+  </div>
+  
+
+  <?php foreach ($romoocs as $m) { ?>
+    <div class="card2 col-md-4 col-xs-4" id="<?php echo $m->romooc_id ?>">
+        <?php echo $m->romooc_number ?>
+    </div> 
+  <?php }  ?>
+    
+</div>
+<div id="launchPad">  
+  <div>Danh sách Xe</div>
+  <div>
+    <select id="vehicle" name="vehicle" class="select2" >
+      <option value="0">Xe</option>
+      <?php foreach ($vehicle_lists as $vehicle) { ?>
+        <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+      <?php } ?>
+    </select>
+  </div>
+  
+  
+  <?php foreach ($vehicles as $v) { ?>
+    <div class="card col-md-4 col-xs-4" id="<?php echo $v->vehicle_id ?>">
+        <?php echo $v->vehicle_number ?>
+    </div> 
+  <?php }  ?>
+    
+</div>
+</form>
+<div class="clearfix"></div>
+
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+<div class="error">
+  *Lưu ý: Khi thực hiện thay đổi mooc cho xe, thì mooc cũ của xe hiện tại sẽ tự động được thay ra vào ngày hôm trước ngày thực hiện. <br>
+  [ Chỉ thực hiện thay mooc tại đây. Để chỉnh sửa hay xóa vui lòng vào mục quản lý. Mỗi lần chỉ thực hiện cho 1 xe ]
+</div>
+<div class="col-md-12 dragContainer">
+     <h4>Danh sách đã lắp</h4>
+
+    <div class="well">
+        <div id="myCarousel" class="carousel slide">
+            
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <div class="row">
+                      <?php foreach ($vehicle_romoocs as $vehicle) { ?>
+                        <div class="col-sm-1" style="border:1px dashed #00c0ef" >
+                          <div class="row" data-toggle="tooltip" data-placement="right" data-original-title="<?php echo $lib->hien_thi_ngay_thang($vehicle->start_time) ?><?php echo isset($vehicle->end_time)?"-".$lib->hien_thi_ngay_thang($vehicle->start_time):"- " ?>" >
+                            <div class="col-sm-12" id="vehicle_<?php echo $vehicle->vehicle ?>"><?php echo $vehicle->vehicle_number ?></div>
+                            <div class="col-sm-12" id="romooc_<?php echo $vehicle->romooc ?>"><?php echo $vehicle->romooc_number ?></div>
+                          </div>
+                        </div>
+                      <?php } ?>
+                        
+                    </div>
+                    <!--/row-->
+                </div>
+                <!--/item-->
+                
+            </div>
+            <!--/carousel-inner--> 
+            
+
+        </div>
+        <!--/myCarousel-->
+
+        <a style="width:auto" class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </a>
+        <a style="width:auto" class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </a>
+    </div>
+    <!--/well-->
+</div>
+
+
+
+<style type="text/css">
+#launchPad, #launchPad2 {
+    float:right;
+    border: 1px solid #eaeaea;
+    background-color: #f5f5f5;
+    width: 250px;
+}
+#dropZone {
+    float:left;
+    border: 1px solid #eaeaea;
+    background-size: cover;
+    background: url("/public/images/truck_outline_res.png") center center no-repeat;
+}
+.card, .card2 { 
+    width: 70px; 
+    padding: 5px;
+    margin:5px;
+    border:1px solid #ccc;
+    background-color: #eaeaea;
+}
+.stack {
+    float: left;
+    width: 180px;
+    margin: 20px;
+}
+.stackHdr {
+    padding: 5px 
+}
+.stackDrop1, .stackDrop2 {
+    min-height:100px;
+    padding: 15px;
+}
+.card:hover, .card2:hover{
+  cursor: move;
+}
+.ui-state-default{
+  border: 1px dashed #DB2E66;
+  background: transparent;
+}
+
+
+.dragContainer{
+  bottom:0;
+  left:0;
+  position:relative;
+}
+</style>
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $( ".select2" ).select2({dropdownAutoWidth : true});
+
+
+  $(".card").draggable({
+    containment: "body",
+    scroll: true,
+    cursor: "move",
+    helper: 'clone',
+    revert: "invalid"
+});
+$(".card2").draggable({
+    containment: "body",
+    scroll: true,
+    cursor: "move",
+    helper: 'clone',
+    revert: "invalid"
+});
+
+$("#launchPad").droppable({
+    tolerance: "intersect",
+    accept: ".card",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {
+        $("#launchPad").append($(ui.draggable));
+    }
+});
+$("#launchPad2").droppable({
+    tolerance: "intersect",
+    accept: ".card2",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {
+        $("#launchPad2").append($(ui.draggable));
+    }
+});
+
+$(".stackDrop1").droppable({
+    tolerance: "intersect",
+    accept: ".card",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {  
+      if ($(this).html().trim() == "") {      
+        $(this).append($(ui.draggable));
+        console.log(ui.draggable[0].id);
+      }
+    }
+});
+
+$(".stackDrop2").droppable({
+    tolerance: "intersect",
+    accept: ".card2",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {    
+      if ($(this).html().trim() == "") {
+        $(this).append($(ui.draggable));
+        console.log(ui.draggable[0].id);
+      }
+    }
+});
+});
+
+$('#update').click(function(){
+  var vehicle = $('.stackDrop1 .card').attr('id');
+  var romooc = $('.stackDrop2 .card2').attr('id');
+  var start_time = $('#ngay').val();
+  if (start_time == "") {
+    $('#ngay').focus();
+    return false;
+  }
+  else if (vehicle == undefined) {
+    return false;
+  }
+  else if (romooc == undefined) {
+    return false;
+  }
+  var yes = "";
+
+  $.ajax({
+    type: "POST", // phương thức gởi đi
+    url: "<?php echo BASE_URL ?>/vehicleromooc/exchange", // nơi mà dữ liệu sẽ chuyển đến khi submit
+    data: {
+        vehicle: vehicle,
+        romooc: romooc,
+        start_time: start_time,
+        yes: yes,
+        }, // giá trị post
+    success: function(answer){ // if everything goes well
+        $('#error').hide();
+        $('#error').slideToggle(100); // hiển thị thẻ div success
+        $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+        $('#error').fadeOut(10000);
+
+        setTimeout(function() {
+          location.reload(true);
+        }, 200);
+    }
+});
+});
+
+var x = "<?php echo $xe ?>";
+$('#vehicle option[value='+x+']').attr('selected','selected');
+
+var m = "<?php echo $mooc ?>";
+$('#romooc option[value='+m+']').attr('selected','selected');
+
+$('#vehicle').change(function(){
+  $('#spare_form').submit();
+});
+$('#romooc').change(function(){
+  $('#spare_form').submit();
+});
+</script>

@@ -125,7 +125,7 @@ $i = $sonews*$page-($sonews-1);
         <tr id="<?php echo $vehicle->vehicle_work_id ?>" class="edit_tr" <?php echo ($vehicle->vehicle_work_end_date=="" || $vehicle->vehicle_work_end_date==0 || $vehicle->vehicle_work_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $vehicle->vehicle_work_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $vehicle->vehicle_number; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $vehicle->vehicle ?>,'none')"><?php echo $vehicle->vehicle_number; ?></a></td>
             <td><?php echo $lib->hien_thi_ngay_thang($vehicle->vehicle_work_start_date); ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($vehicle->vehicle_work_end_date); ?></td>
             

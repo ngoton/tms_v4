@@ -376,24 +376,31 @@ function edit_click(url,title,id){
     }
   });
 }
-function view_click(url,title,id){
-  open_dialog(url+id,title);
-  $('.ui-dialog div.ui-dialog-buttonpane').append('<div class="text-center viewData"><a id="pData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-left"></i></a><a id="nData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-right"></i></a></div>');
-  $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').hide();
-  $('#pData').click(function(){
-    id = parseInt($('tr#'+$(this).attr('data')).prev().attr('id'));
-    if (id > 0) {
-      $(".ui-dialog-content").dialog("close");
-      view_click(url,title,id);
-    }
-  });
-  $('#nData').click(function(){
-    id = parseInt($('tr#'+$(this).attr('data')).next().attr('id'));
-    if (id > 0) {
-      $(".ui-dialog-content").dialog("close");
-      view_click(url,title,id);
-    }
-  });
+function view_click(url,title,id,display){
+  if (display != "" && display != undefined) {
+    open_dialog(url+id,title);
+    $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').hide();
+  }
+  else{
+    open_dialog(url+id,title);
+    $('.ui-dialog div.ui-dialog-buttonpane').append('<div class="text-center viewData"><a id="pData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-left"></i></a><a id="nData" data="'+id+'" class="fm-button ui-state-default ui-corner-all"><i class="ace-icon fa fa-chevron-right"></i></a></div>');
+    $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').hide();
+    $('#pData').click(function(){
+      id = parseInt($('tr#'+$(this).attr('data')).prev().attr('id'));
+      if (id > 0) {
+        $(".ui-dialog-content").dialog("close");
+        view_click(url,title,id);
+      }
+    });
+    $('#nData').click(function(){
+      id = parseInt($('tr#'+$(this).attr('data')).next().attr('id'));
+      if (id > 0) {
+        $(".ui-dialog-content").dialog("close");
+        view_click(url,title,id);
+      }
+    });
+  }
+  
 }
 
 function filter_click(url,title){
