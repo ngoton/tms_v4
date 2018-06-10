@@ -67,7 +67,7 @@ Class driverController Extends baseController {
             'where'=>'1=1',
         );
 
-        $join = array('table'=>'vehicle,staff', 'where'=>'driver_vehicle=vehicle_id AND driver_staff=staff_id');
+        $join = array('table'=>'vehicle', 'where'=>'driver_vehicle=vehicle_id LEFT JOIN staff ON driver_staff=staff_id','join'=>'LEFT JOIN');
 
         if (isset($_POST['filter'])) {
             if (isset($_POST['driver_vehicle'])) {

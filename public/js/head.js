@@ -353,7 +353,7 @@ function info_click(url,title){
   open_dialog(url,title);
 }
 function refresh_click(){
-  location.reload();
+  location.href = window.location.href;
 }
 function add_click(url,title){
   open_dialog(url,title);
@@ -407,71 +407,109 @@ function filter_click(url,title){
   open_dialog(url,title);
 }
 function search_click(){
-  bootbox.prompt("Tìm kiếm", function(result) {
-    if (result === null) {
+  bootbox.prompt({
+    title: "Tìm kiếm",
+    buttons: {
+        confirm: {
+            label: '<i class="fa fa-search"></i> Tìm'
+        },
+        cancel: {
+            label: '<i class="fa fa-times"></i> Hủy'
+        }
+    },
+    callback: function (result) {
+      if (result === null) {
       
-    } else {
-      $.ajax({
-          type: "POST",                            // Phương thức gọi là GET
-          url: "#",                 // File xử lý
-          data: 'page=1&keyword='+result,  
-          success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
-          {
-              $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
-              
-          }
-      });
+      } else {
+        $.ajax({
+            type: "POST",                            // Phương thức gọi là GET
+            url: "#",                 // File xử lý
+            data: 'page=1&keyword='+result,  
+            success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
+            {
+                $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
+                
+            }
+        });
+      }
     }
   });
+  
 }
 
 function del_click(url){
   if (url == "" || url == undefined) {
     var url = window.location.href.split("#")[0]+"/delete";
   }
-  bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-    if(result) {
-      var del = [];
-      ids = $('input:checkbox.checkbox:checked').map(function() { return del.push(this.value); });
-      $.ajax({
-        url: url,   
-        type: 'POST',   
-        data: "xoa="+del,   
-        success:function(data){ 
-          if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
-            for(var i=0; i<del.length; i++)
-               $('tr#'+del[i]).remove();
-           }
-
-          alert_form(data);
-          
+  bootbox.confirm({
+    title: "Bạn có chắc chắn muốn xóa không?",
+    message: "<span class='error'>*Lưu ý: Việc này có thể ảnh hưởng tới các dữ liệu khác.</span>",
+    buttons: {
+        confirm: {
+            label: '<i class="fa fa-check"></i> Đồng ý'
+        },
+        cancel: {
+            label: '<i class="fa fa-times"></i> Hủy'
         }
-      });
+    },
+    callback: function (result) {
+      if(result) {
+        var del = [];
+        ids = $('input:checkbox.checkbox:checked').map(function() { return del.push(this.value); });
+        $.ajax({
+          url: url,   
+          type: 'POST',   
+          data: "xoa="+del,   
+          success:function(data){ 
+            if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
+              for(var i=0; i<del.length; i++)
+                 $('tr#'+del[i]).remove();
+             }
+
+            alert_form(data);
+            
+          }
+        });
+      }
     }
   });
+ 
 }
 function del(id,url)
 {
   if (url == "" || url == undefined) {
     var url = window.location.href.split("#")[0]+"/delete";
   }
-  bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-    if(result) {
-      $.ajax({
-        url: url,   
-        type: 'POST',   
-        data: "data="+id,   
-        success:function(data){ 
-          if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
-            $('tr#'+id).remove(); 
-          }
-          
-          alert_form(data);
-          
+  bootbox.confirm({
+    title: "Bạn có chắc chắn muốn xóa không?",
+    message: "<span class='error'>*Lưu ý: Việc này có thể ảnh hưởng tới các dữ liệu khác.</span>",
+    buttons: {
+        confirm: {
+            label: '<i class="fa fa-check"></i> Đồng ý'
+        },
+        cancel: {
+            label: '<i class="fa fa-times"></i> Hủy'
         }
-      });
+    },
+    callback: function (result) {
+      if(result) {
+        $.ajax({
+          url: url,   
+          type: 'POST',   
+          data: "data="+id,   
+          success:function(data){ 
+            if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
+              $('tr#'+id).remove(); 
+            }
+            
+            alert_form(data);
+            
+          }
+        });
+      }
     }
   });
+ 
 }
 function export_click(type,id,url){
   if (url == "" || url == undefined) {

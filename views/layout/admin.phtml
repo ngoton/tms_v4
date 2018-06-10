@@ -1764,6 +1764,9 @@
                 <a href="#" onclick="javascript:window.history.back();" >Trang trước</a>
               </li>
               <li class="active"><?php echo isset($title)?$title:null ?></li>
+              <?php if(isset($keyword) && $keyword!=""){ ?>
+                <li><i class="ace-icon fa fa-search"></i> <?php echo $keyword ?></li>
+              <?php } ?>
             </ul><!-- /.breadcrumb -->
 
             <!-- <div class="nav-search" id="nav-search">

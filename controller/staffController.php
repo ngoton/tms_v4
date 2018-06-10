@@ -63,7 +63,7 @@ Class staffController Extends baseController {
 
         $pagination_stages = 2;
 
-        $join = array('table'=>'department, position','where'=>'staff_department=department_id AND staff_position=position_id');
+        $join = array('table'=>'department','where'=>'staff_department=department_id LEFT JOIN position ON staff_position=position_id','join'=>'LEFT JOIN');
 
         $data = array(
             'where'=>'1=1',
