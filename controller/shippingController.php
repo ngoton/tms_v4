@@ -311,6 +311,20 @@ Class shippingController Extends baseController {
 
     }
 
+    public function getshipping(){
+        $shipping_model = $this->model->get('shippingModel');
+
+        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($shippings as $shipping) {
+            $result[$i]['id'] = $shipping->shipping_id;
+            $result[$i]['text'] = $shipping->shipping_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

@@ -353,7 +353,7 @@ function info_click(url,title){
   open_dialog(url,title);
 }
 function refresh_click(){
-  location.href = window.location.href;
+  location.href = window.location.href.split("#")[0];
 }
 function add_click(url,title){
   open_dialog(url,title);

@@ -229,7 +229,7 @@ $(document).ready(function(){
       </div>
       <div id="contact" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable" style="width: 100%;">
+            <table id="dataTable_customer" style="width: 100%;">
                 <tbody>
                 <tr>
                     <td style="padding-right: 10px"><input type="checkbox" name="chk"></td>
@@ -293,16 +293,16 @@ $(document).ready(function(){
                                 
                             </tr>
                         </tbody></table>
-                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
                 </tr>
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow('dataTable')">
+            <input type="button" value="Thêm" onclick="addRow_customer('dataTable_customer')">
 
-            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+            <input type="button" value="Xóa" onclick="deleteRow_customer('dataTable_customer')">
         </div>
       </div>
     </div>
@@ -312,7 +312,7 @@ $(document).ready(function(){
 
 
 <script type="text/javascript">
-  function addRow(tableID){
+  function addRow_customer(tableID){
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
     var row=table.insertRow(rowCount);
@@ -347,7 +347,7 @@ $(document).ready(function(){
     $('input[name="chk"]:last').attr('title',"");
 
 }
-function deleteRow(tableID){
+function deleteRow_customer(tableID){
     try{
         var table=document.getElementById(tableID);
         var rowCount=table.rows.length;

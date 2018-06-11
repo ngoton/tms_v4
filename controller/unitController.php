@@ -299,6 +299,20 @@ Class unitController Extends baseController {
 
     }
 
+    public function getunit(){
+        $unit_model = $this->model->get('unitModel');
+
+        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($units as $unit) {
+            $result[$i]['id'] = $unit->unit_id;
+            $result[$i]['text'] = $unit->unit_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {

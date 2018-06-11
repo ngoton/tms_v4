@@ -301,7 +301,7 @@ Class customerController Extends baseController {
         $this->view->data['title'] = 'Thêm mới khách hàng - đối tác';
 
         $customer_model = $this->model->get('customerModel');
-        $lastID = isset($customer_model->getLastCustomer()->customer_code)?$customer_model->getLastCustomer()->customer_code:'KH00';
+        $lastID = isset($customer_model->getCustomerByWhere(array('customer_type'=>1))->customer_code)?$customer_model->getLastCustomer()->customer_code:'KH00';
         $lastID++;
         $this->view->data['lastID'] = $lastID;
 
@@ -599,7 +599,33 @@ Class customerController Extends baseController {
     public function getcustomer(){
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_code','order'=>'ASC'));
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($customers as $customer) {
+            $result[$i]['id'] = $customer->customer_id;
+            $result[$i]['text'] = $customer->customer_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+    public function getncc(){
+        $customer_model = $this->model->get('customerModel');
+
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($customers as $customer) {
+            $result[$i]['id'] = $customer->customer_id;
+            $result[$i]['text'] = $customer->customer_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+    public function getcanhan(){
+        $customer_model = $this->model->get('customerModel');
+
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=3','order_by'=>'customer_code','order'=>'ASC'));
         $result = array();
         $i = 0;
         foreach ($customers as $customer) {

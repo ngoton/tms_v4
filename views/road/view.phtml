@@ -115,7 +115,7 @@
      </div>
      <div id="distance" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable" style="width: 100%;">
+            <table id="dataTable_road" style="width: 100%;">
                 <tbody>
                   <?php if(count($road_oils) > 0){ ?>
                   <?php foreach ($road_oils as $road_oil_data) { ?>
@@ -149,7 +149,7 @@
                                 </tr>
                                 
                           </tbody></table>
-                          <div class="hr hr-18 dotted hr-double"></div>
+                          <div class="hr hr-8 dotted hr-double"></div>
                       </td>
                       
                   </tr>
@@ -184,7 +184,7 @@
                                 </tr>
                                 
                           </tbody></table>
-                          <div class="hr hr-18 dotted hr-double"></div>
+                          <div class="hr hr-8 dotted hr-double"></div>
                       </td>
                       
                   </tr>
@@ -192,14 +192,11 @@
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow('dataTable')">
-
-            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
         </div>
       </div>
       <div id="bridge" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable2" style="width: 100%;">
+            <table id="dataTable_road2" style="width: 100%;">
                 <tbody>
                   <?php if(count($road_tolls) > 0){ ?>
                   <?php foreach ($road_tolls as $road_toll_data) { ?>
@@ -233,7 +230,7 @@
                                 </tr>
                                 
                           </tbody></table>
-                          <div class="hr hr-18 dotted hr-double"></div>
+                          <div class="hr hr-8 dotted hr-double"></div>
                       </td>
                       
                   </tr>
@@ -268,7 +265,7 @@
                               </tr>
                               
                         </tbody></table>
-                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
                 </tr>
@@ -276,9 +273,6 @@
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow2('dataTable2')">
-
-            <input type="button" value="Xóa" onclick="deleteRow2('dataTable2')">
         </div>
       </div>
    </div>

@@ -9,24 +9,36 @@ $(document).ready(function(){
         submitHandler: function(form) {
           var booking_detail_data = [];    
 
-          var booking_detail_way = [];  
-          var booking_detail_km = []; 
-          var booking_detail_lit = [];
+          var booking_detail_number = [];  
+          var booking_detail_unit = []; 
+          var booking_detail_price = [];
+          var booking_detail_container = [];
+          var booking_detail_seal = [];
+          var booking_detail_customer_sub = [];
           var id_booking_detail = [];
 
-          $('.booking_detail_way').each(function() { 
-              booking_detail_way.push($(this).val());
-          });
-          $('.booking_detail_lit').each(function() { 
-              booking_detail_lit.push($(this).val());
-          });
-          $('.booking_detail_km').each(function() { 
-              booking_detail_km.push($(this).val());
+          $('.booking_detail_number').each(function() { 
+              booking_detail_number.push($(this).val());
               id_booking_detail.push($(this).attr('data') || "");
           });
+          $('.booking_detail_unit').each(function() { 
+              booking_detail_unit.push($(this).val());
+          });
+          $('.booking_detail_price').each(function() { 
+              booking_detail_price.push($(this).val());
+          });
+          $('.booking_detail_container').each(function() { 
+              booking_detail_container.push($(this).val());
+          });
+          $('.booking_detail_seal').each(function() { 
+              booking_detail_seal.push($(this).val());
+          });
+          $('.booking_detail_customer_sub').each(function() { 
+              booking_detail_customer_sub.push($(this).val());
+          });
 
-          for (var i = 0; i < booking_detail_km.length; i++) {
-              booking_detail_data.push({'booking_detail_way':booking_detail_way[i], 'booking_detail_lit':booking_detail_lit[i], 'booking_detail_km':booking_detail_km[i], 'id_booking_detail':id_booking_detail[i]});
+          for (var i = 0; i < booking_detail_number.length; i++) {
+              booking_detail_data.push({'booking_detail_number':booking_detail_number[i], 'booking_detail_unit':booking_detail_unit[i], 'booking_detail_price':booking_detail_price[i], 'booking_detail_container':booking_detail_container[i], 'booking_detail_seal':booking_detail_seal[i], 'booking_detail_customer_sub':booking_detail_customer_sub[i], 'id_booking_detail':id_booking_detail[i]});
           };
 
           var formData = new FormData($("#add_booking")[0]);
@@ -62,64 +74,65 @@ $(document).ready(function(){
         $('a[href="#detail"]').trigger('click');
       });
 
-      $('.booking_detail_km').keyup(function(){
-        get_detail($(this));
+      $('.booking_detail_number').keyup(function(){
+        get_price();
       });
-      $('.booking_detail_way').change(function(){
-        get_detail($(this));
+      $('.booking_detail_price').change(function(){
+        get_price();
       });
-      $('.booking_toll_money').keyup(function(){
-      get_bridge($(this));
-    });
+
+
+  var tag_input = $('.booking_detail_customer_sub');
+  try{
+    tag_input.tag(
+      {
+      placeholder:tag_input.attr('placeholder'),
+      //enable typeahead by specifying the source array
+      //source: ace.vars['US_STATES'],//defined in ace.js >> ace.enable_search_ahead
+      
+      //or fetch data from database, fetch those that match "query"
+      source: function(query, process) {
+        $.ajax({url: '<?php echo $this->url("customer/getcustomersub") ?>?q='+encodeURIComponent(query)})
+        .done(function(result_items){
+        process($.parseJSON(result_items));
+        });
+      }
+      
+      }
+    )
+
+    //programmatically add/remove a tag
+    //var $tag_obj = $('#customer_sub').data('tag');
+    //$tag_obj.add('Programmatically Added');
+    
+    //var index = $tag_obj.inValues('some tag');
+    //$tag_obj.remove(index);
+  }
+  catch(e) {
+    //display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+    tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+    //autosize($('#form-field-tags'));
+  }
 	
 });
-function get_bridge(ele){
-  var sum = 0;
-  $('.booking_toll_money').each(function(){
-    sum += parseFloat(get_number(this));
-  });
-  $('#booking_bridge').val(sum);
 
-  $('#booking_bridge').inputmask("numeric", {
-    radixPoint: ".",
-    groupSeparator: ",",
-    digits: 6,
-    autoGroup: true,
-    rightAlign: true,
-    oncleared: function () { self.Value(''); }
-  });
-}
-function get_detail(ele){
-  if (ele) {
-    var row = ele.parent().parent().parent().parent().parent().parent().parent();
+function get_price(){
+
+  var sum = 0;
+  var total = 0 ;
+  $('.booking_detail_number').each(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
     var rowIndex = row[0].rowIndex;
-    var way = parseFloat($('.booking_detail_way:eq('+rowIndex+') option:selected').attr('data') || 0);
-    var km = parseFloat(get_number('.booking_detail_km:eq('+rowIndex+')') || 0);
-    var detail = way*km;
-    $('.booking_detail_lit:eq('+rowIndex+')').val(detail);
-    $('.booking_detail_lit:eq('+rowIndex+')').inputmask("numeric", {
-      radixPoint: ".",
-      groupSeparator: ",",
-      digits: 6,
-      autoGroup: true,
-      rightAlign: true,
-      oncleared: function () { self.Value(''); }
-    });
-  }
-
-  var sum = 0;
-  var km = 0 ;
-  $('.booking_detail_lit').each(function(){
-    sum += parseFloat(get_number(this));
-  });
-  $('.booking_detail_km').each(function(){
-    km += parseFloat(get_number(this));
+    var number = parseFloat(get_number(this) || 0);
+    var price = parseFloat(get_number('.booking_detail_price:eq('+rowIndex+')') || 0);
+    sum += number;
+    total += number*price;
   });
 
-  $('#booking_detail').val(sum);
-  $('#booking_km').val(km);
+  $('#booking_sum').val(sum);
+  $('#booking_total').val(total);
 
-  $('#booking_detail').inputmask("numeric", {
+  $('#booking_sum').inputmask("numeric", {
     radixPoint: ".",
     groupSeparator: ",",
     digits: 6,
@@ -127,7 +140,7 @@ function get_detail(ele){
     rightAlign: true,
     oncleared: function () { self.Value(''); }
   });
-  $('#booking_km').inputmask("numeric", {
+  $('#booking_total').inputmask("numeric", {
     radixPoint: ".",
     groupSeparator: ",",
     digits: 6,
@@ -164,11 +177,11 @@ function get_number(id){
         <div class="col-md-3 col-xs-6">
           <label for="booking_date">Ngày</label>
           <div class="input-group">
-            <input class="form-control input-mask-date" type="text" id="booking_date" name="booking_date" tabindex="1" required="required">
+            <input class="form-control input-mask-date" type="text" id="booking_date" name="booking_date" tabindex="1" required="required" value="<?php echo date('d/m/Y') ?>">
           </div>
-          <label for="booking_date">Số đơn hàng</label>
+          <label for="booking_code">Số đơn hàng</label>
           <div class="input-group">
-            <input class="form-control" type="text" id="booking_date" name="booking_date" tabindex="2" value="<?php echo $lastID ?>">
+            <input class="form-control" type="text" id="booking_code" name="booking_code" tabindex="2" value="<?php echo $lastID ?>">
           </div>
           <label for="booking_customer">Khách hàng <a title="Thêm khách hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm khách hàng mới','booking_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
           <div class="input-group">
@@ -178,15 +191,20 @@ function get_number(id){
               <?php } ?>
             </select>
           </div>
-          <label for="booking_start_date">Bắt đầu</label>
+          <label for="booking_type">Loại hàng</label>
           <div class="input-group">
-            <input class="form-control start-date" type="text" id="booking_start_date" name="booking_start_date" tabindex="7" required="required">
+            <select class="form-control" id="booking_type" name="booking_type" required="required" tabindex="4">
+              <option value="1">Hàng nhập</option>
+              <option value="2">Hàng xuất</option>
+              <option value="3">Khác</option>
+            </select>
           </div>
+          
        </div>
        <div class="col-md-3 col-xs-6">
         <label for="booking_place_from">Kho đi <a title="Thêm kho hàng mới" ><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','booking_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i> </a></label>
           <div class="input-group">
-            <select class="form-control select2 booking_place_to" id="booking_place_from" name="booking_place_from" required="required" tabindex="4">
+            <select class="form-control select2 booking_place_to" id="booking_place_from" name="booking_place_from" required="required" tabindex="5">
               <?php foreach ($places as $place) { ?>
                 <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
@@ -194,23 +212,19 @@ function get_number(id){
           </div>
           <label for="booking_place_to">Kho đến <a title="Thêm kho hàng mới" ><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','booking_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i> </a></label>
           <div class="input-group">
-            <select class="form-control select2 booking_place_from" id="booking_place_to" name="booking_place_to" required="required" tabindex="5">
+            <select class="form-control select2 booking_place_from" id="booking_place_to" name="booking_place_to" required="required" tabindex="6">
               <?php foreach ($places as $place) { ?>
                 <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
           </div>
-          <label for="booking_type">Loại hàng</label>
+          <label for="booking_start_date">Bắt đầu</label>
           <div class="input-group">
-            <select class="form-control" id="booking_type" name="booking_type" required="required" tabindex="6">
-              <option value="1">Hàng nhập</option>
-              <option value="2">Hàng xuất</option>
-              <option value="3">Khác</option>
-            </select>
+            <input class="form-control start-date" type="text" id="booking_start_date" name="booking_start_date" tabindex="7" required="required" value="<?php echo date('d/m/Y') ?>">
           </div>
           <label for="booking_end_date">Kết thúc</label>
           <div class="input-group">
-            <input class="form-control end-date" type="text" id="booking_end_date" name="booking_end_date" tabindex="8" required="required">
+            <input class="form-control end-date" type="text" id="booking_end_date" name="booking_end_date" tabindex="8" required="required" value="<?php echo date('d/m/Y') ?>">
           </div>
        </div>
        <div class="col-md-3 col-xs-6">
@@ -254,48 +268,69 @@ function get_number(id){
      </div>
      <div id="detail" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable" style="width: 100%;">
+            <table id="dataTable_booking" style="width: 100%;">
                 <tbody>
                 <tr>
                     <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
                     <td>
                         <table style="width:100%;">
-                            <tbody><tr>
+                            <tbody>
+                              <tr>
                                 <td>
-                                  <label>Chiều đi <a title="Thêm định mức dầu mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("oil/add") ?>','Thêm định mức dầu mới','.booking_oil_way','<?php echo $this->url("oil/getoil") ?>','add_oil')"></i></a></label>
+                                  <label>Sản lượng</label>
                                   <div class="input-group">
-                                    <select class="form-control booking_oil_way" name="booking_oil_way[]" tabindex="17">
-                                      <?php foreach ($oils as $oil) { ?>
-                                        <option value="<?php echo $oil->oil_id ?>" data="<?php echo $oil->oil_lit ?>"><?php echo $oil->oil_way ?></option>
+                                    <input type="text" class="booking_detail_number numbers" name="booking_detail_number[]" tabindex="16" required="required">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>ĐVT <a title="Thêm đơn vị tính mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("unit/add") ?>','Thêm đơn vị tính mới','.booking_detail_unit','<?php echo $this->url("unit/getunit") ?>','add_unit')"></i></a></label>
+                                  <div class="input-group">
+                                    <select class="form-control booking_detail_unit" name="booking_detail_unit[]" tabindex="17">
+                                      <?php foreach ($units as $unit) { ?>
+                                        <option value="<?php echo $unit->unit_id ?>" ><?php echo $unit->unit_name ?></option>
                                       <?php } ?>
                                     </select>
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Khoảng cách (km)</label>
+                                  <label>Đơn giá</label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_oil_km numbers" name="booking_oil_km[]" tabindex="18">
+                                    <input type="text" class="booking_detail_price numbers" name="booking_detail_price[]" tabindex="20">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>Số container</label>
+                                  <div class="input-group">
+                                    <input type="text" class="booking_detail_container" name="booking_detail_container[]" tabindex="18">
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Định mức dầu (lit)</label>
+                                  <label>Số seal</label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_oil_lit numbers" name="booking_oil_lit[]" tabindex="19" readonly>
+                                    <input type="text" class="booking_detail_seal" name="booking_detail_seal[]" tabindex="19">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Mặt hàng</label>
+                                  <div class="input-group">
+                                    <input type="text" class="booking_detail_customer_sub" name="booking_detail_customer_sub[]" tabindex="21">
                                   </div>
                                 </td>
                               </tr>
                               
                         </tbody></table>
-                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
                 </tr>
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow('dataTable')">
+            <input type="button" value="Thêm" onclick="addRow_booking('dataTable_booking')">
 
-            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+            <input type="button" value="Xóa" onclick="deleteRow_booking('dataTable_booking')">
         </div>
       </div>
    </div>
@@ -305,7 +340,7 @@ function get_number(id){
 
 
 <script type="text/javascript">
-function addRow(tableID){
+function addRow_booking(tableID){
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
     var row=table.insertRow(rowCount);
@@ -323,20 +358,59 @@ function addRow(tableID){
         }
     }
 
-    $('.booking_oil_km:last').val("");
-    $('.booking_oil_lit:last').val("");
+    $('.booking_detail_number:last').val("");
+    $('.booking_detail_price:last').val("");
+    $('.booking_detail_container:last').val("");
+    $('.booking_detail_seal:last').val("");
+    $('.booking_detail_customer_sub:last').val("");
 
     $('input[name="chk"]:last').attr('data',"");
     $('input[name="chk"]:last').attr('title',"");
 
-    $('.booking_oil_km').keyup(function(){
-      get_oil($(this));
+    $('.booking_detail_number').keyup(function(){
+      get_price();
     });
-    $('.booking_oil_way').change(function(){
-      get_oil($(this));
+    $('.booking_detail_price').change(function(){
+      get_price();
     });
+
+    $('.tags:last').replaceWith(function() {
+     return $('.booking_detail_customer_sub:last', this);
+    });
+
+    var tag_input = $('.booking_detail_customer_sub');
+    try{
+      tag_input.tag(
+        {
+        placeholder:tag_input.attr('placeholder'),
+        //enable typeahead by specifying the source array
+        //source: ace.vars['US_STATES'],//defined in ace.js >> ace.enable_search_ahead
+        
+        //or fetch data from database, fetch those that match "query"
+        source: function(query, process) {
+          $.ajax({url: '<?php echo $this->url("customer/getcustomersub") ?>?q='+encodeURIComponent(query)})
+          .done(function(result_items){
+          process($.parseJSON(result_items));
+          });
+        }
+        
+        }
+      )
+
+      //programmatically add/remove a tag
+      //var $tag_obj = $('#customer_sub').data('tag');
+      //$tag_obj.add('Programmatically Added');
+      
+      //var index = $tag_obj.inValues('some tag');
+      //$tag_obj.remove(index);
+    }
+    catch(e) {
+      //display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+      tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+      //autosize($('#form-field-tags'));
+    }
 }
-function deleteRow(tableID){
+function deleteRow_booking(tableID){
     try{
         var table=document.getElementById(tableID);
         var rowCount=table.rows.length;
@@ -356,7 +430,7 @@ function deleteRow(tableID){
                             var data = chkbox.getAttribute("data");
                             var booking = chkbox.getAttribute("title");
 
-                            $.post("<?php echo BASE_URL ?>/booking/deletebookingoil", {data: data, booking: booking},
+                            $.post("<?php echo BASE_URL ?>/booking/deletebookingdetail", {data: data, booking: booking},
                                function(data){
                                 
                                }); 
@@ -367,7 +441,7 @@ function deleteRow(tableID){
                     rowCount--;
                     i--;
 
-                    get_oil();
+                    get_price();
                 }
             }
           }

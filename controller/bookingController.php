@@ -89,6 +89,9 @@ Class bookingController Extends baseController {
             if (isset($_POST['booking_customer'])) {
                 $data['where'] .= ' AND booking_customer IN ('.implode(',',$_POST['booking_customer']).')';
             }
+            if (isset($_POST['booking_type'])) {
+                $data['where'] .= ' AND booking_type IN ('.implode(',',$_POST['booking_type']).')';
+            }
 
             $this->view->data['filter'] = 1;
         }
@@ -139,6 +142,9 @@ Class bookingController Extends baseController {
             }
             if (isset($_POST['booking_customer'])) {
                 $data['where'] .= ' AND booking_customer IN ('.implode(',',$_POST['booking_customer']).')';
+            }
+            if (isset($_POST['booking_type'])) {
+                $data['where'] .= ' AND booking_type IN ('.implode(',',$_POST['booking_type']).')';
             }
         }
         
@@ -192,6 +198,8 @@ Class bookingController Extends baseController {
             $booking_model->createBooking($data);
             $id_booking = $booking_model->getLastBooking()->booking_id;
 
+            $customer_sub_model = $this->model->get('customersubModel');
+
             $booking_detail_model = $this->model->get('bookingdetailModel');
 
             $booking_detail_data = json_decode($_POST['booking_detail_data']);
@@ -204,10 +212,35 @@ Class bookingController Extends baseController {
                         'booking_detail_seal' => trim($v->booking_detail_seal),
                         'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
                         'booking_detail_unit' => trim($v->booking_detail_unit),
-                        'booking_detail_customer_sub' => trim($v->booking_detail_customer_sub),
                         'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
-                        'booking_detail_comment' => trim($v->booking_detail_comment),
                     );
+
+                    $contributor = "";
+                    if(trim($v->booking_detail_customer_sub) != ""){
+                        $support = explode(',', trim($v->booking_detail_customer_sub));
+
+                        if ($support) {
+                            foreach ($support as $key) {
+                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
+                                if ($name) {
+                                    if ($contributor == "")
+                                        $contributor .= $name->customer_sub_id;
+                                    else
+                                        $contributor .= ','.$name->customer_sub_id;
+                                }
+                                else{
+                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
+                                    if ($contributor == "")
+                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
+                                    else
+                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
+                                }
+                                
+                            }
+                        }
+
+                    }
+                    $data_booking_detail['booking_detail_customer_sub'] = $contributor;
 
                     if ($v->id_booking_detail>0) {
                         $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
@@ -276,7 +309,7 @@ Class bookingController Extends baseController {
 
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;
 
@@ -285,6 +318,12 @@ Class bookingController Extends baseController {
         $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
 
         $this->view->data['shippings'] = $shippings;
+
+        $unit_model = $this->model->get('unitModel');
+
+        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
+
+        $this->view->data['units'] = $units;
 
         return $this->view->show('booking/add');
     }
@@ -318,6 +357,8 @@ Class bookingController Extends baseController {
             
             $id_booking = $id;
 
+            $customer_sub_model = $this->model->get('customersubModel');
+
             $booking_detail_model = $this->model->get('bookingdetailModel');
 
             $booking_detail_data = json_decode($_POST['booking_detail_data']);
@@ -330,10 +371,35 @@ Class bookingController Extends baseController {
                         'booking_detail_seal' => trim($v->booking_detail_seal),
                         'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
                         'booking_detail_unit' => trim($v->booking_detail_unit),
-                        'booking_detail_customer_sub' => trim($v->booking_detail_customer_sub),
                         'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
-                        'booking_detail_comment' => trim($v->booking_detail_comment),
                     );
+
+                    $contributor = "";
+                    if(trim($v->booking_detail_customer_sub) != ""){
+                        $support = explode(',', trim($v->booking_detail_customer_sub));
+
+                        if ($support) {
+                            foreach ($support as $key) {
+                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
+                                if ($name) {
+                                    if ($contributor == "")
+                                        $contributor .= $name->customer_sub_id;
+                                    else
+                                        $contributor .= ','.$name->customer_sub_id;
+                                }
+                                else{
+                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
+                                    if ($contributor == "")
+                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
+                                    else
+                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
+                                }
+                                
+                            }
+                        }
+
+                    }
+                    $data_booking_detail['booking_detail_customer_sub'] = $contributor;
 
                     if ($v->id_booking_detail>0) {
                         $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
@@ -411,6 +477,25 @@ Class bookingController Extends baseController {
         $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$id));
         $this->view->data['booking_details'] = $booking_details;
 
+        $customer_sub_model = $this->model->get('customersubModel');
+        $customer_sub = array();
+        foreach ($booking_details as $booking_detail) {
+            $sts = explode(',', $booking_detail->booking_detail_customer_sub);
+            foreach ($sts as $key) {
+                $subs = $customer_sub_model->getCustomer($key);
+                if($subs){
+                    if (!isset($customer_sub[$booking_detail->booking_detail_id]))
+                        $customer_sub[$booking_detail->booking_detail_id] = $subs->customer_sub_name;
+                    else
+                        $customer_sub[$booking_detail->booking_detail_id] .= ','.$subs->customer_sub_name;
+                }
+                
+            }
+        }
+        
+        
+        $this->view->data['customer_sub'] = $customer_sub;
+
         $place_model = $this->model->get('placeModel');
 
         $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
@@ -419,7 +504,7 @@ Class bookingController Extends baseController {
 
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;
 
@@ -428,6 +513,12 @@ Class bookingController Extends baseController {
         $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
 
         $this->view->data['shippings'] = $shippings;
+
+        $unit_model = $this->model->get('unitModel');
+
+        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
+
+        $this->view->data['units'] = $units;
 
 
         return $this->view->show('booking/edit');
@@ -477,6 +568,25 @@ Class bookingController Extends baseController {
         $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$id));
         $this->view->data['booking_details'] = $booking_details;
 
+        $customer_sub_model = $this->model->get('customersubModel');
+        $customer_sub = array();
+        foreach ($booking_details as $booking_detail) {
+            $sts = explode(',', $booking_detail->booking_detail_customer_sub);
+            foreach ($sts as $key) {
+                $subs = $customer_sub_model->getCustomer($key);
+                if($subs){
+                    if (!isset($customer_sub[$booking_detail->booking_detail_id]))
+                        $customer_sub[$booking_detail->booking_detail_id] = $subs->customer_sub_name;
+                    else
+                        $customer_sub[$booking_detail->booking_detail_id] .= ','.$subs->customer_sub_name;
+                }
+                
+            }
+        }
+        
+        
+        $this->view->data['customer_sub'] = $customer_sub;
+
         $place_model = $this->model->get('placeModel');
 
         $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
@@ -485,7 +595,7 @@ Class bookingController Extends baseController {
 
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;
 
@@ -494,6 +604,12 @@ Class bookingController Extends baseController {
         $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
 
         $this->view->data['shippings'] = $shippings;
+
+        $unit_model = $this->model->get('unitModel');
+
+        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
+
+        $this->view->data['units'] = $units;
 
 
         return $this->view->show('booking/view');
@@ -509,7 +625,7 @@ Class bookingController Extends baseController {
         $customer_model = $this->model->get('customerModel');
         $place_model = $this->model->get('placeModel');
 
-        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
         $places = $place_model->getAllPlace(array('order_by'=>'place_code','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;

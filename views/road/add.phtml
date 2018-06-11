@@ -289,7 +289,7 @@ function get_number(id){
      </div>
      <div id="distance" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable" style="width: 100%;">
+            <table id="dataTable_road" style="width: 100%;">
                 <tbody>
                 <tr>
                     <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
@@ -321,21 +321,21 @@ function get_number(id){
                               </tr>
                               
                         </tbody></table>
-                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
                 </tr>
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow('dataTable')">
+            <input type="button" value="Thêm" onclick="addRow_road('dataTable_road')">
 
-            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+            <input type="button" value="Xóa" onclick="deleteRow_road('dataTable_road')">
         </div>
       </div>
       <div id="bridge" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable2" style="width: 100%;">
+            <table id="dataTable_road2" style="width: 100%;">
                 <tbody>
                 <tr>
                     <td style="padding-right: 10px;"><input type="checkbox" name="chk2"></td>
@@ -367,16 +367,16 @@ function get_number(id){
                               </tr>
                               
                         </tbody></table>
-                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
                 </tr>
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow2('dataTable2')">
+            <input type="button" value="Thêm" onclick="addRow_road2('dataTable_road2')">
 
-            <input type="button" value="Xóa" onclick="deleteRow2('dataTable2')">
+            <input type="button" value="Xóa" onclick="deleteRow_road2('dataTable_road2')">
         </div>
       </div>
    </div>
@@ -386,7 +386,7 @@ function get_number(id){
 
 
 <script type="text/javascript">
-function addRow(tableID){
+function addRow_road(tableID){
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
     var row=table.insertRow(rowCount);
@@ -417,7 +417,7 @@ function addRow(tableID){
       get_oil($(this));
     });
 }
-function deleteRow(tableID){
+function deleteRow_road(tableID){
     try{
         var table=document.getElementById(tableID);
         var rowCount=table.rows.length;
@@ -458,7 +458,7 @@ function deleteRow(tableID){
         alert(e);
     }
 }
-function addRow2(tableID){
+function addRow_road2(tableID){
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
     var row=table.insertRow(rowCount);
@@ -486,7 +486,7 @@ function addRow2(tableID){
       get_bridge($(this));
     });
 }
-function deleteRow2(tableID){
+function deleteRow_road2(tableID){
     try{
         var table=document.getElementById(tableID);
         var rowCount=table.rows.length;
