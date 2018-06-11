@@ -200,16 +200,20 @@ Class bookingController Extends baseController {
                 foreach ($booking_detail_data as $v) {
                     $data_booking_detail = array(
                         'booking' => $id_booking,
-                        'booking_detail_way' => trim($v->booking_detail_way),
-                        'booking_detail_km' => str_replace(',', '', $v->booking_detail_km),
-                        'booking_detail_lit' => str_replace(',', '', $v->booking_detail_lit),
+                        'booking_detail_container' => trim($v->booking_detail_container),
+                        'booking_detail_seal' => trim($v->booking_detail_seal),
+                        'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
+                        'booking_detail_unit' => trim($v->booking_detail_unit),
+                        'booking_detail_customer_sub' => trim($v->booking_detail_customer_sub),
+                        'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
+                        'booking_detail_comment' => trim($v->booking_detail_comment),
                     );
 
                     if ($v->id_booking_detail>0) {
                         $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
                     }
                     else{
-                        if ($data_booking_detail['booking_detail_km']!="") {
+                        if ($data_booking_detail['booking_detail_number']!="") {
                             $booking_detail_model->createBooking($data_booking_detail);
                         }
                         
@@ -259,17 +263,28 @@ Class bookingController Extends baseController {
 
         $this->view->data['title'] = 'Thêm mới đơn hàng';
 
+        $booking_model = $this->model->get('bookingModel');
+        $lastID = isset($booking_model->getLastBooking()->booking_code)?$booking_model->getLastBooking()->booking_code:'DH00';
+        $lastID++;
+        $this->view->data['lastID'] = $lastID;
+
         $place_model = $this->model->get('placeModel');
 
-        $places = $place_model->getAllPlace();
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer();
+        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;
+
+        $shipping_model = $this->model->get('shippingModel');
+
+        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
+
+        $this->view->data['shippings'] = $shippings;
 
         return $this->view->show('booking/add');
     }
@@ -311,16 +326,20 @@ Class bookingController Extends baseController {
                 foreach ($booking_detail_data as $v) {
                     $data_booking_detail = array(
                         'booking' => $id_booking,
-                        'booking_detail_way' => trim($v->booking_detail_way),
-                        'booking_detail_km' => str_replace(',', '', $v->booking_detail_km),
-                        'booking_detail_lit' => str_replace(',', '', $v->booking_detail_lit),
+                        'booking_detail_container' => trim($v->booking_detail_container),
+                        'booking_detail_seal' => trim($v->booking_detail_seal),
+                        'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
+                        'booking_detail_unit' => trim($v->booking_detail_unit),
+                        'booking_detail_customer_sub' => trim($v->booking_detail_customer_sub),
+                        'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
+                        'booking_detail_comment' => trim($v->booking_detail_comment),
                     );
 
                     if ($v->id_booking_detail>0) {
                         $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
                     }
                     else{
-                        if ($data_booking_detail['booking_detail_km']!="") {
+                        if ($data_booking_detail['booking_detail_number']!="") {
                             $booking_detail_model->createBooking($data_booking_detail);
                         }
                         
@@ -394,15 +413,21 @@ Class bookingController Extends baseController {
 
         $place_model = $this->model->get('placeModel');
 
-        $places = $place_model->getAllPlace();
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer();
+        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;
+
+        $shipping_model = $this->model->get('shippingModel');
+
+        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
+
+        $this->view->data['shippings'] = $shippings;
 
 
         return $this->view->show('booking/edit');
@@ -454,15 +479,21 @@ Class bookingController Extends baseController {
 
         $place_model = $this->model->get('placeModel');
 
-        $places = $place_model->getAllPlace();
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
         $customer_model = $this->model->get('customerModel');
 
-        $customers = $customer_model->getAllCustomer();
+        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
 
         $this->view->data['customers'] = $customers;
+
+        $shipping_model = $this->model->get('shippingModel');
+
+        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
+
+        $this->view->data['shippings'] = $shippings;
 
 
         return $this->view->show('booking/view');

@@ -1,0 +1,380 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_booking").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+          var booking_detail_data = [];    
+
+          var booking_detail_way = [];  
+          var booking_detail_km = []; 
+          var booking_detail_lit = [];
+          var id_booking_detail = [];
+
+          $('.booking_detail_way').each(function() { 
+              booking_detail_way.push($(this).val());
+          });
+          $('.booking_detail_lit').each(function() { 
+              booking_detail_lit.push($(this).val());
+          });
+          $('.booking_detail_km').each(function() { 
+              booking_detail_km.push($(this).val());
+              id_booking_detail.push($(this).attr('data') || "");
+          });
+
+          for (var i = 0; i < booking_detail_km.length; i++) {
+              booking_detail_data.push({'booking_detail_way':booking_detail_way[i], 'booking_detail_lit':booking_detail_lit[i], 'booking_detail_km':booking_detail_km[i], 'id_booking_detail':id_booking_detail[i]});
+          };
+
+          var formData = new FormData($("#add_booking")[0]);
+          formData.append('booking_detail_data', JSON.stringify(booking_detail_data));
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/booking/addbooking", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_booking').hide();
+                  $('#error_booking').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_booking').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_booking').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+
+      $('#booking_sum').click(function(){
+        $('a[href="#detail"]').trigger('click');
+      });
+      $('#booking_total').click(function(){
+        $('a[href="#detail"]').trigger('click');
+      });
+
+      $('.booking_detail_km').keyup(function(){
+        get_detail($(this));
+      });
+      $('.booking_detail_way').change(function(){
+        get_detail($(this));
+      });
+      $('.booking_toll_money').keyup(function(){
+      get_bridge($(this));
+    });
+	
+});
+function get_bridge(ele){
+  var sum = 0;
+  $('.booking_toll_money').each(function(){
+    sum += parseFloat(get_number(this));
+  });
+  $('#booking_bridge').val(sum);
+
+  $('#booking_bridge').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
+function get_detail(ele){
+  if (ele) {
+    var row = ele.parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+    var way = parseFloat($('.booking_detail_way:eq('+rowIndex+') option:selected').attr('data') || 0);
+    var km = parseFloat(get_number('.booking_detail_km:eq('+rowIndex+')') || 0);
+    var detail = way*km;
+    $('.booking_detail_lit:eq('+rowIndex+')').val(detail);
+    $('.booking_detail_lit:eq('+rowIndex+')').inputmask("numeric", {
+      radixPoint: ".",
+      groupSeparator: ",",
+      digits: 6,
+      autoGroup: true,
+      rightAlign: true,
+      oncleared: function () { self.Value(''); }
+    });
+  }
+
+  var sum = 0;
+  var km = 0 ;
+  $('.booking_detail_lit').each(function(){
+    sum += parseFloat(get_number(this));
+  });
+  $('.booking_detail_km').each(function(){
+    km += parseFloat(get_number(this));
+  });
+
+  $('#booking_detail').val(sum);
+  $('#booking_km').val(km);
+
+  $('#booking_detail').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+  $('#booking_km').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+</script>
+
+<div id="error_booking" class="error"><?php echo isset($error) ? $error : null; ?></div>     
+<div class="tabbable">
+  <form id="add_booking" method="post" action="" autocomplete="off">
+      <ul class="nav nav-tabs padding-18">
+      <li class="active">
+        <a data-toggle="tab" href="#homebooking">
+          <i class="green ace-icon fa fa-file-text-o bigger-120"></i>
+          Thông tin
+        </a>
+      </li>
+
+      <li>
+        <a data-toggle="tab" href="#detail">
+          <i class="blue ace-icon fa fa-th bigger-120"></i>
+          Chi tiết
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content no-border ">
+      <div id="homebooking" class="tab-pane in active">
+        <div class="col-md-3 col-xs-6">
+          <label for="booking_date">Ngày</label>
+          <div class="input-group">
+            <input class="form-control input-mask-date" type="text" id="booking_date" name="booking_date" tabindex="1" required="required">
+          </div>
+          <label for="booking_date">Số đơn hàng</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="booking_date" name="booking_date" tabindex="2" value="<?php echo $lastID ?>">
+          </div>
+          <label for="booking_customer">Khách hàng <a title="Thêm khách hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm khách hàng mới','booking_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="booking_customer" name="booking_customer" required="required" tabindex="3">
+              <?php foreach ($customers as $customer) { ?>
+                <option value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="booking_start_date">Bắt đầu</label>
+          <div class="input-group">
+            <input class="form-control start-date" type="text" id="booking_start_date" name="booking_start_date" tabindex="7" required="required">
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+        <label for="booking_place_from">Kho đi <a title="Thêm kho hàng mới" ><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','booking_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i> </a></label>
+          <div class="input-group">
+            <select class="form-control select2 booking_place_to" id="booking_place_from" name="booking_place_from" required="required" tabindex="4">
+              <?php foreach ($places as $place) { ?>
+                <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="booking_place_to">Kho đến <a title="Thêm kho hàng mới" ><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','booking_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i> </a></label>
+          <div class="input-group">
+            <select class="form-control select2 booking_place_from" id="booking_place_to" name="booking_place_to" required="required" tabindex="5">
+              <?php foreach ($places as $place) { ?>
+                <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="booking_type">Loại hàng</label>
+          <div class="input-group">
+            <select class="form-control" id="booking_type" name="booking_type" required="required" tabindex="6">
+              <option value="1">Hàng nhập</option>
+              <option value="2">Hàng xuất</option>
+              <option value="3">Khác</option>
+            </select>
+          </div>
+          <label for="booking_end_date">Kết thúc</label>
+          <div class="input-group">
+            <input class="form-control end-date" type="text" id="booking_end_date" name="booking_end_date" tabindex="8" required="required">
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <label for="booking_number">Số BK/BL</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="booking_number" name="booking_number" tabindex="9">
+          </div>
+          <label for="booking_shipping">Hãng tàu <a title="Thêm hãng tàu mới" ><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("shipping/add") ?>','Thêm hãng tàu mới','booking_shipping','<?php echo $this->url("shipping/getshipping") ?>','add_shipping')"></i> </a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="booking_shipping" name="booking_shipping" tabindex="10">
+              <?php foreach ($shippings as $shipping) { ?>
+                <option value="<?php echo $shipping->shipping_id ?>"><?php echo $shipping->shipping_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="booking_shipping_name">Tên tàu</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="booking_shipping_name" name="booking_shipping_name" tabindex="11">
+          </div>
+          <label for="booking_shipping_number">Số hiệu</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="booking_shipping_number" name="booking_shipping_number" tabindex="12">
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          
+          <label for="booking_sum">Sản lượng</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="booking_sum" name="booking_sum" tabindex="13" readonly>
+          </div>
+           <label for="booking_total">Thành tiền</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="booking_total" name="booking_total" tabindex="14" readonly>
+          </div>
+          <label for="booking_comment">Diễn giải</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="booking_comment" name="booking_comment" tabindex="15">
+          </div>
+       </div>
+       
+     </div>
+     <div id="detail" class="tab-pane">
+        <div class="col-xs-12">
+            <table id="dataTable" style="width: 100%;">
+                <tbody>
+                <tr>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                    <td>
+                        <table style="width:100%;">
+                            <tbody><tr>
+                                <td>
+                                  <label>Chiều đi <a title="Thêm định mức dầu mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("oil/add") ?>','Thêm định mức dầu mới','.booking_oil_way','<?php echo $this->url("oil/getoil") ?>','add_oil')"></i></a></label>
+                                  <div class="input-group">
+                                    <select class="form-control booking_oil_way" name="booking_oil_way[]" tabindex="17">
+                                      <?php foreach ($oils as $oil) { ?>
+                                        <option value="<?php echo $oil->oil_id ?>" data="<?php echo $oil->oil_lit ?>"><?php echo $oil->oil_way ?></option>
+                                      <?php } ?>
+                                    </select>
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Khoảng cách (km)</label>
+                                  <div class="input-group">
+                                    <input type="text" class="booking_oil_km numbers" name="booking_oil_km[]" tabindex="18">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Định mức dầu (lit)</label>
+                                  <div class="input-group">
+                                    <input type="text" class="booking_oil_lit numbers" name="booking_oil_lit[]" tabindex="19" readonly>
+                                  </div>
+                                </td>
+                              </tr>
+                              
+                        </tbody></table>
+                        <div class="hr hr-18 dotted hr-double"></div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+            </table>
+        
+            <input type="button" value="Thêm" onclick="addRow('dataTable')">
+
+            <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+        </div>
+      </div>
+   </div>
+  </form>
+</div>
+
+
+
+<script type="text/javascript">
+function addRow(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.booking_oil_km:last').val("");
+    $('.booking_oil_lit:last').val("");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+
+    $('.booking_oil_km').keyup(function(){
+      get_oil($(this));
+    });
+    $('.booking_oil_way').change(function(){
+      get_oil($(this));
+    });
+}
+function deleteRow(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+          if(result) {
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert_form("Không thể xóa hết.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var booking = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/booking/deletebookingoil", {data: data, booking: booking},
+                               function(data){
+                                
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+
+                    get_oil();
+                }
+            }
+          }
+        });
+    }
+    catch(e){
+        alert(e);
+    }
+}
+</script>

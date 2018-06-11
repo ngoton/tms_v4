@@ -692,6 +692,7 @@ function open_dialog_other(url, title, id, data, form){
     close: function(){
       $( this ).dialog( "close" );
       $(this).dialog('destroy');
+      $( "#dialog-message-other" ).html("");
     }
   });
   dialog.load(url, function(){

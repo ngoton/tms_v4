@@ -370,13 +370,13 @@ Class roadController Extends baseController {
 
         $place_model = $this->model->get('placeModel');
 
-        $places = $place_model->getAllPlace();
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
         $route_model = $this->model->get('routeModel');
 
-        $routes = $route_model->getAllRoute();
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
 
         $this->view->data['routes'] = $routes;
 
@@ -539,13 +539,13 @@ Class roadController Extends baseController {
 
         $place_model = $this->model->get('placeModel');
 
-        $places = $place_model->getAllPlace();
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
         $route_model = $this->model->get('routeModel');
 
-        $routes = $route_model->getAllRoute();
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
 
         $this->view->data['routes'] = $routes;
 
@@ -616,13 +616,13 @@ Class roadController Extends baseController {
         
         $place_model = $this->model->get('placeModel');
 
-        $places = $place_model->getAllPlace();
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
         $route_model = $this->model->get('routeModel');
 
-        $routes = $route_model->getAllRoute();
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
 
         $this->view->data['routes'] = $routes;
 
