@@ -57,7 +57,7 @@
     <!-- <![endif]-->
     <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/public/css/head.css?v=2">
-    <script type="text/javascript" src="/public/js/head.js?v=2"></script>
+    <script type="text/javascript" src="/public/js/head.js?v=1"></script>
     
     <script type="text/javascript">
     $("#ajax_loader").fadeIn(200);
@@ -1116,7 +1116,7 @@
 
                 <ul class="submenu">
                   <li class="">
-                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                    <a data="newbooking" data-role="newbooking" href="<?php echo $this->url('newbooking') ?>">
                       <i class="menu-icon fa fa-clock-o orange"></i>
 
                       Đang chờ
@@ -1125,7 +1125,7 @@
                     <b class="arrow"></b>
                   </li>
                   <li class="">
-                    <a data="update" data-role="update" href="<?php echo $this->url('update') ?>">
+                    <a data="shipmenttemp" data-role="shipmenttemp" href="<?php echo $this->url('shipmenttemp') ?>">
                       <i class="menu-icon fa fa-check green"></i>
 
                       Đã nhận
@@ -1145,13 +1145,44 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
-                <a data="#" href="#" >
-                  <i class="menu-icon fa fa-file-text-o"></i>
+                <a data="#" data-role="#" href="#" >
+                  <i class="menu-icon fa fa-bus"></i>
 
-                  Phiếu cầu đường
+                  Phiếu vận chuyển
                 </a>
 
                 <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="#" href="#" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-file-text-o"></i>
+
+                  Phiếu cầu đường
+                  <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                  <li class="">
+                    <a data="#" data-role="#" href="">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Tổng hợp
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                  <li class="">
+                    <a data="#" data-role="#" href="">
+                      <i class="menu-icon fa fa-caret-right"></i>
+
+                      Bảng kê
+                    </a>
+
+                    <b class="arrow"></b>
+                  </li>
+                </ul>
               </li>
               <li class="">
                 <a data="#" href="#" >

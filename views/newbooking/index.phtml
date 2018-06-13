@@ -1,0 +1,198 @@
+
+<?php
+$url_order = 'ASC';
+if ($order_by == 'booking_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+elseif ($order_by == 'booking_place_from')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'booking_place_to')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'customer')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'booking_total')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'booking_sum')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'booking_status')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+    $i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<input type="hidden" name="m" id="chonloc" value="<?php echo $limit ?>">
+<div id="content">
+    <div class="title">
+        <h2><i class="ace-icon fa fa-clock-o"></i></h2>
+    </div>
+    <?php foreach ($bookings as $booking) : ?>
+    <div id="ship_<?php echo $booking->booking_id; ?>" class="nen-border">
+        <div class="tieude">
+            <div class="text">
+                <a ><?php echo $booking->booking_place_from==$place['place_id'][$booking->booking_place_from]?$place['place_name'][$booking->booking_place_from]:null ?>
+                    <span class="fa fa-long-arrow-right fa-1g"></span><?php echo $booking->booking_place_to==$place['place_id'][$booking->booking_place_to]?$place['place_name'][$booking->booking_place_to]:null ?>
+                </a>
+            </div>
+        </div>
+        <div class="noidung">
+            <a >
+                <div class="hinh">
+                    <div class="overlay"><i class="fa fa-search"></i></div>
+                    <img src="<?php echo BASE_URL ?>/public/images/xe.jpg">
+                </div>
+            </a>
+            <div class="noidung-text">
+                
+                <a >
+                    <div class="maso">
+                        Mã số: <?php echo $booking->booking_code; ?> - BK/BL: <?php echo $booking->booking_number; ?>
+                    </div>
+                </a>
+                <div class="icon-text">
+                    <table>
+                        <tr>
+                            <td><span class="fa fa-calendar fa-1g"></span></td>
+                            <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_start_date); ?> - <?php echo $lib->hien_thi_ngay_thang($booking->booking_end_date); ?></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fa fa-truck fa-1g"></span></td>
+                            <td><?php echo $booking->booking_sum-$booking->booking_sum_receive; ?></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fa fa-cube fa-1g"></span></td>
+                            <td>
+                                <?php echo $booking->booking_type==1?"Hàng nhập":($booking->booking_type==2?"Hàng xuất":"Khác"); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="fa fa-user fa-1g"></td>
+                            <td><?php echo $booking->customer_name; ?></td>
+                        </tr>
+                    </table>
+                    <span class="chu-nghieng">Mọi chi tiết xin liên hệ bộ phận kinh doanh </span>
+                </div>
+               
+            </div>
+            <div class="lienhe">
+                <a >
+                    Liên hệ </a>
+                <h4></h4>
+                <div class="star">
+                    <ul>
+                            
+                            <li>
+                                <span class=" fa fa-star-o fa-1g"></span>
+                            </li>  
+                            <li>
+                                <span class=" fa fa-star-half-full fa-1g"></span>
+                            </li> 
+                            <li>
+                                <span class=" fa fa-star fa-1g"></span>
+                            </li>  
+                            <li>
+                                <span class=" fa fa-star fa-1g"></span>
+                            </li>  
+                            <li>
+                                <span class=" fa fa-star fa-1g"></span>
+                            </li>  
+                            
+                    </ul>
+                </div>
+                  <div class="nut">
+                     <a class="editButton chitiet" data="<?php echo $booking->booking_id; ?>" name="<?php echo $lib->hien_thi_ngay_thang($booking->booking_end_date); ?>" alt="<?php echo $booking->booking_sum-$booking->booking_sum_receive; ?>" title="<?php echo $booking->booking_place_from ?>" tabindex="<?php echo $booking->booking_place_to ?>" data-from="<?php echo $booking->booking_place_from==$place['place_id'][$booking->booking_place_from]?$place['place_name'][$booking->booking_place_from]:null ?>" data-to="<?php echo $booking->booking_place_to==$place['place_id'][$booking->booking_place_to]?$place['place_name'][$booking->booking_place_to]:null ?>" >Nhận hàng </a>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    <?php endforeach; ?>
+    <div class="title">
+        
+    </div>
+</div>
+
+<div id="dialogContent" title="Xác nhận lô hàng">
+    
+    
+    <form action="#" method="post" id="editForm">
+        <label>
+            <span class="add-on"><i class="icon-calendar" ></i></span>
+            <span>Ngày: </span><br>
+            <input type="hidden" id="i_booking" name="i_booking" value="" />
+            <input type="text" id="i_booking_date" name="i_booking_date" value="" class="input-mask-date" required="required" />
+        </label>
+        <label>
+            <span class="add-on"><i class="icon-folder-close" ></i></span>
+            <span>Sản lượng nhận: </span><br>
+            <input type="text" class="numbers" id="i_ton" name="i_ton" required="required" />
+        </label>
+        <label>
+            <span class="add-on"><i class="icon-user" ></i></span>
+            <span>Số lượng xe: </span><br>
+            <input type="text" class="numbers" id="i_number" name="i_number" />
+        </label>
+        
+                
+    </form>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.editButton')
+    .click(function() {
+            $('#i_booking').val($(this).attr('data'));
+            $('#i_booking_date').val($(this).attr('name'));
+            $('#i_ton').val($(this).attr('alt'));
+            $('#i_ton').attr("max",$(this).attr('alt'));
+            $( "#i_ton" ).keyup(function() {
+              if ( parseFloat(get_number("#i_ton")) > $(this).attr('max'))
+              {
+                  $(this).val($(this).attr('max'));
+              }       
+            }); 
+
+            $( "#dialogContent" ).dialog( "open" );
+
+    });
+
+
+    //set up the dialog box.
+    $( "#dialogContent" ).dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            OK: function() {
+                var id = $('#i_booking').val();
+                var date = $('#i_booking_date').val();
+                var number = $('#i_number').val();
+                var ton = $('#i_ton').val();
+            
+                    
+                    $.post("<?php echo BASE_URL ?>/newbooking/complete", {data: id, date: date, number: number, ton: ton},
+                       function(data){
+                        alert_form(data);
+                        setTimeout(function() {
+                            sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                          }, 200);
+                       
+                       }); 
+                  
+                $( this ).dialog( "close" );
+            },        
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+
+});
+
+function get_number(id){
+    return $(id).val().replace(/[^0-9\.-]+/g,"");
+}
+</script>
+
+<link rel="stylesheet" href="<?php echo BASE_URL ?>/public/css/shipment.css">

@@ -1,0 +1,139 @@
+﻿.title {
+  background: url(../images/dot.png);
+  width: 100%;
+  min-height: 30px;
+}
+.title h2 {
+  background: #13afeb;
+  color: #FFF;
+  float: left;
+  font-size: 20px;
+  line-height: 30px;
+  min-height: 30px;
+  padding: 0px 10px;
+  margin: 0px;
+}
+.nen-border {
+  background: #f3fbfe;
+  border: solid 1px #73A4B6;
+  border-radius: 4px;
+  box-shadow: 2px 0px 1px #0083E8;
+  margin-top: 5px;
+  display: inline-block;
+  min-height: 153px;
+  padding: 8px;
+  width: 100%;
+}
+.nen-border .tieude .text {
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 10px;
+}
+.nen-border .tieude .text a {
+  color: #0F963A;
+}
+.nen-border .tieude .text .fa {
+  margin: 0 5px;
+}
+.noidung .hinh {
+  background: #fff;
+  border-radius: 4px;
+  width: px;
+  height: px;
+  border: solid #d4d4d4 1px;
+  display: inline-block;
+  float: left;
+  margin: 0 3px;
+}
+.hinh {
+  position: relative;
+}
+.overlay {
+  background: url(../images/hinhvuong.png);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 99px;
+  opacity: 0;
+  text-align: center;
+  transition: all ease 0.3s;
+  -webkit-transition: all ease 0.3s;
+  -moz-transition: all ease 0.3s;
+  -o-transition: all ease 0.3s;
+  -ms-transition: all ease 0.3s;
+}
+.noidung .hinh img {
+  padding: 3px;
+}
+.nen-border .noidung .noidung-text {
+  float: left;
+  width: 50%;
+  margin-left: 8px;
+}
+.nen-border .noidung .noidung-text a {
+  color: #236baa;
+  display: inline-block;
+}
+.nen-border .noidung .noidung-text a .maso {
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
+}
+.nen-border .noidung .noidung-text .icon-text {
+  color: #000;
+  width: 100%;
+}
+.nen-border .noidung .noidung-text .icon-text .fa {
+  margin-right: 8px;
+  color: #000;
+}
+.nen-border .noidung .noidung-text .icon-text .chu-nghieng {
+  font-style: italic;
+  color: #808789;
+}
+.nen-border .noidung .lienhe {
+  float: right;
+  margin-right: 3px;
+  width: 10%;
+}
+.nen-border .noidung .lienhe a {
+  color: #df5329;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  float: right;
+  margin-bottom: 6px;
+  width: 100%;
+  text-align: right;
+}
+.nen-border .noidung .lienhe h4 {
+  font-size: 12px;
+  font-style: italic;
+  text-align: right;
+  width: 100%;
+}
+.nen-border .noidung .lienhe .star {
+  display: inline-block;
+  color: #888;
+  float: right;
+}
+.nen-border .noidung .lienhe .star ul {
+  padding: 0;
+}
+.nen-border .noidung .lienhe .star ul li {
+  display: inline-block;
+  /* color: #888; */
+  float: right;
+}
+.nen-border .noidung .lienhe a.chitiet {
+  background: #4e8506;
+  width: 78px;
+  border-radius: 4px;
+  text-align: center;
+  margin: 15px 0 15px 0;
+  display: inline-block;
+  color: #FFF !important;
+  padding: 1px 0;
+  border-bottom: 2px solid #fff;
+  box-shadow: 0 0.5px 5px #999;
+  font-size: 13px;
+  font-family: 'Roboto', sans-serif;
+}
