@@ -27,27 +27,35 @@ $(function () {
       //$(this).mask('dd/mm/yyyy');
       $(this).datepicker({
         format: 'dd/mm/yyyy',
-        autoclose: true
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
       });
     });
     $(document).on("focus", ".start-date", function () {
       $(this).datepicker({
         format: 'dd/mm/yyyy',
-        autoclose: true
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
       }).on('changeDate', function (selected) {
           var minDate = new Date(selected.date.valueOf());
           $('.end-date').datepicker('setStartDate', minDate);
       });
       $('.end-date').datepicker({
         format: 'dd/mm/yyyy',
-        autoclose: true
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
       });
       
     });
     $(document).on("focus", ".end-date", function () {
       $(this).datepicker({
         format: 'dd/mm/yyyy',
-        autoclose: true
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
       }).on('changeDate', function (selected) {
           var maxDate = new Date(selected.date.valueOf());
           $('.start-date').datepicker('setEndDate', maxDate);
@@ -60,7 +68,9 @@ $(function () {
       });
       $('.start-date').datepicker({
         format: 'dd/mm/yyyy',
-        autoclose: true
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
       });
       
     });
@@ -160,65 +170,65 @@ function searchall(page,cot,sapxep){
   var xe = "";
   var vong = "";
 
-  if($('#search-input') != null)
+  if($('#search-input').length)
   {
     var faq_search_input = $('#search-input').val();
   }
-  if($('#chonloc') != null)
+  if($('#chonloc').length)
   {
     var loc = $('#chonloc').val();
   }
-  if($('#chonngaytao') != null)
+  if($('#chonngaytao').length)
   {
     var ngaytao = $('#chonngaytao').val();
   }
-  if($('#chonngaytaobatdau') != null)
+  if($('#chonngaytaobatdau').length)
   {
     var ngaytaobatdau = $('#chonngaytaobatdau').val();
   }
-  if($('#batdau') != null)
+  if($('#batdau').length)
   {
     var batdau = $('#batdau').val();
   }
-  if($('#ketthuc') != null)
+  if($('#ketthuc').length)
   {
     var ketthuc = $('#ketthuc').val();
   }
-  if($('#sl_status') != null)
+  if($('#sl_status').length)
   {
     var trangthai = $('#sl_status').val();
   }
-  if($('#sl_nv') != null)
+  if($('#sl_nv').length)
   {
     var nv = $('#sl_nv').val();
   }
-  if($('#sl_tha') != null)
+  if($('#sl_tha').length)
   {
     var tha = $('#sl_tha').val();
   }
-  if($('#sl_na') != null)
+  if($('#sl_na').length)
   {
     var na = $('#sl_na').val();
   }
-  if($('#tu') != null)
+  if($('#tu').length)
   {
     var tu = $('#tu').val();
   }
-  if($('#den') != null)
+  if($('#den').length)
   {
     var den = $('#den').val();
   }
-  if($('#sl_vehicle') != null)
+  if($('#sl_vehicle').length)
   {
     var xe = $('#sl_vehicle').val();
   }
-  if($('#sl_round') != null)
+  if($('#sl_round').length)
   {
     var vong = $('#sl_round').val();
   }
 
     var dataString = 'keyword='+ faq_search_input+"&limit="+loc+"&page="+ page +"&order_by="+ cot +"&order="+ sapxep+"&ngaytao="+ ngaytao+"&ngaytaobatdau="+ ngaytaobatdau+"&batdau="+ batdau+"&ketthuc="+ ketthuc+"&trangthai="+ trangthai+"&nv="+nv+"&tha="+tha+"&na="+na+"&tu="+tu+"&den="+den+"&xe="+xe+"&vong="+vong; 
-    console.log(dataString);//$('#loading').html("<img src='public/images/loading.gif'/>").fadeIn(500);
+    
   $.ajax({
             type: "POST",                            // Phương thức gọi là GET
             url: "#",                 // File xử lý
@@ -259,56 +269,56 @@ function sapxep(page,cot,sapxep){
           var ngaytao = "";
           var loc =    $('#chonloc').val();
 
-          if($('#search-input') != null)
+          if($('#search-input').length)
           {
             var keyword = $('#search-input').val() || "";
           }
           
-          if($('#chonngaytao') != null)
+          if($('#chonngaytao').length)
           {
             var ngaytao = $('#chonngaytao').val();
           }
-          if($('#chonngaytaobatdau') != null)
+          if($('#chonngaytaobatdau').length)
           {
             var ngaytaobatdau = $('#chonngaytaobatdau').val();
           }
-          if($('#batdau') != null)
+          if($('#batdau').length)
           {
             var batdau = $('#batdau').val();
           }
-          if($('#ketthuc') != null)
+          if($('#ketthuc').length)
           {
             var ketthuc = $('#ketthuc').val();
           }
-          if($('#sl_status') != null)
+          if($('#sl_status').length)
           {
             var trangthai = $('#sl_status').val();
           }
-          if($('#sl_nv') != null)
+          if($('#sl_nv').length)
           {
             var nv = $('#sl_nv').val();
           }
-          if($('#sl_tha') != null)
+          if($('#sl_tha').length)
           {
             var tha = $('#sl_tha').val();
           }
-          if($('#sl_na') != null)
+          if($('#sl_na').length)
           {
             var na = $('#sl_na').val();
           }
-          if($('#tu') != null)
+          if($('#tu').length)
           {
             var tu = $('#tu').val();
           }
-          if($('#den') != null)
+          if($('#den').length)
           {
             var den = $('#den').val();
           }
-          if($('#sl_vehicle') != null)
+          if($('#sl_vehicle').length)
           {
             var xe = $('#sl_vehicle').val();
           }
-          if($('#sl_round') != null)
+          if($('#sl_round').length)
           {
             var vong = $('#sl_round').val();
           }
@@ -330,7 +340,14 @@ window.addEventListener("keydown",function (e) {
     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
         e.preventDefault();
         search_click();
-
+    }
+    if (e.keyCode === 113 || (e.ctrlKey && e.keyCode === 73)) { 
+        e.preventDefault();
+        $( "i.fa-plus-circle" ).click();
+    }
+    if (e.keyCode === 115 || (e.ctrlKey && e.keyCode === 81)) { 
+        e.preventDefault();
+        $( "i.fa-filter" ).click();
     }
 });
 var preEl ;

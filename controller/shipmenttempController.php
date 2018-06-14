@@ -20,7 +20,7 @@ Class shipmenttempController Extends baseController {
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý đơn hàng';
+        $this->view->data['title'] = 'Quản lý đơn hàng đã nhận';
 
 
 
@@ -36,11 +36,17 @@ Class shipmenttempController Extends baseController {
 
             $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
 
+            $batdau = isset($_POST['batdau']) ? $_POST['batdau'] : null;
+            $ketthuc = isset($_POST['ketthuc']) ? $_POST['ketthuc'] : null;
+            $nv = isset($_POST['nv']) ? $_POST['nv'] : null;
+            $tha = isset($_POST['tha']) ? $_POST['tha'] : null;
+            $na = isset($_POST['na']) ? $_POST['na'] : null;
+
         }
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'booking_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'shipment_temp_date';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
 
@@ -50,7 +56,19 @@ Class shipmenttempController Extends baseController {
 
             $limit = 100;
 
+            $batdau = '01/'.date('m/Y');
+            $ketthuc = date('t/m/Y');
+            $nv = 1;
+            $tha = date('m');
+            $na = date('Y');
+
         }
+
+        $ngaybatdau = strtotime(str_replace('/', '-', $batdau));
+        $ngayketthuc = strtotime(str_replace('/', '-', $ketthuc). ' + 1 days');
+        $tha = (int)date('m',$ngaybatdau);
+        $na = (int)date('Y',$ngaybatdau);
+        $nv = ceil($tha/3);
 
         $place_model = $this->model->get('placeModel');
 
@@ -65,7 +83,7 @@ Class shipmenttempController Extends baseController {
         $this->view->data['place_data'] = $place_data;
 
 
-        $booking_model = $this->model->get('bookingModel');
+        $shipment_temp_model = $this->model->get('shipmenttempModel');
 
         $sonews = $limit;
 
@@ -74,10 +92,10 @@ Class shipmenttempController Extends baseController {
         $pagination_stages = 2;
 
         $data = array(
-            'where'=>'1=1',
+            'where'=>'shipment_temp_date >= '.$ngaybatdau.' AND shipment_temp_date < '.$ngayketthuc,
         );
 
-        $join = array('table'=>'customer','where'=>'booking_customer=customer_id','join'=>'LEFT JOIN');
+        $join = array('table'=>'booking','where'=>'shipment_temp_booking=booking_id LEFT JOIN customer ON booking_customer=customer_id','join'=>'LEFT JOIN');
 
         if (isset($_POST['filter'])) {
             if (isset($_POST['booking_place_from'])) {
@@ -96,7 +114,7 @@ Class shipmenttempController Extends baseController {
             $this->view->data['filter'] = 1;
         }
 
-        $tongsodong = count($booking_model->getAllBooking($data,$join));
+        $tongsodong = count($shipment_temp_model->getAllShipment($data,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -120,10 +138,16 @@ Class shipmenttempController Extends baseController {
 
         $this->view->data['sonews'] = $sonews;
 
+        $this->view->data['batdau'] = $batdau;
+        $this->view->data['ketthuc'] = $ketthuc;
+        $this->view->data['nv'] = $nv;
+        $this->view->data['tha'] = $tha;
+        $this->view->data['na'] = $na;
+
 
 
         $data = array(
-            'where'=>'1=1',
+            'where'=>'shipment_temp_date >= '.$ngaybatdau.' AND shipment_temp_date < '.$ngayketthuc,
 
             'order_by'=>$order_by,
 
@@ -154,108 +178,55 @@ Class shipmenttempController Extends baseController {
             $search = '( booking_place_from IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
                         OR booking_place_to IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
                         OR customer_name  LIKE "%'.$keyword.'%" 
+                        OR booking_number  LIKE "%'.$keyword.'%" 
+                        OR booking_code  LIKE "%'.$keyword.'%" 
                     )';
 
             $data['where'] = $search;
 
         }
 
-        $bookings = $booking_model->getAllBooking($data,$join);
+        $shipment_temps = $shipment_temp_model->getAllShipment($data,$join);
 
-        $this->view->data['bookings'] = $bookings;
+        $this->view->data['shipment_temps'] = $shipment_temps;
 
 
-        return $this->view->show('booking/index');
+        return $this->view->show('shipmenttemp/index');
 
     }
 
 
-    public function addbooking(){
-        $booking_model = $this->model->get('bookingModel');
+    public function editshipmenttemp(){
+        $shipment_temp_model = $this->model->get('shipmenttempModel');
 
-        if (isset($_POST['booking_customer']) ) {
+        if (isset($_POST['shipment_temp_id'])) {
+            $id = $_POST['shipment_temp_id'];
+
+            $temps = $shipment_temp_model->getShipment($id);
             
-
             $data = array(
-                'booking_date' => strtotime(str_replace('/', '-', $_POST['booking_date'])),
-                'booking_code'=>trim($_POST['booking_code']),
-                'booking_customer'=>trim($_POST['booking_customer']),
-                'booking_number'=>trim($_POST['booking_number']),
-                'booking_type'=>trim($_POST['booking_type']),
-                'booking_shipping'=>trim($_POST['booking_shipping']),
-                'booking_shipping_name'=>trim($_POST['booking_shipping_name']),
-                'booking_shipping_number'=>trim($_POST['booking_shipping_number']),
-                'booking_place_from'=>trim($_POST['booking_place_from']),
-                'booking_place_to'=>trim($_POST['booking_place_to']),
-                'booking_start_date' => strtotime(str_replace('/', '-', $_POST['booking_start_date'])),
-                'booking_end_date' => strtotime(str_replace('/', '-', $_POST['booking_end_date'])),
-                'booking_sum' => str_replace(',', '', $_POST['booking_sum']),
-                'booking_total' => str_replace(',', '', $_POST['booking_total']),
-                'booking_comment'=>trim($_POST['booking_comment']),
-                'booking_create_user'=>$_SESSION['userid_logined'],
+                'shipment_temp_ton' => trim(str_replace(',','',$_POST['shipment_temp_ton'])),
+                'shipment_temp_number' => trim(str_replace(',','',$_POST['shipment_temp_number'])),
             );
 
-            $booking_model->createBooking($data);
-            $id_booking = $booking_model->getLastBooking()->booking_id;
+            $shipment_temp_model->updateShipment($data,array('shipment_temp_id'=>$id));
+            
+            $booking_model = $this->model->get('bookingModel');
 
-            $customer_sub_model = $this->model->get('customersubModel');
+            $booking = $booking_model->getBooking($temps->shipment_temp_booking);
 
-            $booking_detail_model = $this->model->get('bookingdetailModel');
+            $data_booking = array(
+                'booking_sum_receive' => $booking->booking_sum_receive-$temps->shipment_temp_ton+$data['shipment_temp_ton'],
+            );
+            $booking_model->updateBooking($data_booking,array('booking_id'=>$booking->booking_id));
 
-            $booking_detail_data = json_decode($_POST['booking_detail_data']);
+            $booking = $booking_model->getBooking($temps->shipment_temp_booking);
 
-            if (isset($id_booking)) {
-                foreach ($booking_detail_data as $v) {
-                    $data_booking_detail = array(
-                        'booking' => $id_booking,
-                        'booking_detail_container' => trim($v->booking_detail_container),
-                        'booking_detail_seal' => trim($v->booking_detail_seal),
-                        'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
-                        'booking_detail_unit' => trim($v->booking_detail_unit),
-                        'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
-                    );
-
-                    $contributor = "";
-                    if(trim($v->booking_detail_customer_sub) != ""){
-                        $support = explode(',', trim($v->booking_detail_customer_sub));
-
-                        if ($support) {
-                            foreach ($support as $key) {
-                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
-                                if ($name) {
-                                    if ($contributor == "")
-                                        $contributor .= $name->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$name->customer_sub_id;
-                                }
-                                else{
-                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
-                                    if ($contributor == "")
-                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
-                                }
-                                
-                            }
-                        }
-
-                    }
-                    $data_booking_detail['booking_detail_customer_sub'] = $contributor;
-
-                    if ($v->id_booking_detail>0) {
-                        $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
-                    }
-                    else{
-                        if ($data_booking_detail['booking_detail_number']!="") {
-                            $booking_detail_model->createBooking($data_booking_detail);
-                        }
-                        
-                    }
-                }
-
+            if ( ($booking->booking_sum-$booking->booking_sum_receive) <= 0 && $booking->booking_status=="") {
+                $booking_model->updateBooking(array('booking_status'=>1),array('booking_id'=>$booking->booking_id));
             }
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_booking."|booking|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|shipment_temp|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -263,167 +234,8 @@ Class shipmenttempController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'booking',
-                'user_log_table_name' => 'Đơn hàng',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Thêm thành công";
-        }
-
-    }
-
-    public function add(){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->booking) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        $this->view->data['title'] = 'Thêm mới đơn hàng';
-
-        $booking_model = $this->model->get('bookingModel');
-        $lastID = isset($booking_model->getLastBooking()->booking_code)?$booking_model->getLastBooking()->booking_code:'DH00';
-        $lastID++;
-        $this->view->data['lastID'] = $lastID;
-
-        $place_model = $this->model->get('placeModel');
-
-        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
-
-        $this->view->data['places'] = $places;
-
-        $customer_model = $this->model->get('customerModel');
-
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
-
-        $this->view->data['customers'] = $customers;
-
-        $shipping_model = $this->model->get('shippingModel');
-
-        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
-
-        $this->view->data['shippings'] = $shippings;
-
-        $unit_model = $this->model->get('unitModel');
-
-        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
-
-        $this->view->data['units'] = $units;
-
-        return $this->view->show('booking/add');
-    }
-
-    public function editbooking(){
-        $booking_model = $this->model->get('bookingModel');
-
-        if (isset($_POST['booking_id'])) {
-            $id = $_POST['booking_id'];
-            
-            $data = array(
-                'booking_date' => strtotime(str_replace('/', '-', $_POST['booking_date'])),
-                'booking_code'=>trim($_POST['booking_code']),
-                'booking_customer'=>trim($_POST['booking_customer']),
-                'booking_number'=>trim($_POST['booking_number']),
-                'booking_type'=>trim($_POST['booking_type']),
-                'booking_shipping'=>trim($_POST['booking_shipping']),
-                'booking_shipping_name'=>trim($_POST['booking_shipping_name']),
-                'booking_shipping_number'=>trim($_POST['booking_shipping_number']),
-                'booking_place_from'=>trim($_POST['booking_place_from']),
-                'booking_place_to'=>trim($_POST['booking_place_to']),
-                'booking_start_date' => strtotime(str_replace('/', '-', $_POST['booking_start_date'])),
-                'booking_end_date' => strtotime(str_replace('/', '-', $_POST['booking_end_date'])),
-                'booking_sum' => str_replace(',', '', $_POST['booking_sum']),
-                'booking_total' => str_replace(',', '', $_POST['booking_total']),
-                'booking_comment'=>trim($_POST['booking_comment']),
-                'booking_update_user'=>$_SESSION['userid_logined'],
-            );
-
-            $booking_model->updateBooking($data,array('booking_id'=>$id));
-            
-            $id_booking = $id;
-
-            $customer_sub_model = $this->model->get('customersubModel');
-
-            $booking_detail_model = $this->model->get('bookingdetailModel');
-
-            $booking_detail_data = json_decode($_POST['booking_detail_data']);
-
-            if (isset($id_booking)) {
-                foreach ($booking_detail_data as $v) {
-                    $data_booking_detail = array(
-                        'booking' => $id_booking,
-                        'booking_detail_container' => trim($v->booking_detail_container),
-                        'booking_detail_seal' => trim($v->booking_detail_seal),
-                        'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
-                        'booking_detail_unit' => trim($v->booking_detail_unit),
-                        'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
-                    );
-
-                    $contributor = "";
-                    if(trim($v->booking_detail_customer_sub) != ""){
-                        $support = explode(',', trim($v->booking_detail_customer_sub));
-
-                        if ($support) {
-                            foreach ($support as $key) {
-                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
-                                if ($name) {
-                                    if ($contributor == "")
-                                        $contributor .= $name->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$name->customer_sub_id;
-                                }
-                                else{
-                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
-                                    if ($contributor == "")
-                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
-                                }
-                                
-                            }
-                        }
-
-                    }
-                    $data_booking_detail['booking_detail_customer_sub'] = $contributor;
-
-                    if ($v->id_booking_detail>0) {
-                        $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
-                    }
-                    else{
-                        if ($data_booking_detail['booking_detail_number']!="") {
-                            $booking_detail_model->createBooking($data_booking_detail);
-                        }
-                        
-                    }
-                }
-
-            }
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|booking|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'booking',
-                'user_log_table_name' => 'Đơn hàng',
+                'user_log_table' => 'shipment_temp',
+                'user_log_table_name' => 'Đơn hàng nhận',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -445,7 +257,7 @@ Class shipmenttempController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->booking) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->shipmenttemp) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -453,75 +265,26 @@ Class shipmenttempController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('booking');
+            $this->view->redirect('shipmenttemp');
 
         }
 
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Cập nhật đơn hàng';
 
-        $booking_model = $this->model->get('bookingModel');
+        $shipment_temp_model = $this->model->get('shipmenttempModel');
 
-        $booking_data = $booking_model->getBooking($id);
+        $shipment_temp_data = $shipment_temp_model->getShipment($id);
 
-        $this->view->data['booking_data'] = $booking_data;
+        $this->view->data['shipment_temp_data'] = $shipment_temp_data;
 
-        if (!$booking_data) {
+        if (!$shipment_temp_data) {
 
-            $this->view->redirect('booking');
+            $this->view->redirect('shipmenttemp');
 
         }
 
-        $booking_detail_model = $this->model->get('bookingdetailModel');
-
-        $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$id));
-        $this->view->data['booking_details'] = $booking_details;
-
-        $customer_sub_model = $this->model->get('customersubModel');
-        $customer_sub = array();
-        foreach ($booking_details as $booking_detail) {
-            $sts = explode(',', $booking_detail->booking_detail_customer_sub);
-            foreach ($sts as $key) {
-                $subs = $customer_sub_model->getCustomer($key);
-                if($subs){
-                    if (!isset($customer_sub[$booking_detail->booking_detail_id]))
-                        $customer_sub[$booking_detail->booking_detail_id] = $subs->customer_sub_name;
-                    else
-                        $customer_sub[$booking_detail->booking_detail_id] .= ','.$subs->customer_sub_name;
-                }
-                
-            }
-        }
-        
-        
-        $this->view->data['customer_sub'] = $customer_sub;
-
-        $place_model = $this->model->get('placeModel');
-
-        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
-
-        $this->view->data['places'] = $places;
-
-        $customer_model = $this->model->get('customerModel');
-
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
-
-        $this->view->data['customers'] = $customers;
-
-        $shipping_model = $this->model->get('shippingModel');
-
-        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
-
-        $this->view->data['shippings'] = $shippings;
-
-        $unit_model = $this->model->get('unitModel');
-
-        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
-
-        $this->view->data['units'] = $units;
-
-
-        return $this->view->show('booking/edit');
+        return $this->view->show('shipmenttemp/edit');
 
     }
 
@@ -544,75 +307,26 @@ Class shipmenttempController Extends baseController {
         }
         if (!$id) {
 
-            $this->view->redirect('booking');
+            $this->view->redirect('shipmenttemp');
 
         }
 
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Thông tin đơn hàng';
 
-        $booking_model = $this->model->get('bookingModel');
+        $shipment_temp_model = $this->model->get('shipmenttempModel');
 
-        $booking_data = $booking_model->getBooking($id);
+        $shipment_temp_data = $shipment_temp_model->getShipment($id);
 
-        $this->view->data['booking_data'] = $booking_data;
+        $this->view->data['shipment_temp_data'] = $shipment_temp_data;
 
-        if (!$booking_data) {
+        if (!$shipment_temp_data) {
 
-            $this->view->redirect('booking');
+            $this->view->redirect('shipmenttemp');
 
         }
 
-        $booking_detail_model = $this->model->get('bookingdetailModel');
-
-        $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$id));
-        $this->view->data['booking_details'] = $booking_details;
-
-        $customer_sub_model = $this->model->get('customersubModel');
-        $customer_sub = array();
-        foreach ($booking_details as $booking_detail) {
-            $sts = explode(',', $booking_detail->booking_detail_customer_sub);
-            foreach ($sts as $key) {
-                $subs = $customer_sub_model->getCustomer($key);
-                if($subs){
-                    if (!isset($customer_sub[$booking_detail->booking_detail_id]))
-                        $customer_sub[$booking_detail->booking_detail_id] = $subs->customer_sub_name;
-                    else
-                        $customer_sub[$booking_detail->booking_detail_id] .= ','.$subs->customer_sub_name;
-                }
-                
-            }
-        }
-        
-        
-        $this->view->data['customer_sub'] = $customer_sub;
-
-        $place_model = $this->model->get('placeModel');
-
-        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
-
-        $this->view->data['places'] = $places;
-
-        $customer_model = $this->model->get('customerModel');
-
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
-
-        $this->view->data['customers'] = $customers;
-
-        $shipping_model = $this->model->get('shippingModel');
-
-        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
-
-        $this->view->data['shippings'] = $shippings;
-
-        $unit_model = $this->model->get('unitModel');
-
-        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
-
-        $this->view->data['units'] = $units;
-
-
-        return $this->view->show('booking/view');
+        return $this->view->show('shipmenttemp/view');
 
     }
 
@@ -636,16 +350,13 @@ Class shipmenttempController Extends baseController {
         $this->view->data['order'] = $_GET['order'];
         $this->view->data['limit'] = $_GET['limit'];
         $this->view->data['keyword'] = $_GET['keyword'];
+        $this->view->data['nv'] = $_GET['nv'];
+        $this->view->data['tha'] = $_GET['tha'];
+        $this->view->data['na'] = $_GET['na'];
+        $this->view->data['batdau'] = $_GET['batdau'];
+        $this->view->data['ketthuc'] = $_GET['ketthuc'];
 
-        return $this->view->show('booking/filter');
-    }
-
-    public function deletebookingdetail(){
-        if (isset($_POST['data'])) {
-            $booking_detail_model = $this->model->get('bookingdetailModel');
-
-            $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking_detail_id='.$_POST['data'].' AND booking='.$_POST['booking']);
-        }
+        return $this->view->show('shipmenttemp/filter');
     }
 
     public function delete(){
@@ -657,7 +368,7 @@ Class shipmenttempController Extends baseController {
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->booking) || json_decode($_SESSION['user_permission_action'])->booking != "booking") && $_SESSION['user_permission_action'] != '["all"]') {
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->shipmenttemp) || json_decode($_SESSION['user_permission_action'])->shipmenttemp != "shipmenttemp") && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -666,19 +377,29 @@ Class shipmenttempController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $booking_model = $this->model->get('bookingModel');
+            $shipment_temp_model = $this->model->get('shipmenttempModel');
             $user_log_model = $this->model->get('userlogModel');
+            $booking_model = $this->model->get('bookingModel');
 
             if (isset($_POST['xoa'])) {
 
                 $datas = explode(',', $_POST['xoa']);
 
                 foreach ($datas as $data) {
+                    $temps = $shipment_temp_model->getShipment($data);
 
-                    $booking_model->deleteBooking($data);
+                    $shipment_temp_model->deleteShipment($data);
+
+                    $booking = $booking_model->getBooking($temps->shipment_temp_booking);
+
+                    $data_booking = array(
+                        'booking_sum_receive' => $booking->booking_sum_receive-$temps->shipment_temp_ton,
+                        'booking_status' => null,
+                    );
+                    $booking_model->updateBooking($data_booking,array('booking_id'=>$booking->booking_id));
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|booking|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|shipment_temp|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -690,8 +411,8 @@ Class shipmenttempController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'booking',
-                    'user_log_table_name' => 'Đơn hàng',
+                    'user_log_table' => 'shipment_temp',
+                    'user_log_table_name' => 'Đơn hàng nhận',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -704,18 +425,27 @@ Class shipmenttempController Extends baseController {
             }
 
             else{
+                $temps = $shipment_temp_model->getShipment($_POST['data']);
 
-                $booking_model->deleteBooking($_POST['data']);
+                $shipment_temp_model->deleteShipment($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|booking|"."\n"."\r\n";
+                $booking = $booking_model->getBooking($temps->shipment_temp_booking);
+
+                    $data_booking = array(
+                        'booking_sum_receive' => $booking->booking_sum_receive-$temps->shipment_temp_ton,
+                        'booking_status' => null,
+                    );
+                    $booking_model->updateBooking($data_booking,array('booking_id'=>$booking->booking_id));
+
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|shipment_temp|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'booking',
-                    'user_log_table_name' => 'Đơn hàng',
+                    'user_log_table' => 'shipment_temp',
+                    'user_log_table_name' => 'Đơn hàng nhận',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );
@@ -732,7 +462,7 @@ Class shipmenttempController Extends baseController {
 
     }
 
-    public function importbooking(){
+    public function importshipmenttemp(){
         if (isset($_FILES['import']['name'])) {
             $total = count($_FILES['import']['name']);
             for( $i=0 ; $i < $total ; $i++ ) {
@@ -752,7 +482,7 @@ Class shipmenttempController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->booking) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->shipmenttemp) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -762,7 +492,7 @@ Class shipmenttempController Extends baseController {
         $this->view->data['title'] = 'Nhập dữ liệu';
 
        
-        return $this->view->show('booking/import');
+        return $this->view->show('shipmenttemp/import');
 
     }
 

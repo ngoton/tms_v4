@@ -31,6 +31,135 @@ $i = $sonews*$page-($sonews-1);
 
 <div id="loading"></div>
 <div id="winpopup"></div>
+<div class="col-xs-7">
+    <div class="pull-left">
+      <select id="sl_nv" name="sl_nv" style="width:70px">
+       <option value="1">Quý I</option>
+       <option value="2">Quý II</option>
+       <option value="3">Quý III</option>
+       <option value="4">Quý IV</option>
+      </select>
+      <select id="sl_tha" name="sl_tha" style="width:80px">
+       <?php 
+          for ($k=1; $k < 13; $k++) { 
+              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <select id="sl_na" name="sl_na" style="width:90px">
+       <?php 
+          $nam = date('Y');
+          for ($k=($nam-5); $k < ($nam+5); $k++) { 
+              echo '<option value="'.$k.'">Năm '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+        
+      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+      
+    </div>
+</div>
+<div class="col-xs-5">
+    <div class="tools action-buttons pull-right">
+        <?php
+        if (isset($filter)) {
+            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+        }
+        ?>
+        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+            <option value="18446744073709">All</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
+        <a class="purpose" data-original-title="Thêm mới">
+            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("booking/add") ?>','Thêm đơn hàng mới')"></i>
+        </a> 
+        <div class="pull-right pos-rel dropdown-hover">
+            <button class="btn btn-minier bigger" style="line-height: 26px">
+                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                <li>
+                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                        <span class="orange">
+                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                        <span class="green">
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("booking/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword."&nv=".$nv."&tha=".$tha."&na=".$na."&batdau=".str_replace('/', '-', $batdau)."&ketthuc=".str_replace('/', '-', $ketthuc)) ?>','Lọc dữ liệu')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                        <span class="red">
+                            <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                        <span class="purple">
+                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("booking/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    
+                    <div class="text-center pos-rel dropdown-hover">
+                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                            <span class="blue">
+                                <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                            <li>
+                                <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                    <span class="green">
+                                        <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                    <span class="red">
+                                        <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>                        
+    </div>
+</div>
+
+
+<div class="clearfix"></div>
 <div id="content" style="padding:5px;">
    
 <table class="table_data" id="tblExport" >
@@ -75,103 +204,22 @@ $i = $sonews*$page-($sonews-1);
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_comment','<?php echo $url_order ?>')">Diễn giải <?php if ($order_by == 'booking_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-           
         <th>
-            <div class="tools action-buttons pull-right">
-                <?php
-                if (isset($filter)) {
-                    echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
-                }
-                ?>
-                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
-                    <option value="18446744073709">All</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="500">500</option>
-                </select>
-                <a class="purpose" data-original-title="Thêm mới">
-                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("booking/add") ?>','Thêm đơn hàng mới')"></i>
-                </a> 
-                <div class="pull-right pos-rel dropdown-hover">
-                    <button class="btn btn-minier bigger" style="line-height: 26px">
-                        <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                        <li>
-                            <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
-                                <span class="orange">
-                                    <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
-                                <span class="green">
-                                    <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("booking/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
-                                <span class="red">
-                                    <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
-                                <span class="purple">
-                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("booking/import") ?>','Nhập dữ liệu từ file Excel')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            
-                            <div class="text-center pos-rel dropdown-hover">
-                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
-                                    <span class="blue">
-                                        <i class="ace-icon fa fa-cloud-download bigger-150"></i>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                                    <li>
-                                        <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
-                                            <span class="green">
-                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
-                                            <span class="red">
-                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
-                                            <span class="blue">
-                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        
-                    </ul>
-                </div>                        
-            </div>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_status','<?php echo $url_order ?>')">Trạng thái <?php if ($order_by == 'booking_status'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>   
+        <th>
+            
         </th>
     </tr>
    </thead>
    <tbody>
     <?php foreach ($bookings as $booking) : ?>
         <tr id="<?php echo $booking->booking_id ?>" class="edit_tr" <?php echo ($booking->booking_end_date=="" || $booking->booking_end_date==0 || $booking->booking_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
-            <td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $booking->booking_id ?>"><span class="lbl"></span></td>
+            <td class="text-center">
+                <?php if($booking->booking_status=="" || $booking->booking_status==0){ ?>
+                <input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $booking->booking_id ?>"><span class="lbl"></span>
+                <?php } ?>
+            </td>
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_date); ?></td>
             <td><?php echo $booking->booking_code; ?></td>
@@ -185,6 +233,24 @@ $i = $sonews*$page-($sonews-1);
             <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_start_date); ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_end_date); ?></td>
             <td><?php echo $booking->booking_comment; ?></td>
+            <td>
+                <?php
+                switch ($booking->booking_status) {
+                    case 1:
+                        echo '<span class="green">Đã nhận</span>';
+                        break;
+                    case 2:
+                        echo '<span class="orange">Đang chạy</span>';
+                        break;
+                    case 3:
+                        echo '<span class="red">Hoàn thành</span>';
+                        break;
+                    default:
+                        echo '<span class="grey">Đang chờ</span>';
+                        break;
+                }
+                ?>   
+            </td>
             <td class="text-right">
                 <div class="tools action-buttons">
                     <a class="blue"  onclick="view_click('<?php echo $this->url("booking/view/") ?>','Thông tin đơn hàng',<?php echo $booking->booking_id ?>)">
@@ -193,10 +259,11 @@ $i = $sonews*$page-($sonews-1);
                     <a class="green"  onclick="edit_click('<?php echo $this->url("booking/edit/") ?>','Cập nhật đơn hàng',<?php echo $booking->booking_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
-
+                    <?php if($booking->booking_status=="" || $booking->booking_status==0){ ?>
                     <a class="red" >
                         <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $booking->booking_id ?>)"></i>
                     </a>
+                    <?php } ?>
                 </div>
             </td>
         </tr>
@@ -210,4 +277,79 @@ $this->helper('slidePaginator');
 <script type="text/javascript">
     var ch = "<?php echo $limit ?>";
 $('#chonloc option[value='+ch+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
+
+$(document).ready(function(){
+    $('#batdau').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+      });
+    $('#ketthuc').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+      });
+});
+
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
+
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
 </script>

@@ -36,6 +36,12 @@ Class bookingController Extends baseController {
 
             $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
 
+            $batdau = isset($_POST['batdau']) ? $_POST['batdau'] : null;
+            $ketthuc = isset($_POST['ketthuc']) ? $_POST['ketthuc'] : null;
+            $nv = isset($_POST['nv']) ? $_POST['nv'] : null;
+            $tha = isset($_POST['tha']) ? $_POST['tha'] : null;
+            $na = isset($_POST['na']) ? $_POST['na'] : null;
+
         }
 
         else{
@@ -50,7 +56,19 @@ Class bookingController Extends baseController {
 
             $limit = 100;
 
+            $batdau = '01/'.date('m/Y');
+            $ketthuc = date('t/m/Y');
+            $nv = 1;
+            $tha = date('m');
+            $na = date('Y');
+
         }
+
+        $ngaybatdau = strtotime(str_replace('/', '-', $batdau));
+        $ngayketthuc = strtotime(str_replace('/', '-', $ketthuc). ' + 1 days');
+        $tha = (int)date('m',$ngaybatdau);
+        $na = (int)date('Y',$ngaybatdau);
+        $nv = ceil($tha/3);
 
         $place_model = $this->model->get('placeModel');
 
@@ -74,7 +92,7 @@ Class bookingController Extends baseController {
         $pagination_stages = 2;
 
         $data = array(
-            'where'=>'1=1',
+            'where'=>'booking_date >= '.$ngaybatdau.' AND booking_date < '.$ngayketthuc,
         );
 
         $join = array('table'=>'customer','where'=>'booking_customer=customer_id','join'=>'LEFT JOIN');
@@ -120,10 +138,16 @@ Class bookingController Extends baseController {
 
         $this->view->data['sonews'] = $sonews;
 
+        $this->view->data['batdau'] = $batdau;
+        $this->view->data['ketthuc'] = $ketthuc;
+        $this->view->data['nv'] = $nv;
+        $this->view->data['tha'] = $tha;
+        $this->view->data['na'] = $na;
+
 
 
         $data = array(
-            'where'=>'1=1',
+            'where'=>'booking_date >= '.$ngaybatdau.' AND booking_date < '.$ngayketthuc,
 
             'order_by'=>$order_by,
 
@@ -154,6 +178,8 @@ Class bookingController Extends baseController {
             $search = '( booking_place_from IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
                         OR booking_place_to IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
                         OR customer_name  LIKE "%'.$keyword.'%" 
+                        OR booking_number  LIKE "%'.$keyword.'%" 
+                        OR booking_code  LIKE "%'.$keyword.'%" 
                     )';
 
             $data['where'] = $search;
@@ -636,6 +662,11 @@ Class bookingController Extends baseController {
         $this->view->data['order'] = $_GET['order'];
         $this->view->data['limit'] = $_GET['limit'];
         $this->view->data['keyword'] = $_GET['keyword'];
+        $this->view->data['nv'] = $_GET['nv'];
+        $this->view->data['tha'] = $_GET['tha'];
+        $this->view->data['na'] = $_GET['na'];
+        $this->view->data['batdau'] = $_GET['batdau'];
+        $this->view->data['ketthuc'] = $_GET['ketthuc'];
 
         return $this->view->show('booking/filter');
     }

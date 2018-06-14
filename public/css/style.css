@@ -1274,10 +1274,12 @@ border-radius: 3px;
 -moz-border-radius: 3px;
 -o-border-radius: 3px;
 }
-.edit_tr .tools{display:none}
-.edit_tr:hover .tools{display:block}
+
 .numbers{text-align: right;}
 .modal-footer button {
   float:right;
   margin-left: 5px;
+}
+#content{
+	overflow-x: auto;
 }

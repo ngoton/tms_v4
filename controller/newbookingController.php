@@ -69,7 +69,7 @@ Class newbookingController Extends baseController {
 
         $data = array(
 
-            'where' => '(booking_status IS NULL OR booking_status != 3) AND booking_end_date >= '.strtotime(date('d-m-Y')),
+            'where' => 'booking_sum>booking_sum_receive AND booking_end_date >= '.strtotime(date('d-m-Y')),
 
         );
 
@@ -109,7 +109,7 @@ Class newbookingController Extends baseController {
 
             'limit'=>$x.','.$sonews,
 
-            'where' => '(booking_status IS NULL OR booking_status != 3) AND booking_end_date >= '.strtotime(date('d-m-Y')),
+            'where' => 'booking_sum>booking_sum_receive AND booking_end_date >= '.strtotime(date('d-m-Y')),
 
             );
 
@@ -193,7 +193,7 @@ Class newbookingController Extends baseController {
 
             $booking = $booking_model->getBooking(trim($_POST['data']));
 
-            if ( ($booking->booking_sum-$booking->booking_sum_receive) <= 0) {
+            if ( ($booking->booking_sum-$booking->booking_sum_receive) <= 0 && $booking->booking_status=="") {
 
                 $booking_model->updateBooking(array('booking_status'=>1),array('booking_id'=>$booking->booking_id));
 
@@ -214,7 +214,7 @@ Class newbookingController Extends baseController {
 
                         'shipment_temp_ton' => trim(str_replace(',','',$_POST['ton'])),
 
-                        'shipment_temp_number' => trim($_POST['number']),
+                        'shipment_temp_number' => trim(str_replace(',','',$_POST['number'])),
 
                         );
 

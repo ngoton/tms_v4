@@ -13,6 +13,90 @@ $i = $sonews*$page-($sonews-1);
 
 <div id="loading"></div>
 <div id="winpopup"></div>
+<div class="tools action-buttons pull-right">
+    <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+        <option value="18446744073709">All</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+    </select>
+    <a class="purpose" data-original-title="Thêm mới">
+        <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("house/add") ?>','Thêm kho vật tư mới')"></i>
+    </a> 
+    <div class="pull-right pos-rel dropdown-hover">
+        <button class="btn btn-minier bigger" style="line-height: 26px">
+            <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+        </button>
+
+        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+            <li>
+                <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                    <span class="orange">
+                        <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
+                    <span class="green">
+                        <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                    <span class="red">
+                        <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                    <span class="purple">
+                        <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("house/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                
+                <div class="text-center pos-rel dropdown-hover">
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                        <span class="blue">
+                            <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                        <li>
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                <span class="red">
+                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                <span class="blue">
+                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            
+        </ul>
+    </div>                        
+</div>
+<div class="clearfix"></div>
 <div id="content" style="padding:5px;">
    
 <table class="table_data" id="tblExport" >
@@ -28,89 +112,7 @@ $i = $sonews*$page-($sonews-1);
         </th>
            
         <th>
-            <div class="tools action-buttons pull-right">
-                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
-                    <option value="18446744073709">All</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="500">500</option>
-                </select>
-                <a class="purpose" data-original-title="Thêm mới">
-                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("house/add") ?>','Thêm kho vật tư mới')"></i>
-                </a> 
-                <div class="pull-right pos-rel dropdown-hover">
-                    <button class="btn btn-minier bigger" style="line-height: 26px">
-                        <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                        <li>
-                            <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
-                                <span class="orange">
-                                    <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
-                                <span class="green">
-                                    <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
-                                <span class="red">
-                                    <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
-                                <span class="purple">
-                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("house/import") ?>','Nhập dữ liệu từ file Excel')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            
-                            <div class="text-center pos-rel dropdown-hover">
-                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
-                                    <span class="blue">
-                                        <i class="ace-icon fa fa-cloud-download bigger-150"></i>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                                    <li>
-                                        <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
-                                            <span class="green">
-                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
-                                            <span class="red">
-                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
-                                            <span class="blue">
-                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        
-                    </ul>
-                </div>                        
-            </div>
+            
         </th>
     </tr>
    </thead>

@@ -1,13 +1,13 @@
 
 <?php
 $url_order = 'DESC';
-if ($order_by == 'booking_id')
+if ($order_by == 'shipment_temp_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_place_from')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_place_to')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_date')
+elseif ($order_by == 'shipment_temp_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
@@ -19,7 +19,7 @@ elseif ($order_by == 'customer_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_sum')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_total')
+elseif ($order_by == 'shipment_temp_ton')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_start_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
@@ -31,15 +31,141 @@ $i = $sonews*$page-($sonews-1);
 
 <div id="loading"></div>
 <div id="winpopup"></div>
+<div class="col-xs-7">
+    <div class="pull-left">
+      <select id="sl_nv" name="sl_nv" style="width:70px">
+       <option value="1">Quý I</option>
+       <option value="2">Quý II</option>
+       <option value="3">Quý III</option>
+       <option value="4">Quý IV</option>
+      </select>
+      <select id="sl_tha" name="sl_tha" style="width:80px">
+       <?php 
+          for ($k=1; $k < 13; $k++) { 
+              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <select id="sl_na" name="sl_na" style="width:90px">
+       <?php 
+          $nam = date('Y');
+          for ($k=($nam-5); $k < ($nam+5); $k++) { 
+              echo '<option value="'.$k.'">Năm '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+      
+    </div>
+</div>
+<div class="col-xs-5">
+    <div class="tools action-buttons pull-right">
+        <?php
+        if (isset($filter)) {
+            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+        }
+        ?>
+        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+            <option value="18446744073709">All</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
+        <a class="purpose" data-original-title="Thêm mới">
+            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="javascript:window.location.href='<?php echo $this->url("newbooking") ?>'"></i>
+        </a> 
+        <div class="pull-right pos-rel dropdown-hover">
+            <button class="btn btn-minier bigger" style="line-height: 26px">
+                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                <li>
+                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                        <span class="orange">
+                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                        <span class="green">
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("shipmenttemp/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword."&nv=".$nv."&tha=".$tha."&na=".$na."&batdau=".str_replace('/', '-', $batdau)."&ketthuc=".str_replace('/', '-', $ketthuc)) ?>','Lọc dữ liệu')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                        <span class="red">
+                            <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                        <span class="purple">
+                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("shipmenttemp/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    
+                    <div class="text-center pos-rel dropdown-hover">
+                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                            <span class="blue">
+                                <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                            <li>
+                                <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                    <span class="green">
+                                        <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                    <span class="red">
+                                        <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>                        
+    </div>
+</div>
+<div class="clearfix"></div>
 <div id="content" style="padding:5px;">
    
 <table class="table_data" id="tblExport" >
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'booking_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_temp_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'shipment_temp_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'booking_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_temp_date','<?php echo $url_order ?>')">Ngày nhận <?php if ($order_by == 'shipment_temp_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_code','<?php echo $url_order ?>')">Số ĐH <?php if ($order_by == 'booking_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -51,12 +177,6 @@ $i = $sonews*$page-($sonews-1);
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Khách hàng <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_sum','<?php echo $url_order ?>')">Sản lượng <?php if ($order_by == 'booking_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_total','<?php echo $url_order ?>')">Thành tiền <?php if ($order_by == 'booking_total'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_type','<?php echo $url_order ?>')">Loại hàng <?php if ($order_by == 'booking_type'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
@@ -65,6 +185,16 @@ $i = $sonews*$page-($sonews-1);
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_place_to','<?php echo $url_order ?>')">Kho đến <?php if ($order_by == 'booking_place_to'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_sum','<?php echo $url_order ?>')">Sản lượng <?php if ($order_by == 'booking_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_temp_ton','<?php echo $url_order ?>')">Sản lượng nhận <?php if ($order_by == 'shipment_temp_ton'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_temp_number','<?php echo $url_order ?>')">Số lượng xe <?php if ($order_by == 'shipment_temp_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
         
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_start_date','<?php echo $url_order ?>')">Bắt đầu <?php if ($order_by == 'booking_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -73,130 +203,58 @@ $i = $sonews*$page-($sonews-1);
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_end_date','<?php echo $url_order ?>')">Kết thúc <?php if ($order_by == 'booking_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_comment','<?php echo $url_order ?>')">Diễn giải <?php if ($order_by == 'booking_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_temp_status','<?php echo $url_order ?>')">Trạng thái <?php if ($order_by == 'shipment_temp_status'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
            
         <th>
-            <div class="tools action-buttons pull-right">
-                <?php
-                if (isset($filter)) {
-                    echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
-                }
-                ?>
-                <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
-                    <option value="18446744073709">All</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="500">500</option>
-                </select>
-                <a class="purpose" data-original-title="Thêm mới">
-                    <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("booking/add") ?>','Thêm đơn hàng mới')"></i>
-                </a> 
-                <div class="pull-right pos-rel dropdown-hover">
-                    <button class="btn btn-minier bigger" style="line-height: 26px">
-                        <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                        <li>
-                            <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
-                                <span class="orange">
-                                    <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
-                                <span class="green">
-                                    <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("booking/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
-                                <span class="red">
-                                    <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
-                                <span class="purple">
-                                    <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("booking/import") ?>','Nhập dữ liệu từ file Excel')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            
-                            <div class="text-center pos-rel dropdown-hover">
-                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
-                                    <span class="blue">
-                                        <i class="ace-icon fa fa-cloud-download bigger-150"></i>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                                    <li>
-                                        <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
-                                            <span class="green">
-                                                <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
-                                            <span class="red">
-                                                <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
-                                            <span class="blue">
-                                                <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        
-                    </ul>
-                </div>                        
-            </div>
+            
         </th>
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($bookings as $booking) : ?>
-        <tr id="<?php echo $booking->booking_id ?>" class="edit_tr" <?php echo ($booking->booking_end_date=="" || $booking->booking_end_date==0 || $booking->booking_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
-            <td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $booking->booking_id ?>"><span class="lbl"></span></td>
+    <?php foreach ($shipment_temps as $shipment_temp) : ?>
+        <tr id="<?php echo $shipment_temp->shipment_temp_id ?>" class="edit_tr" <?php echo ($shipment_temp->booking_end_date=="" || $shipment_temp->booking_end_date==0 || $shipment_temp->booking_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+            <td class="text-center">
+                <?php if ($shipment_temp->shipment_temp_status!=1) { ?>
+                <input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $shipment_temp->shipment_temp_id ?>"><span class="lbl"></span>
+            <?php } ?>
+            </td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_date); ?></td>
-            <td><?php echo $booking->booking_code; ?></td>
-            <td><?php echo $booking->booking_number; ?></td>
-            <td><a onclick="view_click('<?php echo $this->url("customer/view/") ?>','Thông tin khách hàng',<?php echo $booking->booking_customer ?>,'none')"><?php echo $booking->customer_name; ?></a></td>
-            <td class="text-right"><?php echo $lib->formatMoney($booking->booking_sum,2); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($booking->booking_total,2); ?></td>
-            <td><?php echo $booking->booking_type==1?"Hàng nhập":($booking->booking_type==2?"Hàng xuất":"Khác"); ?></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $booking->booking_place_from ?>,'none')"><?php echo isset($place_data[$booking->booking_place_from])?$place_data[$booking->booking_place_from]:null; ?></a></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $booking->booking_place_to ?>,'none')"><?php echo isset($place_data[$booking->booking_place_to])?$place_data[$booking->booking_place_to]:null; ?></a></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_start_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_end_date); ?></td>
-            <td><?php echo $booking->booking_comment; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment_temp->shipment_temp_date); ?></td>
+            <td><?php echo $shipment_temp->booking_code; ?></td>
+            <td><?php echo $shipment_temp->booking_number; ?></td>
+            <td><?php echo $shipment_temp->customer_name; ?></td>
+            <td><?php echo $shipment_temp->booking_type==1?"Hàng nhập":($shipment_temp->booking_type==2?"Hàng xuất":"Khác"); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $shipment_temp->booking_place_from ?>,'none')"><?php echo isset($place_data[$shipment_temp->booking_place_from])?$place_data[$shipment_temp->booking_place_from]:null; ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $shipment_temp->booking_place_to ?>,'none')"><?php echo isset($place_data[$shipment_temp->booking_place_to])?$place_data[$shipment_temp->booking_place_to]:null; ?></a></td>
+            <td class="text-right"><?php echo $lib->formatMoney($shipment_temp->booking_sum,2); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($shipment_temp->shipment_temp_ton,2); ?></td>
+            <td class="text-right"><?php echo $shipment_temp->shipment_temp_number; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment_temp->booking_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment_temp->booking_end_date); ?></td>
+            <td>
+                <?php
+                if ($shipment_temp->shipment_temp_status==1) {
+                    echo '<span class="red">Đã chạy</span>';
+                }
+                else{
+                    echo '<span class="green">Đang chạy</span>';
+                }
+                ?>   
+            </td>
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="blue"  onclick="view_click('<?php echo $this->url("booking/view/") ?>','Thông tin đơn hàng',<?php echo $booking->booking_id ?>)">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("shipmenttemp/view/") ?>','Thông tin đơn hàng đã nhận',<?php echo $shipment_temp->shipment_temp_id ?>)">
                         <i class="ace-icon fa fa-info-circle bigger-130"></i>
                     </a>
-                    <a class="green"  onclick="edit_click('<?php echo $this->url("booking/edit/") ?>','Cập nhật đơn hàng',<?php echo $booking->booking_id ?>)">
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("shipmenttemp/edit/") ?>','Cập nhật đơn hàng đã nhận',<?php echo $shipment_temp->shipment_temp_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
-
+                    <?php if ($shipment_temp->shipment_temp_status!=1) { ?>
                     <a class="red" >
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $booking->booking_id ?>)"></i>
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $shipment_temp->shipment_temp_id ?>)"></i>
                     </a>
+                    <?php } ?>
                 </div>
             </td>
         </tr>
@@ -210,4 +268,79 @@ $this->helper('slidePaginator');
 <script type="text/javascript">
     var ch = "<?php echo $limit ?>";
 $('#chonloc option[value='+ch+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
+
+$(document).ready(function(){
+    $('#batdau').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+      });
+    $('#ketthuc').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+      });
+});
+
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
+
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
 </script>
