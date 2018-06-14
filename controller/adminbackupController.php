@@ -164,7 +164,7 @@ Class adminbackupController Extends baseController {
         $backupFilename = "db-".$_SERVER["SERVER_NAME"]."-".$date.'.sql';
         
         //Configure Dropbox Application
-        $app = new DropboxApp("xty8leltwgu1u2w", "yrd25ouxqaql8k0", "CPrOUSMRAMAAAAAAAAAAoSpJcaiSO24R5gMJn6MoVy2A7Q1FLF2AP51ldF4I4Nwx");
+        $app = new DropboxApp(DROPBOX_KEY, DROPBOX_SECRET, DROPBOX_TOKEN);
 
         //Configure Dropbox service
         $dropbox = new Dropbox($app);

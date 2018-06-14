@@ -95,6 +95,10 @@ Class shipmenttempController Extends baseController {
             'where'=>'shipment_temp_date >= '.$ngaybatdau.' AND shipment_temp_date < '.$ngayketthuc,
         );
 
+        if ($_SESSION['role_logined'] == 5) {
+            $data['where'] .= ' AND shipment_temp_owner = '.$_SESSION['userid_logined'];
+        }
+
         $join = array('table'=>'booking','where'=>'shipment_temp_booking=booking_id LEFT JOIN customer ON booking_customer=customer_id','join'=>'LEFT JOIN');
 
         if (isset($_POST['filter'])) {
@@ -156,6 +160,10 @@ Class shipmenttempController Extends baseController {
             'limit'=>$x.','.$sonews,
 
             );
+
+        if ($_SESSION['role_logined'] == 5) {
+            $data['where'] .= ' AND shipment_temp_owner = '.$_SESSION['userid_logined'];
+        }
 
         if (isset($_POST['filter'])) {
             if (isset($_POST['booking_place_from'])) {
