@@ -403,6 +403,65 @@ Class driverController Extends baseController {
         return $this->view->show('driver/view');
 
     }
+    public function viewdriver(){
+
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Thông tin bàn giao xe';
+
+        $id = $_GET['id'];
+
+        $info = explode('~', $id);
+
+        $driver_model = $this->model->get('driverModel');
+
+        $data = array(
+            'where'=>'driver_vehicle = '.$info[0].' AND driver_start_date <= '.strtotime(str_replace('/', '-', $info[1])).' AND (driver_end_date IS NULL OR driver_end_date=0 OR driver_end_date >= '.strtotime(str_replace('/', '-', $info[1])).')',
+            'order_by'=>'driver_start_date',
+            'order'=>'DESC',
+            'limit'=>1
+        );
+
+        $drivers = $driver_model->getAllVehicle($data);
+        foreach ($drivers as $driver) {
+            $driver_data = $driver;
+        }
+
+        $this->view->data['driver_data'] = $driver_data;
+
+        if (!$driver_data) {
+
+            $this->view->redirect('driver');
+
+        }
+
+        $vehicle = $this->model->get('vehicleModel');
+
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $staff = $this->model->get('staffModel');
+
+        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
+
+        return $this->view->show('driver/viewdriver');
+
+    }
 
     public function filter(){
         $this->view->disableLayout();

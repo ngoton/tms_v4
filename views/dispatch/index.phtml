@@ -13,9 +13,9 @@ elseif ($order_by == 'dispatch_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'vehicle_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_receive_date')
+elseif ($order_by == 'dispatch_start_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_delivery_date')
+elseif ($order_by == 'dispatch_end_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
@@ -185,10 +185,10 @@ $i = $sonews*$page-($sonews-1);
         </th>
         
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_receive_date','<?php echo $url_order ?>')">Ngày lấy <?php if ($order_by == 'dispatch_receive_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_start_date','<?php echo $url_order ?>')">Ngày lấy <?php if ($order_by == 'dispatch_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_delivery_date','<?php echo $url_order ?>')">Ngày hạ <?php if ($order_by == 'dispatch_delivery_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_end_date','<?php echo $url_order ?>')">Ngày hạ <?php if ($order_by == 'dispatch_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_comment','<?php echo $url_order ?>')">Ghi chú <?php if ($order_by == 'dispatch_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -203,7 +203,7 @@ $i = $sonews*$page-($sonews-1);
    </thead>
    <tbody>
     <?php foreach ($dispatchs as $dispatch) : ?>
-        <tr id="<?php echo $dispatch->dispatch_id ?>" class="edit_tr" <?php echo ($dispatch->dispatch_delivery_date=="" || $dispatch->dispatch_delivery_date==0 || $dispatch->dispatch_delivery_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+        <tr id="<?php echo $dispatch->dispatch_id ?>" class="edit_tr" <?php echo ($dispatch->dispatch_end_date=="" || $dispatch->dispatch_end_date==0 || $dispatch->dispatch_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
             <td class="text-center">
                 <?php if($dispatch->dispatch_status=="" || $dispatch->dispatch_status==0){ ?>
                 <input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $dispatch->dispatch_id ?>"><span class="lbl"></span>
@@ -218,8 +218,8 @@ $i = $sonews*$page-($sonews-1);
             <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $dispatch->dispatch_vehicle ?>,'none')"><?php echo $dispatch->vehicle_number; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $dispatch->dispatch_place_from ?>,'none')"><?php echo isset($place_data[$dispatch->dispatch_place_from])?$place_data[$dispatch->dispatch_place_from]:null; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $dispatch->dispatch_place_to ?>,'none')"><?php echo isset($place_data[$dispatch->dispatch_place_to])?$place_data[$dispatch->dispatch_place_to]:null; ?></a></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_receive_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_delivery_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_end_date); ?></td>
             <td><?php echo $dispatch->dispatch_comment; ?></td>
             <td>
                 <?php

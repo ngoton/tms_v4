@@ -54,6 +54,14 @@ $(document).ready(function(){
             <?php } ?>
           </select>
         </div>  
+        <label for="dispatch_place_from">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
+        <div class="input-group">
+          <select class="form-control select2" id="dispatch_place_from" name="dispatch_place_from" required="required" tabindex="3">
+            <?php foreach ($places as $place) { ?>
+              <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+            <?php } ?>
+          </select>
+        </div>  
       </div>
       <div class="col-md-2 col-xs-6">
         <label for="dispatch_code">Số lệnh</label>
@@ -69,6 +77,14 @@ $(document).ready(function(){
             <option value="3">Khác</option>
           </select>
         </div>
+        <label for="dispatch_place_to">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
+        <div class="input-group">
+          <select class="form-control select2" id="dispatch_place_to" name="dispatch_place_to" required="required" tabindex="3">
+            <?php foreach ($places as $place) { ?>
+              <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+            <?php } ?>
+          </select>
+        </div>  
       </div>
       <div class="col-md-2 col-xs-6">
         <label for="dispatch_vehicle">Số xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','dispatch_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
@@ -88,9 +104,13 @@ $(document).ready(function(){
             <?php } ?>
           </select>
         </div> 
+        <label for="dispatch_start_date">Ngày lấy</label>
+        <div class="input-group">
+          <input class="form-control start-date" type="text" id="dispatch_start_date" name="dispatch_start_date" tabindex="1" >
+        </div>
      </div>
      <div class="col-md-2 col-xs-6">
-        <label for="dispatch_romooc">Số mooc</label>
+        <label for="dispatch_romooc">Số mooc <a title="Thay lắp mooc" id="vehicle_romooc"><i class="ace-icon fa fa-exchange blue"></i></a></label>
         <div class="input-group">
           <input class="form-control" type="text" id="dispatch_romooc" name="dispatch_romooc" tabindex="4" readonly="" >
         </div>
@@ -99,9 +119,13 @@ $(document).ready(function(){
         <div class="input-group">
           <select class="form-control" id="dispatch_booking_detail" name="dispatch_booking_detail" tabindex="4"></select>
         </div>
+        <label for="dispatch_end_date">Ngày hạ</label>
+        <div class="input-group">
+          <input class="form-control end-date" type="text" id="dispatch_end_date" name="dispatch_end_date" tabindex="1" >
+        </div>
       </div>
       <div class="col-md-2 col-xs-6">
-        <label for="dispatch_staff">Tài xế</label>
+        <label for="dispatch_staff">Tài xế <a title="Tài xế" id="vehicle_driver"><i class="ace-icon fa fa-user blue"></i></a></label>
         <div class="input-group">
           <input class="form-control" type="text" id="dispatch_staff" name="dispatch_staff" tabindex="5" readonly="">
         </div>
@@ -125,3 +149,16 @@ $(document).ready(function(){
       </div>
   </form>
 </div>
+
+<script type="text/javascript">
+  $('#vehicle_romooc').click(function(){
+    var vehicle = $('#dispatch_vehicle').val();
+    var date = $('#dispatch_date').val();
+    view_click('<?php echo $this->url("vehicleromooc/viewromooc/?id=") ?>','Thông tin mooc',vehicle+'~'+date,'none');
+  });
+  $('#vehicle_driver').click(function(){
+    var vehicle = $('#dispatch_vehicle').val();
+    var date = $('#dispatch_date').val();
+    view_click('<?php echo $this->url("driver/viewdriver/?id=") ?>','Thông tin tài xế',vehicle+'~'+date,'none');
+  });
+</script>

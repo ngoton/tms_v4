@@ -403,6 +403,65 @@ Class vehicleromoocController Extends baseController {
         return $this->view->show('vehicleromooc/view');
 
     }
+    public function viewromooc(){
+
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Thông tin thay lắp mooc';
+
+        $id = $_GET['id'];
+
+        $info = explode('~', $id);
+
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        $data = array(
+            'where'=>'vehicle = '.$info[0].' AND start_time <= '.strtotime(str_replace('/', '-', $info[1])).' AND (end_time IS NULL OR end_time=0 OR end_time >= '.strtotime(str_replace('/', '-', $info[1])).')',
+            'order_by'=>'start_time',
+            'order'=>'DESC',
+            'limit'=>1
+        );
+
+        $vehicle_romoocs = $vehicle_romooc_model->getAllVehicle($data);
+        foreach ($vehicle_romoocs as $vehicle_romooc) {
+            $vehicle_romooc_data = $vehicle_romooc;
+        }
+
+        $this->view->data['vehicle_romooc_data'] = $vehicle_romooc_data;
+
+        if (!$vehicle_romooc_data) {
+
+            $this->view->redirect('vehicleromooc');
+
+        }
+
+        $vehicle = $this->model->get('vehicleModel');
+
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $romooc = $this->model->get('romoocModel');
+
+        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+
+        return $this->view->show('vehicleromooc/viewromooc');
+
+    }
 
     public function filter(){
         $this->view->disableLayout();
