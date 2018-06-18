@@ -92,8 +92,15 @@ Class shipmenttempController Extends baseController {
         $pagination_stages = 2;
 
         $data = array(
-            'where'=>'shipment_temp_date >= '.$ngaybatdau.' AND shipment_temp_date < '.$ngayketthuc,
+            'where'=>'1=1',
         );
+
+        if ($batdau!="") {
+            $data['where'] .= ' AND shipment_temp_date >= '.$ngaybatdau;
+        }
+        if ($ketthuc!="") {
+            $data['where'] .= ' AND shipment_temp_date < '.$ngayketthuc;
+        }
 
         if ($_SESSION['role_logined'] == 5) {
             $data['where'] .= ' AND shipment_temp_owner = '.$_SESSION['userid_logined'];
@@ -151,7 +158,7 @@ Class shipmenttempController Extends baseController {
 
 
         $data = array(
-            'where'=>'shipment_temp_date >= '.$ngaybatdau.' AND shipment_temp_date < '.$ngayketthuc,
+            'where'=>'1=1',
 
             'order_by'=>$order_by,
 
@@ -160,6 +167,13 @@ Class shipmenttempController Extends baseController {
             'limit'=>$x.','.$sonews,
 
             );
+
+        if ($batdau!="") {
+            $data['where'] .= ' AND shipment_temp_date >= '.$ngaybatdau;
+        }
+        if ($ketthuc!="") {
+            $data['where'] .= ' AND shipment_temp_date < '.$ngayketthuc;
+        }
 
         if ($_SESSION['role_logined'] == 5) {
             $data['where'] .= ' AND shipment_temp_owner = '.$_SESSION['userid_logined'];

@@ -459,7 +459,37 @@ Class vehicleromoocController Extends baseController {
 
         $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
 
-        return $this->view->show('vehicleromooc/viewromooc');
+        return $this->view->show('vehicleromooc/view');
+
+    }
+
+    public function getromooc(){
+
+        $vehicle = $_GET['vehicle'];
+
+        $date = $_GET['date'];
+
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        $data = array(
+            'where'=>'vehicle = '.$vehicle.' AND start_time <= '.strtotime(str_replace('/', '-', $date)).' AND (end_time IS NULL OR end_time=0 OR end_time >= '.strtotime(str_replace('/', '-', $date)).')',
+            'order_by'=>'start_time',
+            'order'=>'DESC',
+            'limit'=>1
+        );
+        $join = array('table'=>'romooc','where'=>'romooc=romooc_id');
+
+        $vehicle_romoocs = $vehicle_romooc_model->getAllVehicle($data,$join);
+        $vehicle_romooc_data = array(
+            'romooc_id'=>null,
+            'romooc_number'=>null,
+        );
+        foreach ($vehicle_romoocs as $vehicle_romooc) {
+            $vehicle_romooc_data['romooc_id'] = $vehicle_romooc->romooc_id;
+            $vehicle_romooc_data['romooc_number'] = $vehicle_romooc->romooc_number;
+        }
+
+        echo json_encode($vehicle_romooc_data);
 
     }
 

@@ -459,7 +459,37 @@ Class driverController Extends baseController {
 
         $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
 
-        return $this->view->show('driver/viewdriver');
+        return $this->view->show('driver/view');
+
+    }
+
+    public function getdriver(){
+
+        $vehicle = $_GET['vehicle'];
+
+        $date = $_GET['date'];
+
+        $driver_model = $this->model->get('driverModel');
+
+        $data = array(
+            'where'=>'driver_vehicle = '.$vehicle.' AND driver_start_date <= '.strtotime(str_replace('/', '-', $date)).' AND (driver_end_date IS NULL OR driver_end_date=0 OR driver_end_date >= '.strtotime(str_replace('/', '-', $date)).')',
+            'order_by'=>'driver_start_date',
+            'order'=>'DESC',
+            'limit'=>1
+        );
+        $join = array('table'=>'staff','where'=>'driver_staff=staff_id');
+
+        $drivers = $driver_model->getAllVehicle($data,$join);
+        $driver_data = array(
+            'staff_id'=>null,
+            'staff_name'=>null,
+        );
+        foreach ($drivers as $driver) {
+            $driver_data['staff_id'] = $driver->staff_id;
+            $driver_data['staff_name'] = $driver->staff_name;
+        }
+
+        echo json_encode($driver_data);
 
     }
 

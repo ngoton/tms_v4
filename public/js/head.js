@@ -440,6 +440,12 @@ function view_click(url,title,id,display){
   
 }
 
+function view_click_other(url,title,id,display){
+  open_dialog_other(url+id,title);
+  $('.custom-ui-widget-header-accessible .ui-dialog-buttonset').hide();
+  
+}
+
 function filter_click(url,title){
   open_dialog(url,title);
 }

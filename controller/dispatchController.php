@@ -92,8 +92,15 @@ Class dispatchController Extends baseController {
         $pagination_stages = 2;
 
         $data = array(
-            'where'=>'dispatch_date >= '.$ngaybatdau.' AND dispatch_date < '.$ngayketthuc,
+            'where'=>'1=1',
         );
+
+        if ($batdau!="") {
+            $data['where'] .= ' AND dispatch_date >= '.$ngaybatdau;
+        }
+        if ($ketthuc!="") {
+            $data['where'] .= ' AND dispatch_date < '.$ngayketthuc;
+        }
 
         $join = array('table'=>'vehicle','where'=>'dispatch_vehicle=vehicle_id','join'=>'LEFT JOIN');
 
@@ -147,7 +154,7 @@ Class dispatchController Extends baseController {
 
 
         $data = array(
-            'where'=>'dispatch_date >= '.$ngaybatdau.' AND dispatch_date < '.$ngayketthuc,
+            'where'=>'1=1',
 
             'order_by'=>$order_by,
 
@@ -156,6 +163,13 @@ Class dispatchController Extends baseController {
             'limit'=>$x.','.$sonews,
 
             );
+
+        if ($batdau!="") {
+            $data['where'] .= ' AND dispatch_date >= '.$ngaybatdau;
+        }
+        if ($ketthuc!="") {
+            $data['where'] .= ' AND dispatch_date < '.$ngayketthuc;
+        }
 
         if (isset($_POST['filter'])) {
             if (isset($_POST['dispatch_place_from'])) {
@@ -287,9 +301,15 @@ Class dispatchController Extends baseController {
 
         $unit_model = $this->model->get('unitModel');
 
-        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
+        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         $this->view->data['units'] = $units;
+
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $this->view->data['vehicles'] = $vehicles;
 
         return $this->view->show('dispatch/add');
     }
@@ -397,7 +417,7 @@ Class dispatchController Extends baseController {
 
         $unit_model = $this->model->get('unitModel');
 
-        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
+        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         $this->view->data['units'] = $units;
 
@@ -464,7 +484,7 @@ Class dispatchController Extends baseController {
 
         $unit_model = $this->model->get('unitModel');
 
-        $units = $unit_model->getAllunit(array('order_by'=>'unit_name','order'=>'ASC'));
+        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         $this->view->data['units'] = $units;
 
