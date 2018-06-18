@@ -212,9 +212,9 @@ $i = $sonews*$page-($sonews-1);
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_date); ?></td>
             <td><?php echo $dispatch->dispatch_code; ?></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><?php echo isset($dispatch_data[$dispatch->dispatch_id]['shipping'])?$dispatch_data[$dispatch->dispatch_id]['shipping']:null; ?></td>
+            <td><?php echo isset($dispatch_data[$dispatch->dispatch_id]['booking'])?$dispatch_data[$dispatch->dispatch_id]['booking']:null; ?></td>
+            <td><?php echo isset($dispatch_data[$dispatch->dispatch_id]['cont'])?$dispatch_data[$dispatch->dispatch_id]['cont']:null; ?></td>
             <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $dispatch->dispatch_vehicle ?>,'none')"><?php echo $dispatch->vehicle_number; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $dispatch->dispatch_place_from ?>,'none')"><?php echo isset($place_data[$dispatch->dispatch_place_from])?$place_data[$dispatch->dispatch_place_from]:null; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $dispatch->dispatch_place_to ?>,'none')"><?php echo isset($place_data[$dispatch->dispatch_place_to])?$place_data[$dispatch->dispatch_place_to]:null; ?></a></td>

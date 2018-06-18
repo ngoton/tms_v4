@@ -589,6 +589,7 @@ function open_dialog(url, title){
     autoResize:true,
     modal: true,
     width: "auto",
+    height: "auto",
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
     title_html: true,
     buttons: [
@@ -611,6 +612,9 @@ function open_dialog(url, title){
     close: function(){
       $('.viewData').remove();
       $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').show();
+      $( this ).dialog( "close" );
+      $(this).dialog('destroy');
+      $( "#dialog-message" ).html("");
     },
     open: function () {
         if ($.ui && $.ui.dialog && !$.ui.dialog.prototype._allowInteractionRemapped && $(this).closest(".ui-dialog").length) {
@@ -646,6 +650,7 @@ function open_dialog_other(url, title, id, data, form){
     autoResize:true,
     modal: true,
     width: "auto",
+    height: "auto",
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
     title_html: true,
     dialogClass: 'custom-ui-widget-header-accessible',

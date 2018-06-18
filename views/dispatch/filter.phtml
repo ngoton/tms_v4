@@ -1,7 +1,7 @@
 <div class="login_body">
   <form id="add" method="post" action="<?php echo $this->url('dispatch') ?>" enctype="multipart/form-data">
     
-    <div class="col-xs-3">
+    <div class="col-xs-4">
       <label for="dispatch_place_from">Kho đi</label>
       <div class="input-group">
         <select class="form-control multiselect" id="dispatch_place_from" name="dispatch_place_from[]" multiple="">
@@ -10,8 +10,16 @@
           <?php } ?>
         </select>
       </div>
+      <label for="dispatch_type">Loại hàng</label>
+      <div class="input-group">
+        <select class="form-control multiselect" id="dispatch_type" name="dispatch_type[]" multiple="">
+          <option value="1">Hàng nhập</option>
+          <option value="2">Hàng xuất</option>
+          <option value="3">Khác</option>
+        </select>
+      </div>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-4">
       <label for="dispatch_place_to">Kho đến</label>
       <div class="input-group">
         <select class="form-control multiselect" id="dispatch_place_to" name="dispatch_place_to[]" multiple="">
@@ -20,24 +28,22 @@
           <?php } ?>
         </select>
       </div>
+      <label for="dispatch_vehicle">Xe</label>
+      <div class="input-group">
+        <select class="form-control multiselect" id="dispatch_vehicle" name="dispatch_vehicle[]" multiple="">
+          <?php foreach ($vehicles as $vehicle) { ?>
+            <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+          <?php } ?>
+        </select>
+      </div>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-4">
       <label for="dispatch_customer">Khách hàng</label>
       <div class="input-group">
         <select class="form-control multiselect" id="dispatch_customer" name="dispatch_customer[]" multiple="">
           <?php foreach ($customers as $customer) { ?>
             <option value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
           <?php } ?>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-3">
-      <label for="dispatch_type">Loại hàng</label>
-      <div class="input-group">
-        <select class="form-control multiselect" id="dispatch_type" name="dispatch_type[]" multiple="">
-          <option value="1">Hàng nhập</option>
-          <option value="2">Hàng xuất</option>
-          <option value="3">Khác</option>
         </select>
       </div>
     </div>

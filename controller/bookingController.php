@@ -656,6 +656,95 @@ Class bookingController Extends baseController {
 
     }
 
+    public function getbooking(){
+
+        $customer = $_GET['customer'];
+
+        $type = $_GET['type'];
+
+        $booking_model = $this->model->get('bookingModel');
+
+        $data = array(
+            'where'=>'(booking_sum_run IS NULL OR booking_sum_run=0 OR booking_sum_run<booking_sum)',
+            'order_by'=>'booking_date',
+            'order'=>'ASC',
+        );
+        
+        if ($customer>0) {
+            $data['where'] .= ' AND booking_customer='.$customer;
+        }
+        if ($type>0) {
+            $data['where'] .= ' AND booking_type='.$type;
+        }
+
+        $bookings = $booking_model->getAllBooking($data);
+
+        $str = "";
+        foreach ($bookings as $booking) {
+            $str .= '<option value="'.$booking->booking_id.'">['.$booking->booking_code.'] - '.$booking->booking_number.'</option>';
+        }
+
+        $booking_data = array(
+            'booking'=>$str,
+        );
+
+        echo json_encode($booking_data);
+
+    }
+    public function getbookingdetail(){
+
+        $booking = $_GET['booking'];
+
+        $booking_model = $this->model->get('bookingModel');
+        $customer_model = $this->model->get('customerModel');
+        $booking_detail_model = $this->model->get('bookingdetailModel');
+
+        $books = $booking_model->getBooking($booking);
+        $customers = $customer_model->getCustomer($books->booking_customer);
+
+        $data = array(
+            'where'=>'booking = '.$booking,
+        );
+
+        $bookings = $booking_detail_model->getAllBooking($data);
+
+        $str = "";
+        foreach ($bookings as $booking) {
+            $str .= '<option value="'.$booking->booking_detail_id.'">'.$booking->booking_detail_container.'</option>';
+        }
+
+        $booking_data = array(
+            'container'=>$str,
+            'customer'=>$customers->customer_id,
+            'type'=>$books->booking_type,
+            'from'=>$books->booking_place_from,
+            'to'=>$books->booking_place_to,
+            'start'=>$this->lib->hien_thi_ngay_thang($books->booking_start_date),
+            'end'=>$this->lib->hien_thi_ngay_thang($books->booking_end_date),
+        );
+
+        echo json_encode($booking_data);
+
+    }
+    public function getbookingcont(){
+
+        $detail = $_GET['detail'];
+
+        $booking_detail_model = $this->model->get('bookingdetailModel');
+        $unit_model = $this->model->get('unitModel');
+
+        $bookings = $booking_detail_model->getBooking($detail);
+        $units = $unit_model->getUnit($bookings->booking_detail_unit);
+
+        $booking_data = array(
+            'number'=>$bookings->booking_detail_number,
+            'unit'=>$units->unit_name,
+        );
+
+        echo json_encode($booking_data);
+
+    }
+
     public function filter(){
         $this->view->disableLayout();
 

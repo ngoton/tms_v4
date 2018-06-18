@@ -7,7 +7,12 @@ $(document).ready(function(){
 				rules: {
 				},
         submitHandler: function(form) {
+          var dispatch_romooc = $('#dispatch_romooc').attr('data');
+          var dispatch_staff = $('#dispatch_staff').attr('data');
+          
           var formData = new FormData($("#add_dispatch")[0]);
+          formData.append('dispatch_romooc', dispatch_romooc);
+          formData.append('dispatch_staff', dispatch_staff);
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -48,7 +53,7 @@ $(document).ready(function(){
         <div class="hr hr-8 dotted hr-double"></div>
         <label for="booking_customer">Khách hàng </label>
         <div class="input-group">
-          <select class="form-control select2" id="booking_customer" name="booking_customer" required="required" tabindex="3">
+          <select class="form-control select2" id="booking_customer" name="booking_customer" tabindex="7">
             <option value="">Chọn</option>
             <?php foreach ($customers as $customer) { ?>
               <option value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
@@ -57,7 +62,7 @@ $(document).ready(function(){
         </div>  
         <label for="dispatch_place_from">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
         <div class="input-group">
-          <select class="form-control select2" id="dispatch_place_from" name="dispatch_place_from" required="required" tabindex="3">
+          <select class="form-control select2" id="dispatch_place_from" name="dispatch_place_from" required="required" tabindex="13">
             <option value="">Chọn</option>
             <?php foreach ($places as $place) { ?>
               <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
@@ -73,7 +78,7 @@ $(document).ready(function(){
         <div class="hr hr-8 dotted hr-double"></div>
         <label for="booking_type">Loại hàng</label>
         <div class="input-group">
-          <select class="form-control" id="booking_type" name="booking_type" required="required" tabindex="4">
+          <select class="form-control" id="booking_type" name="booking_type" tabindex="8">
             <option value="">Chọn</option>
             <option value="1">Hàng nhập</option>
             <option value="2">Hàng xuất</option>
@@ -82,7 +87,7 @@ $(document).ready(function(){
         </div>
         <label for="dispatch_place_to">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
         <div class="input-group">
-          <select class="form-control select2" id="dispatch_place_to" name="dispatch_place_to" required="required" tabindex="3">
+          <select class="form-control select2" id="dispatch_place_to" name="dispatch_place_to" required="required" tabindex="14">
             <option value="">Chọn</option>
             <?php foreach ($places as $place) { ?>
               <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
@@ -103,8 +108,7 @@ $(document).ready(function(){
         <div class="hr hr-8 dotted hr-double"></div>
         <label for="dispatch_booking">Số BK/BL </label>
         <div class="input-group">
-          <select class="form-control select2" id="dispatch_booking" name="dispatch_booking" required="required" tabindex="3">
-            <option value="">Chọn</option>
+          <select class="form-control" id="dispatch_booking" name="dispatch_booking" tabindex="9">
             <?php foreach ($bookings as $booking) { ?>
               <option value="<?php echo $booking->booking_id ?>"><?php echo $booking->booking_number ?></option>
             <?php } ?>
@@ -112,7 +116,7 @@ $(document).ready(function(){
         </div> 
         <label for="dispatch_start_date">Ngày lấy</label>
         <div class="input-group">
-          <input class="form-control start-date" type="text" id="dispatch_start_date" name="dispatch_start_date" tabindex="1" >
+          <input class="form-control start-date" type="text" id="dispatch_start_date" name="dispatch_start_date" tabindex="15" >
         </div>
      </div>
      <div class="col-md-2 col-xs-6">
@@ -123,11 +127,11 @@ $(document).ready(function(){
         <div class="hr hr-8 dotted hr-double"></div>
         <label for="dispatch_booking_detail">Số cont</label>
         <div class="input-group">
-          <select class="form-control" id="dispatch_booking_detail" name="dispatch_booking_detail" tabindex="4"></select>
+          <select class="form-control" id="dispatch_booking_detail" name="dispatch_booking_detail" tabindex="10" required="required"></select>
         </div>
         <label for="dispatch_end_date">Ngày hạ</label>
         <div class="input-group">
-          <input class="form-control end-date" type="text" id="dispatch_end_date" name="dispatch_end_date" tabindex="1" >
+          <input class="form-control end-date" type="text" id="dispatch_end_date" name="dispatch_end_date" tabindex="16" >
         </div>
       </div>
       <div class="col-md-2 col-xs-6">
@@ -136,27 +140,237 @@ $(document).ready(function(){
           <input class="form-control" type="text" id="dispatch_staff" name="dispatch_staff" tabindex="5" readonly="">
         </div>
         <div class="hr hr-8 dotted hr-double"></div>
-        <label for="booking_detail_number">Sản lượng</label>
+        <label for="dispatch_booking_detail_number">Sản lượng</label>
         <div class="input-group">
-          <input class="form-control" type="text" id="booking_detail_number" name="booking_detail_number" tabindex="5" readonly="">
+          <input class="form-control text-right" type="text" id="dispatch_booking_detail_number" name="dispatch_booking_detail_number" tabindex="11" required="required">
+        </div>
+        <label for="dispatch_comment">Ghi chú</label>
+        <div class="input-group">
+          <input class="form-control" type="text" id="dispatch_comment" name="dispatch_comment" tabindex="17">
         </div>
       </div>
       
       <div class="col-md-2 col-xs-6">
-        <label for="dispatch_comment">Ghi chú</label>
+        <label for="dispatch_shipment_temp">Lô hàng nhận</label>
         <div class="input-group">
-          <input class="form-control" type="text" id="dispatch_comment" name="dispatch_comment" tabindex="5">
+          <select class="form-control" id="dispatch_shipment_temp" name="dispatch_shipment_temp" tabindex="6">
+            <option value="">Chọn</option>
+            <?php foreach ($shipment_temps as $shipment_temp) { ?>
+              <option data="<?php echo $shipment_temp->shipment_temp_booking ?>" alt="<?php echo '['.$shipment_temp->booking_code.'] - '.$shipment_temp->booking_number ?>" value="<?php echo $shipment_temp->shipment_temp_id ?>"><?php echo '['.$shipment_temp->booking_code.']-'.$shipment_temp->booking_number.': '.(isset($place_data[$shipment_temp->booking_place_from])?$place_data[$shipment_temp->booking_place_from]:null).'~'.(isset($place_data[$shipment_temp->booking_place_to])?$place_data[$shipment_temp->booking_place_to]:null).' |'.date('d/m/Y',$shipment_temp->shipment_temp_date) ?></option>
+            <?php } ?>
+          </select>
         </div>
         <div class="hr hr-8 dotted hr-double"></div>
         <label for="booking_detail_unit">ĐVT</label>
         <div class="input-group">
-          <input class="form-control" type="text" id="booking_detail_unit" name="booking_detail_unit" tabindex="5" readonly="">
+          <input class="form-control" type="text" id="booking_detail_unit" name="booking_detail_unit" tabindex="12" readonly="">
         </div>
       </div>
   </form>
 </div>
 
 <script type="text/javascript">
+  $('#dispatch_shipment_temp').change(function(){
+    var booking = $('#dispatch_shipment_temp option:selected').attr('data');
+     if (booking>0) {
+        $.ajax({
+          type: "GET",
+          url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+          data: {booking:booking}, 
+          success: function(answer){
+             var data = $.parseJSON(answer);
+             $('#dispatch_booking_detail').html(data.container);
+             $('#booking_type option[value='+data.type+']').attr('selected','selected');
+             $('#booking_customer option[value='+data.customer+']').attr('selected','selected');
+             $('#booking_customer').select2();
+             $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
+             $('#dispatch_place_from').select2();
+             $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
+             $('#dispatch_place_to').select2();
+             $('#dispatch_start_date').val(data.start);
+             $('#dispatch_end_date').val(data.end);
+
+             var detail = $('#dispatch_booking_detail').val();
+             $.ajax({
+                type: "GET",
+                url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                data: {detail:detail}, 
+                success: function(answer){
+                   var data = $.parseJSON(answer);
+                   $('#dispatch_booking_detail_number').val(data.number);
+                   $('#dispatch_booking_detail_number').attr('max',data.number);
+                   $('#booking_detail_unit').val(data.unit);
+                }
+            });
+          }
+      });
+
+      $('#dispatch_booking').html('<option value="'+booking+'">'+$('#dispatch_shipment_temp option:selected').attr('alt')+'</option>');
+      $('#dispatch_booking').attr('readonly',true);
+      $('#booking_customer').select2({'disabled':true});
+      $('#booking_type').attr('readonly',true);
+     }
+     
+  });
+  $('#booking_customer').change(function(){
+    var customer = $('#booking_customer').val();
+    var type = $('#booking_type').val();
+    if (customer>0) {
+      $.ajax({
+          type: "GET",
+          url: "<?php echo BASE_URL ?>/booking/getbooking",
+          data: {customer:customer,type:type}, 
+          success: function(answer){
+             var data = $.parseJSON(answer);
+             $('#dispatch_booking').html(data.booking);
+
+             var booking = $('#dispatch_booking').val();
+             if (booking>0) {
+                $.ajax({
+                  type: "GET",
+                  url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+                  data: {booking:booking}, 
+                  success: function(answer){
+                     var data = $.parseJSON(answer);
+                     $('#dispatch_booking_detail').html(data.container);
+                     $('#booking_type option[value='+data.type+']').attr('selected','selected');
+                     $('#booking_customer option[value='+data.customer+']').attr('selected','selected');
+                     $('#booking_customer').select2();
+                     $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
+                     $('#dispatch_place_from').select2();
+                     $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
+                     $('#dispatch_place_to').select2();
+                     $('#dispatch_start_date').val(data.start);
+                     $('#dispatch_end_date').val(data.end);
+
+                     var detail = $('#dispatch_booking_detail').val();
+                     $.ajax({
+                        type: "GET",
+                        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                        data: {detail:detail}, 
+                        success: function(answer){
+                           var data = $.parseJSON(answer);
+                           $('#dispatch_booking_detail_number').val(data.number);
+                           $('#dispatch_booking_detail_number').attr('max',data.number);
+                           $('#booking_detail_unit').val(data.unit);
+                        }
+                    });
+                  }
+              });
+             }
+             else{
+              $('#dispatch_booking_detail').html("");
+              $('#dispatch_booking_detail_number').val("");
+              $('#booking_detail_unit').val("");
+             }
+          }
+      });
+    }
+  });
+  $('#booking_type').change(function(){
+    var customer = $('#booking_customer').val();
+    var type = $('#booking_type').val();
+    if (type>0) {
+      $.ajax({
+          type: "GET",
+          url: "<?php echo BASE_URL ?>/booking/getbooking",
+          data: {customer:customer,type:type}, 
+          success: function(answer){
+             var data = $.parseJSON(answer);
+             $('#dispatch_booking').html(data.booking);
+
+             var booking = $('#dispatch_booking').val();
+             if (booking>0) {
+                $.ajax({
+                  type: "GET",
+                  url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+                  data: {booking:booking}, 
+                  success: function(answer){
+                     var data = $.parseJSON(answer);
+                     $('#dispatch_booking_detail').html(data.container);
+                     $('#booking_type option[value='+data.type+']').attr('selected','selected');
+                     $('#booking_customer option[value='+data.customer+']').attr('selected','selected');
+                     $('#booking_customer').select2();
+                     $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
+                     $('#dispatch_place_from').select2();
+                     $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
+                     $('#dispatch_place_to').select2();
+                     $('#dispatch_start_date').val(data.start);
+                     $('#dispatch_end_date').val(data.end);
+
+                     var detail = $('#dispatch_booking_detail').val();
+                     $.ajax({
+                        type: "GET",
+                        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                        data: {detail:detail}, 
+                        success: function(answer){
+                           var data = $.parseJSON(answer);
+                           $('#dispatch_booking_detail_number').val(data.number);
+                           $('#dispatch_booking_detail_number').attr('max',data.number);
+                           $('#booking_detail_unit').val(data.unit);
+                        }
+                    });
+                  }
+              });
+             }
+             else{
+              $('#dispatch_booking_detail').html("");
+              $('#dispatch_booking_detail_number').val("");
+              $('#booking_detail_unit').val("");
+             }
+          }
+      });
+    }
+  });
+  $('#dispatch_booking').change(function(){
+    var booking = $('#dispatch_booking').val();
+     $.ajax({
+        type: "GET",
+        url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+        data: {booking:booking}, 
+        success: function(answer){
+           var data = $.parseJSON(answer);
+           $('#dispatch_booking_detail').html(data.container);
+           $('#booking_type option[value='+data.type+']').attr('selected','selected');
+           $('#booking_customer option[value='+data.customer+']').attr('selected','selected');
+           $('#booking_customer').select2();
+           $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
+           $('#dispatch_place_from').select2();
+           $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
+           $('#dispatch_place_to').select2();
+           $('#dispatch_start_date').val(data.start);
+           $('#dispatch_end_date').val(data.end);
+
+           var detail = $('#dispatch_booking_detail').val();
+           $.ajax({
+              type: "GET",
+              url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+              data: {detail:detail}, 
+              success: function(answer){
+                 var data = $.parseJSON(answer);
+                 $('#dispatch_booking_detail_number').val(data.number);
+                 $('#dispatch_booking_detail_number').attr('max',data.number);
+                 $('#booking_detail_unit').val(data.unit);
+              }
+          });
+        }
+    });
+  });
+  $('#dispatch_booking_detail').change(function(){
+    var detail = $('#dispatch_booking_detail').val();
+     $.ajax({
+        type: "GET",
+        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+        data: {detail:detail}, 
+        success: function(answer){
+           var data = $.parseJSON(answer);
+           $('#dispatch_booking_detail_number').val(data.number);
+           $('#dispatch_booking_detail_number').attr('max',data.number);
+           $('#booking_detail_unit').val(data.unit);
+        }
+    });
+  });
+
   $('#dispatch_vehicle').change(function(){
     var vehicle = $('#dispatch_vehicle').val();
     var date = $('#dispatch_date').val();
