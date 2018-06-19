@@ -605,6 +605,103 @@ Class dispatchController Extends baseController {
         return $this->view->show('dispatch/view');
 
     }
+    public function shipment($id){
+
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->dispatch) && $_SESSION['user_permission_action'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('dispatch');
+
+        }
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Cập nhật lệnh điều xe';
+
+        $dispatch_model = $this->model->get('dispatchModel');
+
+        $dispatch_data = $dispatch_model->getDispatch($id);
+
+        $this->view->data['dispatch_data'] = $dispatch_data;
+
+        if (!$dispatch_data) {
+
+            $this->view->redirect('dispatch');
+
+        }
+
+
+        $place_model = $this->model->get('placeModel');
+
+        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
+
+        $this->view->data['places'] = $places;
+
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $this->view->data['vehicles'] = $vehicles;
+
+        $romooc_model = $this->model->get('romoocModel');
+
+        $romoocs = $romooc_model->getRomooc($dispatch_data->dispatch_romooc);
+
+        $this->view->data['romoocs'] = $romoocs;
+
+        $staff_model = $this->model->get('staffModel');
+
+        $staffs = $staff_model->getStaff($dispatch_data->dispatch_staff);
+
+        $this->view->data['staffs'] = $staffs;
+
+        $booking_model = $this->model->get('bookingModel');
+
+        $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking);
+
+        $this->view->data['bookings'] = $bookings;
+
+        $customer_model = $this->model->get('customerModel');
+
+        $customers = $customer_model->getCustomer($bookings->booking_customer);
+
+        $this->view->data['customers'] = $customers;
+
+
+        $place_data = array();
+
+        foreach ($places as $place) {
+            $place_data[$place->place_id] = $place->place_name;
+            $place_data['name'][$place->place_name] = $place->place_id;
+        }
+
+        $this->view->data['place_data'] = $place_data;
+
+        $shipment_temp_model = $this->model->get('shipmenttempModel');
+
+        $join = array('table'=>'booking','where'=>'shipment_temp_booking=booking_id','join'=>'LEFT JOIN');
+
+        $shipment_temps = $shipment_temp_model->getAllShipment(array('where'=>'shipment_temp_id='.$dispatch_data->dispatch_shipment_temp),$join);
+
+        $this->view->data['shipment_temps'] = $shipment_temps;
+
+
+        return $this->view->show('dispatch/shipment');
+
+    }
 
     public function filter(){
         $this->view->disableLayout();

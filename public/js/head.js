@@ -23,6 +23,28 @@ $(function () {
     $('a[data-action="reload"]').click(function(){
       refresh_click();
     });
+
+    $(document).on("focus", ".input-mask-datetime", function () {
+      $(this).datetimepicker({
+         format: 'DD/MM/YYYY H:mm:ss',//use this option to display seconds
+         calendarWeeks: true,
+         showClear: true,
+         keepOpen: true,
+         icons: {
+          time: 'fa fa-clock-o',
+          date: 'fa fa-calendar',
+          up: 'fa fa-chevron-up',
+          down: 'fa fa-chevron-down',
+          previous: 'fa fa-chevron-left',
+          next: 'fa fa-chevron-right',
+          today: 'fa fa-arrows ',
+          clear: 'fa fa-trash',
+          close: 'fa fa-times'
+         }
+        }).next().on(ace.click_event, function(){
+          $(this).prev().focus();
+        });
+    });
     $(document).on("focus", ".input-mask-date", function () {
       //$(this).mask('dd/mm/yyyy');
       $(this).datepicker({
@@ -30,6 +52,7 @@ $(function () {
         autoclose: true,
         calendarWeeks: true,
         weekStart: 1, 
+        todayHighlight: true
       });
     });
     $(document).on("focus", ".start-date", function () {
@@ -38,6 +61,7 @@ $(function () {
         autoclose: true,
         calendarWeeks: true,
         weekStart: 1, 
+        todayHighlight: true
       }).on('changeDate', function (selected) {
           var minDate = new Date(selected.date.valueOf());
           $('.end-date').datepicker('setStartDate', minDate);
@@ -47,6 +71,7 @@ $(function () {
         autoclose: true,
         calendarWeeks: true,
         weekStart: 1, 
+        todayHighlight: true
       });
       
     });
@@ -56,6 +81,7 @@ $(function () {
         autoclose: true,
         calendarWeeks: true,
         weekStart: 1, 
+        todayHighlight: true
       }).on('changeDate', function (selected) {
           var maxDate = new Date(selected.date.valueOf());
           $('.start-date').datepicker('setEndDate', maxDate);
@@ -71,6 +97,7 @@ $(function () {
         autoclose: true,
         calendarWeeks: true,
         weekStart: 1, 
+        todayHighlight: true
       });
       
     });
