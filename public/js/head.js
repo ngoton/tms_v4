@@ -238,7 +238,8 @@ function searchall(page,cot,sapxep){
             },
             success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
             {
-                $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
+              var success =  $(server_response).find('.widget-main').html();
+              $('.widget-main').html(success);
                  
             }
         });
@@ -329,8 +330,8 @@ function sapxep(page,cot,sapxep){
             data: "page="+ page +"&order_by="+ cot +"&order="+ sapxep+"&limit="+ loc+"&keyword="+ keyword+"&ngaytao="+ ngaytao+"&ngaytaobatdau="+ ngaytaobatdau+"&batdau="+ batdau+"&ketthuc="+ ketthuc+"&trangthai="+ trangthai+"&nv="+nv+"&tha="+tha+"&na="+na+"&tu="+tu+"&den="+den+"&xe="+xe+"&vong="+vong,
             success: function(answer){ // if everything goes well
               
-              $('body').html(answer); // đặt kết quả trả về từ test.php vào thẻ div success
-              //$('#loading').fadeOut(500);
+              var success =  $(server_response).find('.widget-main').html();
+              $('.widget-main').html(success);
                 
             }
           });
@@ -381,7 +382,8 @@ function limit_change(limit,order_by,order,keyword){
       data: 'page=1&limit='+limit+'&order_by='+order_by+'&order='+order+'&keyword='+keyword,  
       success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
       {
-          $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
+          var success =  $(server_response).find('.widget-main').html();
+          $('.widget-main').html(success);
           
       }
   });
@@ -470,7 +472,8 @@ function search_click(){
             data: 'page=1&keyword='+result,  
             success: function(server_response)      // Khi xử lý thành công sẽ chạy hàm này
             {
-                $('body').html(server_response);    // Hiển thị dữ liệu vào thẻ div #searchresultdata
+               var success =  $(server_response).find('.widget-main').html();
+                $('.widget-main').html(success);
                 
             }
         });

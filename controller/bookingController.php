@@ -681,7 +681,7 @@ Class bookingController Extends baseController {
 
         $str = "";
         foreach ($bookings as $booking) {
-            $str .= '<option value="'.$booking->booking_id.'">['.$booking->booking_code.'] - '.$booking->booking_number.'</option>';
+            $str .= '<option value="'.$booking->booking_id.'">'.$booking->booking_number.'-['.$booking->booking_code.']</option>';
         }
 
         $booking_data = array(
@@ -728,6 +728,16 @@ Class bookingController Extends baseController {
     }
     public function getbookingcont(){
 
+        if (!isset($_GET['detail'])) {
+            $booking_data = array(
+                'number'=>null,
+                'unit'=>null,
+            );
+
+            echo json_encode($booking_data);
+            return;
+        }
+        
         $detail = $_GET['detail'];
 
         $booking_detail_model = $this->model->get('bookingdetailModel');
