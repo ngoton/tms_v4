@@ -67,22 +67,33 @@ $(document).ready(function(){
     </ul>
     <div class="tab-content no-border ">
       <div id="homeshipment" class="tab-pane in active">
+        <div>
+          <label>
+            <input name="shipment_sub" type="radio" class="ace" value="0" checked="">
+            <span class="lbl blue"> Lô hàng chính</span>
+          </label>
+          <label>
+            <input name="shipment_sub" type="radio" class="ace" value="1">
+            <span class="lbl blue"> Lô hàng phụ</span>
+          </label>
+        </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_code">Lệnh điều xe</label>
           <div class="input-group">
             <input class="form-control" type="text" id="dispatch_code" name="dispatch_code" tabindex="1" readonly="" value="<?php echo $dispatch_data->dispatch_code ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
+          <label for="shipment_do">Số DO</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="shipment_do" name="shipment_do" tabindex="7" >
+          </div>
           <label for="shipment_customer">Khách hàng </label>
           <div class="input-group">
-            <select class="form-control" id="shipment_customer" name="shipment_customer" tabindex="7" readonly="">
+            <select class="form-control" id="shipment_customer" name="shipment_customer" tabindex="14" readonly="">
                 <option value="<?php echo $customers->customer_id ?>"><?php echo $customers->customer_name ?></option>
             </select>
           </div>  
-          <label for="shipment_do">Số DO</label>
-          <div class="input-group">
-            <input class="form-control" type="text" id="shipment_do" name="shipment_do" tabindex="14" >
-          </div>
+          
             
         </div>
         <div class="col-md-2 col-xs-6">
@@ -91,24 +102,25 @@ $(document).ready(function(){
             <input class="form-control input-mask-date" type="text" id="shipment_date" name="shipment_date" tabindex="2" required="required" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_date) ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_type">Loại hàng</label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_type" name="shipment_type" tabindex="8" readonly="">
-              <option value="">Chọn</option>
-              <option <?php echo $bookings->booking_type==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
-              <option <?php echo $bookings->booking_type==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
-              <option <?php echo $bookings->booking_type==3?'selected="selected"':null ?> value="3">Khác</option>
-            </select>
-          </div>
           <label for="shipment_booking_detail">Số container</label>
           <div class="input-group">
-            <select class="form-control" id="shipment_booking_detail" name="shipment_booking_detail" tabindex="15" required="required">
+            <select class="form-control" id="shipment_booking_detail" name="shipment_booking_detail" tabindex="8" required="required">
                 <option value="">Chọn</option>
               <?php foreach ($booking_details as $booking_detail) { ?>
                 <option value="<?php echo $booking_detail->booking_detail_id ?>"><?php echo $booking_detail->booking_detail_container ?></option>
               <?php } ?>
             </select>
           </div>
+          <label for="shipment_type">Loại hàng</label>
+          <div class="input-group">
+            <select class="form-control" id="shipment_type" name="shipment_type" tabindex="15" readonly="">
+              <option value="">Chọn</option>
+              <option <?php echo $bookings->booking_type==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
+              <option <?php echo $bookings->booking_type==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
+              <option <?php echo $bookings->booking_type==3?'selected="selected"':null ?> value="3">Khác</option>
+            </select>
+          </div>
+          
            
         </div>
         <div class="col-md-2 col-xs-6">
@@ -122,16 +134,17 @@ $(document).ready(function(){
             </select>
           </div>  
           <div class="hr hr-8 dotted hr-double"></div>
+          <label for="shipment_ton_receive">Sản lượng nhận</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="shipment_ton_receive" name="shipment_ton_receive" tabindex="9" >
+          </div>
           <label for="shipment_booking">Số BK/BL </label>
           <div class="input-group">
-            <select class="form-control" id="shipment_booking" name="shipment_booking" tabindex="9" readonly="">
+            <select class="form-control" id="shipment_booking" name="shipment_booking" tabindex="16" readonly="">
                 <option value="<?php echo $bookings->booking_id ?>"><?php echo $bookings->booking_number ?></option>
             </select>
           </div> 
-          <label for="shipment_ton_receive">Sản lượng nhận</label>
-          <div class="input-group">
-            <input class="form-control numbers" type="text" id="shipment_ton_receive" name="shipment_ton_receive" tabindex="16" >
-          </div>
+          
           
        </div>
        <div class="col-md-2 col-xs-6">
@@ -140,9 +153,13 @@ $(document).ready(function(){
             <input class="form-control" type="text" id="shipment_romooc" name="shipment_romooc" tabindex="4" readonly="" data="<?php echo $romoocs->romooc_id ?>" value="<?php echo $romoocs->romooc_number ?>" >
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
+          <label for="shipment_ton">Sản lượng giao</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="shipment_ton" name="shipment_ton" tabindex="10" required="required" >
+          </div>
           <label for="shipment_place_from">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','shipment_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
           <div class="input-group">
-            <select class="form-control select2" id="shipment_place_from" name="shipment_place_from" required="required" tabindex="10">
+            <select class="form-control select2" id="shipment_place_from" name="shipment_place_from" required="required" tabindex="17">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
                 <option <?php echo $dispatch_data->dispatch_place_from==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
@@ -150,10 +167,7 @@ $(document).ready(function(){
             </select>
           </div>
           
-          <label for="shipment_ton">Sản lượng giao</label>
-          <div class="input-group">
-            <input class="form-control numbers" type="text" id="shipment_ton" name="shipment_ton" tabindex="17" required="required" >
-          </div>
+          
           
         </div>
         <div class="col-md-2 col-xs-6">
@@ -162,23 +176,24 @@ $(document).ready(function(){
             <input class="form-control" type="text" id="shipment_staff" name="shipment_staff" tabindex="5" readonly="" data="<?php echo $staffs->staff_id ?>" value="<?php echo $staffs->staff_name ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
+          <label for="shipment_unit">ĐVT</label>
+          <div class="input-group">
+            <select class="form-control" id="shipment_unit" name="shipment_unit" tabindex="11" required="required">
+              <?php foreach ($units as $unit) { ?>
+                <option value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
           <label for="shipment_place_to">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','shipment_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
           <div class="input-group">
-            <select class="form-control select2" id="shipment_place_to" name="shipment_place_to" required="required" tabindex="11">
+            <select class="form-control select2" id="shipment_place_to" name="shipment_place_to" required="required" tabindex="18">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
                 <option <?php echo $dispatch_data->dispatch_place_to==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
-          <label for="shipment_unit">ĐVT</label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_unit" name="shipment_unit" tabindex="18" required="required">
-              <?php foreach ($units as $unit) { ?>
-                <option value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
-              <?php } ?>
-            </select>
-          </div>
+          
           
         </div>
         <div class="col-md-2 col-xs-6">
@@ -189,11 +204,11 @@ $(document).ready(function(){
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_start_date">Ngày lấy</label>
           <div class="input-group">
-            <input class="form-control input-mask-datetime" type="text" id="shipment_start_date" name="shipment_start_date" tabindex="12" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_start_date) ?>" >
+            <input class="form-control input-mask-datetime" type="text" id="shipment_start_date" name="shipment_start_date" tabindex="12" value="<?php echo date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date) ?>" >
           </div>
           <label for="shipment_end_date">Ngày hạ</label>
           <div class="input-group">
-            <input class="form-control input-mask-datetime" type="text" id="shipment_end_date" name="shipment_end_date" tabindex="13" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_end_date) ?>" >
+            <input class="form-control input-mask-datetime" type="text" id="shipment_end_date" name="shipment_end_date" tabindex="13" value="<?php echo date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date) ?>" >
           </div>
         </div>
       </div>
@@ -270,7 +285,32 @@ $(document).ready(function(){
 </div>
 
 <script type="text/javascript">
-  
+  $('input[name=shipment_sub]').change(function(){
+    var type = $(this).val();
+    var data = '<?php echo $dispatch_data->dispatch_id ?>';
+    $.ajax({
+        type: "GET",
+        url: "<?php echo BASE_URL ?>/dispatch/getdispatch",
+        data: {data:data, type:type}, 
+        success: function(answer){
+           var data = $.parseJSON(answer);
+
+           $("#shipment_type").find('option').removeAttr("selected");
+           $('#shipment_customer').html(data.customer);
+           $('#shipment_type option[value='+data.booking_type+']').attr('selected','selected');
+           $('#shipment_booking').html(data.booking);
+           $('#shipment_place_from option[value='+data.place_from+']').attr('selected','selected');
+           $('#shipment_place_to option[value='+data.place_to+']').attr('selected','selected');
+           $('#shipment_start_date').val(data.start_date);
+           $('#shipment_end_date').val(data.end_date);
+           $('#shipment_comment').val(data.comment);
+           $('#shipment_booking_detail').html(data.container);
+           $('#shipment_place_from').select2();
+           $('#shipment_place_to').select2();
+        }
+    });
+  });
+
   $('#shipment_booking_detail').change(function(){
     var detail = $('#shipment_booking_detail').val();
      $.ajax({

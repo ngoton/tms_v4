@@ -225,13 +225,10 @@ $i = $sonews*$page-($sonews-1);
                 <?php
                 switch ($dispatch->dispatch_status) {
                     case 1:
-                        echo '<span class="green">Đã nhận</span>';
+                        echo '<a onclick="view_click(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="green">Đã chạy ('.$dispatch->dispatch_shipment_number.')</span></a>';
                         break;
                     case 2:
-                        echo '<span class="orange">Đang chạy</span>';
-                        break;
-                    case 3:
-                        echo '<span class="red">Hoàn thành</span>';
+                        echo '<a onclick="view_click(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="red">Hoàn thành ('.$dispatch->dispatch_shipment_number.')</span></a>';
                         break;
                     default:
                         echo '<span class="grey">Đang chờ</span>';

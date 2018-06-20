@@ -260,13 +260,16 @@ Class shipmentController Extends baseController {
                 'shipment_end_date' => strtotime(str_replace('/', '-', $_POST['shipment_end_date'])),
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
+                'shipment_sub'=>trim($_POST['shipment_sub']),
                 'shipment_create_user'=>$_SESSION['userid_logined'],
             );
 
             $shipment_model->createShipment($data);
             $id_shipment = $shipment_model->getLastShipment()->shipment_id;
 
-
+            $dispatch_model = $this->model->get('dispatchModel');
+            $dispatch = $dispatch_model->getDispatch($data['shipment_dispatch']);
+            $dispatch_model->updateDispatch(array('dispatch_status'=>1,'dispatch_shipment_number'=>($dispatch->dispatch_shipment_number+1)),array('dispatch_id'=>$data['shipment_dispatch']));
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_shipment."|shipment|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -388,6 +391,7 @@ Class shipmentController Extends baseController {
                 'shipment_end_date' => strtotime(str_replace('/', '-', $_POST['shipment_end_date'])),
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
+                'shipment_sub'=>trim($_POST['shipment_sub']),
                 'shipment_update_user'=>$_SESSION['userid_logined'],
             );
 
@@ -661,6 +665,7 @@ Class shipmentController Extends baseController {
 
             $shipment_model = $this->model->get('shipmentModel');
             $user_log_model = $this->model->get('userlogModel');
+            $dispatch_model = $this->model->get('dispatchModel');
 
             if (isset($_POST['xoa'])) {
 
@@ -671,7 +676,13 @@ Class shipmentController Extends baseController {
 
                     $shipment_model->deleteShipment($data);
 
-                    
+                    $dispatch = $dispatch_model->getDispatch($temps->shipment_dispatch);
+                    $data_dispatch = array(
+                        'dispatch_shipment_number'=>($dispatch->dispatch_shipment_number-1),
+                        'dispatch_status'=>$dispatch->dispatch_shipment_number==1?0:$dispatch->dispatch_status,
+                    );
+                    $dispatch_model->updateDispatch($data_dispatch,array('dispatch_id'=>$temps->shipment_dispatch));
+
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|shipment|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
@@ -701,6 +712,13 @@ Class shipmentController Extends baseController {
                 $temps = $shipment_model->getShipment($_POST['data']);
 
                 $shipment_model->deleteShipment($_POST['data']);
+
+                $dispatch = $dispatch_model->getDispatch($temps->shipment_dispatch);
+                $data_dispatch = array(
+                    'dispatch_shipment_number'=>($dispatch->dispatch_shipment_number-1),
+                    'dispatch_status'=>$dispatch->dispatch_shipment_number==1?0:$dispatch->dispatch_status,
+                );
+                $dispatch_model->updateDispatch($data_dispatch,array('dispatch_id'=>$temps->shipment_dispatch));
 
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|shipment|"."\n"."\r\n";
