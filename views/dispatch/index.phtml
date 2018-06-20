@@ -241,7 +241,7 @@ $i = $sonews*$page-($sonews-1);
             </td>
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="orange"  onclick="edit_click('<?php echo $this->url("dispatch/shipment/") ?>','Phiếu vận chuyển',<?php echo $dispatch->dispatch_id ?>)">
+                    <a class="tooltip-warning orange" data-rel="tooltip" data-original-title="Nhập phiếu vận chuyển"  onclick="edit_click('<?php echo $this->url("dispatch/shipment/") ?>','Phiếu vận chuyển',<?php echo $dispatch->dispatch_id ?>)">
                         <i class="ace-icon fa fa-file-text-o bigger-130"></i>
                     </a>
                     <a class="blue"  onclick="view_click('<?php echo $this->url("dispatch/view/") ?>','Thông tin lệnh điều xe',<?php echo $dispatch->dispatch_id ?>)">

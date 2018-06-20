@@ -27,9 +27,15 @@ $(function () {
     $(document).on("focus", ".input-mask-datetime", function () {
       $(this).datetimepicker({
          format: 'DD/MM/YYYY H:mm:ss',//use this option to display seconds
-         calendarWeeks: true,
+         //calendarWeeks: true,
          showClear: true,
+         showClose: true,
          keepOpen: true,
+         widgetParent: $('body'),
+         widgetPositioning: {
+            horizontal: 'left',
+            vertical: 'bottom'
+         },
          icons: {
           time: 'fa fa-clock-o',
           date: 'fa fa-calendar',
@@ -40,9 +46,21 @@ $(function () {
           today: 'fa fa-arrows ',
           clear: 'fa fa-trash',
           close: 'fa fa-times'
-         }
-        }).next().on(ace.click_event, function(){
-          $(this).prev().focus();
+         },
+         locale:  moment.locale('en', {
+              week: { dow: 1 }
+          }),
+        }).on('dp.show', function(){
+            var datepicker = $("body").find('.bootstrap-datetimepicker-widget');
+            if (datepicker.hasClass('top') || datepicker.hasClass('bottom')) {
+                var top = $(this).offset().top;
+                var left = $(this).offset().left;
+                datepicker.css({
+                                'z-index': '1060',
+                                'top': top + 'px', 
+                                'left': left+'px'
+                            });
+            }
         });
     });
     $(document).on("focus", ".input-mask-date", function () {

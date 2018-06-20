@@ -732,6 +732,7 @@ Class bookingController Extends baseController {
             $booking_data = array(
                 'number'=>null,
                 'unit'=>null,
+                'price'=>null
             );
 
             echo json_encode($booking_data);
@@ -748,7 +749,8 @@ Class bookingController Extends baseController {
 
         $booking_data = array(
             'number'=>$bookings->booking_detail_number,
-            'unit'=>$units->unit_name,
+            'unit'=>$units->unit_id,
+            'price'=>$bookings->booking_detail_price,
         );
 
         echo json_encode($booking_data);

@@ -256,13 +256,22 @@ Class dispatchController Extends baseController {
             $dispatch_model->createDispatch($data);
             $id_dispatch = $dispatch_model->getLastDispatch()->dispatch_id;
 
-            $shipment_temp_model = $this->model->get('shipmenttempModel');
             if ($data['dispatch_shipment_temp']>0) {
+                $shipment_temp_model = $this->model->get('shipmenttempModel');
                 $shipment_temp = $shipment_temp_model->getShipment($data['dispatch_shipment_temp']);
                 $data_shipment_temp = array(
                     'shipment_temp_status'=>1,
                 );
                 $shipment_temp_model->updateShipment($data_shipment_temp,array('shipment_temp_id'=>$data['dispatch_shipment_temp']));
+            }
+
+            if ($data['dispatch_booking']>0) {
+                $booking_model = $this->model->get('bookingModel');
+                $booking = $booking_model->getBooking($data['dispatch_booking']);
+                $data_booking = array(
+                    'booking_status'=>2,
+                );
+                $booking_model->updateBooking($data_booking,array('booking_id'=>$data['dispatch_booking']));
             }
 
 
@@ -383,13 +392,22 @@ Class dispatchController Extends baseController {
 
             $dispatch_model->updateDispatch($data,array('dispatch_id'=>$id));
 
-            $shipment_temp_model = $this->model->get('shipmenttempModel');
             if ($data['dispatch_shipment_temp']>0) {
+                $shipment_temp_model = $this->model->get('shipmenttempModel');
                 $shipment_temp = $shipment_temp_model->getShipment($data['dispatch_shipment_temp']);
                 $data_shipment_temp = array(
                     'shipment_temp_status'=>1,
                 );
                 $shipment_temp_model->updateShipment($data_shipment_temp,array('shipment_temp_id'=>$data['dispatch_shipment_temp']));
+            }
+
+            if ($data['dispatch_booking']>0) {
+                $booking_model = $this->model->get('bookingModel');
+                $booking = $booking_model->getBooking($data['dispatch_booking']);
+                $data_booking = array(
+                    'booking_status'=>2,
+                );
+                $booking_model->updateBooking($data_booking,array('booking_id'=>$data['dispatch_booking']));
             }
             
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|dispatch|".implode("-",$data)."\n"."\r\n";
@@ -674,6 +692,12 @@ Class dispatchController Extends baseController {
 
         $this->view->data['bookings'] = $bookings;
 
+        $booking_detail_model = $this->model->get('bookingdetailModel');
+
+        $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$bookings->booking_id.' AND booking_detail_id NOT IN (SELECT shipment_booking_detail FROM shipment WHERE shipment_booking_detail=booking_detail_id)'));
+
+        $this->view->data['booking_details'] = $booking_details;
+
         $customer_model = $this->model->get('customerModel');
 
         $customers = $customer_model->getCustomer($bookings->booking_customer);
@@ -697,6 +721,12 @@ Class dispatchController Extends baseController {
         $shipment_temps = $shipment_temp_model->getAllShipment(array('where'=>'shipment_temp_id='.$dispatch_data->dispatch_shipment_temp),$join);
 
         $this->view->data['shipment_temps'] = $shipment_temps;
+
+        $unit_model = $this->model->get('unitModel');
+
+        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
+
+        $this->view->data['units'] = $units;
 
 
         return $this->view->show('dispatch/shipment');

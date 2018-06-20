@@ -234,13 +234,18 @@ $i = $sonews*$page-($sonews-1);
             <td><?php echo $lib->hien_thi_ngay_thang($shipment_temp->booking_end_date); ?></td>
             <td>
                 <?php
-                if ($shipment_temp->shipment_temp_status==1) {
-                    echo '<span class="red">Đã chạy</span>';
+                switch ($shipment_temp->shipment_temp_status) {
+                    case 1:
+                        echo '<span class="green">Đang chạy</span>';
+                        break;
+                    case 2:
+                        echo '<span class="red">Hoàn thành</span>';
+                        break;
+                    default:
+                        echo '<span class="grey">Đang chờ</span>';
+                        break;
                 }
-                else{
-                    echo '<span class="green">Đang chạy</span>';
-                }
-                ?>   
+                ?>  
             </td>
             <td class="text-right">
                 <div class="tools action-buttons">
