@@ -269,13 +269,10 @@ $(document).ready(function(){
           success: function(answer){
              var data = $.parseJSON(answer);
              $('#dispatch_booking_detail').html(data.container);
-             $('#dispatch_booking_type option[value='+data.type+']').attr('selected','selected');
-             $('#dispatch_customer option[value='+data.customer+']').attr('selected','selected');
-             $('#dispatch_customer').select2();
-             $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
-             $('#dispatch_place_from').select2();
-             $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
-             $('#dispatch_place_to').select2();
+             $("#dispatch_booking_type").val(data.type).change();
+             $("#dispatch_place_from").val(data.from).change();
+             $("#dispatch_place_to").val(data.to).change();
+             $("#dispatch_customer").val(data.customer).change();
              $('#dispatch_start_date').val(data.start);
              $('#dispatch_end_date').val(data.end);
 
@@ -301,163 +298,161 @@ $(document).ready(function(){
      }
      
   });
-  $('#dispatch_customer').change(function(){
-    var customer = $('#dispatch_customer').val();
-    var type = $('#dispatch_booking_type').val();
-    if (customer>0) {
-      $.ajax({
-          type: "GET",
-          url: "<?php echo BASE_URL ?>/booking/getbooking",
-          data: {customer:customer,type:type}, 
-          success: function(answer){
-             var data = $.parseJSON(answer);
-             $('#dispatch_booking').html(data.booking);
+  $('#dispatch_customer').on("select2:select", function(e) { 
+      var customer = $('#dispatch_customer').val();
+      var type = $('#dispatch_booking_type').val();
+      if (customer>0) {
+        $.ajax({
+            type: "GET",
+            url: "<?php echo BASE_URL ?>/booking/getbooking",
+            data: {customer:customer,type:type}, 
+            success: function(answer){
+               var data = $.parseJSON(answer);
+               $('#dispatch_booking').html(data.booking);
 
-             var booking = $('#dispatch_booking').val();
-             if (booking>0) {
-                $.ajax({
-                  type: "GET",
-                  url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
-                  data: {booking:booking}, 
-                  success: function(answer){
-                     var data = $.parseJSON(answer);
-                     $('#dispatch_booking_detail').html(data.container);
-                     $('#dispatch_booking_type option[value='+data.type+']').attr('selected','selected');
-                     $('#dispatch_customer option[value='+data.customer+']').attr('selected','selected');
-                     $('#dispatch_customer').select2();
-                     $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
-                     $('#dispatch_place_from').select2();
-                     $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
-                     $('#dispatch_place_to').select2();
-                     $('#dispatch_start_date').val(data.start);
-                     $('#dispatch_end_date').val(data.end);
+               var booking = $('#dispatch_booking').val();
+               if (booking>0) {
+                  $.ajax({
+                    type: "GET",
+                    url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+                    data: {booking:booking}, 
+                    success: function(answer){
+                       var data = $.parseJSON(answer);
+                       $('#dispatch_booking_detail').html(data.container);
+                       $("#dispatch_booking_type").val(data.type).change();
+                       $("#dispatch_place_from").val(data.from).change();
+                       $("#dispatch_place_to").val(data.to).change();
+                       $("#dispatch_customer").val(data.customer).change();
+                       $('#dispatch_start_date').val(data.start);
+                       $('#dispatch_end_date').val(data.end);
 
-                     var detail = $('#dispatch_booking_detail').val();
-                     $.ajax({
-                        type: "GET",
-                        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-                        data: {detail:detail}, 
-                        success: function(answer){
-                           var data = $.parseJSON(answer);
-                           $('#dispatch_booking_detail_number').val(data.number);
-                           $('#dispatch_booking_detail_number').attr('max',data.number);
-                           $('#booking_detail_unit').val(data.unit);
-                        }
-                    });
-                  }
-              });
-             }
-             else{
-              $('#dispatch_booking_detail').html("");
-              $('#dispatch_booking_detail_number').val("");
-              $('#booking_detail_unit').val("");
-             }
-          }
-      });
+                       var detail = $('#dispatch_booking_detail').val();
+                       $.ajax({
+                          type: "GET",
+                          url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                          data: {detail:detail}, 
+                          success: function(answer){
+                             var data = $.parseJSON(answer);
+                             $('#dispatch_booking_detail_number').val(data.number);
+                             $('#dispatch_booking_detail_number').attr('max',data.number);
+                             $('#booking_detail_unit').val(data.unit);
+                          }
+                      });
+                    }
+                });
+               }
+               else{
+                $('#dispatch_booking_detail').html("");
+                $('#dispatch_booking_detail_number').val("");
+                $('#booking_detail_unit').val("");
+               }
+            }
+        });
+      }
+    });
+  
+  $('#dispatch_booking_type').change(function(e){
+    if (e.originalEvent) {
+      var customer = $('#dispatch_customer').val();
+      var type = $('#dispatch_booking_type').val();
+      if (type>0) {
+        $.ajax({
+            type: "GET",
+            url: "<?php echo BASE_URL ?>/booking/getbooking",
+            data: {customer:customer,type:type}, 
+            success: function(answer){
+               var data = $.parseJSON(answer);
+               $('#dispatch_booking').html(data.booking);
+
+               var booking = $('#dispatch_booking').val();
+               if (booking>0) {
+                  $.ajax({
+                    type: "GET",
+                    url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+                    data: {booking:booking}, 
+                    success: function(answer){
+                       var data = $.parseJSON(answer);
+                       $('#dispatch_booking_detail').html(data.container);
+                       $("#dispatch_booking_type").val(data.type).change();
+                       $("#dispatch_place_from").val(data.from).change();
+                       $("#dispatch_place_to").val(data.to).change();
+                       $("#dispatch_customer").val(data.customer).change();
+                       $('#dispatch_start_date').val(data.start);
+                       $('#dispatch_end_date').val(data.end);
+
+                       var detail = $('#dispatch_booking_detail').val();
+                       $.ajax({
+                          type: "GET",
+                          url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                          data: {detail:detail}, 
+                          success: function(answer){
+                             var data = $.parseJSON(answer);
+                             $('#dispatch_booking_detail_number').val(data.number);
+                             $('#dispatch_booking_detail_number').attr('max',data.number);
+                             $('#booking_detail_unit').val(data.unit);
+                          }
+                      });
+                    }
+                });
+               }
+               else{
+                $('#dispatch_booking_detail').html("");
+                $('#dispatch_booking_detail_number').val("");
+                $('#booking_detail_unit').val("");
+               }
+            }
+        });
+      }
     }
   });
-  $('#dispatch_booking_type').change(function(){
-    var customer = $('#dispatch_customer').val();
-    var type = $('#dispatch_booking_type').val();
-    if (type>0) {
-      $.ajax({
+  $('#dispatch_booking').change(function(e){
+    if (e.originalEvent) {
+      var booking = $('#dispatch_booking').val();
+       $.ajax({
           type: "GET",
-          url: "<?php echo BASE_URL ?>/booking/getbooking",
-          data: {customer:customer,type:type}, 
+          url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+          data: {booking:booking}, 
           success: function(answer){
              var data = $.parseJSON(answer);
-             $('#dispatch_booking').html(data.booking);
+             $('#dispatch_booking_detail').html(data.container);
+             $("#dispatch_booking_type").val(data.type).change();
+             $("#dispatch_place_from").val(data.from).change();
+             $("#dispatch_place_to").val(data.to).change();
+             $("#dispatch_customer").val(data.customer).change();
+             $('#dispatch_start_date').val(data.start);
+             $('#dispatch_end_date').val(data.end);
 
-             var booking = $('#dispatch_booking').val();
-             if (booking>0) {
-                $.ajax({
-                  type: "GET",
-                  url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
-                  data: {booking:booking}, 
-                  success: function(answer){
-                     var data = $.parseJSON(answer);
-                     $('#dispatch_booking_detail').html(data.container);
-                     $('#dispatch_booking_type option[value='+data.type+']').attr('selected','selected');
-                     $('#dispatch_customer option[value='+data.customer+']').attr('selected','selected');
-                     $('#dispatch_customer').select2();
-                     $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
-                     $('#dispatch_place_from').select2();
-                     $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
-                     $('#dispatch_place_to').select2();
-                     $('#dispatch_start_date').val(data.start);
-                     $('#dispatch_end_date').val(data.end);
-
-                     var detail = $('#dispatch_booking_detail').val();
-                     $.ajax({
-                        type: "GET",
-                        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-                        data: {detail:detail}, 
-                        success: function(answer){
-                           var data = $.parseJSON(answer);
-                           $('#dispatch_booking_detail_number').val(data.number);
-                           $('#dispatch_booking_detail_number').attr('max',data.number);
-                           $('#booking_detail_unit').val(data.unit);
-                        }
-                    });
-                  }
-              });
-             }
-             else{
-              $('#dispatch_booking_detail').html("");
-              $('#dispatch_booking_detail_number').val("");
-              $('#booking_detail_unit').val("");
-             }
+             var detail = $('#dispatch_booking_detail').val();
+             $.ajax({
+                type: "GET",
+                url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                data: {detail:detail}, 
+                success: function(answer){
+                   var data = $.parseJSON(answer);
+                   $('#dispatch_booking_detail_number').val(data.number);
+                   $('#dispatch_booking_detail_number').attr('max',data.number);
+                   $('#booking_detail_unit').val(data.unit);
+                }
+            });
           }
       });
-    }
+     }
   });
-  $('#dispatch_booking').change(function(){
-    var booking = $('#dispatch_booking').val();
-     $.ajax({
-        type: "GET",
-        url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
-        data: {booking:booking}, 
-        success: function(answer){
-           var data = $.parseJSON(answer);
-           $('#dispatch_booking_detail').html(data.container);
-           $('#dispatch_booking_type option[value='+data.type+']').attr('selected','selected');
-           $('#dispatch_customer option[value='+data.customer+']').attr('selected','selected');
-           $('#dispatch_customer').select2();
-           $('#dispatch_place_from option[value='+data.from+']').attr('selected','selected');
-           $('#dispatch_place_from').select2();
-           $('#dispatch_place_to option[value='+data.to+']').attr('selected','selected');
-           $('#dispatch_place_to').select2();
-           $('#dispatch_start_date').val(data.start);
-           $('#dispatch_end_date').val(data.end);
-
-           var detail = $('#dispatch_booking_detail').val();
-           $.ajax({
-              type: "GET",
-              url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-              data: {detail:detail}, 
-              success: function(answer){
-                 var data = $.parseJSON(answer);
-                 $('#dispatch_booking_detail_number').val(data.number);
-                 $('#dispatch_booking_detail_number').attr('max',data.number);
-                 $('#booking_detail_unit').val(data.unit);
-              }
-          });
-        }
-    });
-  });
-  $('#dispatch_booking_detail').change(function(){
-    var detail = $('#dispatch_booking_detail').val();
-     $.ajax({
-        type: "GET",
-        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-        data: {detail:detail}, 
-        success: function(answer){
-           var data = $.parseJSON(answer);
-           $('#dispatch_booking_detail_number').val(data.number);
-           $('#dispatch_booking_detail_number').attr('max',data.number);
-           $('#booking_detail_unit').val(data.unit);
-        }
-    });
+  $('#dispatch_booking_detail').change(function(e){
+    if (e.originalEvent) {
+      var detail = $('#dispatch_booking_detail').val();
+       $.ajax({
+          type: "GET",
+          url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+          data: {detail:detail}, 
+          success: function(answer){
+             var data = $.parseJSON(answer);
+             $('#dispatch_booking_detail_number').val(data.number);
+             $('#dispatch_booking_detail_number').attr('max',data.number);
+             $('#booking_detail_unit').val(data.unit);
+          }
+      });
+     }
   });
 
   $('#dispatch_shipment_temp_sub').change(function(){
@@ -470,13 +465,10 @@ $(document).ready(function(){
           success: function(answer){
              var data = $.parseJSON(answer);
              $('#dispatch_booking_detail_sub').html(data.container);
-             $('#dispatch_booking_type_sub option[value='+data.type+']').attr('selected','selected');
-             $('#dispatch_customer_sub option[value='+data.customer+']').attr('selected','selected');
-             $('#dispatch_customer_sub').select2();
-             $('#dispatch_place_from_sub option[value='+data.from+']').attr('selected','selected');
-             $('#dispatch_place_from_sub').select2();
-             $('#dispatch_place_to_sub option[value='+data.to+']').attr('selected','selected');
-             $('#dispatch_place_to_sub').select2();
+             $("#dispatch_booking_type_sub").val(data.type).change();
+             $("#dispatch_place_from_sub").val(data.from).change();
+             $("#dispatch_place_to_sub").val(data.to).change();
+             $("#dispatch_customer_sub").val(data.customer).change();
              $('#dispatch_start_date_sub').val(data.start);
              $('#dispatch_end_date_sub').val(data.end);
 
@@ -502,7 +494,7 @@ $(document).ready(function(){
      }
      
   });
-  $('#dispatch_customer_sub').change(function(){
+  $('#dispatch_customer_sub').on("select2:select", function(e) { 
     var customer = $('#dispatch_customer_sub').val();
     var type = $('#dispatch_booking_type_sub').val();
     if (customer>0) {
@@ -523,13 +515,10 @@ $(document).ready(function(){
                   success: function(answer){
                      var data = $.parseJSON(answer);
                      $('#dispatch_booking_detail_sub').html(data.container);
-                     $('#dispatch_booking_type_sub option[value='+data.type+']').attr('selected','selected');
-                     $('#dispatch_customer_sub option[value='+data.customer+']').attr('selected','selected');
-                     $('#dispatch_customer_sub').select2();
-                     $('#dispatch_place_from_sub option[value='+data.from+']').attr('selected','selected');
-                     $('#dispatch_place_from_sub').select2();
-                     $('#dispatch_place_to_sub option[value='+data.to+']').attr('selected','selected');
-                     $('#dispatch_place_to_sub').select2();
+                     $("#dispatch_booking_type_sub").val(data.type).change();
+                     $("#dispatch_place_from_sub").val(data.from).change();
+                     $("#dispatch_place_to_sub").val(data.to).change();
+                     $("#dispatch_customer_sub").val(data.customer).change();
                      $('#dispatch_start_date_sub').val(data.start);
                      $('#dispatch_end_date_sub').val(data.end);
 
@@ -557,108 +546,108 @@ $(document).ready(function(){
       });
     }
   });
-  $('#dispatch_booking_type_sub').change(function(){
-    var customer = $('#dispatch_customer_sub').val();
-    var type = $('#dispatch_booking_type_sub').val();
-    if (type>0) {
-      $.ajax({
+  $('#dispatch_booking_type_sub').change(function(e){
+    if (e.originalEvent) {
+      var customer = $('#dispatch_customer_sub').val();
+      var type = $('#dispatch_booking_type_sub').val();
+      if (type>0) {
+        $.ajax({
+            type: "GET",
+            url: "<?php echo BASE_URL ?>/booking/getbooking",
+            data: {customer:customer,type:type}, 
+            success: function(answer){
+               var data = $.parseJSON(answer);
+               $('#dispatch_booking_sub').html(data.booking);
+
+               var booking = $('#dispatch_booking_sub').val();
+               if (booking>0) {
+                  $.ajax({
+                    type: "GET",
+                    url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+                    data: {booking:booking}, 
+                    success: function(answer){
+                       var data = $.parseJSON(answer);
+                       $('#dispatch_booking_detail_sub').html(data.container);
+                       $("#dispatch_booking_type_sub").val(data.type).change();
+                       $("#dispatch_place_from_sub").val(data.from).change();
+                       $("#dispatch_place_to_sub").val(data.to).change();
+                       $("#dispatch_customer_sub").val(data.customer).change();
+                       $('#dispatch_start_date_sub').val(data.start);
+                       $('#dispatch_end_date_sub').val(data.end);
+
+                       var detail = $('#dispatch_booking_detail_sub').val();
+                       $.ajax({
+                          type: "GET",
+                          url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                          data: {detail:detail}, 
+                          success: function(answer){
+                             var data = $.parseJSON(answer);
+                             $('#dispatch_booking_detail_number_sub').val(data.number);
+                             $('#dispatch_booking_detail_number_sub').attr('max',data.number);
+                             $('#booking_detail_unit_sub').val(data.unit);
+                          }
+                      });
+                    }
+                });
+               }
+               else{
+                $('#dispatch_booking_detail_sub').html("");
+                $('#dispatch_booking_detail_number_sub').val("");
+                $('#booking_detail_unit_sub').val("");
+               }
+            }
+        });
+      }
+    }
+  });
+  $('#dispatch_booking_sub').change(function(e){
+    if (e.originalEvent) {
+      var booking = $('#dispatch_booking_sub').val();
+       $.ajax({
           type: "GET",
-          url: "<?php echo BASE_URL ?>/booking/getbooking",
-          data: {customer:customer,type:type}, 
+          url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
+          data: {booking:booking}, 
           success: function(answer){
              var data = $.parseJSON(answer);
-             $('#dispatch_booking_sub').html(data.booking);
+             $('#dispatch_booking_detail_sub').html(data.container);
+             $("#dispatch_booking_type_sub").val(data.type).change();
+             $("#dispatch_place_from_sub").val(data.from).change();
+             $("#dispatch_place_to_sub").val(data.to).change();
+             $("#dispatch_customer_sub").val(data.customer).change();
+             $('#dispatch_start_date_sub').val(data.start);
+             $('#dispatch_end_date_sub').val(data.end);
 
-             var booking = $('#dispatch_booking_sub').val();
-             if (booking>0) {
-                $.ajax({
-                  type: "GET",
-                  url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
-                  data: {booking:booking}, 
-                  success: function(answer){
-                     var data = $.parseJSON(answer);
-                     $('#dispatch_booking_detail_sub').html(data.container);
-                     $('#dispatch_booking_type_sub option[value='+data.type+']').attr('selected','selected');
-                     $('#dispatch_customer_sub option[value='+data.customer+']').attr('selected','selected');
-                     $('#dispatch_customer_sub').select2();
-                     $('#dispatch_place_from_sub option[value='+data.from+']').attr('selected','selected');
-                     $('#dispatch_place_from_sub').select2();
-                     $('#dispatch_place_to_sub option[value='+data.to+']').attr('selected','selected');
-                     $('#dispatch_place_to_sub').select2();
-                     $('#dispatch_start_date_sub').val(data.start);
-                     $('#dispatch_end_date_sub').val(data.end);
-
-                     var detail = $('#dispatch_booking_detail_sub').val();
-                     $.ajax({
-                        type: "GET",
-                        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-                        data: {detail:detail}, 
-                        success: function(answer){
-                           var data = $.parseJSON(answer);
-                           $('#dispatch_booking_detail_number_sub').val(data.number);
-                           $('#dispatch_booking_detail_number_sub').attr('max',data.number);
-                           $('#booking_detail_unit_sub').val(data.unit);
-                        }
-                    });
-                  }
-              });
-             }
-             else{
-              $('#dispatch_booking_detail_sub').html("");
-              $('#dispatch_booking_detail_number_sub').val("");
-              $('#booking_detail_unit_sub').val("");
-             }
+             var detail = $('#dispatch_booking_detail_sub').val();
+             $.ajax({
+                type: "GET",
+                url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+                data: {detail:detail}, 
+                success: function(answer){
+                   var data = $.parseJSON(answer);
+                   $('#dispatch_booking_detail_number_sub').val(data.number);
+                   $('#dispatch_booking_detail_number_sub').attr('max',data.number);
+                   $('#booking_detail_unit_sub').val(data.unit);
+                }
+            });
           }
       });
     }
   });
-  $('#dispatch_booking_sub').change(function(){
-    var booking = $('#dispatch_booking_sub').val();
-     $.ajax({
-        type: "GET",
-        url: "<?php echo BASE_URL ?>/booking/getbookingdetail",
-        data: {booking:booking}, 
-        success: function(answer){
-           var data = $.parseJSON(answer);
-           $('#dispatch_booking_detail_sub').html(data.container);
-           $('#dispatch_booking_type_sub option[value='+data.type+']').attr('selected','selected');
-           $('#dispatch_customer_sub option[value='+data.customer+']').attr('selected','selected');
-           $('#dispatch_customer_sub').select2();
-           $('#dispatch_place_from_sub option[value='+data.from+']').attr('selected','selected');
-           $('#dispatch_place_from_sub').select2();
-           $('#dispatch_place_to_sub option[value='+data.to+']').attr('selected','selected');
-           $('#dispatch_place_to_sub').select2();
-           $('#dispatch_start_date_sub').val(data.start);
-           $('#dispatch_end_date_sub').val(data.end);
-
-           var detail = $('#dispatch_booking_detail_sub').val();
-           $.ajax({
-              type: "GET",
-              url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-              data: {detail:detail}, 
-              success: function(answer){
-                 var data = $.parseJSON(answer);
-                 $('#dispatch_booking_detail_number_sub').val(data.number);
-                 $('#dispatch_booking_detail_number_sub').attr('max',data.number);
-                 $('#booking_detail_unit_sub').val(data.unit);
-              }
-          });
-        }
-    });
-  });
-  $('#dispatch_booking_detail_sub').change(function(){
-    var detail = $('#dispatch_booking_detail_sub').val();
-     $.ajax({
-        type: "GET",
-        url: "<?php echo BASE_URL ?>/booking/getbookingcont",
-        data: {detail:detail}, 
-        success: function(answer){
-           var data = $.parseJSON(answer);
-           $('#dispatch_booking_detail_number_sub').val(data.number);
-           $('#dispatch_booking_detail_number_sub').attr('max',data.number);
-           $('#booking_detail_unit_sub').val(data.unit);
-        }
-    });
+  $('#dispatch_booking_detail_sub').change(function(e){
+    if (e.originalEvent) {
+      var detail = $('#dispatch_booking_detail_sub').val();
+       $.ajax({
+          type: "GET",
+          url: "<?php echo BASE_URL ?>/booking/getbookingcont",
+          data: {detail:detail}, 
+          success: function(answer){
+             var data = $.parseJSON(answer);
+             $('#dispatch_booking_detail_number_sub').val(data.number);
+             $('#dispatch_booking_detail_number_sub').attr('max',data.number);
+             $('#booking_detail_unit_sub').val(data.unit);
+          }
+      });
+     }
   });
 
   $('#dispatch_vehicle').change(function(){

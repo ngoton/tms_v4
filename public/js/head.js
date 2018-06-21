@@ -681,7 +681,16 @@ function open_dialog(url, title){
     _allowInteraction: function (event) {
         return !!$(event.target).is(".select2-input") || this._super(event);
     }
-  });
+  }).dialogExtend({
+        "closable" : true,
+        "maximizable" : true,
+        "minimizable" : true,
+        "collapsable" : true,
+        "dblclick" : "collapse",
+        "titlebar" : "transparent",
+        "minimizeLocation" : "right"
+        
+      });
   dialog.load(url, function(){
      dialog.dialog('open');
  });
@@ -790,7 +799,16 @@ function open_dialog_other(url, title, id, data, form){
       $(this).dialog('destroy');
       $( "#dialog-message-other" ).html("");
     }
-  });
+  }).dialogExtend({
+        "closable" : true,
+        "maximizable" : true,
+        "minimizable" : true,
+        "collapsable" : true,
+        "dblclick" : "collapse",
+        "titlebar" : "transparent",
+        "minimizeLocation" : "right"
+        
+      });
   dialog.load(url, function(){
      dialog.dialog('open');
  });
