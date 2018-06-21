@@ -661,7 +661,7 @@ function open_dialog(url, title){
       $('.viewData').remove();
       $('.ui-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset').show();
       $( this ).dialog( "close" );
-      $(this).dialog('destroy');
+      //$(this).dialog('destroy');
       $( "#dialog-message" ).html("");
     },
     open: function () {
@@ -682,13 +682,10 @@ function open_dialog(url, title){
         return !!$(event.target).is(".select2-input") || this._super(event);
     }
   }).dialogExtend({
-        "closable" : true,
         "maximizable" : true,
         "minimizable" : true,
-        "collapsable" : true,
-        "dblclick" : "collapse",
-        "titlebar" : "transparent",
-        "minimizeLocation" : "right"
+        "dblclick" : "maximize",
+        "minimizeLocation" : "left"
         
       });
   dialog.load(url, function(){
@@ -796,17 +793,14 @@ function open_dialog_other(url, title, id, data, form){
     },
     close: function(){
       $( this ).dialog( "close" );
-      $(this).dialog('destroy');
+      //$(this).dialog('destroy');
       $( "#dialog-message-other" ).html("");
     }
   }).dialogExtend({
-        "closable" : true,
         "maximizable" : true,
         "minimizable" : true,
-        "collapsable" : true,
-        "dblclick" : "collapse",
-        "titlebar" : "transparent",
-        "minimizeLocation" : "right"
+        "dblclick" : "maximize",
+        "minimizeLocation" : "left"
         
       });
   dialog.load(url, function(){
