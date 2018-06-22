@@ -223,138 +223,30 @@ $(document).ready(function(){
             <div class="widget-body">
               <div class="widget-main padding-8">
                 <div id="profile-feed-1" class="profile-feed">
-                  <div class="profile-activity clearfix">
-                    <div>
-                      <div class="pull-left">
-                        <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="1"><span class="lbl"></span>
+                  <?php $m=0; foreach ($roads as $road) { ?>
+                    <div class="profile-activity clearfix">
+                      <div>
+                        <div class="pull-left">
+                          <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="<?php echo $road->road_id ?>" checked><span class="lbl"></span>
+                        </div>
+                        <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_from] ?> </a> - <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_to] ?> </a>
+                        <div class="time">
+                          <i class="ace-icon fa fa-map-signs bigger-110"></i>
+                          <?php echo $road->road_km ?> km
+                          <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                          <?php echo $road->road_time ?>h
+                          <i class="ace-icon fa fa-tint bigger-110"></i>
+                          <?php echo $road->road_oil ?> lit
+                        </div>
                       </div>
-                      <a class="user" href="#"> Cát Lái </a> - <a class="user" href="#"> Ngã 3 Vũng Tàu </a>
-                      <div class="time">
-                        <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                        105 km
-                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                        2h
-                        <i class="ace-icon fa fa-tint bigger-110"></i>
-                        35 lit
-                      </div>
-                    </div>
 
-                    <div class="tools action-buttons">
-                      <a href="#" class="blue">
-                        <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="profile-activity clearfix">
-                    <div>
-                      <div class="pull-left">
-                        <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="1"><span class="lbl"></span>
-                      </div>
-                      <a class="user" href="#"> Cát Lái </a> - <a class="user" href="#"> Ngã 3 Vũng Tàu </a>
-                      <div class="time">
-                        <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                        105 km
-                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                        2h
-                        <i class="ace-icon fa fa-tint bigger-110"></i>
-                        35 lit
+                      <div class="tools action-buttons">
+                        <a href="#" class="blue">
+                          <i class="ace-icon fa fa-info-circle bigger-125"></i>
+                        </a>
                       </div>
                     </div>
-
-                    <div class="tools action-buttons">
-                      <a href="#" class="blue">
-                        <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="profile-activity clearfix">
-                    <div>
-                      <div class="pull-left">
-                        <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="1"><span class="lbl"></span>
-                      </div>
-                      <a class="user" href="#"> Cát Lái </a> - <a class="user" href="#"> Ngã 3 Vũng Tàu </a>
-                      <div class="time">
-                        <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                        105 km
-                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                        2h
-                        <i class="ace-icon fa fa-tint bigger-110"></i>
-                        35 lit
-                      </div>
-                    </div>
-
-                    <div class="tools action-buttons">
-                      <a href="#" class="blue">
-                        <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="profile-activity clearfix">
-                    <div>
-                      <div class="pull-left">
-                        <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="1"><span class="lbl"></span>
-                      </div>
-                      <a class="user" href="#"> Cát Lái </a> - <a class="user" href="#"> Ngã 3 Vũng Tàu </a>
-                      <div class="time">
-                        <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                        105 km
-                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                        2h
-                        <i class="ace-icon fa fa-tint bigger-110"></i>
-                        35 lit
-                      </div>
-                    </div>
-
-                    <div class="tools action-buttons">
-                      <a href="#" class="blue">
-                        <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="profile-activity clearfix">
-                    <div>
-                      <div class="pull-left">
-                        <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="1"><span class="lbl"></span>
-                      </div>
-                      <a class="user" href="#"> Cát Lái </a> - <a class="user" href="#"> Ngã 3 Vũng Tàu </a>
-                      <div class="time">
-                        <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                        105 km
-                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                        2h
-                        <i class="ace-icon fa fa-tint bigger-110"></i>
-                        35 lit
-                      </div>
-                    </div>
-
-                    <div class="tools action-buttons">
-                      <a href="#" class="blue">
-                        <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="profile-activity clearfix">
-                    <div>
-                      <div class="pull-left">
-                        <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="1"><span class="lbl"></span>
-                      </div>
-                      <a class="user" href="#"> Cát Lái </a> - <a class="user" href="#"> Ngã 3 Vũng Tàu </a>
-                      <div class="time">
-                        <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                        105 km
-                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                        2h
-                        <i class="ace-icon fa fa-tint bigger-110"></i>
-                        35 lit
-                      </div>
-                    </div>
-
-                    <div class="tools action-buttons">
-                      <a href="#" class="blue">
-                        <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                      </a>
-                    </div>
-                  </div>
+                  <?php } ?>
 
                 </div>
               </div>
@@ -524,17 +416,12 @@ $(document).ready(function(){
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?php echo MAP_KEY ?>&callback=initialize"></script>
 <script>
+var markers = new Array();
 var geocoder;
 var map;
 var directionsDisplay;
 var directionsService;
-  var locations = [
-    ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-    ['Bondi Beach', -33.890542, 151.274856, 4],
-    ['Coogee Beach', -33.923036, 151.259052, 5],
-    ['Maroubra Beach', -33.950198, 151.259302, 1],
-    ['Cronulla Beach', -34.028249, 151.157507, 3]
-  ];
+var locations = <?php echo json_encode($road_data ); ?>;
 
 function initialize() {
   directionsDisplay = new google.maps.DirectionsRenderer();
@@ -543,7 +430,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 10,
     gestureHandling: 'greedy',
-    center: new google.maps.LatLng(-33.92, 151.25),
+    center: new google.maps.LatLng(10.8470055, 106.6500569),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
   directionsDisplay.setMap(map);
@@ -557,7 +444,8 @@ function initialize() {
   for (i = 0; i < locations.length; i++) {
     marker = new google.maps.Marker({
       position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-      map: map
+      map: map,
+      title: locations[i][0]
     });
 
     bounds.extend(marker.position);
@@ -568,6 +456,8 @@ function initialize() {
       }
     })(marker, i));
 
+    // Add marker to markers array
+    markers.push(marker);
     //now fit the map to the newly inclusive bounds
     map.fitBounds(bounds);
 
@@ -587,6 +477,7 @@ function initialize() {
       directionsDisplay.setDirections(result);
     }
   });
+
 }
 
 
@@ -596,5 +487,9 @@ $('#profile-feed-1').ace_scroll({
   height: '400px',
   mouseWheelLock: true,
   alwaysVisible : true
+});
+
+$('.marker-link').click(function(){
+  google.maps.event.trigger(markers[$(this).attr('markerid')], 'click');
 });
 </script>

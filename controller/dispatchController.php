@@ -835,6 +835,36 @@ Class dispatchController Extends baseController {
 
         $this->view->data['units'] = $units;
 
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
+
+        $route_data = array();
+
+        foreach ($routes as $route) {
+            $route_data[$route->route_id] = $route->route_name;
+            $route_data['name'][$route->route_name] = $route->route_id;
+            $route_data['lat'][$route->route_id] = $route->route_lat;
+            $route_data['long'][$route->route_id] = $route->route_long;
+        }
+        $this->view->data['route_data'] = $route_data;
+
+        $road_model = $this->model->get('roadModel');
+
+        $data = array(
+            'where'=>'road_place_from = '.$dispatch_data->dispatch_place_from.' AND road_place_to = '.$dispatch_data->dispatch_place_to.' AND road_start_date <= '.$dispatch_data->dispatch_date.' AND (road_end_date IS NULL OR road_end_date=0 OR road_end_date >= '.$dispatch_data->dispatch_date.')',
+        );
+
+        $road_data = array();
+        $roads = $road_model->getAllRoad($data);
+
+        foreach ($roads as $road) {
+            $road_data[] = array($route_data[$road->road_route_from],$route_data['lat'][$road->road_route_from],$route_data['long'][$road->road_route_from]);
+            $road_data[] = array($route_data[$road->road_route_to],$route_data['lat'][$road->road_route_to],$route_data['long'][$road->road_route_to]);
+        }
+
+        $this->view->data['roads'] = $roads;
+        $this->view->data['road_data'] = $road_data;
 
         return $this->view->show('dispatch/shipment');
 
