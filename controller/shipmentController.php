@@ -261,6 +261,7 @@ Class shipmentController Extends baseController {
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
                 'shipment_sub'=>trim($_POST['shipment_sub']),
+                'shipment_road'=>implode(',', $_POST['shipment_road']),
                 'shipment_create_user'=>$_SESSION['userid_logined'],
             );
 
@@ -392,6 +393,7 @@ Class shipmentController Extends baseController {
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
                 'shipment_sub'=>trim($_POST['shipment_sub']),
+                'shipment_road'=>implode(',', $_POST['shipment_road']),
                 'shipment_update_user'=>$_SESSION['userid_logined'],
             );
 

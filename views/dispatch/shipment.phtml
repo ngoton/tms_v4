@@ -11,6 +11,46 @@ $(document).ready(function(){
           var shipment_staff = $('#shipment_staff').attr('data');
           var shipment_container = $('#shipment_booking_detail option:selected').text();
           var shipment_price = $('#shipment_ton').attr('data');
+
+          var shipment_cost = [];  
+
+          var shipment_cost_list = [];  
+          var shipment_cost_comment = [];  
+          var shipment_cost_money = [];  
+          var shipment_cost_money_vat = [];  
+          var shipment_cost_customer = [];  
+          var shipment_cost_invoice = [];  
+          var shipment_cost_invoice_date = [];  
+
+          $('.shipment_cost_money').each(function() { 
+              shipment_cost_money.push($(this).val());
+              id_shipment_cost.push($(this).attr('data') || "");
+          });
+          $('.shipment_cost_list').each(function() { 
+              shipment_cost_list.push($(this).val());
+          });
+          $('.shipment_cost_comment').each(function() { 
+              shipment_cost_comment.push($(this).val());
+          });
+          $('.shipment_cost_money_vat').each(function() { 
+            if ($(this).is(':checked'))
+              shipment_cost_money_vat.push(1);
+            else
+              shipment_cost_money_vat.push(0);
+          });
+          $('.shipment_cost_customer').each(function() { 
+              shipment_cost_customer.push($(this).val());
+          });
+          $('.shipment_cost_invoice').each(function() { 
+              shipment_cost_invoice.push($(this).val());
+          });
+          $('.shipment_cost_invoice_date').each(function() { 
+              shipment_cost_invoice_date.push($(this).val());
+          });
+
+          for (var i = 0; i < shipment_cost_money.length; i++) {
+              shipment_cost.push({'shipment_cost_money':shipment_cost_money[i], 'shipment_cost_list':shipment_cost_list[i], 'shipment_cost_comment':shipment_cost_comment[i], 'shipment_cost_money_vat':shipment_cost_money_vat[i], 'shipment_cost_customer':shipment_cost_customer[i], 'shipment_cost_invoice':shipment_cost_invoice[i], 'shipment_cost_invoice_date':shipment_cost_invoice_date[i], 'id_shipment_cost':id_shipment_cost[i]});
+          };
           
           var formData = new FormData($("#shipment_dispatch")[0]);
           formData.append('shipment_dispatch', '<?php echo $dispatch_data->dispatch_id ?>');
@@ -18,6 +58,7 @@ $(document).ready(function(){
           formData.append('shipment_staff', shipment_staff);
           formData.append('shipment_container', shipment_container);
           formData.append('shipment_price', shipment_price);
+          formData.append('shipment_cost', JSON.stringify(shipment_cost));
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -220,6 +261,12 @@ $(document).ready(function(){
       <div id="roadshipment" class="tab-pane">
         <div class="col-md-4">
           <div class="widget-box transparent">
+            <div class="widget-header widget-header-small">
+              <h5 class="widget-title blue smaller">
+                <i class="ace-icon fa fa-location-arrow orange"></i>
+                <?php echo $km.' km - '.$oil.' lit - '.$time.'h' ?>
+              </h4>
+            </div>
             <div class="widget-body">
               <div class="widget-main padding-8">
                 <div id="profile-feed-1" class="profile-feed">
@@ -233,15 +280,16 @@ $(document).ready(function(){
                         <div class="time">
                           <i class="ace-icon fa fa-map-signs bigger-110"></i>
                           <?php echo $road->road_km ?> km
-                          <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                          <?php echo $road->road_time ?>h
                           <i class="ace-icon fa fa-tint bigger-110"></i>
                           <?php echo $road->road_oil ?> lit
+                          <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                          <?php echo $road->road_time ?>h
+                          
                         </div>
                       </div>
 
                       <div class="tools action-buttons">
-                        <a href="#" class="blue">
+                        <a class="blue" onclick="view_click_other('<?php echo $this->url("road/view/") ?>','Thông tin định mức tuyến đường',<?php echo $road->road_id ?>,'none')">
                           <i class="ace-icon fa fa-info-circle bigger-125"></i>
                         </a>
                       </div>
@@ -254,12 +302,91 @@ $(document).ready(function(){
           </div>
         </div>
         <div class="col-md-8">
-          <div id="map_canvas" style="width:490px;height:300px;"></div>
+          <div id="map_canvas" style="min-width:490px;width:100%;height:300px;"></div>
         </div>
+
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?php echo MAP_KEY ?>&callback=initialize"></script>
+        <script>
+        var markers = new Array();
+        var locations = <?php echo json_encode($road_data ); ?>;
+
+        function initialize() {
+          var bounds = new google.maps.LatLngBounds();
+          var infowindow = new google.maps.InfoWindow();
+          var directionsDisplay = new google.maps.DirectionsRenderer({preserveViewport: true});
+          var directionsService = new google.maps.DirectionsService();
+
+          var map = new google.maps.Map(document.getElementById('map_canvas'), {
+            zoom: 10,
+            gestureHandling: 'greedy',
+            center: new google.maps.LatLng(10.8470055, 106.6500569),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+          directionsDisplay.setMap(map);
+          
+          var marker, i;
+          var request = {
+            travelMode: google.maps.TravelMode.DRIVING
+          };
+          for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+              map: map,
+              title: locations[i][0]
+            });
+
+            
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+              }
+            })(marker, i));
+
+            // Add marker to markers array
+            markers.push(marker);
+            bounds.extend(marker.position);
+
+            if (i == 0) request.origin = marker.getPosition();
+            else if (i == locations.length - 1) request.destination = marker.getPosition();
+            else {
+              if (!request.waypoints) request.waypoints = [];
+              request.waypoints.push({
+                location: marker.getPosition(),
+                stopover: true
+              });
+            }
+
+          }
+
+          //now fit the map to the newly inclusive bounds
+          map.fitBounds(bounds);
+
+          directionsService.route(request, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              var map = directionsDisplay.getMap();
+              directionsDisplay.setDirections(result);
+              map.setZoom(9);
+            }
+          });
+
+        }
+
+        $('.marker-link').click(function(){
+          google.maps.event.trigger(markers[$(this).attr('markerid')], 'click');
+        });
+        </script>
+        <script>
+          $('#profile-feed-1').ace_scroll({
+            height: '400px',
+            mouseWheelLock: true,
+            alwaysVisible : true
+          });
+        </script>
       </div>
       <div id="costshipment" class="tab-pane">
         <div class="col-xs-12">
-            <table id="dataTable_booking" style="width: 100%;">
+            <table id="dataTable_shipment" style="width: 100%;">
                 <tbody>
                 <tr>
                     <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
@@ -268,45 +395,51 @@ $(document).ready(function(){
                             <tbody>
                               <tr>
                                 <td>
-                                  <label>Sản lượng</label>
+                                  <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.shipment_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_detail_number numbers" name="booking_detail_number[]" tabindex="16" required="required">
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>ĐVT <a title="Thêm đơn vị tính mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("unit/add") ?>','Thêm đơn vị tính mới','.booking_detail_unit','<?php echo $this->url("unit/getunit") ?>','add_unit')"></i></a></label>
-                                  <div class="input-group">
-                                    <select class="form-control booking_detail_unit" name="booking_detail_unit[]" tabindex="17">
-                                      <?php foreach ($units as $unit) { ?>
-                                        <option value="<?php echo $unit->unit_id ?>" ><?php echo $unit->unit_name ?></option>
+                                    <select class="form-control shipment_cost_list" name="shipment_cost_list[]" tabindex="14">
+                                      <?php foreach ($cost_lists as $cost_list) { ?>
+                                        <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
                                       <?php } ?>
                                     </select>
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Đơn giá</label>
+                                  <label>Nội dung</label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_detail_price numbers" name="booking_detail_price[]" tabindex="20">
+                                    <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15">
                                   </div>
+                                </td>
+                                
+                                <td>
+                                  <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
+                                  <div class="input-group">
+                                    <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16">
+                                  </div>
+                                  
                                 </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <label>Số container</label>
+                                  <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.shipment_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_detail_container" name="booking_detail_container[]" tabindex="18">
+                                    <select class="form-control shipment_cost_customer select2" name="shipment_cost_customer[]" tabindex="17">
+                                      <?php foreach ($customer_lists as $customer_list) { ?>
+                                        <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
+                                      <?php } ?>
+                                    </select>
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Số seal</label>
+                                  <label>Số hóa đơn chứng từ</label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_detail_seal" name="booking_detail_seal[]" tabindex="19">
+                                    <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18">
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Mặt hàng</label>
+                                  <label>Ngày</label>
                                   <div class="input-group">
-                                    <input type="text" class="booking_detail_customer_sub" name="booking_detail_customer_sub[]" tabindex="21">
+                                    <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19">
                                   </div>
                                 </td>
                               </tr>
@@ -319,9 +452,9 @@ $(document).ready(function(){
             </tbody>
             </table>
         
-            <input type="button" value="Thêm" onclick="addRow_booking('dataTable_booking')">
+            <input type="button" value="Thêm" onclick="addRow_shipment('dataTable_shipment')">
 
-            <input type="button" value="Xóa" onclick="deleteRow_booking('dataTable_booking')">
+            <input type="button" value="Xóa" onclick="deleteRow_shipment('dataTable_shipment')">
         </div>
       </div>
     </div>
@@ -414,82 +547,94 @@ $(document).ready(function(){
   });
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?php echo MAP_KEY ?>&callback=initialize"></script>
-<script>
-var markers = new Array();
-var geocoder;
-var map;
-var directionsDisplay;
-var directionsService;
-var locations = <?php echo json_encode($road_data ); ?>;
 
-function initialize() {
-  directionsDisplay = new google.maps.DirectionsRenderer();
-  directionsService = new google.maps.DirectionsService();
+<script type="text/javascript">
+$(document).ready( function() {
+  $('#shipment_place_from').on("select2:select", function(e) { 
+    var from = $('#shipment_place_from').val();
+    var to = $('#shipment_place_to').val();
+    var date = $('#shipment_date').val();
 
-  var map = new google.maps.Map(document.getElementById('map_canvas'), {
-    zoom: 10,
-    gestureHandling: 'greedy',
-    center: new google.maps.LatLng(10.8470055, 106.6500569),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
   });
-  directionsDisplay.setMap(map);
-  var bounds = new google.maps.LatLngBounds();
-  var infowindow = new google.maps.InfoWindow();
+  $('#shipment_place_to').on("select2:select", function(e) { 
+    var from = $('#shipment_place_from').val();
+    var to = $('#shipment_place_to').val();
+    var date = $('#shipment_date').val();
 
-  var marker, i;
-  var request = {
-    travelMode: google.maps.TravelMode.DRIVING
-  };
-  for (i = 0; i < locations.length; i++) {
-    marker = new google.maps.Marker({
-      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-      map: map,
-      title: locations[i][0]
-    });
+    $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+  });
+});
 
-    bounds.extend(marker.position);
-    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-      return function() {
-        infowindow.setContent(locations[i][0]);
-        infowindow.open(map, marker);
-      }
-    })(marker, i));
-
-    // Add marker to markers array
-    markers.push(marker);
-    //now fit the map to the newly inclusive bounds
-    map.fitBounds(bounds);
-
-    if (i == 0) request.origin = marker.getPosition();
-    else if (i == locations.length - 1) request.destination = marker.getPosition();
-    else {
-      if (!request.waypoints) request.waypoints = [];
-      request.waypoints.push({
-        location: marker.getPosition(),
-        stopover: true
-      });
+function addRow_shipment(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
     }
 
-  }
-  directionsService.route(request, function(result, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(result);
-    }
-  });
+    $('.shipment_cost_money:last').val("");
+    $('.shipment_cost_comment:last').val("");
+    $('.shipment_cost_invoice:last').val("");
+    $('.shipment_cost_invoice_date:last').val("");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+
+    $('.select2-container:last').remove();
+    $('.shipment_cost_customer:last').removeClass('select2-hidden-accessible');
+    $('.shipment_cost_customer:last').select2();
 
 }
+function deleteRow_shipment(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
 
+        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+          if(result) {
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert_form("Không thể xóa hết.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var shipment = chkbox.getAttribute("title");
 
-</script>
-<script type="text/javascript">
-$('#profile-feed-1').ace_scroll({
-  height: '400px',
-  mouseWheelLock: true,
-  alwaysVisible : true
-});
+                            $.post("<?php echo BASE_URL ?>/shipment/deleteshipmentcost", {data: data, shipment: shipment},
+                               function(data){
+                                
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
 
-$('.marker-link').click(function(){
-  google.maps.event.trigger(markers[$(this).attr('markerid')], 'click');
-});
+                }
+            }
+          }
+        });
+    }
+    catch(e){
+        alert(e);
+    }
+}
 </script>

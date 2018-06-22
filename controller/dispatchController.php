@@ -828,12 +828,22 @@ Class dispatchController Extends baseController {
 
         $this->view->data['customers'] = $customers;
 
+        $customer_lists = $customer_model->getAllCustomer(array('order_by'=>'customer_code','order'=>'ASC'));
+
+        $this->view->data['customer_lists'] = $customer_lists;
+
 
         $unit_model = $this->model->get('unitModel');
 
         $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         $this->view->data['units'] = $units;
+
+        $costlist_model = $this->model->get('costlistModel');
+
+        $cost_lists = $costlist_model->getAllCost(array('order_by'=>'cost_list_name','order'=>'ASC'));
+
+        $this->view->data['cost_lists'] = $cost_lists;
 
         $route_model = $this->model->get('routeModel');
 
@@ -856,18 +866,79 @@ Class dispatchController Extends baseController {
         );
 
         $road_data = array();
+        $km=0;$time=0;$oil=0;
+
         $roads = $road_model->getAllRoad($data);
 
         foreach ($roads as $road) {
             $road_data[] = array($route_data[$road->road_route_from],$route_data['lat'][$road->road_route_from],$route_data['long'][$road->road_route_from]);
             $road_data[] = array($route_data[$road->road_route_to],$route_data['lat'][$road->road_route_to],$route_data['long'][$road->road_route_to]);
+
+            $km += $road->road_km;
+            $time += $road->road_time;
+            $oil += $road->road_oil;
         }
 
         $this->view->data['roads'] = $roads;
         $this->view->data['road_data'] = $road_data;
 
+        $this->view->data['km'] = $km;
+        $this->view->data['time'] = $time;
+        $this->view->data['oil'] = $oil;
+
         return $this->view->show('dispatch/shipment');
 
+    }
+
+    public function getroad(){
+        $this->view->disableLayout();
+
+        $from = $_GET['from'];
+        $to = $_GET['to'];
+        $date = strtotime(str_replace('/', '-', $_GET['date']));
+
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
+
+        $route_data = array();
+
+        foreach ($routes as $route) {
+            $route_data[$route->route_id] = $route->route_name;
+            $route_data['name'][$route->route_name] = $route->route_id;
+            $route_data['lat'][$route->route_id] = $route->route_lat;
+            $route_data['long'][$route->route_id] = $route->route_long;
+        }
+
+        $road_model = $this->model->get('roadModel');
+
+        $data = array(
+            'where'=>'road_place_from = '.$from.' AND road_place_to = '.$to.' AND road_start_date <= '.$date.' AND (road_end_date IS NULL OR road_end_date=0 OR road_end_date >= '.$date.')',
+        );
+
+        $road_data = array();
+        $km=0;$time=0;$oil=0;
+
+        $roads = $road_model->getAllRoad($data);
+
+        foreach ($roads as $road) {
+            $road_data[] = array($route_data[$road->road_route_from],$route_data['lat'][$road->road_route_from],$route_data['long'][$road->road_route_from]);
+            $road_data[] = array($route_data[$road->road_route_to],$route_data['lat'][$road->road_route_to],$route_data['long'][$road->road_route_to]);
+
+            $km += $road->road_km;
+            $time += $road->road_time;
+            $oil += $road->road_oil;
+        }
+
+        $this->view->data['route_data'] = $route_data;
+        $this->view->data['roads'] = $roads;
+        $this->view->data['road_data'] = $road_data;
+
+        $this->view->data['km'] = $km;
+        $this->view->data['time'] = $time;
+        $this->view->data['oil'] = $oil;
+
+        return $this->view->show('dispatch/getroad');
     }
 
     public function getdispatch(){
