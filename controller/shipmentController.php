@@ -741,10 +741,53 @@ Class shipmentController Extends baseController {
 
         $booking_detail_model = $this->model->get('bookingdetailModel');
 
-        $booking_details = $booking_detail_model->geBooking($shipment_data->shipment_booking_detail);
+        $booking_details = $booking_detail_model->getBooking($shipment_data->shipment_booking_detail);
 
         $this->view->data['booking_details'] = $booking_details;
 
+        $route_model = $this->model->get('routeModel');
+
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
+
+        $route_data = array();
+
+        foreach ($routes as $route) {
+            $route_data[$route->route_id] = $route->route_name;
+            $route_data['name'][$route->route_name] = $route->route_id;
+            $route_data['lat'][$route->route_id] = $route->route_lat;
+            $route_data['long'][$route->route_id] = $route->route_long;
+        }
+        $this->view->data['route_data'] = $route_data;
+
+        $road_model = $this->model->get('roadModel');
+
+        $roads = $road_model->getAllRoad(array('where'=>'road_id IN ('.$shipment_data->shipment_road.')'));
+
+        $road_data = array();
+        $km=0;$time=0;$oil=0;
+
+        foreach ($roads as $road) {
+            $road_data[] = array($route_data[$road->road_route_from],$route_data['lat'][$road->road_route_from],$route_data['long'][$road->road_route_from]);
+            $road_data[] = array($route_data[$road->road_route_to],$route_data['lat'][$road->road_route_to],$route_data['long'][$road->road_route_to]);
+
+            $km += $road->road_km;
+            $time += $road->road_time;
+            $oil += $road->road_oil;
+        }
+
+        $this->view->data['roads'] = $roads;
+        $this->view->data['road_data'] = $road_data;
+
+        $this->view->data['km'] = $km;
+        $this->view->data['time'] = $time;
+        $this->view->data['oil'] = $oil;
+
+        $join = array('table'=>'cost_list,customer','where'=>'shipment_cost_customer=customer_id AND shipment_cost_list=cost_list_id');
+        $shipment_cost_model = $this->model->get('shipmentcostModel');
+
+        $shipment_costs = $shipment_cost_model->getAllShipment(array('where'=>'shipment_cost_shipment='.$shipment_data->shipment_id),$join);
+
+        $this->view->data['shipment_costs'] = $shipment_costs;
 
         return $this->view->show('shipment/edit');
 
@@ -761,7 +804,7 @@ Class shipmentController Extends baseController {
 
         }
 
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->shipment) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;
@@ -774,7 +817,7 @@ Class shipmentController Extends baseController {
         }
 
         $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Thông tin phiếu vận chuyển';
+        $this->view->data['title'] = 'Cập nhật phiếu vận chuyển';
 
         $shipment_model = $this->model->get('shipmentModel');
 
@@ -788,6 +831,14 @@ Class shipmentController Extends baseController {
 
         }
 
+
+        $dispatch_model = $this->model->get('dispatchModel');
+
+        $dispatchs = $dispatch_model->getAllDispatch(array('where'=>'dispatch_id='.$shipment_data->shipment_dispatch.' OR (dispatch_status IS NULL OR dispatch_status!=2)'));
+
+        $this->view->data['dispatchs'] = $dispatchs;
+
+
         $place_model = $this->model->get('placeModel');
 
         $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
@@ -799,6 +850,24 @@ Class shipmentController Extends baseController {
         $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
 
         $this->view->data['vehicles'] = $vehicles;
+
+
+        $customer_model = $this->model->get('customerModel');
+
+        $customers = $customer_model->getCustomer($shipment_data->shipment_customer);
+
+        $this->view->data['customers'] = $customers;
+
+        $customer_lists = $customer_model->getAllCustomer(array('order_by'=>'customer_code','order'=>'ASC'));
+
+        $this->view->data['customer_lists'] = $customer_lists;
+
+
+        $unit_model = $this->model->get('unitModel');
+
+        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
+
+        $this->view->data['units'] = $units;
 
         $romooc_model = $this->model->get('romoocModel');
 
@@ -812,34 +881,67 @@ Class shipmentController Extends baseController {
 
         $this->view->data['staffs'] = $staffs;
 
+        $costlist_model = $this->model->get('costlistModel');
+
+        $cost_lists = $costlist_model->getAllCost(array('order_by'=>'cost_list_name','order'=>'ASC'));
+
+        $this->view->data['cost_lists'] = $cost_lists;
+        
         $booking_model = $this->model->get('bookingModel');
 
         $bookings = $booking_model->getBooking($shipment_data->shipment_booking);
 
         $this->view->data['bookings'] = $bookings;
 
-        $customer_model = $this->model->get('customerModel');
+        $booking_detail_model = $this->model->get('bookingdetailModel');
 
-        $customers = $customer_model->getCustomer($bookings->booking_customer);
+        $booking_details = $booking_detail_model->getBooking($shipment_data->shipment_booking_detail);
 
-        $this->view->data['customers'] = $customers;
+        $this->view->data['booking_details'] = $booking_details;
 
-        $place_data = array();
+        $route_model = $this->model->get('routeModel');
 
-        foreach ($places as $place) {
-            $place_data[$place->place_id] = $place->place_name;
-            $place_data['name'][$place->place_name] = $place->place_id;
+        $routes = $route_model->getAllRoute(array('order_by'=>'route_name','order'=>'ASC'));
+
+        $route_data = array();
+
+        foreach ($routes as $route) {
+            $route_data[$route->route_id] = $route->route_name;
+            $route_data['name'][$route->route_name] = $route->route_id;
+            $route_data['lat'][$route->route_id] = $route->route_lat;
+            $route_data['long'][$route->route_id] = $route->route_long;
+        }
+        $this->view->data['route_data'] = $route_data;
+
+        $road_model = $this->model->get('roadModel');
+
+        $roads = $road_model->getAllRoad(array('where'=>'road_id IN ('.$shipment_data->shipment_road.')'));
+
+        $road_data = array();
+        $km=0;$time=0;$oil=0;
+
+        foreach ($roads as $road) {
+            $road_data[] = array($route_data[$road->road_route_from],$route_data['lat'][$road->road_route_from],$route_data['long'][$road->road_route_from]);
+            $road_data[] = array($route_data[$road->road_route_to],$route_data['lat'][$road->road_route_to],$route_data['long'][$road->road_route_to]);
+
+            $km += $road->road_km;
+            $time += $road->road_time;
+            $oil += $road->road_oil;
         }
 
-        $this->view->data['place_data'] = $place_data;
+        $this->view->data['roads'] = $roads;
+        $this->view->data['road_data'] = $road_data;
 
-        $shipment_temp_model = $this->model->get('shipmenttempModel');
+        $this->view->data['km'] = $km;
+        $this->view->data['time'] = $time;
+        $this->view->data['oil'] = $oil;
 
-        $join = array('table'=>'booking','where'=>'shipment_temp_booking=booking_id','join'=>'LEFT JOIN');
+        $join = array('table'=>'cost_list,customer','where'=>'shipment_cost_customer=customer_id AND shipment_cost_list=cost_list_id');
+        $shipment_cost_model = $this->model->get('shipmentcostModel');
 
-        $shipment_temps = $shipment_temp_model->getAllShipment(array('where'=>'shipment_temp_id='.$shipment_data->shipment_shipment_temp),$join);
+        $shipment_costs = $shipment_cost_model->getAllShipment(array('where'=>'shipment_cost_shipment='.$shipment_data->shipment_id),$join);
 
-        $this->view->data['shipment_temps'] = $shipment_temps;
+        $this->view->data['shipment_costs'] = $shipment_costs;
 
 
         return $this->view->show('shipment/view');

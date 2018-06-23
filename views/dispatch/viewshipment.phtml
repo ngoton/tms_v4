@@ -1,0 +1,78 @@
+<?php $i=1 ?>
+<table class="table_data" id="tblExport" >
+<thead>
+    <tr>
+        <th><a>STT</a></th>
+        <th>
+            <a>Ngày</a>
+        </th>
+        <th>
+            <a>Khách hàng</a>
+        </th>
+        <th>
+            <a>Số DO</a>
+        </th>
+        <th>
+            <a>Xe</a>
+        </th>
+        <th>
+            <a>Mooc</a>
+        </th>
+        <th>
+            <a>Tài xế</a>
+        </th>
+        <th>
+            <a>Số cont</a>
+        </th>
+        <th>
+            <a>Ngày lấy</a>
+        </th>
+        <th>
+            <a>Nơi lấy</a>
+        </th>
+        <th>
+            <a>Ngày hạ</a>
+        </th>
+        <th>
+            <a>Nơi hạ</a>
+        </th>
+        
+        <th>
+            <a>Ghi chú</a>
+        </th> 
+        <th>
+            
+        </th>
+    </tr>
+   </thead>
+   <tbody>
+    <?php foreach ($shipments as $shipment) : ?>
+        <tr id="<?php echo $shipment->shipment_id ?>" class="edit_tr" <?php echo ($shipment->shipment_end_date=="" || $shipment->shipment_end_date==0 || $shipment->shipment_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("customer/view/") ?>','Thông tin khách hàng',<?php echo $shipment->shipment_customer ?>,'none')"><?php echo $shipment->customer_name; ?></a></td>
+            <td><?php echo $shipment->shipment_do; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $shipment->shipment_vehicle ?>,'none')"><?php echo $shipment->vehicle_number; ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("romooc/view/") ?>','Thông tin mocc',<?php echo $shipment->shipment_romooc ?>,'none')"><?php echo $shipment->romooc_number; ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("staff/view/") ?>','Thông tin tài xế',<?php echo $shipment->shipment_staff ?>,'none')"><?php echo $shipment->staff_name; ?></a></td>
+            <td><?php echo $shipment->shipment_container; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_start_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $shipment->shipment_place_from ?>,'none')"><?php echo isset($place_data[$shipment->shipment_place_from])?$place_data[$shipment->shipment_place_from]:null; ?></a></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_end_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $shipment->shipment_place_to ?>,'none')"><?php echo isset($place_data[$shipment->shipment_place_to])?$place_data[$shipment->shipment_place_to]:null; ?></a></td>
+            
+            
+            <td><?php echo $shipment->shipment_comment; ?></td>
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("shipment/view/") ?>','Thông tin phiếu vận chuyển',<?php echo $shipment->shipment_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+   </tbody>
+</table>

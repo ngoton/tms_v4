@@ -240,10 +240,10 @@ $i = $sonews*$page-($sonews-1);
                 <?php
                 switch ($dispatch->dispatch_status) {
                     case 1:
-                        echo '<a onclick="view_click(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="green">Đã chạy ('.$dispatch->dispatch_shipment_number.')</span></a>';
+                        echo '<a class="tooltip-success" data-rel="tooltip" data-original-title="Xem phiếu vận chuyển" onclick="view_click_other(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="green">Đã chạy ('.$dispatch->dispatch_shipment_number.')</span></a>';
                         break;
                     case 2:
-                        echo '<a onclick="view_click(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="red">Hoàn thành ('.$dispatch->dispatch_shipment_number.')</span></a>';
+                        echo '<a class="tooltip-error" data-rel="tooltip" data-original-title="Xem phiếu vận chuyển" onclick="view_click_other(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="red">Hoàn thành ('.$dispatch->dispatch_shipment_number.')</span></a>';
                         break;
                     default:
                         echo '<span class="grey">Đang chờ</span>';

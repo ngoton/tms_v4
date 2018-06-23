@@ -891,6 +891,58 @@ Class dispatchController Extends baseController {
 
     }
 
+    public function viewshipment($id){
+        $this->view->disableLayout();
+
+        $this->view->data['lib'] = $this->lib;
+
+        $place_model = $this->model->get('placeModel');
+
+        $places = $place_model->getAllPlace();
+        $place_data = array();
+
+        foreach ($places as $place) {
+            $place_data[$place->place_id] = $place->place_name;
+            $place_data['name'][$place->place_name] = $place->place_id;
+        }
+
+        $this->view->data['place_data'] = $place_data;
+
+
+        $shipment_model = $this->model->get('shipmentModel');
+
+        $join = array('table'=>'vehicle','where'=>'shipment_vehicle=vehicle_id LEFT JOIN customer ON shipment_customer=customer_id LEFT JOIN romooc ON shipment_romooc=romooc_id LEFT JOIN staff ON shipment_staff=staff_id','join'=>'LEFT JOIN');
+        $data = array(
+            'where'=>'shipment_dispatch = '.$id,
+            'order_by'=>'shipment_date',
+            'order'=>'DESC',
+
+            );
+
+        $shipments = $shipment_model->getAllShipment($data,$join);
+
+        $this->view->data['shipments'] = $shipments;
+
+        $booking_model = $this->model->get('bookingModel');
+        $shipping_model = $this->model->get('shippingModel');
+
+        $shipment_data = array();
+        foreach ($shipments as $shipment) {
+            $book = $booking_model->getBooking($shipment->shipment_booking);
+            if ($book) {
+                $shipment_data[$shipment->shipment_id]['booking'] = $book->booking_number;
+                $shipping = $shipping_model->getShipping($book->booking_shipping);
+                if ($shipping) {
+                    $shipment_data[$shipment->shipment_id]['shipping'] = $shipping->shipping_name;
+                }
+            }
+        }
+        $this->view->data['shipment_data'] = $shipment_data;
+
+
+        return $this->view->show('dispatch/viewshipment');
+    }
+
     public function getroad(){
         $this->view->disableLayout();
 

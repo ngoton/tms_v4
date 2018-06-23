@@ -262,14 +262,139 @@ $(document).ready(function(){
         </div>
       </div>
       <div id="roadshipment" class="tab-pane">
-        
+        <div class="col-md-4">
+          <div class="widget-box transparent">
+            <div class="widget-header widget-header-small">
+              <h5 class="widget-title blue smaller">
+                <i class="ace-icon fa fa-location-arrow orange"></i>
+                <?php echo $km.' km - '.$oil.' lit - '.$time.'h' ?>
+              </h4>
+            </div>
+            <div class="widget-body">
+              <div class="widget-main padding-8">
+                <div id="profile-feed-1" class="profile-feed">
+                  <?php $m=0; foreach ($roads as $road) { ?>
+                    <div class="profile-activity clearfix">
+                      <div>
+                        <div class="pull-left">
+                          <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="<?php echo $road->road_id ?>" checked><span class="lbl"></span>
+                        </div>
+                        <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_from] ?> </a> - <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_to] ?> </a>
+                        <div class="time">
+                          <i class="ace-icon fa fa-map-signs bigger-110"></i>
+                          <?php echo $road->road_km ?> km
+                          <i class="ace-icon fa fa-tint bigger-110"></i>
+                          <?php echo $road->road_oil ?> lit
+                          <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                          <?php echo $road->road_time ?>h
+                          
+                        </div>
+                      </div>
+
+                      <div class="tools action-buttons">
+                        <a class="blue" onclick="view_click_other('<?php echo $this->url("road/view/") ?>','Thông tin định mức tuyến đường',<?php echo $road->road_id ?>,'none')">
+                          <i class="ace-icon fa fa-info-circle bigger-125"></i>
+                        </a>
+                      </div>
+                    </div>
+                  <?php } ?>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div id="map_canvas" style="min-width:490px;width:100%;height:300px;"></div>
+        </div>
+
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?php echo MAP_KEY ?>&callback=initialize"></script>
+        <script>
+        var markers = new Array();
+        var locations = <?php echo json_encode($road_data ); ?>;
+
+        function initialize() {
+          var bounds = new google.maps.LatLngBounds();
+          var infowindow = new google.maps.InfoWindow();
+          var directionsDisplay = new google.maps.DirectionsRenderer({preserveViewport: true});
+          var directionsService = new google.maps.DirectionsService();
+
+          var map = new google.maps.Map(document.getElementById('map_canvas'), {
+            zoom: 10,
+            gestureHandling: 'greedy',
+            center: new google.maps.LatLng(10.8470055, 106.6500569),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+          directionsDisplay.setMap(map);
+          
+          var marker, i;
+          var request = {
+            travelMode: google.maps.TravelMode.DRIVING
+          };
+          for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+              map: map,
+              title: locations[i][0]
+            });
+
+            
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+              }
+            })(marker, i));
+
+            // Add marker to markers array
+            markers.push(marker);
+            bounds.extend(marker.position);
+
+            if (i == 0) request.origin = marker.getPosition();
+            else if (i == locations.length - 1) request.destination = marker.getPosition();
+            else {
+              if (!request.waypoints) request.waypoints = [];
+              request.waypoints.push({
+                location: marker.getPosition(),
+                stopover: true
+              });
+            }
+
+          }
+
+          //now fit the map to the newly inclusive bounds
+          map.fitBounds(bounds);
+
+          directionsService.route(request, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              var map = directionsDisplay.getMap();
+              directionsDisplay.setDirections(result);
+              map.setZoom(9);
+            }
+          });
+
+        }
+
+        $('.marker-link').click(function(){
+          google.maps.event.trigger(markers[$(this).attr('markerid')], 'click');
+        });
+        </script>
+        <script>
+          $('#profile-feed-1').ace_scroll({
+            height: '400px',
+            mouseWheelLock: true,
+            alwaysVisible : true
+          });
+        </script>
       </div>
       <div id="costshipment" class="tab-pane">
         <div class="col-xs-12">
             <table id="dataTable_shipment" style="width: 100%;">
                 <tbody>
-                <tr>
-                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                <?php if (count($shipment_costs)>0) { ?>
+                <?php foreach ($shipment_costs as $shipment_cost) { ?>
+                  <tr>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $shipment_cost->shipment_cost_id ?>" title="<?php echo $shipment_cost->shipment_cost_shipment ?>"></td>
                     <td>
                         <table style="width:100%;">
                             <tbody>
@@ -279,7 +404,7 @@ $(document).ready(function(){
                                   <div class="input-group">
                                     <select class="form-control shipment_cost_list" name="shipment_cost_list[]" tabindex="14">
                                       <?php foreach ($cost_lists as $cost_list) { ?>
-                                        <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
+                                        <option <?php echo $shipment_cost->shipment_cost_list==$cost_list->cost_list_id?'selected="selected"':null ?> value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
                                       <?php } ?>
                                     </select>
                                   </div>
@@ -287,14 +412,14 @@ $(document).ready(function(){
                                 <td>
                                   <label>Nội dung</label>
                                   <div class="input-group">
-                                    <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15">
+                                    <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15" value="<?php echo $shipment_cost->shipment_cost_comment ?>">
                                   </div>
                                 </td>
                                 
                                 <td>
-                                  <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
+                                  <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" <?php echo $shipment_cost->shipment_cost_money_vat==1?'checked':null ?> ><span class="lbl"></span> VAT</label>
                                   <div class="input-group">
-                                    <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16">
+                                    <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16" data="<?php echo $shipment_cost->shipment_cost_id ?>" value="<?php echo $lib->formatMoney($shipment_cost->shipment_cost_money) ?>">
                                   </div>
                                   
                                 </td>
@@ -305,7 +430,7 @@ $(document).ready(function(){
                                   <div class="input-group">
                                     <select class="form-control shipment_cost_customer select2" name="shipment_cost_customer[]" tabindex="17">
                                       <?php foreach ($customer_lists as $customer_list) { ?>
-                                        <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
+                                        <option <?php echo $shipment_cost->shipment_cost_customer==$customer_list->customer_id?'selected="selected"':null ?> value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
                                       <?php } ?>
                                     </select>
                                   </div>
@@ -313,13 +438,13 @@ $(document).ready(function(){
                                 <td>
                                   <label>Số hóa đơn chứng từ</label>
                                   <div class="input-group">
-                                    <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18">
+                                    <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18" value="<?php echo $shipment_cost->shipment_cost_invoice ?>">
                                   </div>
                                 </td>
                                 <td>
                                   <label>Ngày</label>
                                   <div class="input-group">
-                                    <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19">
+                                    <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19" value="<?php echo $lib->hien_thi_ngay_thang($shipment_cost->shipment_cost_invoice_date) ?>">
                                   </div>
                                 </td>
                               </tr>
@@ -328,7 +453,73 @@ $(document).ready(function(){
                         <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
-                </tr>
+                  </tr>
+                <?php } ?>
+                
+                <?php }else{ ?>
+                <tr>
+                  <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                  <td>
+                      <table style="width:100%;">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.shipment_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
+                                <div class="input-group">
+                                  <select class="form-control shipment_cost_list" name="shipment_cost_list[]" tabindex="14">
+                                    <?php foreach ($cost_lists as $cost_list) { ?>
+                                      <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
+                                    <?php } ?>
+                                  </select>
+                                </div>
+                              </td>
+                              <td>
+                                <label>Nội dung</label>
+                                <div class="input-group">
+                                  <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15">
+                                </div>
+                              </td>
+                              
+                              <td>
+                                <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
+                                <div class="input-group">
+                                  <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16">
+                                </div>
+                                
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.shipment_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
+                                <div class="input-group">
+                                  <select class="form-control shipment_cost_customer select2" name="shipment_cost_customer[]" tabindex="17">
+                                    <?php foreach ($customer_lists as $customer_list) { ?>
+                                      <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
+                                    <?php } ?>
+                                  </select>
+                                </div>
+                              </td>
+                              <td>
+                                <label>Số hóa đơn chứng từ</label>
+                                <div class="input-group">
+                                  <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Ngày</label>
+                                <div class="input-group">
+                                  <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19">
+                                </div>
+                              </td>
+                            </tr>
+                            
+                      </tbody></table>
+                      <div class="hr hr-8 dotted hr-double"></div>
+                  </td>
+                  
+              </tr>
+                <?php } ?>
+                
             </tbody>
             </table>
         
