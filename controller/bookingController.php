@@ -789,8 +789,22 @@ Class bookingController Extends baseController {
     public function deletebookingdetail(){
         if (isset($_POST['data'])) {
             $booking_detail_model = $this->model->get('bookingdetailModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking_detail_id='.$_POST['data'].' AND booking='.$_POST['booking']);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|booking_detail|"."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
+
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'booking_detail',
+                'user_log_table_name' => 'Chi tiết đơn hàng',
+                'user_log_action' => 'Xóa',
+                'user_log_data' => json_encode($_POST['data']),
+            );
+            $user_log_model->createUser($data_log);
         }
     }
 

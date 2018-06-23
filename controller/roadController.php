@@ -670,15 +670,43 @@ Class roadController Extends baseController {
     public function deleteroadoil(){
         if (isset($_POST['data'])) {
             $road_oil_model = $this->model->get('roadoilModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             $road_oil_model->queryRoad('DELETE FROM road_oil WHERE road_oil_id='.$_POST['data'].' AND road='.$_POST['road']);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|road_oil|"."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
+
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'road_oil',
+                'user_log_table_name' => 'Chi tiết khoảng cách',
+                'user_log_action' => 'Xóa',
+                'user_log_data' => json_encode($_POST['data']),
+            );
+            $user_log_model->createUser($data_log);
         }
     }
     public function deleteroadtoll(){
         if (isset($_POST['data'])) {
             $road_toll_model = $this->model->get('roadtollModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             $road_toll_model->queryRoad('DELETE FROM road_toll WHERE road_toll_id='.$_POST['data'].' AND road='.$_POST['road']);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|road_toll|"."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
+
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'road_toll',
+                'user_log_table_name' => 'Chi tiết trạm thu phí',
+                'user_log_action' => 'Xóa',
+                'user_log_data' => json_encode($_POST['data']),
+            );
+            $user_log_model->createUser($data_log);
         }
     }
 

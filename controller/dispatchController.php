@@ -217,6 +217,7 @@ Class dispatchController Extends baseController {
             $book = $booking_model->getBooking($dispatch->dispatch_booking);
             if ($book) {
                 $dispatch_data[$dispatch->dispatch_id]['booking'] = $book->booking_number;
+                $dispatch_data[$dispatch->dispatch_id]['booking_type'] = $book->booking_type;
                 $shipping = $shipping_model->getShipping($book->booking_shipping);
                 if ($shipping) {
                     $dispatch_data[$dispatch->dispatch_id]['shipping'] = $shipping->shipping_name;

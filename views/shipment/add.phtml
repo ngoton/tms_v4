@@ -2,7 +2,7 @@
 $(document).ready(function(){
   $( ".select2" ).select2({dropdownAutoWidth : true});
       // Validate form
-      $("#shipment_dispatch").validate({
+      $("#add_shipment").validate({
         errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
         rules: {
         },
@@ -53,8 +53,7 @@ $(document).ready(function(){
               shipment_cost.push({'shipment_cost_money':shipment_cost_money[i], 'shipment_cost_list':shipment_cost_list[i], 'shipment_cost_comment':shipment_cost_comment[i], 'shipment_cost_money_vat':shipment_cost_money_vat[i], 'shipment_cost_customer':shipment_cost_customer[i], 'shipment_cost_invoice':shipment_cost_invoice[i], 'shipment_cost_invoice_date':shipment_cost_invoice_date[i], 'id_shipment_cost':id_shipment_cost[i]});
           };
           
-          var formData = new FormData($("#shipment_dispatch")[0]);
-          formData.append('shipment_dispatch', '<?php echo $dispatch_data->dispatch_id ?>');
+          var formData = new FormData($("#add_shipment")[0]);
           formData.append('shipment_romooc', shipment_romooc);
           formData.append('shipment_staff', shipment_staff);
           formData.append('shipment_container', shipment_container);
@@ -91,7 +90,7 @@ $(document).ready(function(){
 
 <div id="error_shipment" class="error"><?php echo isset($error) ? $error : null; ?></div>     
 <div class="tabbable">
-  <form id="shipment_dispatch" method="post" action="" autocomplete="off">
+  <form id="add_shipment" method="post" action="" autocomplete="off">
     <ul class="nav nav-tabs padding-18">
       <li class="active">
         <a data-toggle="tab" href="#homeshipment">
@@ -127,7 +126,12 @@ $(document).ready(function(){
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_code">Lệnh điều xe</label>
           <div class="input-group">
-            <input class="form-control" type="text" id="dispatch_code" name="dispatch_code" tabindex="1" readonly="" value="<?php echo $dispatch_data->dispatch_code ?>">
+            <select class="form-control select2" id="shipment_dispatch" name="shipment_dispatch" tabindex="1" required="required">
+                <option value="">Chọn</option>
+              <?php foreach ($dispatchs as $dispatch) { ?>
+                <option value="<?php echo $dispatch->dispatch_id ?>"><?php echo $dispatch->dispatch_code ?></option>
+              <?php } ?>
+            </select>
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_do">Số DO</label>
@@ -137,7 +141,6 @@ $(document).ready(function(){
           <label for="shipment_customer">Khách hàng </label>
           <div class="input-group">
             <select class="form-control" id="shipment_customer" name="shipment_customer" tabindex="14" readonly="">
-                <option value="<?php echo $customers->customer_id ?>"><?php echo $customers->customer_name ?></option>
             </select>
           </div>  
           
@@ -146,25 +149,21 @@ $(document).ready(function(){
         <div class="col-md-2 col-xs-6">
           <label for="shipment_date">Ngày</label>
           <div class="input-group">
-            <input class="form-control input-mask-date" type="text" id="shipment_date" name="shipment_date" tabindex="2" required="required" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_date) ?>">
+            <input class="form-control input-mask-date" type="text" id="shipment_date" name="shipment_date" tabindex="2" required="required" value="<?php echo date('d/m/Y') ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_booking_detail">Số container</label>
           <div class="input-group">
             <select class="form-control" id="shipment_booking_detail" name="shipment_booking_detail" tabindex="8" required="required">
-                <option value="">Chọn</option>
-              <?php foreach ($booking_details as $booking_detail) { ?>
-                <option value="<?php echo $booking_detail->booking_detail_id ?>"><?php echo $booking_detail->booking_detail_container ?></option>
-              <?php } ?>
             </select>
           </div>
           <label for="shipment_type">Loại hàng</label>
           <div class="input-group">
             <select class="form-control" id="shipment_type" name="shipment_type" tabindex="15" readonly="">
               <option value="">Chọn</option>
-              <option <?php echo $bookings->booking_type==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
-              <option <?php echo $bookings->booking_type==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
-              <option <?php echo $bookings->booking_type==3?'selected="selected"':null ?> value="3">Khác</option>
+              <option value="1">Hàng nhập</option>
+              <option value="2">Hàng xuất</option>
+              <option value="3">Khác</option>
             </select>
           </div>
           
@@ -176,7 +175,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="shipment_vehicle" name="shipment_vehicle" required="required" tabindex="3">
               <option value="">Chọn</option>
               <?php foreach ($vehicles as $vehicle) { ?>
-                <option <?php echo $dispatch_data->dispatch_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
               <?php } ?>
             </select>
           </div>  
@@ -188,7 +187,6 @@ $(document).ready(function(){
           <label for="shipment_booking">Số BK/BL </label>
           <div class="input-group">
             <select class="form-control" id="shipment_booking" name="shipment_booking" tabindex="16" readonly="">
-                <option value="<?php echo $bookings->booking_id ?>"><?php echo $bookings->booking_number ?></option>
             </select>
           </div> 
           
@@ -197,7 +195,7 @@ $(document).ready(function(){
        <div class="col-md-2 col-xs-6">
           <label for="shipment_romooc">Mooc <a title="Thay lắp mooc" id="vehicle_romooc"><i class="ace-icon fa fa-exchange blue"></i></a></label>
           <div class="input-group">
-            <input class="form-control" type="text" id="shipment_romooc" name="shipment_romooc" tabindex="4" readonly="" data="<?php echo $romoocs->romooc_id ?>" value="<?php echo $romoocs->romooc_number ?>" >
+            <input class="form-control" type="text" id="shipment_romooc" name="shipment_romooc" tabindex="4" readonly="" >
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_ton">Sản lượng giao</label>
@@ -209,7 +207,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="shipment_place_from" name="shipment_place_from" required="required" tabindex="17">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
-                <option <?php echo $dispatch_data->dispatch_place_from==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+                <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
           </div>
@@ -220,7 +218,7 @@ $(document).ready(function(){
         <div class="col-md-2 col-xs-6">
           <label for="shipment_staff">Tài xế <a title="Tài xế" id="vehicle_driver"><i class="ace-icon fa fa-user blue"></i></a></label>
           <div class="input-group">
-            <input class="form-control" type="text" id="shipment_staff" name="shipment_staff" tabindex="5" readonly="" data="<?php echo $staffs->staff_id ?>" value="<?php echo $staffs->staff_name ?>">
+            <input class="form-control" type="text" id="shipment_staff" name="shipment_staff" tabindex="5" readonly="" >
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_unit">ĐVT</label>
@@ -236,7 +234,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="shipment_place_to" name="shipment_place_to" required="required" tabindex="18">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
-                <option <?php echo $dispatch_data->dispatch_place_to==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+                <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
@@ -246,144 +244,21 @@ $(document).ready(function(){
         <div class="col-md-2 col-xs-6">
           <label for="shipment_comment">Ghi chú</label>
           <div class="input-group">
-            <input class="form-control" type="text" id="shipment_comment" name="shipment_comment" tabindex="6" value="<?php echo $dispatch_data->dispatch_comment ?>">
+            <input class="form-control" type="text" id="shipment_comment" name="shipment_comment" tabindex="6" >
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_start_date">Ngày lấy</label>
           <div class="input-group">
-            <input class="form-control input-mask-datetime" type="text" id="shipment_start_date" name="shipment_start_date" tabindex="12" value="<?php echo date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date) ?>" >
+            <input class="form-control input-mask-datetime" type="text" id="shipment_start_date" name="shipment_start_date" tabindex="12" >
           </div>
           <label for="shipment_end_date">Ngày hạ</label>
           <div class="input-group">
-            <input class="form-control input-mask-datetime" type="text" id="shipment_end_date" name="shipment_end_date" tabindex="13" value="<?php echo date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date) ?>" >
+            <input class="form-control input-mask-datetime" type="text" id="shipment_end_date" name="shipment_end_date" tabindex="13" >
           </div>
         </div>
       </div>
       <div id="roadshipment" class="tab-pane">
-        <div class="col-md-4">
-          <div class="widget-box transparent">
-            <div class="widget-header widget-header-small">
-              <h5 class="widget-title blue smaller">
-                <i class="ace-icon fa fa-location-arrow orange"></i>
-                <?php echo $km.' km - '.$oil.' lit - '.$time.'h' ?>
-              </h4>
-            </div>
-            <div class="widget-body">
-              <div class="widget-main padding-8">
-                <div id="profile-feed-1" class="profile-feed">
-                  <?php $m=0; foreach ($roads as $road) { ?>
-                    <div class="profile-activity clearfix">
-                      <div>
-                        <div class="pull-left">
-                          <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="<?php echo $road->road_id ?>" checked><span class="lbl"></span>
-                        </div>
-                        <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_from] ?> </a> - <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_to] ?> </a>
-                        <div class="time">
-                          <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                          <?php echo $road->road_km ?> km
-                          <i class="ace-icon fa fa-tint bigger-110"></i>
-                          <?php echo $road->road_oil ?> lit
-                          <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                          <?php echo $road->road_time ?>h
-                          
-                        </div>
-                      </div>
-
-                      <div class="tools action-buttons">
-                        <a class="blue" onclick="view_click_other('<?php echo $this->url("road/view/") ?>','Thông tin định mức tuyến đường',<?php echo $road->road_id ?>,'none')">
-                          <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                        </a>
-                      </div>
-                    </div>
-                  <?php } ?>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div id="map_canvas" style="min-width:490px;width:100%;height:300px;"></div>
-        </div>
-
-        <script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?php echo MAP_KEY ?>&callback=initialize"></script>
-        <script>
-        var markers = new Array();
-        var locations = <?php echo json_encode($road_data ); ?>;
-
-        function initialize() {
-          var bounds = new google.maps.LatLngBounds();
-          var infowindow = new google.maps.InfoWindow();
-          var directionsDisplay = new google.maps.DirectionsRenderer({preserveViewport: true});
-          var directionsService = new google.maps.DirectionsService();
-
-          var map = new google.maps.Map(document.getElementById('map_canvas'), {
-            zoom: 10,
-            gestureHandling: 'greedy',
-            center: new google.maps.LatLng(10.8470055, 106.6500569),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          });
-          directionsDisplay.setMap(map);
-          
-          var marker, i;
-          var request = {
-            travelMode: google.maps.TravelMode.DRIVING
-          };
-          for (i = 0; i < locations.length; i++) {
-            marker = new google.maps.Marker({
-              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-              map: map,
-              title: locations[i][0]
-            });
-
-            
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-              return function() {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-              }
-            })(marker, i));
-
-            // Add marker to markers array
-            markers.push(marker);
-            bounds.extend(marker.position);
-
-            if (i == 0) request.origin = marker.getPosition();
-            else if (i == locations.length - 1) request.destination = marker.getPosition();
-            else {
-              if (!request.waypoints) request.waypoints = [];
-              request.waypoints.push({
-                location: marker.getPosition(),
-                stopover: true
-              });
-            }
-
-          }
-
-          //now fit the map to the newly inclusive bounds
-          map.fitBounds(bounds);
-
-          directionsService.route(request, function(result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-              var map = directionsDisplay.getMap();
-              directionsDisplay.setDirections(result);
-              map.setZoom(9);
-            }
-          });
-
-        }
-
-        $('.marker-link').click(function(){
-          google.maps.event.trigger(markers[$(this).attr('markerid')], 'click');
-        });
-        </script>
-        <script>
-          $('#profile-feed-1').ace_scroll({
-            height: '400px',
-            mouseWheelLock: true,
-            alwaysVisible : true
-          });
-        </script>
+        
       </div>
       <div id="costshipment" class="tab-pane">
         <div class="col-xs-12">
@@ -464,9 +339,45 @@ $(document).ready(function(){
 </div>
 
 <script type="text/javascript">
+  $('#shipment_dispatch').change(function(){
+    var type = $('input[name=shipment_sub]:checked').val();
+    var dispatch = $('#shipment_dispatch').val();
+    if (dispatch>0) {
+      $.ajax({
+        type: "GET",
+        url: "<?php echo BASE_URL ?>/shipment/getdispatch",
+        data: {dispatch:dispatch,type:type}, 
+        success: function(answer){
+           var data = $.parseJSON(answer);
+           $("#shipment_vehicle").val(data.vehicle).change();
+
+           $("#shipment_type").val(data.booking_type).change();
+           $("#shipment_place_from").val(data.place_from).change();
+           $("#shipment_place_to").val(data.place_to).change();
+
+           $('#shipment_customer').html(data.customer);
+           $('#shipment_booking').html(data.booking);
+           $('#shipment_start_date').val(data.start_date);
+           $('#shipment_end_date').val(data.end_date);
+           $('#shipment_comment').val(data.comment);
+           $('#shipment_booking_detail').html(data.container);
+        }
+      });
+    }
+    else{
+     $('#shipment_customer').html("");
+     $('#shipment_booking').html("");
+     $('#shipment_start_date').val("");
+     $('#shipment_end_date').val("");
+     $('#shipment_comment').val("");
+     $('#shipment_booking_detail').html("");
+    }
+     
+  });
+
   $('input[name=shipment_sub]').change(function(){
     var type = $(this).val();
-    var data = '<?php echo $dispatch_data->dispatch_id ?>';
+    var data = $('#shipment_dispatch').val();
     $.ajax({
         type: "GET",
         url: "<?php echo BASE_URL ?>/dispatch/getdispatch",

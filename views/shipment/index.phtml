@@ -1,21 +1,27 @@
 
 <?php
 $url_order = 'DESC';
-if ($order_by == 'dispatch_id')
+if ($order_by == 'shipment_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_place_from')
+elseif ($order_by == 'shipment_place_from')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_place_to')
+elseif ($order_by == 'shipment_place_to')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_date')
+elseif ($order_by == 'shipment_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_code')
+elseif ($order_by == 'shipment_do')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'vehicle_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_start_date')
+elseif ($order_by == 'romooc_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'dispatch_end_date')
+elseif ($order_by == 'staff_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'customer_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'shipment_start_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'shipment_end_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
@@ -75,7 +81,7 @@ $i = $sonews*$page-($sonews-1);
             <option value="500">500</option>
         </select>
         <a class="purpose" data-original-title="Thêm mới">
-            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("dispatch/add") ?>','Thêm lệnh điều xe mới')"></i>
+            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("shipment/add") ?>','Thêm phiếu vận chuyển mới')"></i>
         </a> 
         <div class="pull-right pos-rel dropdown-hover">
             <button class="btn btn-minier bigger" style="line-height: 26px">
@@ -93,7 +99,7 @@ $i = $sonews*$page-($sonews-1);
                 <li>
                     <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
                         <span class="green">
-                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("dispatch/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword."&nv=".$nv."&tha=".$tha."&na=".$na."&batdau=".str_replace('/', '-', $batdau)."&ketthuc=".str_replace('/', '-', $ketthuc)) ?>','Lọc dữ liệu')"></i>
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("shipment/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword."&nv=".$nv."&tha=".$tha."&na=".$na."&batdau=".str_replace('/', '-', $batdau)."&ketthuc=".str_replace('/', '-', $ketthuc)) ?>','Lọc dữ liệu')"></i>
                         </span>
                     </a>
                 </li>
@@ -107,7 +113,7 @@ $i = $sonews*$page-($sonews-1);
                 <li>
                     <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
                         <span class="purple">
-                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("dispatch/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("shipment/import") ?>','Nhập dữ liệu từ file Excel')"></i>
                         </span>
                     </a>
                 </li>
@@ -158,113 +164,85 @@ $i = $sonews*$page-($sonews-1);
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'dispatch_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'shipment_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'dispatch_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'shipment_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_code','<?php echo $url_order ?>')">Số lệnh <?php if ($order_by == 'dispatch_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Khách hàng <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_booking_detail','<?php echo $url_order ?>')">Tên tàu <?php if ($order_by == 'dispatch_booking_detail'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_do','<?php echo $url_order ?>')">Số DO <?php if ($order_by == 'shipment_do'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_booking_detail','<?php echo $url_order ?>')">BK/BL <?php if ($order_by == 'dispatch_booking_detail'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_booking_detail','<?php echo $url_order ?>')">Loại hàng <?php if ($order_by == 'dispatch_booking_detail'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_number','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'romooc_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Xe lấy <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_name','<?php echo $url_order ?>')">Tài xế <?php if ($order_by == 'staff_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_place_from','<?php echo $url_order ?>')">Nơi lấy <?php if ($order_by == 'dispatch_place_from'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_container','<?php echo $url_order ?>')">Số cont <?php if ($order_by == 'shipment_container'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_place_to','<?php echo $url_order ?>')">Nơi hạ <?php if ($order_by == 'dispatch_place_to'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_start_date','<?php echo $url_order ?>')">Ngày lấy <?php if ($order_by == 'shipment_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_place_from','<?php echo $url_order ?>')">Nơi lấy <?php if ($order_by == 'shipment_place_from'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_end_date','<?php echo $url_order ?>')">Ngày hạ <?php if ($order_by == 'shipment_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_place_to','<?php echo $url_order ?>')">Nơi hạ <?php if ($order_by == 'shipment_place_to'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_start_date','<?php echo $url_order ?>')">Ngày lấy <?php if ($order_by == 'dispatch_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_end_date','<?php echo $url_order ?>')">Ngày hạ <?php if ($order_by == 'dispatch_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_comment','<?php echo $url_order ?>')">Ghi chú <?php if ($order_by == 'dispatch_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','dispatch_status','<?php echo $url_order ?>')">Trạng thái <?php if ($order_by == 'dispatch_status'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>   
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','shipment_comment','<?php echo $url_order ?>')">Ghi chú <?php if ($order_by == 'shipment_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
         <th>
             
         </th>
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($dispatchs as $dispatch) : ?>
-        <tr id="<?php echo $dispatch->dispatch_id ?>" class="edit_tr" <?php echo ($dispatch->dispatch_end_date=="" || $dispatch->dispatch_end_date==0 || $dispatch->dispatch_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+    <?php foreach ($shipments as $shipment) : ?>
+        <tr id="<?php echo $shipment->shipment_id ?>" class="edit_tr" <?php echo ($shipment->shipment_end_date=="" || $shipment->shipment_end_date==0 || $shipment->shipment_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
             <td class="text-center">
-                <?php if($dispatch->dispatch_status=="" || $dispatch->dispatch_status==0){ ?>
-                <input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $dispatch->dispatch_id ?>"><span class="lbl"></span>
+                <?php if($shipment->shipment_status=="" || $shipment->shipment_status==0){ ?>
+                <input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $shipment->shipment_id ?>"><span class="lbl"></span>
                 <?php } ?>
             </td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_date); ?></td>
-            <td><?php echo $dispatch->dispatch_code; ?></td>
-            <td><?php echo isset($dispatch_data[$dispatch->dispatch_id]['shipping'])?$dispatch_data[$dispatch->dispatch_id]['shipping']:null; ?></td>
-            <td><?php echo isset($dispatch_data[$dispatch->dispatch_id]['booking'])?$dispatch_data[$dispatch->dispatch_id]['booking']:null; ?></td>
-            <td>
-                <?php 
-                $ty = isset($dispatch_data[$dispatch->dispatch_id]['booking_type'])?$dispatch_data[$dispatch->dispatch_id]['booking_type']:null; 
-                switch ($ty) {
-                    case 1:
-                        echo "Hàng nhập";
-                        break;
-                    case 2:
-                        echo "Hàng xuất";
-                        break;
-                    default:
-                        echo "Khác";
-                        break;
-                }
-                ?>
-            </td>
-            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $dispatch->dispatch_vehicle ?>,'none')"><?php echo $dispatch->vehicle_number; ?></a></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $dispatch->dispatch_place_from ?>,'none')"><?php echo isset($place_data[$dispatch->dispatch_place_from])?$place_data[$dispatch->dispatch_place_from]:null; ?></a></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $dispatch->dispatch_place_to ?>,'none')"><?php echo isset($place_data[$dispatch->dispatch_place_to])?$place_data[$dispatch->dispatch_place_to]:null; ?></a></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_start_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($dispatch->dispatch_end_date); ?></td>
-            <td><?php echo $dispatch->dispatch_comment; ?></td>
-            <td>
-                <?php
-                switch ($dispatch->dispatch_status) {
-                    case 1:
-                        echo '<a onclick="view_click(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="green">Đã chạy ('.$dispatch->dispatch_shipment_number.')</span></a>';
-                        break;
-                    case 2:
-                        echo '<a onclick="view_click(\''.$this->url("dispatch/viewshipment/").'\',\'Phiếu vận chuyển\','.$dispatch->dispatch_id.')"><span class="red">Hoàn thành ('.$dispatch->dispatch_shipment_number.')</span></a>';
-                        break;
-                    default:
-                        echo '<span class="grey">Đang chờ</span>';
-                        break;
-                }
-                ?>   
-            </td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("customer/view/") ?>','Thông tin khách hàng',<?php echo $shipment->shipment_customer ?>,'none')"><?php echo $shipment->customer_name; ?></a></td>
+            <td><?php echo $shipment->shipment_do; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $shipment->shipment_vehicle ?>,'none')"><?php echo $shipment->vehicle_number; ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("romooc/view/") ?>','Thông tin mocc',<?php echo $shipment->shipment_romooc ?>,'none')"><?php echo $shipment->romooc_number; ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("staff/view/") ?>','Thông tin tài xế',<?php echo $shipment->shipment_staff ?>,'none')"><?php echo $shipment->staff_name; ?></a></td>
+            <td><?php echo $shipment->shipment_container; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_start_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $shipment->shipment_place_from ?>,'none')"><?php echo isset($place_data[$shipment->shipment_place_from])?$place_data[$shipment->shipment_place_from]:null; ?></a></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_end_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $shipment->shipment_place_to ?>,'none')"><?php echo isset($place_data[$shipment->shipment_place_to])?$place_data[$shipment->shipment_place_to]:null; ?></a></td>
+            
+            
+            <td><?php echo $shipment->shipment_comment; ?></td>
+            
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="tooltip-warning orange" data-rel="tooltip" data-original-title="Nhập phiếu vận chuyển"  onclick="edit_click('<?php echo $this->url("dispatch/shipment/") ?>','Phiếu vận chuyển',<?php echo $dispatch->dispatch_id ?>)">
-                        <i class="ace-icon fa fa-file-text-o bigger-130"></i>
-                    </a>
-                    <a class="blue"  onclick="view_click('<?php echo $this->url("dispatch/view/") ?>','Thông tin lệnh điều xe',<?php echo $dispatch->dispatch_id ?>)">
+                    
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("shipment/view/") ?>','Thông tin phiếu vận chuyển',<?php echo $shipment->shipment_id ?>)">
                         <i class="ace-icon fa fa-info-circle bigger-130"></i>
                     </a>
-                    <a class="green"  onclick="edit_click('<?php echo $this->url("dispatch/edit/") ?>','Cập nhật lệnh điều xe',<?php echo $dispatch->dispatch_id ?>)">
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("shipment/edit/") ?>','Cập nhật phiếu vận chuyển',<?php echo $shipment->shipment_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
-                    <?php if($dispatch->dispatch_status=="" || $dispatch->dispatch_status==0){ ?>
+                    <?php if($shipment->shipment_status=="" || $shipment->shipment_status==0){ ?>
                     <a class="red" >
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $dispatch->dispatch_id ?>)"></i>
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $shipment->shipment_id ?>)"></i>
                     </a>
                     <?php } ?>
                 </div>

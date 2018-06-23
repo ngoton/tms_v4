@@ -676,8 +676,22 @@ Class customerController Extends baseController {
     public function deletecontact(){
         if (isset($_POST['data'])) {
             $contact_person = $this->model->get('contactpersonModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             $contact_person->queryCustomer('DELETE FROM contact_person WHERE contact_person_id='.$_POST['data'].' AND contact_person_customer='.$_POST['customer']);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|contact_person|"."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
+
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'contact_person',
+                'user_log_table_name' => 'Người liên hệ',
+                'user_log_action' => 'Xóa',
+                'user_log_data' => json_encode($_POST['data']),
+            );
+            $user_log_model->createUser($data_log);
         }
     }
 
