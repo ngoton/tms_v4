@@ -258,6 +258,8 @@ Class shipmentController Extends baseController {
                 'shipment_place_to'=>trim($_POST['shipment_place_to']),
                 'shipment_start_date' => strtotime(str_replace('/', '-', $_POST['shipment_start_date'])),
                 'shipment_end_date' => strtotime(str_replace('/', '-', $_POST['shipment_end_date'])),
+                'shipment_port_from'=>trim($_POST['shipment_port_from']),
+                'shipment_port_to'=>trim($_POST['shipment_port_to']),
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
                 'shipment_sub'=>trim($_POST['shipment_sub']),
@@ -288,15 +290,19 @@ Class shipmentController Extends baseController {
                     if ($v->id_shipment_cost>0) {
                         $data_shipment_cost['shipment_cost_update_user'] = $_SESSION['userid_logined'];
                         $shipment_cost_model->updateShipment($data_shipment_cost,array('shipment_cost_id'=>$v->id_shipment_cost));
+
+                        $cost += $data_shipment_cost['shipment_cost_money'];
                     }
                     else{
                         if ($data_shipment_cost['shipment_cost_money']!="") {
                             $data_shipment_cost['shipment_cost_create_user'] = $_SESSION['userid_logined'];
                             $shipment_cost_model->createShipment($data_shipment_cost);
+
+                            $cost += $data_shipment_cost['shipment_cost_money'];
                         }
                         
                     }
-                    $cost += $data_shipment_cost['shipment_cost_money'];
+                    
                 }
             }
 
@@ -388,6 +394,12 @@ Class shipmentController Extends baseController {
 
         $this->view->data['cost_lists'] = $cost_lists;
 
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
+
 
         return $this->view->show('shipment/add');
 
@@ -413,6 +425,8 @@ Class shipmentController Extends baseController {
             'start_date'=>null,
             'end_date'=>null,
             'container'=>null,
+            'port_from'=>null,
+            'port_to'=>null
         );
 
         $dispatch_model = $this->model->get('dispatchModel');
@@ -459,6 +473,8 @@ Class shipmentController Extends baseController {
                 'start_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date_sub),
                 'end_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date_sub),
                 'container'=>$containers,
+                'port_from'=>$dispatch_data->dispatch_port_from_sub,
+                'port_to'=>$dispatch_data->dispatch_port_to_sub,
             );
         }
         else{
@@ -491,6 +507,8 @@ Class shipmentController Extends baseController {
                 'start_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date),
                 'end_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date),
                 'container'=>$containers,
+                'port_from'=>$dispatch_data->dispatch_port_from,
+                'port_to'=>$dispatch_data->dispatch_port_to,
             );
         }
 
@@ -575,6 +593,8 @@ Class shipmentController Extends baseController {
                 'shipment_place_to'=>trim($_POST['shipment_place_to']),
                 'shipment_start_date' => strtotime(str_replace('/', '-', $_POST['shipment_start_date'])),
                 'shipment_end_date' => strtotime(str_replace('/', '-', $_POST['shipment_end_date'])),
+                'shipment_port_from'=>trim($_POST['shipment_port_from']),
+                'shipment_port_to'=>trim($_POST['shipment_port_to']),
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
                 'shipment_sub'=>trim($_POST['shipment_sub']),
@@ -606,15 +626,19 @@ Class shipmentController Extends baseController {
                     if ($v->id_shipment_cost>0) {
                         $data_shipment_cost['shipment_cost_update_user'] = $_SESSION['userid_logined'];
                         $shipment_cost_model->updateShipment($data_shipment_cost,array('shipment_cost_id'=>$v->id_shipment_cost));
+
+                        $cost += $data_shipment_cost['shipment_cost_money'];
                     }
                     else{
                         if ($data_shipment_cost['shipment_cost_money']!="") {
                             $data_shipment_cost['shipment_cost_create_user'] = $_SESSION['userid_logined'];
                             $shipment_cost_model->createShipment($data_shipment_cost);
+
+                            $cost += $data_shipment_cost['shipment_cost_money'];
                         }
                         
                     }
-                    $cost += $data_shipment_cost['shipment_cost_money'];
+                    
                 }
             }
             $shipment_model->updateShipment(array('shipment_cost'=>$cost),array('shipment_id'=>$id_shipment));
@@ -789,6 +813,12 @@ Class shipmentController Extends baseController {
 
         $this->view->data['shipment_costs'] = $shipment_costs;
 
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
+
         return $this->view->show('shipment/edit');
 
     }
@@ -942,6 +972,12 @@ Class shipmentController Extends baseController {
         $shipment_costs = $shipment_cost_model->getAllShipment(array('where'=>'shipment_cost_shipment='.$shipment_data->shipment_id),$join);
 
         $this->view->data['shipment_costs'] = $shipment_costs;
+
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
 
 
         return $this->view->show('shipment/view');

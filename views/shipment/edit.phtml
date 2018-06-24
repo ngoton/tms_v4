@@ -215,7 +215,15 @@ $(document).ready(function(){
               <?php } ?>
             </select>
           </div>
-          
+          <label for="shipment_port_from">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','shipment_port_from','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="shipment_port_from" name="shipment_port_from" tabindex="19">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $shipment_data->shipment_port_from==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
           
           
         </div>
@@ -242,7 +250,15 @@ $(document).ready(function(){
               <?php } ?>
             </select>
           </div> 
-          
+          <label for="shipment_port_to">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','shipment_port_to','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="shipment_port_to" name="shipment_port_to" tabindex="20">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $shipment_data->shipment_port_to==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
           
         </div>
         <div class="col-md-2 col-xs-6">
@@ -549,6 +565,8 @@ $(document).ready(function(){
            $("#shipment_type").val(data.booking_type).change();
            $("#shipment_place_from").val(data.place_from).change();
            $("#shipment_place_to").val(data.place_to).change();
+           $("#shipment_port_from").val(data.port_from).change();
+           $("#shipment_port_to").val(data.port_to).change();
 
            $('#shipment_customer').html(data.customer);
            $('#shipment_booking').html(data.booking);
@@ -583,6 +601,8 @@ $(document).ready(function(){
            $("#shipment_type").val(data.booking_type).change();
            $("#shipment_place_from").val(data.place_from).change();
            $("#shipment_place_to").val(data.place_to).change();
+           $("#shipment_port_from").val(data.port_from).change();
+           $("#shipment_port_to").val(data.port_to).change();
 
            $('#shipment_customer').html(data.customer);
            $('#shipment_booking').html(data.booking);

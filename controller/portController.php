@@ -310,6 +310,19 @@ Class portController Extends baseController {
         return $this->view->show('port/view');
 
     }
+    public function getport(){
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($ports as $port) {
+            $result[$i]['id'] = $port->port_id;
+            $result[$i]['text'] = $port->port_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
 
     public function delete(){
 

@@ -248,6 +248,8 @@ Class dispatchController Extends baseController {
                 'dispatch_place_to'=>trim($_POST['dispatch_place_to']),
                 'dispatch_start_date' => strtotime(str_replace('/', '-', $_POST['dispatch_start_date'])),
                 'dispatch_end_date' => strtotime(str_replace('/', '-', $_POST['dispatch_end_date'])),
+                'dispatch_port_from'=>trim($_POST['dispatch_port_from']),
+                'dispatch_port_to'=>trim($_POST['dispatch_port_to']),
                 'dispatch_comment'=>trim($_POST['dispatch_comment']),
                 'dispatch_shipment_temp'=>trim($_POST['dispatch_shipment_temp']),
                 'dispatch_customer'=>trim($_POST['dispatch_customer']),
@@ -257,6 +259,8 @@ Class dispatchController Extends baseController {
                 'dispatch_place_to_sub'=>trim($_POST['dispatch_place_to_sub']),
                 'dispatch_start_date_sub' => strtotime(str_replace('/', '-', $_POST['dispatch_start_date_sub'])),
                 'dispatch_end_date_sub' => strtotime(str_replace('/', '-', $_POST['dispatch_end_date_sub'])),
+                'dispatch_port_from_sub'=>trim($_POST['dispatch_port_from_sub']),
+                'dispatch_port_to_sub'=>trim($_POST['dispatch_port_to_sub']),
                 'dispatch_comment_sub'=>trim($_POST['dispatch_comment_sub']),
                 'dispatch_shipment_temp_sub'=>trim($_POST['dispatch_shipment_temp_sub']),
                 'dispatch_customer_sub'=>trim($_POST['dispatch_customer_sub']),
@@ -397,6 +401,12 @@ Class dispatchController Extends baseController {
 
         $this->view->data['shipment_temps'] = $shipment_temps;
 
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
+
         return $this->view->show('dispatch/add');
     }
 
@@ -417,6 +427,8 @@ Class dispatchController Extends baseController {
                 'dispatch_place_to'=>trim($_POST['dispatch_place_to']),
                 'dispatch_start_date' => strtotime(str_replace('/', '-', $_POST['dispatch_start_date'])),
                 'dispatch_end_date' => strtotime(str_replace('/', '-', $_POST['dispatch_end_date'])),
+                'dispatch_port_from'=>trim($_POST['dispatch_port_from']),
+                'dispatch_port_to'=>trim($_POST['dispatch_port_to']),
                 'dispatch_comment'=>trim($_POST['dispatch_comment']),
                 'dispatch_shipment_temp'=>trim($_POST['dispatch_shipment_temp']),
                 'dispatch_customer'=>trim($_POST['dispatch_customer']),
@@ -426,6 +438,8 @@ Class dispatchController Extends baseController {
                 'dispatch_place_to_sub'=>trim($_POST['dispatch_place_to_sub']),
                 'dispatch_start_date_sub' => strtotime(str_replace('/', '-', $_POST['dispatch_start_date_sub'])),
                 'dispatch_end_date_sub' => strtotime(str_replace('/', '-', $_POST['dispatch_end_date_sub'])),
+                'dispatch_port_from_sub'=>trim($_POST['dispatch_port_from_sub']),
+                'dispatch_port_to_sub'=>trim($_POST['dispatch_port_to_sub']),
                 'dispatch_comment_sub'=>trim($_POST['dispatch_comment_sub']),
                 'dispatch_shipment_temp_sub'=>trim($_POST['dispatch_shipment_temp_sub']),
                 'dispatch_customer_sub'=>trim($_POST['dispatch_customer_sub']),
@@ -618,6 +632,12 @@ Class dispatchController Extends baseController {
 
         $this->view->data['shipment_temp_subs'] = $shipment_temp_subs;
 
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
+
 
         return $this->view->show('dispatch/edit');
 
@@ -743,6 +763,12 @@ Class dispatchController Extends baseController {
         
 
         $this->view->data['shipment_temp_subs'] = $shipment_temp_subs;
+
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
 
 
         return $this->view->show('dispatch/view');
@@ -887,6 +913,12 @@ Class dispatchController Extends baseController {
         $this->view->data['time'] = $time;
         $this->view->data['oil'] = $oil;
 
+        $port_model = $this->model->get('portModel');
+
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+
+        $this->view->data['ports'] = $ports;
+
         return $this->view->show('dispatch/shipment');
 
     }
@@ -1009,6 +1041,8 @@ Class dispatchController Extends baseController {
             'start_date'=>null,
             'end_date'=>null,
             'container'=>null,
+            'port_from'=>null,
+            'port_to'=>null
         );
 
         $dispatch_model = $this->model->get('dispatchModel');
@@ -1032,6 +1066,8 @@ Class dispatchController Extends baseController {
                 'start_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date_sub),
                 'end_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date_sub),
                 'container'=>'<option value="">Chọn</option>',
+                'port_from'=>$dispatch_data->dispatch_port_from_sub,
+                'port_to'=>$dispatch_data->dispatch_port_to_sub,
             );
         }
         else{
@@ -1048,6 +1084,8 @@ Class dispatchController Extends baseController {
                 'start_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date),
                 'end_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date),
                 'container'=>'<option value="">Chọn</option>',
+                'port_from'=>$dispatch_data->dispatch_port_from,
+                'port_to'=>$dispatch_data->dispatch_port_to,
             );
         }
 

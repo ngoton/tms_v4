@@ -60,7 +60,15 @@
               <?php } ?>
             </select>
           </div>
-           
+           <label for="dispatch_port_from">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_from','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_from" name="dispatch_port_from" tabindex="15">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_from==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
         </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','dispatch_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
@@ -91,7 +99,15 @@
               <?php } ?>
             </select>
           </div> 
-          
+          <label for="dispatch_port_to">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_to','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_to" name="dispatch_port_to" tabindex="16">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_to==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
        </div>
        <div class="col-md-2 col-xs-6">
           <label for="dispatch_romooc">Mooc <a title="Thay lắp mooc" id="vehicle_romooc"><i class="ace-icon fa fa-exchange blue"></i></a></label>
@@ -148,7 +164,15 @@
               <?php } ?>
             </select>
           </div>  
-          
+          <label for="dispatch_port_from_sub">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_from_sub','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_from_sub" name="dispatch_port_from_sub" tabindex="24">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_from_sub==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
         </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_customer_sub">Khách hàng </label>
@@ -169,7 +193,15 @@
               <?php } ?>
             </select>
           </div>  
-          
+          <label for="dispatch_port_to_sub">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_to_sub','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_to_sub" name="dispatch_port_to_sub" tabindex="16">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_to_sub==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
           
         </div>
         <div class="col-md-2 col-xs-6">
@@ -177,9 +209,9 @@
           <div class="input-group">
             <select class="form-control" id="dispatch_booking_type_sub" name="dispatch_booking_type_sub" tabindex="17">
               <option value="">Chọn</option>
-              <option <?php echo $dispatch_data->dispatch_booking_type_sub==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
-              <option <?php echo $dispatch_data->dispatch_booking_type_sub==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
-              <option <?php echo $dispatch_data->dispatch_booking_type_sub==3?'selected="selected"':null ?> value="3">Khác</option>
+                <option <?php echo $dispatch_data->dispatch_booking_type_sub==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
+                <option <?php echo $dispatch_data->dispatch_booking_type_sub==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
+                <option <?php echo $dispatch_data->dispatch_booking_type_sub==3?'selected="selected"':null ?> value="3">Khác</option>
             </select>
           </div>
           <label for="dispatch_start_date_sub">Ngày lấy</label>
@@ -214,5 +246,5 @@
         </div>
       </div>
     </div>
-  
+ 
 </div>
