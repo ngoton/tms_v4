@@ -40,7 +40,7 @@ Class portController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'place_code';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'port_id';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
@@ -55,11 +55,7 @@ Class portController Extends baseController {
 
 
 
-        $place_model = $this->model->get('placeModel');
-
-        $data = array(
-            'where'=>'place_port = 1',
-        );
+        $port_model = $this->model->get('portModel');
 
         $sonews = $limit;
 
@@ -67,9 +63,9 @@ Class portController Extends baseController {
 
         $pagination_stages = 2;
 
-        $join = array('table'=>'province','where'=>'place_province=province_id');
+        $join = array('table'=>'province','where'=>'port_province=province_id');
 
-        $tongsodong = count($place_model->getAllPlace($data,$join));
+        $tongsodong = count($port_model->getAllPort(null,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -96,7 +92,6 @@ Class portController Extends baseController {
 
 
         $data = array(
-            'where'=>'place_port = 1',
 
             'order_by'=>$order_by,
 
@@ -110,15 +105,15 @@ Class portController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = ' AND ( place_code LIKE "%'.$keyword.'%" OR place_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
+            $search = '( port_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
 
-            $data['where'] .= $search;
+            $data['where'] = $search;
 
         }
 
 
 
-        $this->view->data['places'] = $place_model->getAllPlace($data,$join);
+        $this->view->data['ports'] = $port_model->getAllPort($data,$join);
 
 
 
@@ -128,29 +123,21 @@ Class portController Extends baseController {
 
 
     public function addport(){
-        $place_model = $this->model->get('placeModel');
+        $port_model = $this->model->get('portModel');
 
-        if (isset($_POST['place_code'])) {
-            if($place_model->getPlaceByWhere(array('place_code'=>trim($_POST['place_code'])))){
-                echo 'Mã cảng đã tồn tại';
-                return false;
-            }
-            if($place_model->getPlaceByWhere(array('place_name'=>trim($_POST['place_name']),'place_province'=>trim($_POST['place_province'])))){
+        if (isset($_POST['port_name'])) {
+            if($port_model->getPortByWhere(array('port_name'=>trim($_POST['port_name'])))){
                 echo 'Tên cảng đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'place_province' => trim($_POST['place_province']),
-                'place_name' => trim($_POST['place_name']),
-                'place_code' => trim($_POST['place_code']),
-                'place_lat' => trim($_POST['place_lat']),
-                'place_long' => trim($_POST['place_long']),
-                'place_port' => isset($_POST['place_port'])?$_POST['place_port']:null,
+                'port_province' => trim($_POST['port_province']),
+                'port_name' => trim($_POST['port_name']),
             );
-            $place_model->createPlace($data);
+            $port_model->createPort($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$place_model->getLastPlace()->place_id."|place|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$port_model->getLastPort()->port_id."|port|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -158,7 +145,7 @@ Class portController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'place',
+                'user_log_table' => 'port',
                 'user_log_table_name' => 'Cảng',
                 'user_log_action' => 'Thêm mới',
                 'user_log_data' => json_encode($data),
@@ -199,30 +186,22 @@ Class portController Extends baseController {
     }
 
     public function editport(){
-        $place_model = $this->model->get('placeModel');
+        $port_model = $this->model->get('portModel');
 
-        if (isset($_POST['place_id'])) {
-            $id = $_POST['place_id'];
-            if($place_model->getAllPlaceByWhere($id.' AND place_code = "'.trim($_POST['place_code']))){
-                echo 'Mã cảng đã tồn tại';
-                return false;
-            }
-            if($place_model->getAllPlaceByWhere($id.' AND place_name = "'.trim($_POST['place_name']).'"'.' AND place_province = '.trim($_POST['place_province']))){
+        if (isset($_POST['port_id'])) {
+            $id = $_POST['port_id'];
+            if($port_model->getAllPortByWhere($id.' AND port_name = "'.trim($_POST['port_name']).'"')){
                 echo 'Tên cảng đã tồn tại';
                 return false;
             }
 
             $data = array(
-                'place_province' => trim($_POST['place_province']),
-                'place_name' => trim($_POST['place_name']),
-                'place_code' => trim($_POST['place_code']),
-                'place_lat' => trim($_POST['place_lat']),
-                'place_long' => trim($_POST['place_long']),
-                'place_port' => isset($_POST['place_port'])?$_POST['place_port']:null,
+                'port_province' => trim($_POST['port_province']),
+                'port_name' => trim($_POST['port_name']),
             );
-            $place_model->updatePlace($data,array('place_id'=>$id));
+            $port_model->updatePort($data,array('port_id'=>$id));
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|place|".implode("-",$data)."\n"."\r\n";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|port|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -230,7 +209,7 @@ Class portController Extends baseController {
             $data_log = array(
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
-                'user_log_table' => 'place',
+                'user_log_table' => 'port',
                 'user_log_table_name' => 'Cảng',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
@@ -267,13 +246,13 @@ Class portController Extends baseController {
 
         $this->view->data['title'] = 'Cập nhật cảng';
 
-        $place_model = $this->model->get('placeModel');
+        $port_model = $this->model->get('portModel');
 
-        $place_data = $place_model->getPlace($id);
+        $port_data = $port_model->getPort($id);
 
-        $this->view->data['place_data'] = $place_data;
+        $this->view->data['port_data'] = $port_data;
 
-        if (!$place_data) {
+        if (!$port_data) {
 
             $this->view->redirect('port');
 
@@ -312,13 +291,13 @@ Class portController Extends baseController {
 
         $this->view->data['title'] = 'Thông tin cảng';
 
-        $place_model = $this->model->get('placeModel');
+        $port_model = $this->model->get('portModel');
 
-        $place_data = $place_model->getPlace($id);
+        $port_data = $port_model->getPort($id);
 
-        $this->view->data['place_data'] = $place_data;
+        $this->view->data['port_data'] = $port_data;
 
-        if (!$place_data) {
+        if (!$port_data) {
 
             $this->view->redirect('port');
 
@@ -331,16 +310,15 @@ Class portController Extends baseController {
         return $this->view->show('port/view');
 
     }
-
     public function getport(){
-        $place_model = $this->model->get('placeModel');
+        $port_model = $this->model->get('portModel');
 
-        $places = $place_model->getAllPlace(array('where'=>'place_port = 1','order_by'=>'place_code','order'=>'ASC'));
+        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
         $result = array();
         $i = 0;
-        foreach ($places as $place) {
-            $result[$i]['id'] = $place->place_id;
-            $result[$i]['text'] = $place->place_name;
+        foreach ($ports as $port) {
+            $result[$i]['id'] = $port->port_id;
+            $result[$i]['text'] = $port->port_name;
             $i++;
         }
         echo json_encode($result);
@@ -364,7 +342,7 @@ Class portController Extends baseController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $place_model = $this->model->get('placeModel');
+            $port_model = $this->model->get('portModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -373,10 +351,10 @@ Class portController Extends baseController {
 
                 foreach ($datas as $data) {
 
-                    $place_model->deletePlace($data);
+                    $port_model->deletePort($data);
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|place|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|port|"."\n"."\r\n";
 
                         $this->lib->ghi_file("action_logs.txt",$text);
 
@@ -388,7 +366,7 @@ Class portController Extends baseController {
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'place',
+                    'user_log_table' => 'port',
                     'user_log_table_name' => 'Cảng',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
@@ -403,16 +381,16 @@ Class portController Extends baseController {
 
             else{
 
-                $place_model->deletePlace($_POST['data']);
+                $port_model->deletePort($_POST['data']);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|place|"."\n"."\r\n";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|port|"."\n"."\r\n";
 
                 $this->lib->ghi_file("action_logs.txt",$text);
 
                 $data_log = array(
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
-                    'user_log_table' => 'place',
+                    'user_log_table' => 'port',
                     'user_log_table_name' => 'Cảng',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),

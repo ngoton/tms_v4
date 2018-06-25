@@ -1,0 +1,34 @@
+ 
+<div class="login_body">
+  
+          <table style="margin-top:20px;">
+            <tr>
+                <td>Cảng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','lift_place','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="lift_place" name="lift_place" required="required" tabindex="1">
+                    <?php foreach ($places as $place) { ?>
+                      <option value="<?php echo $place->place_id ?>" <?php echo $lift_data->lift_place==$place->place_id?'selected="selected"':null ?>><?php echo $place->place_name ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Phí nâng </td>
+                <td><input type="text" id="lift_on" name="lift_on" tabindex="2" class="numbers" value="<?php echo $lib->formatMoney($lift_data->lift_on) ?>"></td>
+            </tr>
+            <tr>
+                <td>Phí hạ </td>
+                <td><input type="text" id="lift_off" name="lift_off" tabindex="3" class="numbers" value="<?php echo $lib->formatMoney($lift_data->lift_off) ?>"></td>
+            </tr>
+            <tr>
+                <td>Ngày áp dụng </td>
+                <td><input type="text" id="lift_start_date" name="lift_start_date" tabindex="4" class="start-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($lift_data->lift_start_date) ?>"></td>
+            </tr>
+            <tr>
+                <td>Ngày hết hạn </td>
+                <td><input type="text" id="lift_end_date" name="lift_end_date" tabindex="5" class="end-date" value="<?php echo $lib->hien_thi_ngay_thang($lift_data->lift_end_date) ?>"></td>
+            </tr>
+        </table> 
+    
+</div>
+<div id="error_lift" class="error"><?php echo isset($error) ? $error : null; ?></div>

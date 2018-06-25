@@ -130,7 +130,7 @@
             <select class="form-control select2" id="shipment_port_from" name="shipment_port_from" tabindex="19">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option <?php echo $shipment_data->shipment_port_from==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option <?php echo $shipment_data->shipment_port_from==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
@@ -165,7 +165,7 @@
             <select class="form-control select2" id="shipment_port_to" name="shipment_port_to" tabindex="20">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option <?php echo $shipment_data->shipment_port_to==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option <?php echo $shipment_data->shipment_port_to==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 

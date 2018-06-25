@@ -1,0 +1,176 @@
+
+<?php
+$url_order = 'DESC';
+if ($order_by == 'lift_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'place_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'lift_on')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'lift_off')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'lift_start_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'lift_end_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<div class="tools action-buttons pull-right">
+    <?php
+    if (isset($filter)) {
+        echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+    }
+    ?>
+    <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+        <option value="18446744073709">All</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+    </select>
+    <a class="purpose" data-original-title="Thêm mới">
+        <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("lift/add") ?>','Thêm phí nâng hạ mới')"></i>
+    </a> 
+    <div class="pull-right pos-rel dropdown-hover">
+        <button class="btn btn-minier bigger" style="line-height: 26px">
+            <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+        </button>
+
+        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+            <li>
+                <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                    <span class="orange">
+                        <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                    <span class="green">
+                        <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("lift/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                    <span class="red">
+                        <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                    <span class="purple">
+                        <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("lift/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                
+                <div class="text-center pos-rel dropdown-hover">
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                        <span class="blue">
+                            <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                        <li>
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                <span class="red">
+                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                <span class="blue">
+                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            
+        </ul>
+    </div>                        
+</div>
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblExport" >
+<thead>
+    <tr>
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','lift_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'lift_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_name','<?php echo $url_order ?>')">Cảng <?php if ($order_by == 'place_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','lift_on','<?php echo $url_order ?>')">Phí nâng <?php if ($order_by == 'lift_on'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','lift_off','<?php echo $url_order ?>')">Phí hạ <?php if ($order_by == 'lift_off'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','lift_start_date','<?php echo $url_order ?>')">Ngày áp dụng <?php if ($order_by == 'lift_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','lift_end_date','<?php echo $url_order ?>')">Ngày hết hạn <?php if ($order_by == 'lift_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+           
+        <th>
+            
+        </th>
+    </tr>
+   </thead>
+   <tbody>
+    <?php foreach ($lifts as $lift) : ?>
+        <tr id="<?php echo $lift->lift_id ?>" class="edit_tr" <?php echo ($lift->lift_end_date=="" || $lift->lift_end_date==0 || $lift->lift_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $lift->lift_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin cảng',<?php echo $lift->lift_place ?>,'none')"><?php echo $lift->place_name; ?></a></td>
+            <td><?php echo $lib->formatMoney($lift->lift_on); ?></td>
+            <td><?php echo $lib->formatMoney($lift->lift_off); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($lift->lift_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($lift->lift_end_date); ?></td>
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("lift/view/") ?>','Thông tin phí nâng hạ',<?php echo $lift->lift_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("lift/edit/") ?>','Cập nhật phí nâng hạ',<?php echo $lift->lift_id ?>)">
+                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
+
+                    <a class="red" >
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $lift->lift_id ?>)"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+</div>
+<script type="text/javascript">
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+</script>

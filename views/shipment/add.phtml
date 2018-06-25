@@ -216,7 +216,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="shipment_port_from" name="shipment_port_from" tabindex="19">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
@@ -251,7 +251,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="shipment_port_to" name="shipment_port_to" tabindex="20">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 

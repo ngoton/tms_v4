@@ -401,9 +401,9 @@ Class dispatchController Extends baseController {
 
         $this->view->data['shipment_temps'] = $shipment_temps;
 
-        $port_model = $this->model->get('portModel');
+      
 
-        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+        $ports = $place_model->getAllPlace(array('where'=>'place_port=1','order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['ports'] = $ports;
 
@@ -634,7 +634,7 @@ Class dispatchController Extends baseController {
 
         $port_model = $this->model->get('portModel');
 
-        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+        $ports = $place_model->getAllPlace(array('where'=>'place_port=1','order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['ports'] = $ports;
 
@@ -766,7 +766,7 @@ Class dispatchController Extends baseController {
 
         $port_model = $this->model->get('portModel');
 
-        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+        $ports = $place_model->getAllPlace(array('where'=>'place_port=1','order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['ports'] = $ports;
 
@@ -915,7 +915,7 @@ Class dispatchController Extends baseController {
 
         $port_model = $this->model->get('portModel');
 
-        $ports = $port_model->getAllPort(array('order_by'=>'port_name','order'=>'ASC'));
+        $ports = $place_model->getAllPlace(array('where'=>'place_port=1','order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['ports'] = $ports;
 

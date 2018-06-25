@@ -57,6 +57,10 @@ Class placeController Extends baseController {
 
         $place_model = $this->model->get('placeModel');
 
+        $data = array(
+            'where'=>'place_port IS NULL',
+        );
+
         $sonews = $limit;
 
         $x = ($page-1) * $sonews;
@@ -65,7 +69,7 @@ Class placeController Extends baseController {
 
         $join = array('table'=>'province','where'=>'place_province=province_id');
 
-        $tongsodong = count($place_model->getAllPlace(null,$join));
+        $tongsodong = count($place_model->getAllPlace($data,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -92,6 +96,7 @@ Class placeController Extends baseController {
 
 
         $data = array(
+            'where'=>'place_port IS NULL',
 
             'order_by'=>$order_by,
 
@@ -105,9 +110,9 @@ Class placeController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( place_code LIKE "%'.$keyword.'%" OR place_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
+            $search = ' AND ( place_code LIKE "%'.$keyword.'%" OR place_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
 
-            $data['where'] = $search;
+            $data['where'] .= $search;
 
         }
 
@@ -141,6 +146,7 @@ Class placeController Extends baseController {
                 'place_code' => trim($_POST['place_code']),
                 'place_lat' => trim($_POST['place_lat']),
                 'place_long' => trim($_POST['place_long']),
+                'place_port' => isset($_POST['place_port'])?$_POST['place_port']:null,
             );
             $place_model->createPlace($data);
 
@@ -212,6 +218,7 @@ Class placeController Extends baseController {
                 'place_code' => trim($_POST['place_code']),
                 'place_lat' => trim($_POST['place_lat']),
                 'place_long' => trim($_POST['place_long']),
+                'place_port' => isset($_POST['place_port'])?$_POST['place_port']:null,
             );
             $place_model->updatePlace($data,array('place_id'=>$id));
 

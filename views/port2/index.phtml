@@ -1,11 +1,9 @@
 
 <?php
 $url_order = 'DESC';
-if ($order_by == 'place_id')
+if ($order_by == 'port_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'place_code')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'place_name')
+elseif ($order_by == 'port_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'province_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
@@ -73,21 +71,21 @@ $i = $sonews*$page-($sonews-1);
                         <li>
                             <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
                                 <span class="green">
-                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblexport')"></i>
+                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
                                 </span>
                             </a>
                         </li>
                         <li>
                             <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
                                 <span class="red">
-                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblexport')"></i>
+                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
                                 </span>
                             </a>
                         </li>
                         <li>
                             <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
                                 <span class="blue">
-                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblexport')"></i>
+                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
                                 </span>
                             </a>
                         </li>
@@ -101,16 +99,13 @@ $i = $sonews*$page-($sonews-1);
 <div class="clearfix"></div>
 <div id="content" style="padding:5px;">
    
-<table class="table_data" id="tblexport" >
+<table class="table_data" id="tblExport" >
 <thead>
     <tr>
     	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'place_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','port_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'port_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_code','<?php echo $url_order ?>')">Mã cảng <?php if ($order_by == 'place_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_name','<?php echo $url_order ?>')">Tên cảng <?php if ($order_by == 'place_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','port_name','<?php echo $url_order ?>')">Tên cảng <?php if ($order_by == 'port_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','province_name','<?php echo $url_order ?>')">Tỉnh/TP <?php if ($order_by == 'province_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -122,26 +117,25 @@ $i = $sonews*$page-($sonews-1);
     </tr>
    </thead>
    <tbody>
-    <?php foreach ($places as $place) : ?>
-        <tr id="<?php echo $place->place_id ?>" class="edit_tr">
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $place->place_id ?>"><span class="lbl"></span></td>
+    <?php foreach ($ports as $port) : ?>
+        <tr id="<?php echo $port->port_id ?>" class="edit_tr">
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $port->port_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $place->place_code; ?></td>
-            <td><?php echo $place->place_name; ?></td>
-            <td><?php echo $place->province_name; ?></td>
+            <td><?php echo $port->port_name; ?></td>
+            <td><?php echo $port->province_name; ?></td>
             
             
             <td class="text-right">
                 <div class="tools action-buttons">
-                    <a class="blue"  onclick="view_click('<?php echo $this->url("port/view/") ?>','Thông tin cảng',<?php echo $place->place_id ?>)">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("port/view/") ?>','Thông tin cảng',<?php echo $port->port_id ?>)">
                         <i class="ace-icon fa fa-info-circle bigger-130"></i>
                     </a>
-                    <a class="green"  onclick="edit_click('<?php echo $this->url("port/edit/") ?>','Cập nhật cảng',<?php echo $place->place_id ?>)">
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("port/edit/") ?>','Cập nhật cảng',<?php echo $port->port_id ?>)">
                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                     </a>
 
                     <a class="red" >
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $place->place_id ?>)"></i>
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $port->port_id ?>)"></i>
                     </a>
                 </div>
             </td>

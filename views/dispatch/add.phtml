@@ -109,7 +109,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="dispatch_port_from" name="dispatch_port_from" tabindex="15">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
@@ -148,7 +148,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="dispatch_port_to" name="dispatch_port_to" tabindex="16">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
@@ -211,7 +211,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="dispatch_port_from_sub" name="dispatch_port_from_sub" tabindex="24">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div> 
@@ -240,7 +240,7 @@ $(document).ready(function(){
             <select class="form-control select2" id="dispatch_port_to_sub" name="dispatch_port_to_sub" tabindex="16">
               <option value="">Chọn</option>
               <?php foreach ($ports as $port) { ?>
-                <option value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
+                <option value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
               <?php } ?>
             </select>
           </div>
