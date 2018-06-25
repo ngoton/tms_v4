@@ -40,7 +40,7 @@ Class liftController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'place_name,lift_start_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'place_name,unit_name,lift_start_date';
 
             $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
 
@@ -67,11 +67,14 @@ Class liftController Extends baseController {
             'where'=>'1=1',
         );
 
-        $join = array('table'=>'place', 'where'=>'lift_place=place_id','join'=>'LEFT JOIN');
+        $join = array('table'=>'place', 'where'=>'lift_place=place_id LEFT JOIN unit ON lift_unit=unit_id','join'=>'LEFT JOIN');
 
         if (isset($_POST['filter'])) {
             if (isset($_POST['lift_place'])) {
                 $data['where'] .= ' AND lift_place IN ('.implode(',',$_POST['lift_place']).')';
+            }
+            if (isset($_POST['lift_unit'])) {
+                $data['where'] .= ' AND lift_unit IN ('.implode(',',$_POST['lift_unit']).')';
             }
             $this->view->data['filter'] = 1;
         }
@@ -117,6 +120,9 @@ Class liftController Extends baseController {
             if (isset($_POST['lift_place'])) {
                 $data['where'] .= ' AND lift_place IN ('.implode(',',$_POST['lift_place']).')';
             }
+            if (isset($_POST['lift_unit'])) {
+                $data['where'] .= ' AND lift_unit IN ('.implode(',',$_POST['lift_unit']).')';
+            }
             $this->view->data['filter'] = 1;
         }
 
@@ -143,7 +149,7 @@ Class liftController Extends baseController {
         $lift_model = $this->model->get('liftModel');
 
         if (isset($_POST['lift_start_date'])) {
-            if($lift_model->getVehicleByWhere(array('lift_place'=>$_POST['lift_place'],'lift_start_date'=>strtotime(str_replace('/', '-', $_POST['lift_start_date']))))){
+            if($lift_model->getLiftByWhere(array('lift_place'=>$_POST['lift_place'],'lift_unit'=>$_POST['lift_unit'],'lift_start_date'=>strtotime(str_replace('/', '-', $_POST['lift_start_date']))))){
                 echo 'Thông tin đã tồn tại';
                 return false;
             }
@@ -152,6 +158,7 @@ Class liftController Extends baseController {
                 'lift_start_date' => strtotime(str_replace('/', '-', $_POST['lift_start_date'])),
                 'lift_end_date' => $_POST['lift_end_date']!=""?strtotime(str_replace('/', '-', $_POST['lift_end_date'])):null,
                 'lift_place' => trim($_POST['lift_place']),
+                'lift_unit' => trim($_POST['lift_unit']),
                 'lift_customer' => trim($_POST['lift_customer']),
                 'lift_on' => str_replace(',', '', $_POST['lift_on']),
                 'lift_off' => str_replace(',', '', $_POST['lift_off']),
@@ -160,13 +167,13 @@ Class liftController Extends baseController {
             $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['lift_start_date']).' -1 day')));
 
             if ($data['lift_end_date'] == null) {
-                $lift_model->queryLift('UPDATE lift SET lift_end_date = '.$ngaytruoc.' WHERE lift_place='.$data['lift_place'].' AND (lift_end_date IS NULL OR lift_end_date = 0)');
+                $lift_model->queryLift('UPDATE lift SET lift_end_date = '.$ngaytruoc.' WHERE lift_place='.$data['lift_place'].' AND lift_unit='.$data['lift_unit'].' AND (lift_end_date IS NULL OR lift_end_date = 0)');
                 $lift_model->createLift($data);
             }
             else{
-                $dm1 = $lift_model->queryLift('SELECT * FROM lift WHERE lift_place='.$data['lift_place'].' AND lift_start_date <= '.$data['lift_start_date'].' AND lift_end_date <= '.$data['lift_end_date'].' AND lift_end_date >= '.$data['lift_start_date'].' ORDER BY lift_end_date ASC LIMIT 1');
-                $dm2 = $lift_model->queryLift('SELECT * FROM lift WHERE lift_place='.$data['lift_place'].' AND lift_end_date >= '.$data['lift_end_date'].' AND lift_start_date >= '.$data['lift_start_date'].' AND lift_start_date <= '.$data['lift_end_date'].' ORDER BY lift_end_date ASC LIMIT 1');
-                $dm3 = $lift_model->queryLift('SELECT * FROM lift WHERE lift_place='.$data['lift_place'].' AND lift_start_date <= '.$data['lift_start_date'].' AND lift_end_date >= '.$data['lift_end_date'].' ORDER BY lift_end_date ASC LIMIT 1');
+                $dm1 = $lift_model->queryLift('SELECT * FROM lift WHERE lift_place='.$data['lift_place'].' AND lift_unit='.$data['lift_unit'].' AND lift_start_date <= '.$data['lift_start_date'].' AND lift_end_date <= '.$data['lift_end_date'].' AND lift_end_date >= '.$data['lift_start_date'].' ORDER BY lift_end_date ASC LIMIT 1');
+                $dm2 = $lift_model->queryLift('SELECT * FROM lift WHERE lift_place='.$data['lift_place'].' AND lift_unit='.$data['lift_unit'].' AND lift_end_date >= '.$data['lift_end_date'].' AND lift_start_date >= '.$data['lift_start_date'].' AND lift_start_date <= '.$data['lift_end_date'].' ORDER BY lift_end_date ASC LIMIT 1');
+                $dm3 = $lift_model->queryLift('SELECT * FROM lift WHERE lift_place='.$data['lift_place'].' AND lift_unit='.$data['lift_unit'].' AND lift_start_date <= '.$data['lift_start_date'].' AND lift_end_date >= '.$data['lift_end_date'].' ORDER BY lift_end_date ASC LIMIT 1');
 
                 if ($dm3) {
                     foreach ($dm3 as $row) {
@@ -177,6 +184,7 @@ Class liftController Extends baseController {
 
                         $c = array(
                             'lift_place' => $row->lift_place,
+                            'lift_unit' => $row->lift_unit,
                             'lift_customer' => $row->lift_customer,
                             'lift_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['lift_end_date']).' +1 day'))),
                             'lift_end_date' => $row->lift_end_date,
@@ -261,7 +269,11 @@ Class liftController Extends baseController {
 
         $customer = $this->model->get('customerModel');
 
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $this->view->data['customers'] = $customer->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_name','order'=>'ASC'));
+
+        $unit = $this->model->get('unitModel');
+
+        $this->view->data['units'] = $unit->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         return $this->view->show('lift/add');
     }
@@ -276,6 +288,7 @@ Class liftController Extends baseController {
                 'lift_start_date' => strtotime(str_replace('/', '-', $_POST['lift_start_date'])),
                 'lift_end_date' => $_POST['lift_end_date']!=""?strtotime(str_replace('/', '-', $_POST['lift_end_date'])):null,
                 'lift_place' => trim($_POST['lift_place']),
+                'lift_unit' => trim($_POST['lift_unit']),
                 'lift_customer' => trim($_POST['lift_customer']),
                 'lift_on' => str_replace(',', '', $_POST['lift_on']),
                 'lift_off' => str_replace(',', '', $_POST['lift_off']),
@@ -348,7 +361,11 @@ Class liftController Extends baseController {
 
         $customer = $this->model->get('customerModel');
 
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $this->view->data['customers'] = $customer->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_name','order'=>'ASC'));
+
+        $unit = $this->model->get('unitModel');
+
+        $this->view->data['units'] = $unit->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         return $this->view->show('lift/edit');
 
@@ -398,7 +415,11 @@ Class liftController Extends baseController {
 
         $customer = $this->model->get('customerModel');
 
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $this->view->data['customers'] = $customer->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_name','order'=>'ASC'));
+
+        $unit = $this->model->get('unitModel');
+
+        $this->view->data['units'] = $unit->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         return $this->view->show('lift/view');
 
@@ -457,7 +478,11 @@ Class liftController Extends baseController {
 
         $customer = $this->model->get('customerModel');
 
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
+        $this->view->data['customers'] = $customer->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_name','order'=>'ASC'));
+
+        $unit = $this->model->get('unitModel');
+
+        $this->view->data['units'] = $unit->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         return $this->view->show('lift/view');
 
@@ -465,14 +490,14 @@ Class liftController Extends baseController {
 
     public function getlift(){
 
-        $vehicle = $_GET['vehicle'];
+        $port = $_GET['port'];
 
         $date = $_GET['date'];
 
         $lift_model = $this->model->get('liftModel');
 
         $data = array(
-            'where'=>'lift_place = '.$vehicle.' AND lift_start_date <= '.strtotime(str_replace('/', '-', $date)).' AND (lift_end_date IS NULL OR lift_end_date=0 OR lift_end_date >= '.strtotime(str_replace('/', '-', $date)).')',
+            'where'=>'lift_place = '.$port.' AND lift_start_date <= '.strtotime(str_replace('/', '-', $date)).' AND (lift_end_date IS NULL OR lift_end_date=0 OR lift_end_date >= '.strtotime(str_replace('/', '-', $date)).')',
             'order_by'=>'lift_start_date',
             'order'=>'DESC',
             'limit'=>1
@@ -502,6 +527,10 @@ Class liftController Extends baseController {
         $place = $this->model->get('placeModel');
 
         $this->view->data['places'] = $place->getAllPlace(array('where'=>'place_port = 1','order_by'=>'place_name','order'=>'ASC'));
+
+        $unit = $this->model->get('unitModel');
+
+        $this->view->data['units'] = $unit->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
 
         $this->view->data['page'] = $_GET['page'];
         $this->view->data['order_by'] = $_GET['order_by'];

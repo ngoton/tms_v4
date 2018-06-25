@@ -5,6 +5,8 @@ if ($order_by == 'lift_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'place_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'unit_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'lift_on')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'lift_off')
@@ -120,6 +122,9 @@ $i = $sonews*$page-($sonews-1);
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_name','<?php echo $url_order ?>')">Cảng <?php if ($order_by == 'place_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','unit_name','<?php echo $url_order ?>')">Đơn vị <?php if ($order_by == 'unit_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','lift_on','<?php echo $url_order ?>')">Phí nâng <?php if ($order_by == 'lift_on'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
@@ -143,6 +148,7 @@ $i = $sonews*$page-($sonews-1);
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $lift->lift_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin cảng',<?php echo $lift->lift_place ?>,'none')"><?php echo $lift->place_name; ?></a></td>
+            <td><?php echo $lift->unit_name; ?></td>
             <td><?php echo $lib->formatMoney($lift->lift_on); ?></td>
             <td><?php echo $lib->formatMoney($lift->lift_off); ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($lift->lift_start_date); ?></td>

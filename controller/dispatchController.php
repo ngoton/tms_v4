@@ -887,13 +887,15 @@ Class dispatchController Extends baseController {
         $this->view->data['route_data'] = $route_data;
 
         $road_model = $this->model->get('roadModel');
+        $road_toll_model = $this->model->get('roadtollModel');
+        
 
         $data = array(
             'where'=>'road_place_from = '.$dispatch_data->dispatch_place_from.' AND road_place_to = '.$dispatch_data->dispatch_place_to.' AND road_start_date <= '.$dispatch_data->dispatch_date.' AND (road_end_date IS NULL OR road_end_date=0 OR road_end_date >= '.$dispatch_data->dispatch_date.')',
         );
 
         $road_data = array();
-        $km=0;$time=0;$oil=0;
+        $km=0;$time=0;$oil=0;$police=0;$tire=0;$roadtoll=0;
 
         $roads = $road_model->getAllRoad($data);
 
@@ -904,6 +906,13 @@ Class dispatchController Extends baseController {
             $km += $road->road_km;
             $time += $road->road_time;
             $oil += $road->road_oil;
+            $police += $road->road_police;
+            $tire += $road->road_tire;
+
+            $tolls = $road_toll_model->getAllRoad(array('where'=>'road='.$road->road_id));
+            foreach ($tolls as $toll) {
+                $roadtoll += $toll->road_toll_money;
+            }
         }
 
         $this->view->data['roads'] = $roads;
@@ -912,12 +921,33 @@ Class dispatchController Extends baseController {
         $this->view->data['km'] = $km;
         $this->view->data['time'] = $time;
         $this->view->data['oil'] = $oil;
+        $this->view->data['police'] = $police;
+        $this->view->data['tire'] = $tire;
+        $this->view->data['roadtoll'] = $roadtoll;
 
         $port_model = $this->model->get('portModel');
 
         $ports = $place_model->getAllPlace(array('where'=>'place_port=1','order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['ports'] = $ports;
+
+        $warehouse_model = $this->model->get('warehouseModel');
+
+        $data = array(
+            'where'=>'(warehouse_place = '.$dispatch_data->dispatch_place_from.' OR warehouse_place = '.$dispatch_data->dispatch_place_to.') AND warehouse_start_date <= '.$dispatch_data->dispatch_date.' AND (warehouse_end_date IS NULL OR warehouse_end_date=0 OR warehouse_end_date >= '.$dispatch_data->dispatch_date.')',
+        );
+
+        $warehouses = $warehouse_model->getAllWarehouse($data);
+
+        $warehouse_cont=0; $warehouse_ton=0;
+        foreach ($warehouses as $warehouse) {
+            $warehouse_cont += $warehouse->warehouse_cont;
+            $warehouse_ton += $warehouse->warehouse_ton;
+        }
+        $this->view->data['warehouse_cont'] = $warehouse_cont;
+        $this->view->data['warehouse_ton'] = $warehouse_ton;
+
+
 
         return $this->view->show('dispatch/shipment');
 
