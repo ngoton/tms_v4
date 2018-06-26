@@ -1128,34 +1128,66 @@ Class dispatchController Extends baseController {
     }
     public function getcost(){
         $this->view->disableLayout();
+        $this->view->data['lib'] = $this->lib;
 
         $from = $_GET['from'];
         $to = $_GET['to'];
         $port_from = $_GET['port_from'];
         $port_to = $_GET['port_to'];
         $id = $_GET['dispatch'];
+        $book = $_GET['book'];
+        $ton = str_replace(',', '', $_GET['ton']);
+        $unit = $_GET['unit'];
 
         $date = strtotime(str_replace('/', '-', $_GET['date']));
 
-        $dispatch_model = $this->model->get('dispatchModel');
         $booking_model = $this->model->get('bookingModel');
-
-        $dispatch_data = $dispatch_model->getDispatch($id);
-
-        $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking);
-
-        $this->view->data['bookings'] = $bookings;
-
         $road_model = $this->model->get('roadModel');
         $road_toll_model = $this->model->get('roadtollModel');
+        $warehouse_model = $this->model->get('warehouseModel');
+        $lift_model = $this->model->get('liftModel');
+        $shipdeposit_model = $this->model->get('shipdepositModel');
 
-        $data = array(
+
+        $bookings = $booking_model->getBooking($book);
+
+        $data_road = array(
             'where'=>'road_place_from = '.$from.' AND road_place_to = '.$to.' AND road_start_date <= '.$date.' AND (road_end_date IS NULL OR road_end_date=0 OR road_end_date >= '.$date.')',
         );
 
+        $data_warehouse = array(
+            'where'=>'(warehouse_place = '.$from.' OR warehouse_place = '.$to.') AND warehouse_start_date <= '.$date.' AND (warehouse_end_date IS NULL OR warehouse_end_date=0 OR warehouse_end_date >= '.$date.')',
+        );
+
+        $data_lift = array(
+            'where'=>'(lift_place = '.$from.' OR lift_place = '.$to.' OR lift_place = '.$port_from.' OR lift_place = '.$port_to.') AND lift_unit = '.$unit.' AND lift_start_date <= '.$date.' AND (lift_end_date IS NULL OR lift_end_date=0 OR lift_end_date >= '.$date.')',
+        );
+
+        $lifts = $lift_model->getAllLift($data_lift);
+
+        $lift_on=0; $lift_off=0;
+        $lift_on_null=0; $lift_off_null=0;
+        foreach ($lifts as $lift) {
+            if ($from == $lift->lift_place) {
+                $lift_on += $lift->lift_on;
+            }
+            if ($to == $lift->lift_place) {
+                $lift_off += $lift->lift_off;
+            }
+            if ($port_from == $lift->lift_place) {
+                $lift_on_null += $lift->lift_on_null;
+            }
+            if ($port_to == $lift->lift_place) {
+                $lift_off_null += $lift->lift_off_null;
+            }
+        }
+
+        $shipdeposits = $shipdeposit_model->getAllShipping(array('where'=>'shipdeposit_shipping='.$bookings->booking_shipping.' AND shipdeposit_unit = '.$unit.' AND shipdeposit_start_date <= '.$date.' AND (shipdeposit_end_date IS NULL OR shipdeposit_end_date=0 OR shipdeposit_end_date >= '.$date.')'));
+
+        
         $police=0;$tire=0;$roadtoll=0;
 
-        $roads = $road_model->getAllRoad($data);
+        $roads = $road_model->getAllRoad($data_road);
 
         foreach ($roads as $road) {
             
@@ -1168,70 +1200,37 @@ Class dispatchController Extends baseController {
             }
         }
 
-        $this->view->data['roads'] = $roads;
-        $this->view->data['road_data'] = $road_data;
-
-        $this->view->data['km'] = $km;
-        $this->view->data['time'] = $time;
-        $this->view->data['oil'] = $oil;
-        $this->view->data['police'] = $police;
-        $this->view->data['tire'] = $tire;
-        $this->view->data['roadtoll'] = $roadtoll;
-
-
-        $warehouse_model = $this->model->get('warehouseModel');
-
-        $data = array(
-            'where'=>'(warehouse_place = '.$dispatch_data->dispatch_place_from.' OR warehouse_place = '.$dispatch_data->dispatch_place_to.') AND warehouse_start_date <= '.$dispatch_data->dispatch_date.' AND (warehouse_end_date IS NULL OR warehouse_end_date=0 OR warehouse_end_date >= '.$dispatch_data->dispatch_date.')',
-        );
-
-        $warehouses = $warehouse_model->getAllWarehouse($data);
+        $warehouses = $warehouse_model->getAllWarehouse($data_warehouse);
 
         $warehouse_cont=0; $warehouse_ton=0;
         foreach ($warehouses as $warehouse) {
             $warehouse_cont += $warehouse->warehouse_cont;
             $warehouse_ton += $warehouse->warehouse_ton;
         }
-        $this->view->data['warehouse_cont'] = $warehouse_cont;
-        $this->view->data['warehouse_ton'] = $warehouse_ton;
 
-        $lift_model = $this->model->get('liftModel');
-
-        $data = array(
-            'where'=>'(lift_place = '.$dispatch_data->dispatch_place_from.' OR lift_place = '.$dispatch_data->dispatch_place_to.' OR lift_place = '.$dispatch_data->dispatch_port_from.' OR lift_place = '.$dispatch_data->dispatch_port_to.') AND lift_unit = '.$dispatch_data->dispatch_unit.' AND lift_start_date <= '.$dispatch_data->dispatch_date.' AND (lift_end_date IS NULL OR lift_end_date=0 OR lift_end_date >= '.$dispatch_data->dispatch_date.')',
-        );
-
-        $lifts = $lift_model->getAllLift($data);
-
-        $lift_on=0; $lift_off=0;
-        $lift_on_null=0; $lift_off_null=0;
-        foreach ($lifts as $lift) {
-            if ($dispatch_data->dispatch_place_from == $lift->lift_place) {
-                $lift_on += $lift->lift_on;
-            }
-            if ($dispatch_data->dispatch_place_to == $lift->lift_place) {
-                $lift_off += $lift->lift_off;
-            }
-            if ($dispatch_data->dispatch_port_from == $lift->lift_place) {
-                $lift_on_null += $lift->lift_on_null;
-            }
-            if ($dispatch_data->dispatch_port_to == $lift->lift_place) {
-                $lift_off_null += $lift->lift_off_null;
-            }
-        }
-        $this->view->data['lift_on'] = $lift_on;
-        $this->view->data['lift_off'] = $lift_off;
-        $this->view->data['lift_on_null'] = $lift_on_null;
-        $this->view->data['lift_off_null'] = $lift_off_null;
-
-        $shipdeposit_model = $this->model->get('shipdepositModel');
-
-        $shipdeposits = $shipdeposit_model->getAllShipping(array('where'=>'shipdeposit_shipping='.$bookings->booking_shipping.' AND shipdeposit_unit = '.$dispatch_data->dispatch_unit.' AND shipdeposit_start_date <= '.$dispatch_data->dispatch_date.' AND (shipdeposit_end_date IS NULL OR shipdeposit_end_date=0 OR shipdeposit_end_date >= '.$dispatch_data->dispatch_date.')'));
+        
 
         $deposit=0;
         foreach ($shipdeposits as $shipdeposit) {
             $deposit += $shipdeposit->shipdeposit_money;
         }
+
+        $this->view->data['roads'] = $roads;
+
+        $this->view->data['police'] = $police;
+        $this->view->data['tire'] = $tire;
+        $this->view->data['roadtoll'] = $roadtoll;
+
+        $this->view->data['bookings'] = $bookings;
+
+        $this->view->data['warehouse_cont'] = $warehouse_cont;
+        $this->view->data['warehouse_ton'] = $warehouse_ton;
+        
+        $this->view->data['lift_on'] = $lift_on;
+        $this->view->data['lift_off'] = $lift_off;
+        $this->view->data['lift_on_null'] = $lift_on_null;
+        $this->view->data['lift_off_null'] = $lift_off_null;
+
         $this->view->data['deposit'] = $deposit;
 
         $this->view->data['clean'] = 0;
@@ -1241,6 +1240,17 @@ Class dispatchController Extends baseController {
 
         $sumcost = $police+$tire+$roadtoll+$warehouse_cont+$warehouse_ton+$lift_on+$lift_off+$lift_on_null+$lift_off_null+$deposit;
         $this->view->data['sumcost'] = $sumcost;
+
+        $customer_model = $this->model->get('customerModel');
+        $customer_lists = $customer_model->getAllCustomer(array('order_by'=>'customer_code','order'=>'ASC'));
+
+        $this->view->data['customer_lists'] = $customer_lists;
+
+        $costlist_model = $this->model->get('costlistModel');
+
+        $cost_lists = $costlist_model->getAllCost(array('order_by'=>'cost_list_name','order'=>'ASC'));
+
+        $this->view->data['cost_lists'] = $cost_lists;
 
         return $this->view->show('dispatch/getcost');
     }
@@ -1272,22 +1282,25 @@ Class dispatchController Extends baseController {
         $dispatch_data = $dispatch_model->getDispatch($id);
 
         if ($type==1) {
-            $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking_sub);
-            $customers = $customer_model->getCustomer($dispatch_data->dispatch_customer_sub);
+            if ($dispatch_data->dispatch_customer_sub>0) {
+               $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking_sub);
+                $customers = $customer_model->getCustomer($dispatch_data->dispatch_customer_sub);
 
-            $result = array(
-                'customer'=>'<option value="'.$customers->customer_id.'">'.$customers->customer_name.'</option>',
-                'booking_type'=>$dispatch_data->dispatch_booking_type_sub,
-                'booking'=>'<option value="'.$bookings->booking_id.'">'.$bookings->booking_number.'</option>',
-                'place_from'=>$dispatch_data->dispatch_place_from_sub,
-                'place_to'=>$dispatch_data->dispatch_place_to_sub,
-                'comment'=>$dispatch_data->dispatch_comment_sub,
-                'start_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date_sub),
-                'end_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date_sub),
-                'container'=>'<option value="">Chọn</option>',
-                'port_from'=>$dispatch_data->dispatch_port_from_sub,
-                'port_to'=>$dispatch_data->dispatch_port_to_sub,
-            );
+                $result = array(
+                    'customer'=>'<option value="'.$customers->customer_id.'">'.$customers->customer_name.'</option>',
+                    'booking_type'=>$dispatch_data->dispatch_booking_type_sub,
+                    'booking'=>'<option value="'.$bookings->booking_id.'">'.$bookings->booking_number.'</option>',
+                    'place_from'=>$dispatch_data->dispatch_place_from_sub,
+                    'place_to'=>$dispatch_data->dispatch_place_to_sub,
+                    'comment'=>$dispatch_data->dispatch_comment_sub,
+                    'start_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_start_date_sub),
+                    'end_date'=>date('d/m/Y H:m:s',$dispatch_data->dispatch_end_date_sub),
+                    'container'=>'<option value="">Chọn</option>',
+                    'port_from'=>$dispatch_data->dispatch_port_from_sub,
+                    'port_to'=>$dispatch_data->dispatch_port_to_sub,
+                );
+            }
+            
         }
         else{
             $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking);
@@ -1308,12 +1321,15 @@ Class dispatchController Extends baseController {
             );
         }
 
-        $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$bookings->booking_id.' AND booking_detail_id NOT IN (SELECT shipment_booking_detail FROM shipment WHERE shipment_booking_detail=booking_detail_id)'));
+        if (isset($bookings->booking_id)) {
+            $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$bookings->booking_id.' AND booking_detail_id NOT IN (SELECT shipment_booking_detail FROM shipment WHERE shipment_booking_detail=booking_detail_id)'));
 
         
-        foreach ($booking_details as $detail) {
-            $result['container'] .= '<option value="'.$detail->booking_detail_id.'">'.$detail->booking_detail_container.'</option>';
+            foreach ($booking_details as $detail) {
+                $result['container'] .= '<option value="'.$detail->booking_detail_id.'">'.$detail->booking_detail_container.'</option>';
+            }
         }
+        
         
 
 

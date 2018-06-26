@@ -193,6 +193,10 @@
 </div>
 <div class="text-right"><b>Tổng chi phí: <span id="sumcost"><?php echo $lib->formatMoney($sumcost) ?></span></b></div>
 <script type="text/javascript">
+$(document).ready(function(){
+  $( ".select2" ).select2({dropdownAutoWidth : true});
+});
+
 function addRow_shipment(tableID){
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;

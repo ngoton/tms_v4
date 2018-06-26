@@ -127,7 +127,7 @@ $(document).ready(function(){
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_code">Lệnh điều xe</label>
           <div class="input-group">
-            <input class="form-control" type="text" id="dispatch_code" name="dispatch_code" tabindex="1" readonly="" value="<?php echo $dispatch_data->dispatch_id ?>" value="<?php echo $dispatch_data->dispatch_code ?>">
+            <input class="form-control" type="text" id="dispatch_code" name="dispatch_code" tabindex="1" readonly="" data="<?php echo $dispatch_data->dispatch_id ?>" value="<?php echo $dispatch_data->dispatch_code ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_do">Số DO</label>
@@ -698,6 +698,19 @@ $(document).ready(function(){
            $('#shipment_end_date').val(data.end_date);
            $('#shipment_comment').val(data.comment);
            $('#shipment_booking_detail').html(data.container);
+
+           var from = $('#shipment_place_from').val();
+            var to = $('#shipment_place_to').val();
+            var date = $('#shipment_date').val();
+            var dispatch = $('#dispatch_code').attr('data');
+            var port_from = $('#shipment_port_from').val();
+            var port_to = $('#shipment_port_to').val();
+            var book = $('#shipment_booking').val();
+            var ton = $('#shipment_ton').val();
+            var unit = $('#shipment_unit').val();
+
+            $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+            $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
         }
     });
   });
@@ -765,25 +778,97 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready( function() {
-  $('#shipment_place_from').change(function(e) { 
-    if (e.originalEvent) {
+  $('#shipment_place_from').on("select2:select", function(e) { 
+    
       var from = $('#shipment_place_from').val();
       var to = $('#shipment_place_to').val();
       var date = $('#shipment_date').val();
       var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
 
       $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
-    }
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
+    
   });
-  $('#shipment_place_to').change(function(e) { 
-    if (e.originalEvent) {
+  $('#shipment_place_to').on("select2:select", function(e) { 
+    
       var from = $('#shipment_place_from').val();
       var to = $('#shipment_place_to').val();
       var date = $('#shipment_date').val();
       var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
 
       $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
-    }
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
+    
+  });
+  $('#shipment_port_from').on("select2:select", function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
+    
+  });
+  $('#shipment_port_to').on("select2:select", function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
+    
+  });
+  $('#shipment_ton').change(function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
+    
+  });
+  $('#shipment_unit').change(function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit);
+    
   });
 });
 </script>
