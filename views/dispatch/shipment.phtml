@@ -127,7 +127,7 @@ $(document).ready(function(){
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_code">Lệnh điều xe</label>
           <div class="input-group">
-            <input class="form-control" type="text" id="dispatch_code" name="dispatch_code" tabindex="1" readonly="" value="<?php echo $dispatch_data->dispatch_code ?>">
+            <input class="form-control" type="text" id="dispatch_code" name="dispatch_code" tabindex="1" readonly="" value="<?php echo $dispatch_data->dispatch_id ?>" value="<?php echo $dispatch_data->dispatch_code ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="shipment_do">Số DO</label>
@@ -405,8 +405,49 @@ $(document).ready(function(){
         <div class="tabbable tabs-below">
           <div class="tab-content">
             <div id="costloan" class="tab-pane active">
-              <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
-              <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+              <div class="col-md-6">
+                <label for="shipment_cost_lift_on">Nâng cont</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_lift_on" name="shipment_cost_lift_on" tabindex="15" value="<?php echo $lib->formatMoney($lift_on) ?>">
+                </div>
+                <label for="shipment_cost_lift_off">Hạ cont</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_lift_off" name="shipment_cost_lift_off" tabindex="15" value="<?php echo $lib->formatMoney($lift_off) ?>">
+                </div>
+                <label for="shipment_cost_lift_on_null">Nâng cont rỗng</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_lift_on_null" name="shipment_cost_lift_on_null" tabindex="15" value="<?php echo $lib->formatMoney($lift_on_null) ?>">
+                </div>
+                <label for="shipment_cost_lift_off_null">Hạ cont rỗng</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_lift_off_null" name="shipment_cost_lift_off_null" tabindex="15" value="<?php echo $lib->formatMoney($lift_off_null) ?>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="shipment_cost_deposit">Cược cont</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_deposit" name="shipment_cost_deposit" tabindex="15" value="<?php echo $lib->formatMoney($deposit) ?>">
+                </div>
+                <label for="shipment_cost_clean">Rửa cont</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_clean" name="shipment_cost_clean" tabindex="15" value="<?php echo $lib->formatMoney($clean) ?>">
+                </div>
+                <label for="shipment_cost_trans">Chuyển cont</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_trans" name="shipment_cost_trans" tabindex="15" value="<?php echo $lib->formatMoney($trans) ?>">
+                </div>
+                <label for="shipment_cost_weight">Cân xe</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_weight" name="shipment_cost_weight" tabindex="15" value="<?php echo $lib->formatMoney($weight) ?>">
+                </div>
+                <label for="shipment_cost_document">Lấy hồ sơ</label>
+                <div class="input-group">
+                  <input class="form-control numbers" type="text" id="shipment_cost_document" name="shipment_cost_document" tabindex="15" value="<?php echo $lib->formatMoney($document) ?>">
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              
+              
             </div>
 
             <div id="costtoll" class="tab-pane">
@@ -554,6 +595,80 @@ $(document).ready(function(){
 
           
         </div>
+        <div class="text-right"><b>Tổng chi phí: <span id="sumcost"><?php echo $lib->formatMoney($sumcost) ?></span></b></div>
+        <script type="text/javascript">
+          function addRow_shipment(tableID){
+              var table=document.getElementById(tableID);
+              var rowCount=table.rows.length;
+              var row=table.insertRow(rowCount);
+              var colCount=table.rows[0].cells.length;
+              for(var i=0;i<colCount;i++){
+                  var newcell=row.insertCell(i);
+                  newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+                  switch(newcell.childNodes[0].type){
+                      case"text":newcell.childNodes[0].value="";
+                      break;
+                      case"checkbox":newcell.childNodes[0].checked=false;
+                      break;
+                      case"select-one":newcell.childNodes[0].selectedIndex=0;
+                      break;
+                  }
+              }
+
+              $('.shipment_cost_money:last').val("");
+              $('.shipment_cost_comment:last').val("");
+              $('.shipment_cost_invoice:last').val("");
+              $('.shipment_cost_invoice_date:last').val("");
+
+              $('input[name="chk"]:last').attr('data',"");
+              $('input[name="chk"]:last').attr('title',"");
+
+              $('.select2-container:last').remove();
+              $('.shipment_cost_customer:last').removeClass('select2-hidden-accessible');
+              $('.shipment_cost_customer:last').select2();
+
+          }
+          function deleteRow_shipment(tableID){
+              try{
+                  var table=document.getElementById(tableID);
+                  var rowCount=table.rows.length;
+
+                  bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+                    if(result) {
+                      for(var i=0;i<rowCount;i++){
+                          var row=table.rows[i];
+                          var chkbox=row.cells[0].childNodes[0];
+                          if(null!=chkbox&&true==chkbox.checked){
+                            if(rowCount<=1){
+                                  alert_form("Không thể xóa hết.");
+                                  break;
+                              }
+                              else if(chkbox.getAttribute("title") > 0){
+                                  
+                                      var data = chkbox.getAttribute("data");
+                                      var shipment = chkbox.getAttribute("title");
+
+                                      $.post("<?php echo BASE_URL ?>/shipment/deleteshipmentcost", {data: data, shipment: shipment},
+                                         function(data){
+                                          
+                                         }); 
+                                  
+                              }
+                              
+                              table.deleteRow(i);
+                              rowCount--;
+                              i--;
+
+                          }
+                      }
+                    }
+                  });
+              }
+              catch(e){
+                  alert(e);
+              }
+          }
+          </script>
       </div>
     </div>
       
@@ -651,90 +766,24 @@ $(document).ready(function(){
 <script type="text/javascript">
 $(document).ready( function() {
   $('#shipment_place_from').change(function(e) { 
-    var from = $('#shipment_place_from').val();
-    var to = $('#shipment_place_to').val();
-    var date = $('#shipment_date').val();
+    if (e.originalEvent) {
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
 
-    $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+      $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+    }
   });
   $('#shipment_place_to').change(function(e) { 
-    var from = $('#shipment_place_from').val();
-    var to = $('#shipment_place_to').val();
-    var date = $('#shipment_date').val();
+    if (e.originalEvent) {
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
 
-    $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+      $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+    }
   });
 });
-
-function addRow_shipment(tableID){
-    var table=document.getElementById(tableID);
-    var rowCount=table.rows.length;
-    var row=table.insertRow(rowCount);
-    var colCount=table.rows[0].cells.length;
-    for(var i=0;i<colCount;i++){
-        var newcell=row.insertCell(i);
-        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
-        switch(newcell.childNodes[0].type){
-            case"text":newcell.childNodes[0].value="";
-            break;
-            case"checkbox":newcell.childNodes[0].checked=false;
-            break;
-            case"select-one":newcell.childNodes[0].selectedIndex=0;
-            break;
-        }
-    }
-
-    $('.shipment_cost_money:last').val("");
-    $('.shipment_cost_comment:last').val("");
-    $('.shipment_cost_invoice:last').val("");
-    $('.shipment_cost_invoice_date:last').val("");
-
-    $('input[name="chk"]:last').attr('data',"");
-    $('input[name="chk"]:last').attr('title',"");
-
-    $('.select2-container:last').remove();
-    $('.shipment_cost_customer:last').removeClass('select2-hidden-accessible');
-    $('.shipment_cost_customer:last').select2();
-
-}
-function deleteRow_shipment(tableID){
-    try{
-        var table=document.getElementById(tableID);
-        var rowCount=table.rows.length;
-
-        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-          if(result) {
-            for(var i=0;i<rowCount;i++){
-                var row=table.rows[i];
-                var chkbox=row.cells[0].childNodes[0];
-                if(null!=chkbox&&true==chkbox.checked){
-                  if(rowCount<=1){
-                        alert_form("Không thể xóa hết.");
-                        break;
-                    }
-                    else if(chkbox.getAttribute("title") > 0){
-                        
-                            var data = chkbox.getAttribute("data");
-                            var shipment = chkbox.getAttribute("title");
-
-                            $.post("<?php echo BASE_URL ?>/shipment/deleteshipmentcost", {data: data, shipment: shipment},
-                               function(data){
-                                
-                               }); 
-                        
-                    }
-                    
-                    table.deleteRow(i);
-                    rowCount--;
-                    i--;
-
-                }
-            }
-          }
-        });
-    }
-    catch(e){
-        alert(e);
-    }
-}
 </script>

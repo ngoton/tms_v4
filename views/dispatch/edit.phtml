@@ -9,11 +9,13 @@ $(document).ready(function(){
         submitHandler: function(form) {
           var dispatch_romooc = $('#dispatch_romooc').attr('data');
           var dispatch_staff = $('#dispatch_staff').attr('data');
+          var dispatch_customer = $('#dispatch_customer').val();
           
           var formData = new FormData($("#edit_dispatch")[0]);
           formData.append('dispatch_id', '<?php echo $dispatch_data->dispatch_id ?>');
           formData.append('dispatch_romooc', dispatch_romooc);
           formData.append('dispatch_staff', dispatch_staff);
+          formData.append('dispatch_customer', dispatch_customer);
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -71,14 +73,23 @@ $(document).ready(function(){
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="dispatch_shipment_temp">Lô hàng nhận</label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_shipment_temp" name="dispatch_shipment_temp" tabindex="6" >
+            <select class="form-control select2" id="dispatch_shipment_temp" name="dispatch_shipment_temp" tabindex="7">
               <option value="">Chọn</option>
               <?php foreach ($shipment_temps as $shipment_temp) { ?>
                 <option <?php echo $dispatch_data->dispatch_shipment_temp==$shipment_temp->shipment_temp_id?'selected="selected"':null ?> data="<?php echo $shipment_temp->shipment_temp_booking ?>" alt="<?php echo $shipment_temp->booking_number.'-['.$shipment_temp->booking_code.']' ?>" value="<?php echo $shipment_temp->shipment_temp_id ?>"><?php echo '['.$shipment_temp->booking_code.']-'.$shipment_temp->booking_number.': '.(isset($place_data[$shipment_temp->booking_place_from])?$place_data[$shipment_temp->booking_place_from]:null).'~'.(isset($place_data[$shipment_temp->booking_place_to])?$place_data[$shipment_temp->booking_place_to]:null).' |'.date('d/m/Y',$shipment_temp->shipment_temp_date) ?></option>
               <?php } ?>
             </select>
           </div>
-            
+          <label for="dispatch_place_from">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_place_from" name="dispatch_place_from" required="required" tabindex="13">
+              <option value="">Chọn</option>
+              <?php foreach ($places as $place) { ?>
+                <option <?php echo $dispatch_data->dispatch_place_from==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div>  
+          
         </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_code">Số lệnh</label>
@@ -88,31 +99,22 @@ $(document).ready(function(){
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="dispatch_customer">Khách hàng </label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_customer" name="dispatch_customer" tabindex="7">
-              <option value="">Chọn</option>
+            <select class="form-control select2" id="dispatch_customer" name="dispatch_customer" tabindex="8">
               <?php foreach ($customer_lists as $customer) { ?>
                 <option <?php echo $customers->customer_id==$customer->customer_id?'selected="selected"':null ?> value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
               <?php } ?>
             </select>
           </div>  
-          <label for="dispatch_place_from">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
+          
+          <label for="dispatch_place_to">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_place_from" name="dispatch_place_from" required="required" tabindex="11">
+            <select class="form-control select2" id="dispatch_place_to" name="dispatch_place_to" required="required" tabindex="14">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
-                <option <?php echo $dispatch_data->dispatch_place_from==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+                <option <?php echo $dispatch_data->dispatch_place_to==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
-          </div>
-           <label for="dispatch_port_from">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_from','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="dispatch_port_from" name="dispatch_port_from" tabindex="15">
-              <option value="">Chọn</option>
-              <?php foreach ($ports as $port) { ?>
-                <option <?php echo $dispatch_data->dispatch_port_from==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
+          </div>  
         </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','dispatch_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
@@ -127,47 +129,34 @@ $(document).ready(function(){
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="dispatch_booking_type">Loại hàng</label>
           <div class="input-group">
-            <select class="form-control" id="dispatch_booking_type" name="dispatch_booking_type" tabindex="8" >
+            <select class="form-control" id="dispatch_booking_type" name="dispatch_booking_type" tabindex="9">
               <option value="">Chọn</option>
               <option <?php echo $dispatch_data->dispatch_booking_type==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
               <option <?php echo $dispatch_data->dispatch_booking_type==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
               <option <?php echo $dispatch_data->dispatch_booking_type==3?'selected="selected"':null ?> value="3">Khác</option>
             </select>
           </div>
-          <label for="dispatch_place_to">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
+          
+          <label for="dispatch_start_date">Ngày lấy</label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_place_to" name="dispatch_place_to" required="required" tabindex="12">
-              <option value="">Chọn</option>
-              <?php foreach ($places as $place) { ?>
-                <option <?php echo $dispatch_data->dispatch_place_to==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
-          <label for="dispatch_port_to">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_to','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="dispatch_port_to" name="dispatch_port_to" tabindex="16">
-              <option value="">Chọn</option>
-              <?php foreach ($ports as $port) { ?>
-                <option <?php echo $dispatch_data->dispatch_port_to==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
+            <input class="form-control start-date" type="text" id="dispatch_start_date" name="dispatch_start_date" tabindex="15" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_start_date) ?>" >
+          </div>
        </div>
        <div class="col-md-2 col-xs-6">
           <label for="dispatch_romooc">Mooc <a title="Thay lắp mooc" id="vehicle_romooc"><i class="ace-icon fa fa-exchange blue"></i></a></label>
           <div class="input-group">
-            <input class="form-control" type="text" id="dispatch_romooc" name="dispatch_romooc" tabindex="4" readonly="" data="<?php echo $romoocs->romooc_id ?>" value="<?php echo $romoocs->romooc_number ?>" >
+            <input class="form-control" type="text" id="dispatch_romooc" name="dispatch_romooc" tabindex="4" readonly="" data="<?php echo $romoocs->romooc_id ?>" value="<?php echo $romoocs->romooc_number ?>"" >
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
           <label for="dispatch_booking">Số BK/BL </label>
           <div class="input-group">
-            <select class="form-control" id="dispatch_booking" name="dispatch_booking" tabindex="9">
-                <option value="<?php echo $bookings->booking_id ?>"><?php echo $bookings->booking_number ?></option>
+            <select class="form-control" id="dispatch_booking" name="dispatch_booking" tabindex="10">
+              <option value="<?php echo $bookings->booking_id ?>"><?php echo $bookings->booking_number ?></option>
             </select>
           </div> 
-          <label for="dispatch_start_date">Ngày lấy</label>
+          <label for="dispatch_end_date">Ngày hạ</label>
           <div class="input-group">
-            <input class="form-control start-date" type="text" id="dispatch_start_date" name="dispatch_start_date" tabindex="13" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_start_date) ?>" >
+            <input class="form-control end-date" type="text" id="dispatch_end_date" name="dispatch_end_date" tabindex="16" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_end_date) ?>" >
           </div>
           
         </div>
@@ -177,22 +166,51 @@ $(document).ready(function(){
             <input class="form-control" type="text" id="dispatch_staff" name="dispatch_staff" tabindex="5" readonly="" data="<?php echo $staffs->staff_id ?>" value="<?php echo $staffs->staff_name ?>">
           </div>
           <div class="hr hr-8 dotted hr-double"></div>
+          <label for="dispatch_ton">Sản lượng</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="dispatch_ton" name="dispatch_ton" tabindex="11" value="<?php echo $lib->formatMoney($dispatch_data->dispatch_ton) ?>">
+          </div>
+          <label for="dispatch_port_from">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_from','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_from" name="dispatch_port_from" tabindex="17">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_from==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
+          
+        </div>
+        <div class="col-md-2 col-xs-6">
           <label for="dispatch_comment">Ghi chú</label>
           <div class="input-group">
-            <input class="form-control" type="text" id="dispatch_comment" name="dispatch_comment" tabindex="10" value="<?php echo $dispatch_data->dispatch_comment ?>">
+            <input class="form-control" type="text" id="dispatch_comment" name="dispatch_comment" tabindex="6" value="<?php echo $dispatch_data->dispatch_comment ?>">
           </div>
-          <label for="dispatch_end_date">Ngày hạ</label>
+          <div class="hr hr-8 dotted hr-double"></div>
+          <label for="dispatch_unit">Đơn vị</label>
           <div class="input-group">
-            <input class="form-control end-date" type="text" id="dispatch_end_date" name="dispatch_end_date" tabindex="14" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_end_date) ?>" >
+            <select class="form-control" id="dispatch_unit" name="dispatch_unit" tabindex="12" >
+              <?php foreach ($units as $unit) { ?>
+                <option <?php echo $dispatch_data->dispatch_unit==$unit->unit_id?'selected="selected"':null ?> value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
+              <?php } ?>
+            </select>
           </div>
-          
+          <label for="dispatch_port_to">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_to','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_to" name="dispatch_port_to" tabindex="18">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_to==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
         </div>
       </div>
       <div id="subdispatch" class="tab-pane">
       <div class="col-md-2 col-xs-6">
           <label for="dispatch_shipment_temp_sub">Lô hàng nhận</label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_shipment_temp_sub" name="dispatch_shipment_temp_sub" tabindex="15">
+            <select class="form-control select2" id="dispatch_shipment_temp_sub" name="dispatch_shipment_temp_sub" tabindex="19">
               <option value="">Chọn</option>
               <?php foreach ($shipment_temp_subs as $shipment_temp) { ?>
                 <option <?php echo $dispatch_data->dispatch_shipment_temp_sub==$shipment_temp->shipment_temp_id?'selected="selected"':null ?> data="<?php echo $shipment_temp->shipment_temp_booking ?>" alt="<?php echo $shipment_temp->booking_number.'-['.$shipment_temp->booking_code.']' ?>" value="<?php echo $shipment_temp->shipment_temp_id ?>"><?php echo '['.$shipment_temp->booking_code.']-'.$shipment_temp->booking_number.': '.(isset($place_data[$shipment_temp->booking_place_from])?$place_data[$shipment_temp->booking_place_from]:null).'~'.(isset($place_data[$shipment_temp->booking_place_to])?$place_data[$shipment_temp->booking_place_to]:null).' |'.date('d/m/Y',$shipment_temp->shipment_temp_date) ?></option>
@@ -201,27 +219,22 @@ $(document).ready(function(){
           </div>
           <label for="dispatch_place_from_sub">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_from_sub','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_place_from_sub" name="dispatch_place_from_sub" tabindex="20">
+            <select class="form-control select2" id="dispatch_place_from_sub" name="dispatch_place_from_sub" tabindex="25">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
                 <option <?php echo $dispatch_data->dispatch_place_from_sub==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
           </div>  
-          <label for="dispatch_port_from_sub">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_from_sub','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <label for="dispatch_comment_sub">Ghi chú</label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_port_from_sub" name="dispatch_port_from_sub" tabindex="24">
-              <option value="">Chọn</option>
-              <?php foreach ($ports as $port) { ?>
-                <option <?php echo $dispatch_data->dispatch_port_from_sub==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
+            <input class="form-control" type="text" id="dispatch_comment_sub" name="dispatch_comment_sub" tabindex="31" value="<?php echo $dispatch_data->dispatch_comment_sub ?>">
+          </div>
         </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_customer_sub">Khách hàng </label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_customer_sub" name="dispatch_customer_sub" tabindex="16">
+            <select class="form-control select2" id="dispatch_customer_sub" name="dispatch_customer_sub" tabindex="20">
               <option value="">Chọn</option>
               <?php foreach ($customer_lists as $customer) { ?>
                 <option <?php echo isset($customer_subs->customer_id)?($customer_subs->customer_id==$customer->customer_id?'selected="selected"':null):null ?> value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
@@ -230,37 +243,29 @@ $(document).ready(function(){
           </div>  
           <label for="dispatch_place_to_sub">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','dispatch_place_to_sub','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
           <div class="input-group">
-            <select class="form-control select2" id="dispatch_place_to_sub" name="dispatch_place_to_sub" tabindex="21">
+            <select class="form-control select2" id="dispatch_place_to_sub" name="dispatch_place_to_sub" tabindex="26">
               <option value="">Chọn</option>
               <?php foreach ($places as $place) { ?>
                 <option <?php echo $dispatch_data->dispatch_place_to_sub==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
               <?php } ?>
             </select>
           </div>  
-          <label for="dispatch_port_to_sub">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_to_sub','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="dispatch_port_to_sub" name="dispatch_port_to_sub" tabindex="16">
-              <option value="">Chọn</option>
-              <?php foreach ($ports as $port) { ?>
-                <option <?php echo $dispatch_data->dispatch_port_to_sub==$port->port_id?'selected="selected"':null ?> value="<?php echo $port->port_id ?>"><?php echo $port->port_name ?></option>
-              <?php } ?>
-            </select>
-          </div>
+          
           
         </div>
         <div class="col-md-2 col-xs-6">
           <label for="dispatch_booking_type_sub">Loại hàng</label>
           <div class="input-group">
-            <select class="form-control" id="dispatch_booking_type_sub" name="dispatch_booking_type_sub" tabindex="17">
+            <select class="form-control" id="dispatch_booking_type_sub" name="dispatch_booking_type_sub" tabindex="21">
               <option value="">Chọn</option>
-                <option <?php echo $dispatch_data->dispatch_booking_type_sub==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
-                <option <?php echo $dispatch_data->dispatch_booking_type_sub==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
-                <option <?php echo $dispatch_data->dispatch_booking_type_sub==3?'selected="selected"':null ?> value="3">Khác</option>
+              <option <?php echo $dispatch_data->dispatch_booking_type_sub==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
+              <option <?php echo $dispatch_data->dispatch_booking_type_sub==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
+              <option <?php echo $dispatch_data->dispatch_booking_type_sub==3?'selected="selected"':null ?> value="3">Khác</option>
             </select>
           </div>
           <label for="dispatch_start_date_sub">Ngày lấy</label>
           <div class="input-group">
-            <input class="form-control input-mask-date" type="text" id="dispatch_start_date_sub" name="dispatch_start_date_sub" tabindex="22" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_start_date_sub) ?>" >
+            <input class="form-control input-mask-date" type="text" id="dispatch_start_date_sub" name="dispatch_start_date_sub" tabindex="27" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_start_date_sub) ?>"  >
           </div>
           
           
@@ -268,28 +273,59 @@ $(document).ready(function(){
        <div class="col-md-2 col-xs-6">
           <label for="dispatch_booking_sub">Số BK/BL </label>
           <div class="input-group">
-            <select class="form-control" id="dispatch_booking_sub" name="dispatch_booking_sub" tabindex="18">
+            <select class="form-control" id="dispatch_booking_sub" name="dispatch_booking_sub" tabindex="22">
               <?php if(isset($booking_subs->booking_id)){ ?>
               <option value="<?php echo $booking_subs->booking_id ?>"><?php echo $booking_subs->booking_number ?></option>
+              <?php }else{ ?>
+                <option value=""></option>
               <?php } ?>
             </select>
           </div> 
           <label for="dispatch_end_date_sub">Ngày hạ</label>
           <div class="input-group">
-            <input class="form-control input-mask-date" type="text" id="dispatch_end_date_sub" name="dispatch_end_date_sub" tabindex="23" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_end_date_sub) ?>" >
+            <input class="form-control input-mask-date" type="text" id="dispatch_end_date_sub" name="dispatch_end_date_sub" tabindex="28" value="<?php echo $lib->hien_thi_ngay_thang($dispatch_data->dispatch_end_date_sub) ?>" >
           </div>
           
         </div>
         <div class="col-md-2 col-xs-6">
-          <label for="dispatch_comment_sub">Ghi chú</label>
-          <div class="input-group">
-            <input class="form-control" type="text" id="dispatch_comment_sub" name="dispatch_comment_sub" tabindex="19" value="<?php echo $dispatch_data->dispatch_comment_sub ?>">
-          </div>
           
+          <label for="dispatch_ton_sub">Sản lượng</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="dispatch_ton_sub" name="dispatch_ton_sub" tabindex="23" value="<?php echo $lib->formatMoney($dispatch_data->dispatch_ton_sub) ?>">
+          </div>
+          <label for="dispatch_port_from_sub">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_from_sub','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_from_sub" name="dispatch_port_from_sub" tabindex="29">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_from_sub==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div> 
+        </div>
+        <div class="col-md-2 col-xs-6">
+          <label for="dispatch_unit_sub">Đơn vị</label>
+          <div class="input-group">
+            <select class="form-control" id="dispatch_unit_sub" name="dispatch_unit_sub" tabindex="24" >
+              <?php foreach ($units as $unit) { ?>
+                <option <?php echo $dispatch_data->dispatch_unit_sub==$unit->unit_id?'selected="selected"':null ?> value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="dispatch_port_to_sub">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','dispatch_port_to_sub','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="dispatch_port_to_sub" name="dispatch_port_to_sub" tabindex="30">
+              <option value="">Chọn</option>
+              <?php foreach ($ports as $port) { ?>
+                <option <?php echo $dispatch_data->dispatch_port_to_sub==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
           
         </div>
       </div>
     </div>
+    
   </form>
 </div>
 

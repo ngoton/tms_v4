@@ -446,7 +446,7 @@ Class shipmentController Extends baseController {
             $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking_sub);
 
             $customer_model = $this->model->get('customerModel');
-            $customers = $customer_model->getCustomer($bookings->booking_customer);
+            $customers = $customer_model->getCustomer($dispatch_data->dispatch_customer);
 
             $booking_detail_model = $this->model->get('bookingdetailModel');
             $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$bookings->booking_id.' AND booking_detail_id NOT IN (SELECT shipment_booking_detail FROM shipment WHERE shipment_booking_detail=booking_detail_id)'));
@@ -480,7 +480,7 @@ Class shipmentController Extends baseController {
             $bookings = $booking_model->getBooking($dispatch_data->dispatch_booking);
 
             $customer_model = $this->model->get('customerModel');
-            $customers = $customer_model->getCustomer($bookings->booking_customer);
+            $customers = $customer_model->getCustomer($dispatch_data->dispatch_customer);
 
             $booking_detail_model = $this->model->get('bookingdetailModel');
             $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$bookings->booking_id.' AND booking_detail_id NOT IN (SELECT shipment_booking_detail FROM shipment WHERE shipment_booking_detail=booking_detail_id)'));

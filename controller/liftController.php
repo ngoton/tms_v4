@@ -128,7 +128,7 @@ Class liftController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( place_name LIKE "%'.$keyword.'%" OR customer_name LIKE "%'.$keyword.'%" )';
+            $search = '( place_name LIKE "%'.$keyword.'%" OR unit_name LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -162,6 +162,8 @@ Class liftController Extends baseController {
                 'lift_customer' => trim($_POST['lift_customer']),
                 'lift_on' => str_replace(',', '', $_POST['lift_on']),
                 'lift_off' => str_replace(',', '', $_POST['lift_off']),
+                'lift_on_null' => str_replace(',', '', $_POST['lift_on_null']),
+                'lift_off_null' => str_replace(',', '', $_POST['lift_off_null']),
             );
 
             $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['lift_start_date']).' -1 day')));
@@ -190,6 +192,8 @@ Class liftController Extends baseController {
                             'lift_end_date' => $row->lift_end_date,
                             'lift_on' => $row->lift_on,
                             'lift_off' => $row->lift_off,
+                            'lift_on_null' => $row->lift_on_null,
+                            'lift_off_null' => $row->lift_off_null,
                             );
                         $lift_model->createLift($c);
 
@@ -292,6 +296,8 @@ Class liftController Extends baseController {
                 'lift_customer' => trim($_POST['lift_customer']),
                 'lift_on' => str_replace(',', '', $_POST['lift_on']),
                 'lift_off' => str_replace(',', '', $_POST['lift_off']),
+                'lift_on_null' => str_replace(',', '', $_POST['lift_on_null']),
+                'lift_off_null' => str_replace(',', '', $_POST['lift_off_null']),
             );
 
             $lift_model->updateLift($data,array('lift_id'=>$id));

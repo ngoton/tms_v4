@@ -1,4 +1,4 @@
-   
+  
 <div class="login_body">
   
         <div class="col-md-6">
@@ -36,9 +36,17 @@
           <div class="input-group">
             <input type="text" id="lift_end_date" name="lift_end_date" tabindex="6" class="end-date" value="<?php echo $lib->hien_thi_ngay_thang($lift_data->lift_end_date) ?>">
           </div>
+          <label for="lift_on_null">Phí nâng rỗng</label>
+          <div class="input-group">
+            <input type="text" id="lift_on_null" name="lift_on_null" tabindex="7" class="numbers" value="<?php echo $lib->formatMoney($lift_data->lift_on_null) ?>">
+          </div>
+          <label for="lift_off_null">Phí hạ rỗng</label>
+          <div class="input-group">
+            <input type="text" id="lift_off_null" name="lift_off_null" tabindex="8" class="numbers" value="<?php echo $lib->formatMoney($lift_data->lift_off_null) ?>">
+          </div>
           <label for="lift_customer">Tên đơn vị <a title="Thêm tên đơn vị mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm tên đơn vị mới','lift_customer','<?php echo $this->url("customer/getsupply") ?>','add_customer')"></i></a></label>
           <div class="input-group">
-            <select class="form-control select2" id="lift_customer" name="lift_customer" tabindex="7">
+            <select class="form-control select2" id="lift_customer" name="lift_customer" tabindex="9">
               <option value="">Chọn</option>
               <?php foreach ($customers as $customer) { ?>
                 <option <?php echo $lift_data->lift_customer==$customer->customer_id?'selected="selected"':null ?> value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>

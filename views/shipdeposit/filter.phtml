@@ -1,19 +1,19 @@
 <div class="login_body">
-  <form id="add" method="post" action="<?php echo $this->url('lift') ?>" enctype="multipart/form-data">
+  <form id="add" method="post" action="<?php echo $this->url('shipdeposit') ?>" enctype="multipart/form-data">
     <div class="col-xs-6">
-      <label for="lift_place">Cảng</label>
+      <label for="shipdeposit_shipping">Hãng tàu</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="lift_place" name="lift_place[]" multiple="">
-          <?php foreach ($places as $place) { ?>
-            <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+        <select class="form-control multiselect" id="shipdeposit_shipping" name="shipdeposit_shipping[]" multiple="">
+          <?php foreach ($shippings as $shipping) { ?>
+            <option value="<?php echo $shipping->shipping_id ?>"><?php echo $shipping->shipping_name ?></option>
           <?php } ?>
         </select>
       </div>
     </div>
     <div class="col-xs-6">
-      <label for="lift_unit">Loại</label>
+      <label for="shipdeposit_unit">Loại</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="lift_unit" name="lift_unit[]" multiple="">
+        <select class="form-control multiselect" id="shipdeposit_unit" name="shipdeposit_unit[]" multiple="">
           <?php foreach ($units as $unit) { ?>
             <option value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
           <?php } ?>

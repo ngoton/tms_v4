@@ -1,0 +1,79 @@
+<script type="text/javascript">
+$(document).ready(function(){
+  $( ".select2" ).select2({dropdownAutoWidth : true});
+      // Validate form
+      $("#edit_shipdeposit").validate({
+        errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        rules: {
+        },
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#edit_shipdeposit")[0]);
+          formData.append('shipdeposit_id', '<?php echo $shipdeposit_data->shipdeposit_id ?>');
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/shipdeposit/editshipdeposit", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_shipdeposit').hide();
+                  $('#error_shipdeposit').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_shipdeposit').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_shipdeposit').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+           
+         
+      });
+  
+});
+</script>
+<div id="error_shipdeposit" class="error"><?php echo isset($error) ? $error : null; ?></div>     
+<div class="login_body">
+  
+      <form id="edit_shipdeposit" method="post" action="" autocomplete="off">
+        <div class="col-md-6">
+          <label for="shipdeposit_shipping">Hãng tàu <a title="Thêm hãng tàu mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("shipping/add") ?>','Thêm hãng tàu mới','shipdeposit_shipping','<?php echo $this->url("shipping/getshipping") ?>','add_shipping')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="shipdeposit_shipping" name="shipdeposit_shipping" required="required" tabindex="1">
+              <?php foreach ($shippings as $shipping) { ?>
+                <option value="<?php echo $shipping->shipping_id ?>" <?php echo $shipdeposit_data->shipdeposit_shipping==$shipping->shipping_id?'selected="selected"':null ?>><?php echo $shipping->shipping_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="shipdeposit_unit">Đơn vị <a title="Thêm đơn vị mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("unit/add") ?>','Thêm đơn vị mới','shipdeposit_unit','<?php echo $this->url("unit/getunit") ?>','add_unit')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control" id="shipdeposit_unit" name="shipdeposit_unit" required="required" tabindex="2">
+              <?php foreach ($units as $unit) { ?>
+                <option <?php echo $shipdeposit_data->shipdeposit_unit==$unit->unit_id?'selected="selected"':null ?> value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="shipdeposit_money">Phí cược cont</label>
+          <div class="input-group">
+            <input type="text" id="shipdeposit_money" name="shipdeposit_money" tabindex="3" class="numbers" value="<?php echo $lib->formatMoney($shipdeposit_data->shipdeposit_money) ?>">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="shipdeposit_start_date">Ngày áp dụng</label>
+          <div class="input-group">
+            <input type="text" id="shipdeposit_start_date" name="shipdeposit_start_date" tabindex="4" class="start-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($shipdeposit_data->shipdeposit_start_date) ?>">
+          </div>
+          <label for="shipdeposit_end_date">Ngày hết hạn</label>
+          <div class="input-group">
+            <input type="text" id="shipdeposit_end_date" name="shipdeposit_end_date" tabindex="5" class="end-date" value="<?php echo $lib->hien_thi_ngay_thang($shipdeposit_data->shipdeposit_end_date) ?>">
+          </div>
+          
+        </div>
+          
+    </form>
+</div>
+
