@@ -235,6 +235,7 @@ function get_number(id){
           <label for="booking_shipping">Hãng tàu <a title="Thêm hãng tàu mới" ><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("shipping/add") ?>','Thêm hãng tàu mới','booking_shipping','<?php echo $this->url("shipping/getshipping") ?>','add_shipping')"></i> </a></label>
           <div class="input-group">
             <select class="form-control select2" id="booking_shipping" name="booking_shipping" tabindex="10">
+              <option value="">Chọn</option>
               <?php foreach ($shippings as $shipping) { ?>
                 <option value="<?php echo $shipping->shipping_id ?>"><?php echo $shipping->shipping_name ?></option>
               <?php } ?>

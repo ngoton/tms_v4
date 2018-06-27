@@ -1138,6 +1138,7 @@ Class dispatchController Extends baseController {
         $book = $_GET['book'];
         $ton = str_replace(',', '', $_GET['ton']);
         $unit = $_GET['unit'];
+        $sub = $_GET['sub'];
 
         $date = strtotime(str_replace('/', '-', $_GET['date']));
 
@@ -1149,7 +1150,7 @@ Class dispatchController Extends baseController {
         $shipdeposit_model = $this->model->get('shipdepositModel');
 
 
-        $bookings = $booking_model->getBooking($book);
+        
 
         $data_road = array(
             'where'=>'road_place_from = '.$from.' AND road_place_to = '.$to.' AND road_start_date <= '.$date.' AND (road_end_date IS NULL OR road_end_date=0 OR road_end_date >= '.$date.')',
@@ -1160,7 +1161,7 @@ Class dispatchController Extends baseController {
         );
 
         $data_lift = array(
-            'where'=>'(lift_place = '.$from.' OR lift_place = '.$to.' OR lift_place = '.$port_from.' OR lift_place = '.$port_to.') AND lift_unit = '.$unit.' AND lift_start_date <= '.$date.' AND (lift_end_date IS NULL OR lift_end_date=0 OR lift_end_date >= '.$date.')',
+            'where'=>'(lift_place = "'.$from.'" OR lift_place = "'.$to.'" OR lift_place = "'.$port_from.'" OR lift_place = "'.$port_to.'") AND lift_unit = '.$unit.' AND lift_start_date <= '.$date.' AND (lift_end_date IS NULL OR lift_end_date=0 OR lift_end_date >= '.$date.')',
         );
 
         $lifts = $lift_model->getAllLift($data_lift);
@@ -1182,8 +1183,7 @@ Class dispatchController Extends baseController {
             }
         }
 
-        $shipdeposits = $shipdeposit_model->getAllShipping(array('where'=>'shipdeposit_shipping='.$bookings->booking_shipping.' AND shipdeposit_unit = '.$unit.' AND shipdeposit_start_date <= '.$date.' AND (shipdeposit_end_date IS NULL OR shipdeposit_end_date=0 OR shipdeposit_end_date >= '.$date.')'));
-
+        
         
         $police=0;$tire=0;$roadtoll=0;
 
@@ -1208,11 +1208,23 @@ Class dispatchController Extends baseController {
             $warehouse_ton += $warehouse->warehouse_ton;
         }
 
+        $bookings = array();
+        $shipdeposits = array();
+
+        if ($book>0) {
+            $bookings = $booking_model->getBooking($book);
+
+            $shipdeposits = $shipdeposit_model->getAllShipping(array('where'=>'shipdeposit_shipping='.$bookings->booking_shipping.' AND shipdeposit_unit = '.$unit.' AND shipdeposit_start_date <= '.$date.' AND (shipdeposit_end_date IS NULL OR shipdeposit_end_date=0 OR shipdeposit_end_date >= '.$date.')'));
+        }
         
 
         $deposit=0;
         foreach ($shipdeposits as $shipdeposit) {
             $deposit += $shipdeposit->shipdeposit_money;
+        }
+
+        if ($sub==1) {
+            $police=0;$tire=0;$roadtoll=0;
         }
 
         $this->view->data['roads'] = $roads;

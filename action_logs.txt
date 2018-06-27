@@ -441,3 +441,13 @@
 
 26/06/2018 16:13:47|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600--3-2-3-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3-3-2-1-1
 
+27/06/2018 08:14:31|admin|edit|8|dispatch|1529946000-DX03-2-1-1-2-3-1529254800-1530291600---0-3--3-3-2-1-------0-6------1
+
+27/06/2018 08:15:25|admin|delete|4|shipment|
+
+27/06/2018 11:11:31|admin|add|6|shipment|1529341200-1-2-2--2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960--3-Hàng xuất-100000.00-0-1,2-1690000-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"350000","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"60000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"350000"}
+
+27/06/2018 11:16:34|admin|delete|6|shipment|
+
+27/06/2018 11:17:28|admin|add|7|shipment|1529341200-1-2-2--2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960--3-Hàng xuất-100000.00-0-1,2-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"350000","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"60000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"350000"}
+

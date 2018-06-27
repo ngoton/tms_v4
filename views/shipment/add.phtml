@@ -277,77 +277,7 @@ $(document).ready(function(){
         
       </div>
       <div id="costshipment" class="tab-pane">
-        <div class="col-xs-12">
-            <table id="dataTable_shipment" style="width: 100%;">
-                <tbody>
-                <tr>
-                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
-                    <td>
-                        <table style="width:100%;">
-                            <tbody>
-                              <tr>
-                                <td>
-                                  <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.shipment_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
-                                  <div class="input-group">
-                                    <select class="form-control shipment_cost_list" name="shipment_cost_list[]" tabindex="14">
-                                      <?php foreach ($cost_lists as $cost_list) { ?>
-                                        <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
-                                      <?php } ?>
-                                    </select>
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>Nội dung</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15">
-                                  </div>
-                                </td>
-                                
-                                <td>
-                                  <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16">
-                                  </div>
-                                  
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.shipment_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
-                                  <div class="input-group">
-                                    <select class="form-control shipment_cost_customer select2" name="shipment_cost_customer[]" tabindex="17">
-                                      <?php foreach ($customer_lists as $customer_list) { ?>
-                                        <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
-                                      <?php } ?>
-                                    </select>
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>Số hóa đơn chứng từ</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18">
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>Ngày</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19">
-                                  </div>
-                                </td>
-                              </tr>
-                              
-                        </tbody></table>
-                        <div class="hr hr-8 dotted hr-double"></div>
-                    </td>
-                    
-                </tr>
-            </tbody>
-            </table>
         
-            <input type="button" value="Thêm" onclick="addRow_shipment('dataTable_shipment')">
-
-            <input type="button" value="Xóa" onclick="deleteRow_shipment('dataTable_shipment')">
-        </div>
       </div>
     </div>
       
@@ -379,6 +309,20 @@ $(document).ready(function(){
            $('#shipment_end_date').val(data.end_date);
            $('#shipment_comment').val(data.comment);
            $('#shipment_booking_detail').html(data.container);
+
+           var from = $('#shipment_place_from').val();
+            var to = $('#shipment_place_to').val();
+            var date = $('#shipment_date').val();
+            var dispatch = $('#dispatch_code').attr('data');
+            var port_from = $('#shipment_port_from').val();
+            var port_to = $('#shipment_port_to').val();
+            var book = $('#shipment_booking').val();
+            var ton = $('#shipment_ton').val();
+            var unit = $('#shipment_unit').val();
+            var sub = $('input[name="shipment_sub"]:checked').val();
+
+            $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+            $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
         }
       });
     }
@@ -415,6 +359,20 @@ $(document).ready(function(){
            $('#shipment_end_date').val(data.end_date);
            $('#shipment_comment').val(data.comment);
            $('#shipment_booking_detail').html(data.container);
+
+           var from = $('#shipment_place_from').val();
+            var to = $('#shipment_place_to').val();
+            var date = $('#shipment_date').val();
+            var dispatch = $('#dispatch_code').attr('data');
+            var port_from = $('#shipment_port_from').val();
+            var port_to = $('#shipment_port_to').val();
+            var book = $('#shipment_booking').val();
+            var ton = $('#shipment_ton').val();
+            var unit = $('#shipment_unit').val();
+            var sub = $('input[name="shipment_sub"]:checked').val();
+
+            $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+            $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
         }
     });
   });
@@ -431,6 +389,19 @@ $(document).ready(function(){
            $('#shipment_ton').val(data.number);
            $('#shipment_ton').attr('data',data.price);
            $('#shipment_unit option[value='+data.unit+']').attr('selected','selected');
+
+           var from = $('#shipment_place_from').val();
+            var to = $('#shipment_place_to').val();
+            var date = $('#shipment_date').val();
+            var dispatch = $('#dispatch_code').attr('data');
+            var port_from = $('#shipment_port_from').val();
+            var port_to = $('#shipment_port_to').val();
+            var book = $('#shipment_booking').val();
+            var ton = $('#shipment_ton').val();
+            var unit = $('#shipment_unit').val();
+            var sub = $('input[name="shipment_sub"]:checked').val();
+
+           $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
         }
     });
   });
@@ -482,91 +453,103 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready( function() {
-  $('#shipment_place_from').change(function(e) { 
-    var from = $('#shipment_place_from').val();
-    var to = $('#shipment_place_to').val();
-    var date = $('#shipment_date').val();
+  $('#shipment_place_from').on("select2:select", function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+      var sub = $('input[name="shipment_sub"]:checked').val();
 
-    $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+      $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
+    
   });
-  $('#shipment_place_to').change(function(e) { 
-    var from = $('#shipment_place_from').val();
-    var to = $('#shipment_place_to').val();
-    var date = $('#shipment_date').val();
+  $('#shipment_place_to').on("select2:select", function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+      var sub = $('input[name="shipment_sub"]:checked').val();
 
-    $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+      $("#roadshipment").load("<?php echo $this->url('dispatch') ?>/getroad?from="+from+"&to="+to+"&date="+date);
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
+    
+  });
+  $('#shipment_port_from').on("select2:select", function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+      var sub = $('input[name="shipment_sub"]:checked').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
+    
+  });
+  $('#shipment_port_to').on("select2:select", function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+      var sub = $('input[name="shipment_sub"]:checked').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
+    
+  });
+  $('#shipment_ton').change(function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+      var sub = $('input[name="shipment_sub"]:checked').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
+    
+  });
+  $('#shipment_unit').change(function(e) { 
+    
+      var from = $('#shipment_place_from').val();
+      var to = $('#shipment_place_to').val();
+      var date = $('#shipment_date').val();
+      var dispatch = $('#dispatch_code').attr('data');
+      var port_from = $('#shipment_port_from').val();
+      var port_to = $('#shipment_port_to').val();
+      var book = $('#shipment_booking').val();
+      var ton = $('#shipment_ton').val();
+      var unit = $('#shipment_unit').val();
+      var sub = $('input[name="shipment_sub"]:checked').val();
+
+      $("#costshipment").load("<?php echo $this->url('dispatch') ?>/getcost?from="+from+"&to="+to+"&date="+date+"&dispatch="+dispatch+"&port_from="+port_from+"&port_to="+port_to+"&book="+book+"&ton="+ton+"&unit="+unit+"&sub="+sub);
+    
   });
 });
-
-function addRow_shipment(tableID){
-    var table=document.getElementById(tableID);
-    var rowCount=table.rows.length;
-    var row=table.insertRow(rowCount);
-    var colCount=table.rows[0].cells.length;
-    for(var i=0;i<colCount;i++){
-        var newcell=row.insertCell(i);
-        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
-        switch(newcell.childNodes[0].type){
-            case"text":newcell.childNodes[0].value="";
-            break;
-            case"checkbox":newcell.childNodes[0].checked=false;
-            break;
-            case"select-one":newcell.childNodes[0].selectedIndex=0;
-            break;
-        }
-    }
-
-    $('.shipment_cost_money:last').val("");
-    $('.shipment_cost_comment:last').val("");
-    $('.shipment_cost_invoice:last').val("");
-    $('.shipment_cost_invoice_date:last').val("");
-
-    $('input[name="chk"]:last').attr('data',"");
-    $('input[name="chk"]:last').attr('title',"");
-
-    $('.select2-container:last').remove();
-    $('.shipment_cost_customer:last').removeClass('select2-hidden-accessible');
-    $('.shipment_cost_customer:last').select2();
-
-}
-function deleteRow_shipment(tableID){
-    try{
-        var table=document.getElementById(tableID);
-        var rowCount=table.rows.length;
-
-        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-          if(result) {
-            for(var i=0;i<rowCount;i++){
-                var row=table.rows[i];
-                var chkbox=row.cells[0].childNodes[0];
-                if(null!=chkbox&&true==chkbox.checked){
-                  if(rowCount<=1){
-                        alert_form("Không thể xóa hết.");
-                        break;
-                    }
-                    else if(chkbox.getAttribute("title") > 0){
-                        
-                            var data = chkbox.getAttribute("data");
-                            var shipment = chkbox.getAttribute("title");
-
-                            $.post("<?php echo BASE_URL ?>/shipment/deleteshipmentcost", {data: data, shipment: shipment},
-                               function(data){
-                                
-                               }); 
-                        
-                    }
-                    
-                    table.deleteRow(i);
-                    rowCount--;
-                    i--;
-
-                }
-            }
-          }
-        });
-    }
-    catch(e){
-        alert(e);
-    }
-}
 </script>

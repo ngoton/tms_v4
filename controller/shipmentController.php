@@ -267,13 +267,32 @@ Class shipmentController Extends baseController {
                 'shipment_create_user'=>$_SESSION['userid_logined'],
             );
 
+            $detail_list = array(
+                'shipment_cost_lift_on'=>str_replace(',', '', $_POST['shipment_cost_lift_on']),
+                'shipment_cost_lift_off'=>str_replace(',', '', $_POST['shipment_cost_lift_off']),
+                'shipment_cost_lift_on_null'=>str_replace(',', '', $_POST['shipment_cost_lift_on_null']),
+                'shipment_cost_lift_off_null'=>str_replace(',', '', $_POST['shipment_cost_lift_off_null']),
+                'shipment_cost_deposit'=>str_replace(',', '', $_POST['shipment_cost_deposit']),
+                'shipment_cost_clean'=>str_replace(',', '', $_POST['shipment_cost_clean']),
+                'shipment_cost_trans'=>str_replace(',', '', $_POST['shipment_cost_trans']),
+                'shipment_cost_weight'=>str_replace(',', '', $_POST['shipment_cost_weight']),
+                'shipment_cost_document'=>str_replace(',', '', $_POST['shipment_cost_document']),
+                'shipment_cost_toll'=>str_replace(',', '', $_POST['shipment_cost_toll']),
+                'shipment_cost_cont'=>str_replace(',', '', $_POST['shipment_cost_cont']),
+                'shipment_cost_ton'=>str_replace(',', '', $_POST['shipment_cost_ton']),
+                'shipment_cost_police'=>str_replace(',', '', $_POST['shipment_cost_police']),
+                'shipment_cost_tire'=>str_replace(',', '', $_POST['shipment_cost_tire']),
+            );
+
+            $data['shipment_cost_detail'] = json_encode($detail_list);
+
             $shipment_model->createShipment($data);
             $id_shipment = $shipment_model->getLastShipment()->shipment_id;
 
             $shipment_cost_model = $this->model->get('shipmentcostModel');
 
             $shipment_cost = json_decode($_POST['shipment_cost']);
-            $cost = 0;
+            $cost = array_sum($detail_list);
             if (isset($id_shipment)) {
                 foreach ($shipment_cost as $v) {
                     $data_shipment_cost = array(
@@ -600,6 +619,25 @@ Class shipmentController Extends baseController {
                 'shipment_update_user'=>$_SESSION['userid_logined'],
             );
 
+            $detail_list = array(
+                'shipment_cost_lift_on'=>str_replace(',', '', $_POST['shipment_cost_lift_on']),
+                'shipment_cost_lift_off'=>str_replace(',', '', $_POST['shipment_cost_lift_off']),
+                'shipment_cost_lift_on_null'=>str_replace(',', '', $_POST['shipment_cost_lift_on_null']),
+                'shipment_cost_lift_off_null'=>str_replace(',', '', $_POST['shipment_cost_lift_off_null']),
+                'shipment_cost_deposit'=>str_replace(',', '', $_POST['shipment_cost_deposit']),
+                'shipment_cost_clean'=>str_replace(',', '', $_POST['shipment_cost_clean']),
+                'shipment_cost_trans'=>str_replace(',', '', $_POST['shipment_cost_trans']),
+                'shipment_cost_weight'=>str_replace(',', '', $_POST['shipment_cost_weight']),
+                'shipment_cost_document'=>str_replace(',', '', $_POST['shipment_cost_document']),
+                'shipment_cost_toll'=>str_replace(',', '', $_POST['shipment_cost_toll']),
+                'shipment_cost_cont'=>str_replace(',', '', $_POST['shipment_cost_cont']),
+                'shipment_cost_ton'=>str_replace(',', '', $_POST['shipment_cost_ton']),
+                'shipment_cost_police'=>str_replace(',', '', $_POST['shipment_cost_police']),
+                'shipment_cost_tire'=>str_replace(',', '', $_POST['shipment_cost_tire']),
+            );
+
+            $data['shipment_cost_detail'] = json_encode($detail_list);
+
             $shipment_model->updateShipment($data,array('shipment_id'=>$id));
             $id_shipment = $id;
 
@@ -607,7 +645,7 @@ Class shipmentController Extends baseController {
 
             $shipment_cost = json_decode($_POST['shipment_cost']);
 
-            $cost = 0;
+            $cost = array_sum($detail_list);
             if (isset($id_shipment)) {
                 foreach ($shipment_cost as $v) {
                     $data_shipment_cost = array(
