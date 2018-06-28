@@ -1016,6 +1016,8 @@ Class dispatchController Extends baseController {
         $this->view->data['trans'] = 0;
         $this->view->data['weight'] = 0;
         $this->view->data['document'] = 0;
+        $this->view->data['release'] = 0;
+        $this->view->data['park'] = 0;
 
         $sumcost = $police+$tire+$roadtoll+$warehouse_cont+$warehouse_ton+$lift_on+$lift_off+$lift_on_null+$lift_off_null+$deposit;
         $this->view->data['sumcost'] = $sumcost;
@@ -1249,6 +1251,8 @@ Class dispatchController Extends baseController {
         $this->view->data['trans'] = 0;
         $this->view->data['weight'] = 0;
         $this->view->data['document'] = 0;
+        $this->view->data['release'] = 0;
+        $this->view->data['park'] = 0;
 
         $sumcost = $police+$tire+$roadtoll+$warehouse_cont+$warehouse_ton+$lift_on+$lift_off+$lift_on_null+$lift_off_null+$deposit;
         $this->view->data['sumcost'] = $sumcost;

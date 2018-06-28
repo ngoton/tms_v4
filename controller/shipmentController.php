@@ -258,8 +258,8 @@ Class shipmentController Extends baseController {
                 'shipment_place_to'=>trim($_POST['shipment_place_to']),
                 'shipment_start_date' => strtotime(str_replace('/', '-', $_POST['shipment_start_date'])),
                 'shipment_end_date' => strtotime(str_replace('/', '-', $_POST['shipment_end_date'])),
-                'shipment_port_from'=>trim($_POST['shipment_port_from']),
-                'shipment_port_to'=>trim($_POST['shipment_port_to']),
+                'shipment_port_from'=>isset($_POST['shipment_port_from'])?$_POST['shipment_port_from']:null,
+                'shipment_port_to'=>isset($_POST['shipment_port_to'])?$_POST['shipment_port_to']:null,
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
                 'shipment_sub'=>trim($_POST['shipment_sub']),
@@ -282,6 +282,8 @@ Class shipmentController Extends baseController {
                 'shipment_cost_ton'=>str_replace(',', '', $_POST['shipment_cost_ton']),
                 'shipment_cost_police'=>str_replace(',', '', $_POST['shipment_cost_police']),
                 'shipment_cost_tire'=>str_replace(',', '', $_POST['shipment_cost_tire']),
+                'shipment_cost_release'=>str_replace(',', '', $_POST['shipment_cost_release']),
+                'shipment_cost_park'=>str_replace(',', '', $_POST['shipment_cost_park']),
             );
 
             $data['shipment_cost_detail'] = json_encode($detail_list);
@@ -706,6 +708,8 @@ Class shipmentController Extends baseController {
         $this->view->data['trans'] = 0;
         $this->view->data['weight'] = 0;
         $this->view->data['document'] = 0;
+        $this->view->data['release'] = 0;
+        $this->view->data['park'] = 0;
 
         $sumcost = $police+$tire+$roadtoll+$warehouse_cont+$warehouse_ton+$lift_on+$lift_off+$lift_on_null+$lift_off_null+$deposit;
         $this->view->data['sumcost'] = $sumcost;
@@ -750,8 +754,8 @@ Class shipmentController Extends baseController {
                 'shipment_place_to'=>trim($_POST['shipment_place_to']),
                 'shipment_start_date' => strtotime(str_replace('/', '-', $_POST['shipment_start_date'])),
                 'shipment_end_date' => strtotime(str_replace('/', '-', $_POST['shipment_end_date'])),
-                'shipment_port_from'=>trim($_POST['shipment_port_from']),
-                'shipment_port_to'=>trim($_POST['shipment_port_to']),
+                'shipment_port_from'=>isset($_POST['shipment_port_from'])?$_POST['shipment_port_from']:null,
+                'shipment_port_to'=>isset($_POST['shipment_port_to'])?$_POST['shipment_port_to']:null,
                 'shipment_comment'=>trim($_POST['shipment_comment']),
                 'shipment_price'=>str_replace(',', '', $_POST['shipment_price']),
                 'shipment_sub'=>trim($_POST['shipment_sub']),
@@ -774,6 +778,8 @@ Class shipmentController Extends baseController {
                 'shipment_cost_ton'=>str_replace(',', '', $_POST['shipment_cost_ton']),
                 'shipment_cost_police'=>str_replace(',', '', $_POST['shipment_cost_police']),
                 'shipment_cost_tire'=>str_replace(',', '', $_POST['shipment_cost_tire']),
+                'shipment_cost_release'=>str_replace(',', '', $_POST['shipment_cost_release']),
+                'shipment_cost_park'=>str_replace(',', '', $_POST['shipment_cost_park']),
             );
 
             $data['shipment_cost_detail'] = json_encode($detail_list);
@@ -982,6 +988,32 @@ Class shipmentController Extends baseController {
         $this->view->data['time'] = $time;
         $this->view->data['oil'] = $oil;
 
+        $detail_cost = json_decode($shipment_data->shipment_cost_detail);
+
+        $this->view->data['police'] = $detail_cost->shipment_cost_police;
+        $this->view->data['tire'] = $detail_cost->shipment_cost_tire;
+        $this->view->data['roadtoll'] = $detail_cost->shipment_cost_toll;
+
+        $this->view->data['warehouse_cont'] = $detail_cost->shipment_cost_cont;
+        $this->view->data['warehouse_ton'] = $detail_cost->shipment_cost_ton;
+        
+        $this->view->data['lift_on'] = $detail_cost->shipment_cost_lift_on;
+        $this->view->data['lift_off'] = $detail_cost->shipment_cost_lift_off;
+        $this->view->data['lift_on_null'] = $detail_cost->shipment_cost_lift_on_null;
+        $this->view->data['lift_off_null'] = $detail_cost->shipment_cost_lift_off_null;
+
+        $this->view->data['deposit'] = $detail_cost->shipment_cost_deposit;
+
+        $this->view->data['clean'] = $detail_cost->shipment_cost_clean;
+        $this->view->data['trans'] = $detail_cost->shipment_cost_trans;
+        $this->view->data['weight'] = $detail_cost->shipment_cost_weight;
+        $this->view->data['document'] = $detail_cost->shipment_cost_document;
+        $this->view->data['release'] = $detail_cost->shipment_cost_release;
+        $this->view->data['park'] = $detail_cost->shipment_cost_park;
+
+        $sumcost = $detail_cost->shipment_cost_police+$detail_cost->shipment_cost_tire+$detail_cost->shipment_cost_toll+$detail_cost->shipment_cost_cont+$detail_cost->shipment_cost_ton+$detail_cost->shipment_cost_lift_on+$detail_cost->shipment_cost_lift_off+$detail_cost->shipment_cost_lift_on_null+$detail_cost->shipment_cost_lift_off_null+$detail_cost->shipment_cost_deposit+$detail_cost->shipment_cost_clean+$detail_cost->shipment_cost_trans+$detail_cost->shipment_cost_weight+$detail_cost->shipment_cost_document;
+        $this->view->data['sumcost'] = $sumcost;
+
         $join = array('table'=>'cost_list,customer','where'=>'shipment_cost_customer=customer_id AND shipment_cost_list=cost_list_id');
         $shipment_cost_model = $this->model->get('shipmentcostModel');
 
@@ -1141,6 +1173,32 @@ Class shipmentController Extends baseController {
         $this->view->data['km'] = $km;
         $this->view->data['time'] = $time;
         $this->view->data['oil'] = $oil;
+
+        $detail_cost = json_decode($shipment_data->shipment_cost_detail);
+
+        $this->view->data['police'] = $detail_cost->shipment_cost_police;
+        $this->view->data['tire'] = $detail_cost->shipment_cost_tire;
+        $this->view->data['roadtoll'] = $detail_cost->shipment_cost_toll;
+
+        $this->view->data['warehouse_cont'] = $detail_cost->shipment_cost_cont;
+        $this->view->data['warehouse_ton'] = $detail_cost->shipment_cost_ton;
+        
+        $this->view->data['lift_on'] = $detail_cost->shipment_cost_lift_on;
+        $this->view->data['lift_off'] = $detail_cost->shipment_cost_lift_off;
+        $this->view->data['lift_on_null'] = $detail_cost->shipment_cost_lift_on_null;
+        $this->view->data['lift_off_null'] = $detail_cost->shipment_cost_lift_off_null;
+
+        $this->view->data['deposit'] = $detail_cost->shipment_cost_deposit;
+
+        $this->view->data['clean'] = $detail_cost->shipment_cost_clean;
+        $this->view->data['trans'] = $detail_cost->shipment_cost_trans;
+        $this->view->data['weight'] = $detail_cost->shipment_cost_weight;
+        $this->view->data['document'] = $detail_cost->shipment_cost_document;
+        $this->view->data['release'] = $detail_cost->shipment_cost_release;
+        $this->view->data['park'] = $detail_cost->shipment_cost_park;
+
+        $sumcost = $detail_cost->shipment_cost_police+$detail_cost->shipment_cost_tire+$detail_cost->shipment_cost_toll+$detail_cost->shipment_cost_cont+$detail_cost->shipment_cost_ton+$detail_cost->shipment_cost_lift_on+$detail_cost->shipment_cost_lift_off+$detail_cost->shipment_cost_lift_on_null+$detail_cost->shipment_cost_lift_off_null+$detail_cost->shipment_cost_deposit+$detail_cost->shipment_cost_clean+$detail_cost->shipment_cost_trans+$detail_cost->shipment_cost_weight+$detail_cost->shipment_cost_document;
+        $this->view->data['sumcost'] = $sumcost;
 
         $join = array('table'=>'cost_list,customer','where'=>'shipment_cost_customer=customer_id AND shipment_cost_list=cost_list_id');
         $shipment_cost_model = $this->model->get('shipmentcostModel');

@@ -449,6 +449,18 @@ $(document).ready(function(){
               
               
             </div>
+            <div id="costrelease" class="tab-pane">
+              <label for="shipment_cost_release">Số tiền</label>
+              <div class="input-group">
+                <input class="form-control numbers" type="text" id="shipment_cost_release" name="shipment_cost_release" tabindex="15" value="<?php echo $lib->formatMoney($release) ?>">
+              </div>
+            </div>
+            <div id="costpark" class="tab-pane">
+              <label for="shipment_cost_park">Số tiền</label>
+              <div class="input-group">
+                <input class="form-control numbers" type="text" id="shipment_cost_park" name="shipment_cost_park" tabindex="15" value="<?php echo $lib->formatMoney($park) ?>">
+              </div>
+            </div>
 
             <div id="costtoll" class="tab-pane">
               <label for="shipment_cost_toll">Số tiền</label>
@@ -558,6 +570,18 @@ $(document).ready(function(){
               <a data-toggle="tab" href="#costloan" aria-expanded="false">
                 <i class="red ace-icon fa fa-exchange bigger-110"></i>
                 Chi hộ
+              </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#costrelease" aria-expanded="false">
+                <i class="pink ace-icon fa fa-file-text-o bigger-110"></i>
+                Thanh lý
+              </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#costpark" aria-expanded="false">
+                <i class="brown ace-icon fa fa-anchor bigger-110"></i>
+                Neo xe
               </a>
             </li>
             <li class="">
