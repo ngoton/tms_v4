@@ -1,0 +1,35 @@
+
+<div class="login_body">
+  
+          <table>
+            <tr>
+                <td>Ngày </td>
+                <td><input type="text" id="gas_date" name="gas_date" tabindex="1" class="input-mask-datetime" required="required" value="<?php echo date('d/m/Y H:m:s',$gas_data->gas_date) ?>"></td>
+            </tr>
+            <tr>
+                <td>Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="gas_vehicle" name="gas_vehicle" required="required" tabindex="2">
+                    <?php foreach ($vehicles as $vehicle) { ?>
+                      <option <?php echo $gas_data->gas_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>Km xe </td>
+                <td><input type="text" id="gas_km" name="gas_km" tabindex="3" class="numbers" value="<?php echo $lib->formatMoney($gas_data->gas_km) ?>"></td>
+            </tr>
+            <tr>
+                <td>Km định vị </td>
+                <td><input type="text" id="gas_km_gps" name="gas_km_gps" tabindex="4" class="numbers" value="<?php echo $lib->formatMoney($gas_data->gas_km_gps) ?>"></td>
+            </tr>
+            <tr>
+                <td>Số lit </td>
+                <td><input type="text" id="gas_lit" name="gas_lit" tabindex="5" class="numbers" required="required" value="<?php echo $lib->formatMoney($gas_data->gas_lit,2) ?>"></td>
+            </tr>
+        </table> 
+    
+</div>
+<div id="error_gas" class="error"><?php echo isset($error) ? $error : null; ?></div>

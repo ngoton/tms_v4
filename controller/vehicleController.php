@@ -178,6 +178,8 @@ Class vehicleController Extends baseController {
                 'vehicle_country' => trim($_POST['vehicle_country']),
                 'vehicle_owner' => isset($_POST['vehicle_owner'])?$_POST['vehicle_owner']:null,
                 'vehicle_number' => trim($_POST['vehicle_number']),
+                'vehicle_oil' => str_replace(',', '', $_POST['vehicle_oil']),
+                'vehicle_volume' => str_replace(',', '', $_POST['vehicle_volume']),
             );
             $vehicle_model->createVehicle($data);
 
@@ -250,6 +252,8 @@ Class vehicleController Extends baseController {
                 'vehicle_country' => trim($_POST['vehicle_country']),
                 'vehicle_owner' => isset($_POST['vehicle_owner'])?$_POST['vehicle_owner']:null,
                 'vehicle_number' => trim($_POST['vehicle_number']),
+                'vehicle_oil' => str_replace(',', '', $_POST['vehicle_oil']),
+                'vehicle_volume' => str_replace(',', '', $_POST['vehicle_volume']),
             );
             $vehicle_model->updateVehicle($data,array('vehicle_id'=>$id));
 
@@ -297,6 +301,7 @@ Class vehicleController Extends baseController {
         }
 
         $this->view->data['title'] = 'Cập nhật xe';
+        $this->view->data['lib'] = $this->lib;
 
         $vehicle_model = $this->model->get('vehicleModel');
 
@@ -346,6 +351,7 @@ Class vehicleController Extends baseController {
         }
 
         $this->view->data['title'] = 'Cập nhật xe';
+        $this->view->data['lib'] = $this->lib;
 
         $vehicle_model = $this->model->get('vehicleModel');
 

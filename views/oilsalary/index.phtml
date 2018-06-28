@@ -1,0 +1,339 @@
+
+<?php
+$url_order = 'DESC';
+if ($order_by == 'gas_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'vehicle_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'gas_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'gas_km')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'gas_km_gps')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'gas_lit')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<div class="col-xs-7">
+    <div class="pull-left">
+      <select id="sl_nv" name="sl_nv" style="width:70px">
+       <option value="1">Quý I</option>
+       <option value="2">Quý II</option>
+       <option value="3">Quý III</option>
+       <option value="4">Quý IV</option>
+      </select>
+      <select id="sl_tha" name="sl_tha" style="width:80px">
+       <?php 
+          for ($k=1; $k < 13; $k++) { 
+              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <select id="sl_na" name="sl_na" style="width:90px">
+       <?php 
+          $nam = date('Y');
+          for ($k=($nam-5); $k < ($nam+5); $k++) { 
+              echo '<option value="'.$k.'">Năm '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+        
+      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+      
+    </div>
+</div>
+<div class="col-xs-5">
+    <div class="tools action-buttons pull-right">
+        <?php
+        if (isset($filter)) {
+            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+        }
+        ?>
+        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+            <option value="18446744073709">All</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
+        
+        <div class="pull-right pos-rel dropdown-hover">
+            <button class="btn btn-minier bigger" style="line-height: 26px">
+                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                <li>
+                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                        <span class="orange">
+                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                        <span class="green">
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("oilsalary/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword."&nv=".$nv."&tha=".$tha."&na=".$na."&batdau=".str_replace('/', '-', $batdau)."&ketthuc=".str_replace('/', '-', $ketthuc)) ?>','Lọc dữ liệu')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                        <span class="red">
+                            <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                        <span class="purple">
+                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("gas/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    
+                    <div class="text-center pos-rel dropdown-hover">
+                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                            <span class="blue">
+                                <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                            <li>
+                                <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                    <span class="green">
+                                        <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                    <span class="red">
+                                        <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>                        
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblExport" >
+<thead>
+    <tr>
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'gas_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'gas_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_km','<?php echo $url_order ?>')">Km xe <?php if ($order_by == 'gas_km'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_km_gps','<?php echo $url_order ?>')">Km định vị <?php if ($order_by == 'gas_km_gps'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>  
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_km','<?php echo $url_order ?>')">Km chạy (theo xe) <?php if ($order_by == 'gas_km'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_km_gps','<?php echo $url_order ?>')">Km chạy (định vị) <?php if ($order_by == 'gas_km_gps'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_lit','<?php echo $url_order ?>')">Số lit <?php if ($order_by == 'gas_lit'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_lit','<?php echo $url_order ?>')">Tỷ lệ/100km <?php if ($order_by == 'gas_lit'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_lit','<?php echo $url_order ?>')">Định mức lit/100km <?php if ($order_by == 'gas_lit'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_lit','<?php echo $url_order ?>')">Thưởng dầu (lit) <?php if ($order_by == 'gas_lit'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','gas_lit','<?php echo $url_order ?>')">Thưởng dầu (VND) <?php if ($order_by == 'gas_lit'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
+        <th>
+            
+        </th>
+    </tr>
+   </thead>
+   <tbody>
+    <?php $tong_km=0; $tong_km_gps=0; $tongsoluong=0; $tong_tyle=0; $tongthuong_lit=0; $tongthuong_vn=0;
+    foreach ($vehicles as $vehicle) : 
+      $km_cu = isset($bonus_data[$vehicle->gas_id]['km'])?$bonus_data[$vehicle->gas_id]['km']:0;
+      $km_gps_cu = isset($bonus_data[$vehicle->gas_id]['km_gps'])?$bonus_data[$vehicle->gas_id]['km_gps']:0;
+      $lit_cu = isset($bonus_data[$vehicle->gas_id]['lit'])?$bonus_data[$vehicle->gas_id]['lit']:0;
+      $thuong = isset($bonus_data[$vehicle->gas_id]['plus'])?$bonus_data[$vehicle->gas_id]['plus']:0;
+      $phat = isset($bonus_data[$vehicle->gas_id]['minus'])?$bonus_data[$vehicle->gas_id]['minus']:0;
+
+      $km_chay = $vehicle->gas_km-$km_cu;
+
+      $soluong = $vehicle->vehicle_volume-$vehicle->gas_lit;
+      $tyle = round($soluong*100/$km_chay,2);
+
+      $dinhmuc_lit = round($vehicle->vehicle_oil*$km_chay/100,2);
+      $thuong_lit = $dinhmuc_lit-$soluong;
+      $thuong_vnd = $thuong*$thuong_lit;
+
+      $tong_km += $km_chay; 
+      $tong_km_gps += $vehicle->gas_km_gps-$km_gps_cu; 
+      $tongsoluong += $soluong; 
+      $tong_tyle += $tyle; 
+      $tongthuong_lit += $thuong_lit; 
+      $tongthuong_vn += $thuong_vnd;
+    ?>
+        <tr id="<?php echo $vehicle->gas_id ?>" class="edit_tr" >
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $vehicle->gas_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo date('d/m/Y H:m:s',$vehicle->gas_date); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $vehicle->gas_vehicle ?>,'none')"><?php echo $vehicle->vehicle_number; ?></a></td>
+            <td class="text-right"><?php echo $lib->formatMoney($vehicle->gas_km); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($vehicle->gas_km_gps); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($vehicle->gas_km-$km_cu); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($vehicle->gas_km_gps-$km_gps_cu); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($soluong,2); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($tyle,2); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($vehicle->vehicle_oil); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($thuong_lit,2); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($thuong_vnd); ?></td>
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("gas/view/") ?>','Thông tin đổ dầu',<?php echo $vehicle->gas_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    <tr style="font-weight: bold;" class="blue">
+      <td class="text-center" colspan="6">Tổng cộng</td>
+      <td class="text-right"><?php echo $lib->formatMoney($tong_km); ?></td>
+      <td class="text-right"><?php echo $lib->formatMoney($tong_km_gps); ?></td>
+      <td class="text-right"><?php echo $lib->formatMoney($tongsoluong,2); ?></td>
+      <td class="text-right"><?php echo $tong_tyle>0?$lib->formatMoney($tong_tyle/($i-1),2):0; ?></td>
+      <td class="text-right"></td>
+      <td class="text-right"><?php echo $lib->formatMoney($tongthuong_lit,2); ?></td>
+      <td class="text-right"><?php echo $lib->formatMoney($tongthuong_vn); ?></td>
+      <td class="text-center"></td>
+    </tr>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+</div>
+<script type="text/javascript">
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
+
+$(document).ready(function(){
+    $('#batdau').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
+      });
+    $('#ketthuc').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
+      });
+});
+
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
+
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+</script>

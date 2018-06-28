@@ -25,6 +25,7 @@ $(function () {
     });
 
     $(document).on("focus", ".input-mask-datetime", function () {
+      $this = this;
       $(this).datetimepicker({
          format: 'DD/MM/YYYY H:mm:ss',//use this option to display seconds
          //calendarWeeks: true,
@@ -53,7 +54,7 @@ $(function () {
         }).on('dp.show', function(){
             var datepicker = $("body").find('.bootstrap-datetimepicker-widget');
             if (datepicker.hasClass('top') || datepicker.hasClass('bottom')) {
-                var top = $(this).offset().top;
+                var top = $(this).offset().top + $($this).height() + 10;
                 var left = $(this).offset().left;
                 datepicker.css({
                                 'z-index': '1060',
@@ -638,6 +639,7 @@ function open_dialog(url, title){
     modal: true,
     width: "auto",
     height: "auto",
+    minHeight: 290,
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
     title_html: true,
     buttons: [

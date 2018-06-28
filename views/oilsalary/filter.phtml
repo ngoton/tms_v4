@@ -1,0 +1,90 @@
+<div class="login_body">
+  <form id="add" method="post" action="<?php echo $this->url('oilsalary') ?>" enctype="multipart/form-data">
+    
+    <label for="gas_vehicle">Xe</label>
+    <div class="input-group">
+      <select class="form-control multiselect" id="gas_vehicle" name="gas_vehicle[]" multiple="">
+        <?php foreach ($vehicles as $vehicle) { ?>
+          <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+        <?php } ?>
+      </select>
+    </div>
+    <input type="hidden" name="filter">
+    <input type="hidden" name="page" value="<?php echo $page ?>">
+    <input type="hidden" name="order_by" value="<?php echo $order_by ?>">
+    <input type="hidden" name="order" value="<?php echo $order ?>">
+    <input type="hidden" name="limit" value="<?php echo $limit ?>">
+    <input type="hidden" name="keyword" value="<?php echo $keyword ?>">
+    <input type="hidden" name="nv" value="<?php echo $nv ?>">
+    <input type="hidden" name="tha" value="<?php echo $tha ?>">
+    <input type="hidden" name="na" value="<?php echo $na ?>">
+    <input type="hidden" name="batdau" value="<?php echo $batdau ?>">
+    <input type="hidden" name="ketthuc" value="<?php echo $ketthuc ?>">
+  </form>   
+</div>  
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.multiselect').multiselect({
+   enableFiltering: true,
+   enableCaseInsensitiveFiltering: true,
+   maxHeight: 350,
+   enableHTML: true,
+   nonSelectedText: 'Tất cả',
+   includeSelectAllOption: true,
+   buttonClass: 'btn btn-white btn-primary',
+   templates: {
+    button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+    ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+    filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+    filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+    li: '<li><a tabindex="0"><label></label></a></li>',
+        divider: '<li class="multiselect-item divider"></li>',
+        liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+   }
+  });
+});
+
+$('.ui-dialog-content').on('click' , '.dropdown-toggle', function(event){
+    var self = $(this);
+    var selfHeight = $(this).parent().height();
+    var selfWidth = $(this).parent().width();
+    var selfOffset = $(self).offset();
+    var selfOffsetRigth = $(document).width() - selfOffset.left - selfWidth;
+    var dropDown = self.parent().find('ul');
+    $(dropDown).css({position:'fixed', top: selfOffset.top + selfHeight , left: selfOffset.left, right: selfOffsetRigth ,  width: '180px'});
+});
+
+function fixDropdownPosition(){
+    var openDropdownButton = $('.dropdown-toggle');
+    if($(openDropdownButton).length){
+        var selfHeight = $(openDropdownButton).height();
+        var selfWidth = $(openDropdownButton).width();
+        var openDropdownButtonOffset = $(openDropdownButton).offset();
+        var openDropdownButtonOffsetRigth = $(document).width() - openDropdownButtonOffset.left - selfWidth;
+        var openDropdown = $(openDropdownButton).find('ul');
+        $(openDropdown).css({position:'fixed', top: openDropdownButtonOffset.top + selfHeight , left: openDropdownButtonOffset.left , right: openDropdownButtonOffsetRigth, width: '180px'});
+    };
+};
+
+$(".ui-dialog-content").unbind("scroll");
+$(".ui-dialog-content").scroll(function(){
+    fixDropdownPosition();
+});
+
+$( window ).resize(function() {
+    fixDropdownPosition();
+});
+$( window ).scroll(function() {
+    fixDropdownPosition();
+});
+$(".ui-dialog").resize(function() {
+    fixDropdownPosition();
+});
+</script>
+<style type="text/css">
+  .dropdown-menu>li.active>a, .dropdown-menu>li>a:active{
+    background: transparent;
+    color: #000;
+  }
+</style>

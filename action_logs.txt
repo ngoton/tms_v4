@@ -475,3 +475,21 @@
 
 28/06/2018 14:26:36|admin|edit|10|shipment|1530118800-9-3-1--2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960----undefined-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000","shipment_cost_release":"0","shipment_cost_park":"0"}
 
+28/06/2018 21:40:20|admin|add|1|gas|-1000-1200-50-2-1
+
+28/06/2018 21:42:29|admin|edit|1|gas|1530147660-1000-1200-50-2-1
+
+28/06/2018 23:52:42|admin|edit|2|vehicle|1-E310-2018-220--50A-134.65-40-400
+
+28/06/2018 23:52:54|admin|edit|1|vehicle|7-A01-2018-86-1-51B-2943-30-300
+
+29/06/2018 00:17:44|admin|edit|1|gas|1530061560-1000-1200-50-2-1
+
+29/06/2018 00:18:21|admin|add|2|gas|1530205200-1300-1400-60-2-1
+
+29/06/2018 00:27:37|admin|edit|2|gas|1530205560-1300-1400-160-2-1
+
+29/06/2018 00:28:43|admin|edit|2|gas|1530205560-1200-1400-160-2-1
+
+29/06/2018 00:29:15|admin|edit|2|gas|1530205560-2000-2000-160-2-1
+

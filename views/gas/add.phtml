@@ -1,0 +1,75 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_gas").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add_gas")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/gas/addgas", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_gas').hide();
+                  $('#error_gas').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_gas').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_gas').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+<div id="error_gas" class="error"><?php echo isset($error) ? $error : null; ?></div>     
+<div class="login_body">
+  
+      <form id="add_gas" method="post" action="" autocomplete="off">
+          <table>
+            <tr>
+                <td>Ngày </td>
+                <td><input type="text" id="gas_date" name="gas_date" tabindex="1" class="input-mask-datetime" required="required"></td>
+            </tr>
+            <tr>
+                <td>Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></td>
+                <td>
+                  <select class="form-control select2" id="gas_vehicle" name="gas_vehicle" required="required" tabindex="2">
+                    <?php foreach ($vehicles as $vehicle) { ?>
+                      <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                    <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>Km xe </td>
+                <td><input type="text" id="gas_km" name="gas_km" tabindex="3" class="numbers"></td>
+            </tr>
+            <tr>
+                <td>Km định vị </td>
+                <td><input type="text" id="gas_km_gps" name="gas_km_gps" tabindex="4" class="numbers"></td>
+            </tr>
+            <tr>
+                <td>Số lit </td>
+                <td><input type="text" id="gas_lit" name="gas_lit" tabindex="5" class="numbers" required="required"></td>
+            </tr>
+        </table> 
+    </form>
+</div>
+
+
+
