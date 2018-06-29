@@ -134,6 +134,30 @@ $(function () {
           oncleared: function () { self.Value(''); }
       });
     });
+
+    // DROPDOWN MENU WITH APPEND-TO-BODY
+    // hold onto the drop down menu
+    var dropdownMenu;
+    // and when you show it, move it to the body
+    $(window).on('show.bs.dropdown', function (e) {
+        // grab the menu
+        dropdownMenu = $(e.target).find('.multiselect-container.dropdown-menu');
+        // detach it and append it to the body
+        $('body').append(dropdownMenu.detach());
+        // grab the new offset position
+        var eOffset = $(e.target).offset();
+        // make sure to place it where it would normally go (this could be improved)
+        dropdownMenu.css({
+            'display': 'block',
+                'top': eOffset.top + $(e.target).outerHeight(),
+                'left': eOffset.left
+        });
+    });
+    // and when you hide it, reattach the drop down, and hide it normally
+    $(window).on('hide.bs.dropdown', function (e) {
+        $(e.target).append(dropdownMenu.detach());
+        dropdownMenu.hide();
+    });
 });
 $( document ).ajaxStart(function() {
 
@@ -639,7 +663,6 @@ function open_dialog(url, title){
     modal: true,
     width: "auto",
     height: "auto",
-    minHeight: 290,
     title: "<div class='widget-header widget-header-small blue'><h4 class='smaller'> "+title+"</h4></div>",
     title_html: true,
     buttons: [
