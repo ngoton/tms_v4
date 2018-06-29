@@ -235,3 +235,5 @@ Time|User|Action
 
 29/06/2018 11:02:43|admin|login|127.0.0.1
 
+29/06/2018 22:39:28|admin|login|::1
+

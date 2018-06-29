@@ -1,0 +1,135 @@
+
+<div id="error_checkingcost" class="error"><?php echo isset($error) ? $error : null; ?></div>     
+<div class="login_body">
+  
+        <div class="col-md-4 col-xs-6">
+          <label for="checking_cost_date">Ngày</label>
+          <div class="input-group">
+            <input class="form-control input-mask-date" type="text" id="checking_cost_date" name="checking_cost_date" required="required" tabindex="1" value="<?php echo $lib->hien_thi_ngay_thang($checkingcost_data->checking_cost_date) ?>" >
+          </div>
+          <label for="checking_cost_comment">Nội dung</label>
+          <div class="input-group">
+            <input class="form-control" type="text" id="checking_cost_comment" name="checking_cost_comment" tabindex="2" value="<?php echo $checkingcost_data->checking_cost_comment ?>" >
+          </div>
+          <label for="checking_cost_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','checking_cost_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
+          <div class="input-group">
+            <?php $ve = explode(',', $checkingcost_data->checking_cost_vehicle); ?>
+            <select class="form-control multiselect" id="checking_cost_vehicle" name="checking_cost_vehicle[]" tabindex="3" multiple="">
+              <?php foreach ($vehicles as $vehicle) { ?>
+                <option <?php echo in_array($vehicle->vehicle_id,$ve)?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="checking_cost_romooc">Mooc <a title="Thêm mooc mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới','checking_cost_romooc','<?php echo $this->url("romooc/getromooc") ?>','add_romooc')"></i></a></label>
+          <div class="input-group">
+            <?php $ro = explode(',', $checkingcost_data->checking_cost_romooc); ?>
+            <select class="form-control multiselect" id="checking_cost_romooc" name="checking_cost_romooc[]" tabindex="4" multiple="">
+              <?php foreach ($romoocs as $romooc) { ?>
+                <option <?php echo in_array($romooc->romooc_id,$ro)?'selected="selected"':null ?> value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <label for="checking_cost_customer">Tên đơn vị <a title="Thêm nhà cung cấp mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm nhà cung cấp mới','checking_cost_customer','<?php echo $this->url("customer/getsupply") ?>','add_customer')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="checking_cost_customer" name="checking_cost_customer" required="required" tabindex="7">
+              <?php foreach ($customers as $customer) { ?>
+                <option <?php echo $checkingcost_data->checking_cost_customer==$customer->customer_id?'selected="selected"':null ?> value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="checking_cost_code">Số hóa đơn</label>
+          <div class="input-group">
+            <input type="text" id="checking_cost_code" name="checking_cost_code" tabindex="8" value="<?php echo $checkingcost_data->checking_cost_code ?>" >
+          </div>
+          <label for="checking_cost_price">Số tiền</label>
+          <div class="input-group">
+            <input type="text" id="checking_cost_price" name="checking_cost_price" tabindex="9" class="numbers" value="<?php echo $lib->formatMoney($checkingcost_data->checking_cost_price) ?>">
+          </div>
+          <label for="checking_cost_vat">Thuế GTGT</label>
+          <div class="input-group">
+            <input type="text" id="checking_cost_vat" name="checking_cost_vat" tabindex="10" class="numbers" value="<?php echo $lib->formatMoney($checkingcost_data->checking_cost_vat) ?>">
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <label for="checking_cost_start_date">Ngày hiệu lực</label>
+          <div class="input-group">
+            <input type="text" id="checking_cost_start_date" name="checking_cost_start_date" tabindex="5" class="start-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($checkingcost_data->checking_cost_start_date) ?>">
+          </div>
+          <label for="checking_cost_end_date">Ngày hết hạn</label>
+          <div class="input-group">
+            <input type="text" id="checking_cost_end_date" name="checking_cost_end_date" tabindex="6" class="end-date" required="required" value="<?php echo $lib->hien_thi_ngay_thang($checkingcost_data->checking_cost_end_date) ?>">
+          </div>
+          
+        </div>
+    
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.multiselect').multiselect({
+   enableFiltering: true,
+   enableCaseInsensitiveFiltering: true,
+   maxHeight: 350,
+   enableHTML: true,
+   nonSelectedText: 'Chọn',
+   includeSelectAllOption: true,
+   buttonClass: 'btn btn-white btn-primary',
+   templates: {
+    button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+    ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+    filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+    filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+    li: '<li><a tabindex="0"><label></label></a></li>',
+        divider: '<li class="multiselect-item divider"></li>',
+        liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+   }
+  });
+});
+
+$('.ui-dialog-content').on('click' , '.dropdown-toggle', function(event){
+    var self = $(this);
+    var selfHeight = $(this).parent().height();
+    var selfWidth = $(this).parent().width();
+    var selfOffset = $(self).offset();
+    var selfOffsetRigth = $(document).width() - selfOffset.left - selfWidth;
+    var dropDown = self.parent().find('ul');
+    $(dropDown).css({position:'fixed', top: selfOffset.top + selfHeight , left: selfOffset.left, right: selfOffsetRigth ,  width: '180px'});
+});
+
+function fixDropdownposition(){
+    var openDropdownButton = $('.dropdown-toggle');
+    if($(openDropdownButton).length){
+        var selfHeight = $(openDropdownButton).height();
+        var selfWidth = $(openDropdownButton).width();
+        var openDropdownButtonOffset = $(openDropdownButton).offset();
+        var openDropdownButtonOffsetRigth = $(document).width() - openDropdownButtonOffset.left - selfWidth;
+        var openDropdown = $(openDropdownButton).find('ul');
+        $(openDropdown).css({position:'fixed', top: openDropdownButtonOffset.top + selfHeight , left: openDropdownButtonOffset.left , right: openDropdownButtonOffsetRigth, width: '180px'});
+    };
+};
+
+$(".ui-dialog-content").unbind("scroll");
+$(".ui-dialog-content").scroll(function(){
+    fixDropdownposition();
+});
+
+$( window ).resize(function() {
+    fixDropdownposition();
+});
+$( window ).scroll(function() {
+    fixDropdownposition();
+});
+$(".ui-dialog").resize(function() {
+    fixDropdownposition();
+});
+</script>
+<style type="text/css">
+  .dropdown-menu>li.active>a, .dropdown-menu>li>a:active{
+    background: transparent;
+    color: #000;
+  }
+</style>
+

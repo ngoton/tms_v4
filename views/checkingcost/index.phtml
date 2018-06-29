@@ -1,0 +1,356 @@
+
+<?php
+$url_order = 'DESC';
+if ($order_by == 'checking_cost_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'checking_cost_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'checking_cost_code')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'checking_cost_price')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'checking_cost_vat')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'customer_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'checking_cost_start_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'checking_cost_end_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<div class="col-xs-7">
+    <div class="pull-left">
+      <select id="sl_nv" name="sl_nv" style="width:70px">
+       <option value="1">Quý I</option>
+       <option value="2">Quý II</option>
+       <option value="3">Quý III</option>
+       <option value="4">Quý IV</option>
+      </select>
+      <select id="sl_tha" name="sl_tha" style="width:80px">
+       <?php 
+          for ($k=1; $k < 13; $k++) { 
+              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <select id="sl_na" name="sl_na" style="width:90px">
+       <?php 
+          $nam = date('Y');
+          for ($k=($nam-5); $k < ($nam+5); $k++) { 
+              echo '<option value="'.$k.'">Năm '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+        
+      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+      
+    </div>
+</div>
+<div class="col-xs-5">
+    <div class="tools action-buttons pull-right">
+        <?php
+        if (isset($filter)) {
+            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+        }
+        ?>
+        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+            <option value="18446744073709">All</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
+        <a class="purpose" data-original-title="Thêm mới">
+            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("checkingcost/add") ?>','Thêm phí kiểm định mới')"></i>
+        </a> 
+        <div class="pull-right pos-rel dropdown-hover">
+            <button class="btn btn-minier bigger" style="line-height: 26px">
+                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                <li>
+                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                        <span class="orange">
+                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                        <span class="green">
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("checkingcost/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                        <span class="red">
+                            <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                        <span class="purple">
+                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("checkingcost/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    
+                    <div class="text-center pos-rel dropdown-hover">
+                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                            <span class="blue">
+                                <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                            <li>
+                                <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                    <span class="green">
+                                        <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                    <span class="red">
+                                        <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>                        
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblExport" >
+<thead>
+    <tr>
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'checking_cost_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'checking_cost_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_comment','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'checking_cost_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_vehicle','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'checking_cost_vehicle'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_romooc','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'checking_cost_romooc'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_code','<?php echo $url_order ?>')">Số hóa đơn <?php if ($order_by == 'checking_cost_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Tên đơn vị <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_price','<?php echo $url_order ?>')">Số tiền <?php if ($order_by == 'checking_cost_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_vat','<?php echo $url_order ?>')">Thuế GTGT <?php if ($order_by == 'checking_cost_vat'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_price','<?php echo $url_order ?>')">Tổng cộng <?php if ($order_by == 'checking_cost_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_start_date','<?php echo $url_order ?>')">Ngày hiệu lực <?php if ($order_by == 'checking_cost_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','checking_cost_end_date','<?php echo $url_order ?>')">Ngày hết hạn <?php if ($order_by == 'checking_cost_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+           
+        <th>
+            
+        </th>
+    </tr>
+   </thead>
+   <tbody>
+    <?php $tongtien=0; $tongvat=0;
+    foreach ($checking_costs as $checking_cost) : 
+        $tongtien += $checking_cost->checking_cost_price;
+        $tongvat += $checking_cost->checking_cost_vat;
+
+        $vehicles = explode(',', $checking_cost->checking_cost_vehicle);
+        $romoocs = explode(',', $checking_cost->checking_cost_romooc);
+
+        $str1 = "";
+        foreach ($vehicles as $key => $value) {
+            $ve = isset($vehicle_data[$value])?$vehicle_data[$value]:null;
+            if ($str1=="") {
+                $str1 .= '<a onclick="view_click(\''.$this->url("vehicle/view/").'\',\'Thông tin xe\','.$value.',\'none\')">'.$ve.'</a>';
+            }
+            else{
+                $str1 .= ',<a onclick="view_click(\''.$this->url("vehicle/view/").'\',\'Thông tin xe\','.$value.',\'none\')">'.$ve.'</a>';
+            }
+        }
+
+        $str2 = "";
+        foreach ($romoocs as $key => $value) {
+            $ro = isset($romooc_data[$value])?$romooc_data[$value]:null;
+            if ($str2=="") {
+                $str2 .= '<a onclick="view_click(\''.$this->url("romooc/view/").'\',\'Thông tin mooc\','.$value.',\'none\')">'.$ro.'</a>';
+            }
+            else{
+                $str2 .= ',<a onclick="view_click(\''.$this->url("romooc/view/").'\',\'Thông tin mooc\','.$value.',\'none\')">'.$ro.'</a>';
+            }
+        }
+    ?>
+        <tr id="<?php echo $checking_cost->checking_cost_id ?>" class="edit_tr" <?php echo ($checking_cost->checking_cost_end_date=="" || $checking_cost->checking_cost_end_date==0 || $checking_cost->checking_cost_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $checking_cost->checking_cost_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($checking_cost->checking_cost_date); ?></td>
+            <td><?php echo $checking_cost->checking_cost_comment; ?></td>
+            <td><?php echo $str1; ?></td>
+            <td><?php echo $str2; ?></td>
+            <td><?php echo $checking_cost->checking_cost_code; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("customer/view/") ?>','Thông tin nhà cung cấp',<?php echo $checking_cost->checking_cost_customer ?>,'none')"><?php echo $checking_cost->customer_name; ?></a></td>
+            <td class="text-right"><?php echo $lib->formatMoney($checking_cost->checking_cost_price); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($checking_cost->checking_cost_vat); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($checking_cost->checking_cost_price+$checking_cost->checking_cost_vat); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($checking_cost->checking_cost_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($checking_cost->checking_cost_end_date); ?></td>
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("checkingcost/view/") ?>','Thông tin phí kiểm định',<?php echo $checking_cost->checking_cost_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("checkingcost/edit/") ?>','Cập nhật phí kiểm định',<?php echo $checking_cost->checking_cost_id ?>)">
+                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
+
+                    <a class="red" >
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $checking_cost->checking_cost_id ?>)"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    <tr style="font-weight: bold;" class="blue">
+        <td colspan="8" class="text-center">Tổng cộng</td>
+        <td class="text-right"><?php echo $lib->formatMoney($tongtien); ?></td>
+        <td class="text-right"><?php echo $lib->formatMoney($tongvat); ?></td>
+        <td class="text-right"><?php echo $lib->formatMoney($tongtien+$tongvat); ?></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+</div>
+<script type="text/javascript">
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
+
+$(document).ready(function(){
+    $('#batdau').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
+      });
+    $('#ketthuc').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
+      });
+});
+
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
+
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+</script>
