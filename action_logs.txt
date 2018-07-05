@@ -513,3 +513,17 @@
 
 29/06/2018 22:50:39|admin|edit|1|insurance_cost|1530205200-1530205200-1561827600-2,1-1-5-1000000-100000-Bảo hiểm-00000564-3
 
+05/07/2018 14:29:22|admin|add|1|spare_part_code|DR11R20-Double Road 11.00R20
+
+05/07/2018 14:29:50|admin|edit|1|spare_part_code|DR11R20DR801-Double Road 11.00R20 DR801
+
+05/07/2018 14:52:17|admin|add|2|spare_part_code|VT-VAT
+
+05/07/2018 14:54:27|admin|add|1|spare_part|1-Double Road 11.00R20 DR801-OT2524653636-DR-05-07-2018-Bộ
+
+05/07/2018 15:02:51|admin|edit|1|spare_part|1-Double Road 11.00R20 DR801-OT2524653636-DR-1514739600-Bộ
+
+05/07/2018 15:24:34|admin|add|2|spare_part|2-VAT0002-AR246432535-AT-1531846800-L
+
+05/07/2018 15:25:10|admin|add|3|spare_part|1-Double Road 11.00R20 DR801-OT2424312---
+

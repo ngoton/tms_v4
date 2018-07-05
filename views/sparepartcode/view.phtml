@@ -1,0 +1,18 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    <tr>
+                        <td>Mã</td>
+                        <td><input type="text" id="code" name="code" tabindex="1" required="required" value="<?php echo $spare_part_code_data->code ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>Tên</td>
+                        <td><input type="text" id="name" name="name" tabindex="2" required="required" value="<?php echo $spare_part_code_data->name ?>"></td>
+                    </tr>
+                </table> 
+            
+        </div>
+        <div id="error_spare_part_code" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

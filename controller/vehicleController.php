@@ -88,7 +88,7 @@ Class vehicleController Extends baseController {
             $this->view->data['filter'] = 1;
         }
 
-        $tongsodong = count($vehicle_model->getAllVehicle(null,$join));
+        $tongsodong = count($vehicle_model->getAllVehicle($data,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 

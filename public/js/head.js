@@ -688,6 +688,7 @@ function open_dialog(url, title){
       $( this ).dialog( "close" );
       //$(this).dialog('destroy');
       $( "#dialog-message" ).html("");
+      $('.multiselect-container').remove();
     },
     open: function () {
         if ($.ui && $.ui.dialog && !$.ui.dialog.prototype._allowInteractionRemapped && $(this).closest(".ui-dialog").length) {

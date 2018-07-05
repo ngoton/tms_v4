@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="/public/css/jquery-ui.css">
     <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/public/css/head.css">
-    <script type="text/javascript" src="/public/js/head.js?v=1"></script>
+    <script type="text/javascript" src="/public/js/head.js?v=2"></script>
     
     <script type="text/javascript">
     $("#ajax_loader").fadeIn(200);
@@ -1416,10 +1416,19 @@
                 <b class="arrow"></b>
               </li>
               <li class="">
-                <a data="user" data-role="user" href="<?php echo $this->url('user') ?>">
+                <a data="sparepart" data-role="sparepart" href="<?php echo $this->url('sparepart') ?>">
                   <i class="menu-icon fa fa-dropbox"></i>
 
                   Danh sách vật tư
+                </a>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="">
+                <a data="sparepartcode" data-role="sparepartcode" href="<?php echo $this->url('sparepartcode') ?>">
+                  <i class="menu-icon fa fa-dropbox"></i>
+
+                  Quản lý mã vật tư
                 </a>
 
                 <b class="arrow"></b>
