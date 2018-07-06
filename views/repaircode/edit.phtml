@@ -1,0 +1,53 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	
+			// Validate form
+			$("#edit_repair_code").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+          
+          var formData = new FormData($("#edit_repair_code")[0]);
+          formData.append('repair_code_id', '<?php echo $repair_code_data->repair_code_id ?>');
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/repaircode/editrepaircode", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_repair_code').hide();
+                  $('#error_repair_code').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_repair_code').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_repair_code').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+
+        <div class="login_body">
+         
+              <form id="edit_repair_code" method="post" action="" autocomplete="off">
+                  <table style="margin-top:20px;">
+                    <tr>
+                        <td>Tên danh mục sửa chữa</td>
+                        <td><input type="text" id="repair_code_name" name="repair_code_name" tabindex="1" required="required" value="<?php echo $repair_code_data->repair_code_name ?>"></td>
+                    </tr>
+                </table> 
+            </form>
+        </div>
+        <div id="error_repair_code" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

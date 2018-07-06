@@ -1,0 +1,89 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_repair").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+                
+          var formData = new FormData($("#add_repair")[0]);
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/repair/addrepair", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_repair').hide();
+                  $('#error_repair').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_repair').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_repair').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+<div id="error_repair" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="login_body">
+  
+      <form id="add_repair" method="post" action="" autocomplete="off">
+        <div class="col-xs-6">
+          <label for="repair_date">Ngày</label>
+          <div class="input-group">
+            <input class="input-mask-date" type="text" id="repair_date" name="repair_date" tabindex="1" required="required">
+          </div>
+          <label for="repair_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','repair_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_vehicle" name="repair_vehicle" tabindex="2">
+              <?php foreach ($vehicles as $vehicle) { ?>
+                <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="repair_romooc">Mooc <a title="Thêm mooc mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới','repair_romooc','<?php echo $this->url("romooc/getromooc") ?>','add_romooc')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_romooc" name="repair_romooc" tabindex="3">
+              <?php foreach ($romoocs as $romooc) { ?>
+                <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+              <?php } ?>
+            </select>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <label for="repair_code">Nội dung <a title="Thêm danh mục mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("repaircode/add") ?>','Thêm danh mục mới','repair_code','<?php echo $this->url("repaircode/getrepaircode") ?>','add_repair_code')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_code" name="repair_code" required="required" tabindex="4">
+              <?php foreach ($codes as $code) { ?>
+                <option value="<?php echo $code->repair_code_id ?>"><?php echo $code->repair_code_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="repair_staff">Nhân viên <a title="Thêm nhân viên mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("staff/add") ?>','Thêm nhân viên mới','repair_staff','<?php echo $this->url("staff/getstaff") ?>','add_staff')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_staff" name="repair_staff" tabindex="5">
+              <?php foreach ($staffs as $staff) { ?>
+                <option value="<?php echo $staff->staff_id ?>"><?php echo $staff->staff_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+          <label for="repair_price">Chi phí</label>
+          <div class="input-group">
+            <input class="numbers" type="text" id="repair_price" name="repair_price" tabindex="6" readonly="">
+          </div>
+        </div>
+    </form>
+</div>

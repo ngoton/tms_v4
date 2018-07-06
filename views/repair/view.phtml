@@ -1,0 +1,37 @@
+
+<div class="login_body">
+  
+        <div class="col-xs-6">
+          <label for="spare_part_code">Mã vật tư <a title="Thêm mã mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("sparepartcode/add") ?>','Thêm mã mới','spare_part_code','<?php echo $this->url("sparepartcode/getsparepartcode") ?>','add_spare_part_code')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="spare_part_code" name="spare_part_code" required="required" tabindex="1">
+              <?php foreach ($codes as $code) { ?>
+                <option <?php echo $spare_part_data->spare_part_code==$code->spare_part_code_id?'selected="selected"':null ?> value="<?php echo $code->spare_part_code_id ?>" data="<?php echo $code->name ?>"><?php echo $code->code ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="spare_part_name">Tên vật tư</label>
+          <div class="input-group">
+            <input type="text" id="spare_part_name" name="spare_part_name" tabindex="2" required="required" value="<?php echo $spare_part_data->spare_part_name ?>">
+          </div>
+          <label for="spare_part_seri">Số seri</label>
+          <div class="input-group">
+            <input type="text" id="spare_part_seri" name="spare_part_seri" tabindex="3" value="<?php echo $spare_part_data->spare_part_seri ?>" >
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <label for="spare_part_brand">Nhà sản xuất</label>
+          <div class="input-group">
+            <input type="text" id="spare_part_brand" name="spare_part_brand" tabindex="4" value="<?php echo $spare_part_data->spare_part_brand ?>">
+          </div>
+          <label for="spare_part_date_manufacture">Ngày sản xuất</label>
+          <div class="input-group">
+            <input class="input-mask-date" type="text" id="spare_part_date_manufacture" name="spare_part_date_manufacture" tabindex="5" value="<?php echo $lib->hien_thi_ngay_thang($spare_part_data->spare_part_date_manufacture) ?>">
+          </div>
+          <label for="spare_part_unit">Đơn vị tính</label>
+          <div class="input-group">
+            <input type="text" id="spare_part_unit" name="spare_part_unit" tabindex="6" value="<?php echo $spare_part_data->spare_part_unit ?>">
+          </div>
+        </div>
+    
+</div>

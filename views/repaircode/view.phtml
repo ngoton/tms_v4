@@ -1,0 +1,14 @@
+
+        <div class="login_body">
+         
+                  <table style="margin-top:20px;">
+                    <tr>
+                        <td>Tên danh mục sửa chữa</td>
+                        <td><input type="text" id="repair_code_name" name="repair_code_name" tabindex="1" required="required" value="<?php echo $repair_code_data->repair_code_name ?>"></td>
+                    </tr>
+                </table> 
+            
+        </div>
+        <div id="error_repair_code" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+

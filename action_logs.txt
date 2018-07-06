@@ -527,3 +527,7 @@
 
 05/07/2018 15:25:10|admin|add|3|spare_part|1-Double Road 11.00R20 DR801-OT2424312---
 
+06/07/2018 08:55:19|admin|add|1|repair_code|THAY NHỚT MÁY
+
+06/07/2018 08:55:35|admin|add|2|repair_code|THAY NHỚT HỘP SỐ
+
