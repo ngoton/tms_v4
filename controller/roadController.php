@@ -729,6 +729,8 @@ Class roadController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $road_model = $this->model->get('roadModel');
+            $road_oil_model = $this->model->get('roadoilModel');
+            $road_toll_model = $this->model->get('roadtollModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -739,6 +741,8 @@ Class roadController Extends baseController {
 
                     $road_model->deleteRoad($data);
 
+                    $road_oil_model->queryRoad('DELETE FROM road_oil WHERE road='.$data);
+                    $road_toll_model->queryRoad('DELETE FROM road_toll WHERE road='.$data);
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|road|"."\n"."\r\n";
 
@@ -768,6 +772,9 @@ Class roadController Extends baseController {
             else{
 
                 $road_model->deleteRoad($_POST['data']);
+
+                $road_oil_model->queryRoad('DELETE FROM road_oil WHERE road='.$_POST['data']);
+                $road_toll_model->queryRoad('DELETE FROM road_toll WHERE road='.$_POST['data']);
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|road|"."\n"."\r\n";
 

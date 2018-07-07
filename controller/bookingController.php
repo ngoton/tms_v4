@@ -827,6 +827,7 @@ Class bookingController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $booking_model = $this->model->get('bookingModel');
+            $booking_detail_model = $this->model->get('bookingdetailModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -834,9 +835,10 @@ Class bookingController Extends baseController {
                 $datas = explode(',', $_POST['xoa']);
 
                 foreach ($datas as $data) {
-
+                    
                     $booking_model->deleteBooking($data);
 
+                    $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking='.$data);
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|booking|"."\n"."\r\n";
 
@@ -866,6 +868,8 @@ Class bookingController Extends baseController {
             else{
 
                 $booking_model->deleteBooking($_POST['data']);
+
+                $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking='.$_POST['data']);
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|booking|"."\n"."\r\n";
 

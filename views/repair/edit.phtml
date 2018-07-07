@@ -1,94 +1,313 @@
 <script type="text/javascript">
 $(document).ready(function(){
-	$( ".select2" ).select2({dropdownAutoWidth : true});
-			// Validate form
-			$("#edit_spare_part").validate({
-				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
-				rules: {
-				},
+  $( ".select2" ).select2({dropdownAutoWidth : true});
+      // Validate form
+      $("#edit_repair").validate({
+        errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        rules: {
+        },
         submitHandler: function(form) {
-          
-          var formData = new FormData($("#edit_spare_part")[0]);
-          formData.append('spare_part_id', '<?php echo $spare_part_data->spare_part_id ?>');
+          var repair_list_data = [];
+
+          var repair_list_comment = [];
+          var repair_list_price = [];
+          var repair_list_end_date = [];
+          var id_repair_list = [];
+
+          $('.repair_list_price').each(function() { 
+              repair_list_price.push($(this).val());
+              id_repair_list.push($(this).attr('data') || "");
+          });
+          $('.repair_list_comment').each(function() { 
+              repair_list_comment.push($(this).val());
+          });
+          $('.repair_list_end_date').each(function() { 
+              repair_list_end_date.push($(this).val());
+          });
+
+          for (var i = 0; i < repair_list_price.length; i++) {
+              repair_list_data.push({'repair_list_price':repair_list_price[i], 'repair_list_comment':repair_list_comment[i], 'repair_list_end_date':repair_list_end_date[i], 'id_repair_list':id_repair_list[i]});
+          };
+
+          var formData = new FormData($("#edit_repair")[0]);
+          formData.append('repair_id', '<?php echo $repair_data->repair_id ?>');
+          formData.append('repair_list_data', JSON.stringify(repair_list_data));
           
           $.ajax({
               type: "POST", // phương thức gởi đi
-              url: "<?php echo BASE_URL ?>/sparepart/editsparepart", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              url: "<?php echo BASE_URL ?>/repair/editrepair", // nơi mà dữ liệu sẽ chuyển đến khi submit
               data: formData, // giá trị post
               cache: false,
               contentType: false,
               processData: false,
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error_spare_part').hide();
-                  $('#error_spare_part').slideToggle(100); // hiển thị thẻ div success
-                  $('#error_spare_part').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error_spare_part').fadeOut(10000);
+                  $('#error_repair').hide();
+                  $('#error_repair').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_repair').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_repair').fadeOut(10000);
 
               }
           });
           return false;
            
        }
-					 
-				 
-			});
-	
+           
+         
+      });
+  
 });
 </script>
-
-<div id="error_spare_part" class="error"><?php echo isset($error) ? $error : null; ?></div>
+     
+<div id="error_repair" class="error"><?php echo isset($error) ? $error : null; ?></div>
 <div class="login_body">
   
-      <form id="edit_spare_part" method="post" action="" autocomplete="off">
-        <div class="col-xs-6">
-          <label for="spare_part_code">Mã vật tư <a title="Thêm mã mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("sparepartcode/add") ?>','Thêm mã mới','spare_part_code','<?php echo $this->url("sparepartcode/getsparepartcode") ?>','add_spare_part_code')"></i></a></label>
+      <form id="edit_repair" method="post" action="" autocomplete="off">
+        <div class="col-xs-4">
+          <label for="repair_date">Ngày</label>
           <div class="input-group">
-            <select class="form-control select2" id="spare_part_code" name="spare_part_code" required="required" tabindex="1">
+            <input class="input-mask-date" type="text" id="repair_date" name="repair_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($repair_data->repair_date) ?>">
+          </div>
+          <label for="repair_number">Số phiếu</label>
+          <div class="input-group">
+            <input type="text" id="repair_number" name="repair_number" tabindex="2" value="<?php echo $repair_data->repair_number ?>">
+          </div>
+          <label for="repair_code">Nội dung <a title="Thêm danh mục mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("repaircode/add") ?>','Thêm danh mục mới','repair_code','<?php echo $this->url("repaircode/getrepaircode") ?>','add_repair_code')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_code" name="repair_code" required="required" tabindex="3">
               <?php foreach ($codes as $code) { ?>
-                <option <?php echo $spare_part_data->spare_part_code==$code->spare_part_code_id?'selected="selected"':null ?> value="<?php echo $code->spare_part_code_id ?>" data="<?php echo $code->name ?>"><?php echo $code->code ?></option>
+                <option <?php echo $repair_data->repair_code==$code->repair_code_id?'selected="selected"':null ?> value="<?php echo $code->repair_code_id ?>"><?php echo $code->repair_code_name ?></option>
               <?php } ?>
             </select>
           </div>
-          <label for="spare_part_name">Tên vật tư</label>
+          
+        </div>
+        <div class="col-xs-4">
+          <label for="repair_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','repair_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
           <div class="input-group">
-            <input type="text" id="spare_part_name" name="spare_part_name" tabindex="2" required="required" value="<?php echo $spare_part_data->spare_part_name ?>">
+            <select class="form-control select2" id="repair_vehicle" name="repair_vehicle" tabindex="4">
+              <option value="">Chọn</option>
+              <?php foreach ($vehicles as $vehicle) { ?>
+                <option <?php echo $repair_data->repair_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+              <?php } ?>
+            </select>
           </div>
-          <label for="spare_part_seri">Số seri</label>
+          <label for="repair_staff">Nhân viên <a title="Thêm nhân viên mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("staff/add") ?>','Thêm nhân viên mới','repair_staff','<?php echo $this->url("staff/getstaff") ?>','add_staff')"></i></a></label>
           <div class="input-group">
-            <input type="text" id="spare_part_seri" name="spare_part_seri" tabindex="3" value="<?php echo $spare_part_data->spare_part_seri ?>" >
+            <select class="form-control select2" id="repair_staff" name="repair_staff" tabindex="6">
+              <?php foreach ($staffs as $staff) { ?>
+                <option <?php echo $repair_data->repair_staff==$staff->staff_id?'selected="selected"':null ?> value="<?php echo $staff->staff_id ?>"><?php echo $staff->staff_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+          
+
+        </div>
+        <div class="col-xs-4">
+          <label for="repair_romooc">Mooc <a title="Thêm mooc mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới','repair_romooc','<?php echo $this->url("romooc/getromooc") ?>','add_romooc')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_romooc" name="repair_romooc" tabindex="5">
+              <option value="">Chọn</option>
+              <?php foreach ($romoocs as $romooc) { ?>
+                <option <?php echo $repair_data->repair_romooc==$romooc->romooc_id?'selected="selected"':null ?> value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="repair_price">Chi phí</label>
+          <div class="input-group">
+            <input class="numbers" type="text" id="repair_price" name="repair_price" tabindex="7" readonly="" value="<?php echo $lib->formatMoney($repair_data->repair_price) ?>">
           </div>
         </div>
-        <div class="col-xs-6">
-          <label for="spare_part_brand">Nhà sản xuất</label>
-          <div class="input-group">
-            <input type="text" id="spare_part_brand" name="spare_part_brand" tabindex="4" value="<?php echo $spare_part_data->spare_part_brand ?>">
-          </div>
-          <label for="spare_part_date_manufacture">Ngày sản xuất</label>
-          <div class="input-group">
-            <input class="input-mask-date" type="text" id="spare_part_date_manufacture" name="spare_part_date_manufacture" tabindex="5" value="<?php echo $lib->hien_thi_ngay_thang($spare_part_data->spare_part_date_manufacture) ?>">
-          </div>
-          <label for="spare_part_unit">Đơn vị tính</label>
-          <div class="input-group">
-            <input type="text" id="spare_part_unit" name="spare_part_unit" tabindex="6" value="<?php echo $spare_part_data->spare_part_unit ?>">
-          </div>
+
+        <div>
+            <table id="dataTable_repair" style="width: 100%;">
+                <tbody>
+                  <?php if(count($repair_lists) > 0){ ?>
+                  <?php foreach ($repair_lists as $repair_list_data) { ?>
+                    <tr>
+                      <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $repair_list_data->repair_list_id ?>" title="<?php echo $repair_list_data->repair ?>"></td>
+                      <td>
+                          <table style="width:100%;">
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <label>Chi tiết</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="8" required="required" value="<?php echo $repair_list_data->repair_list_comment ?>">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <label>Đơn giá</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="9" required="required" value="<?php echo $lib->formatMoney($repair_list_data->repair_list_price) ?>" data="<?php echo $repair_list_data->repair_list_id ?>">
+                                    </div>
+                                  </td>
+                                  
+                                  <td>
+                                    <label>Hạn bảo hành</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_end_date input-mask-date" name="repair_list_end_date[]" tabindex="10" value="<?php echo $lib->hien_thi_ngay_thang($repair_list_data->repair_list_end_date) ?>">
+                                    </div>
+                                  </td>
+                                </tr>
+                          </tbody></table>
+                          <div class="hr hr-8 dotted hr-double"></div>
+                      </td>
+                      
+                  </tr>
+                  <?php }}else{ ?>
+                    <tr>
+                      <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                      <td>
+                          <table style="width:100%;">
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <label>Chi tiết</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="8" required="required">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <label>Đơn giá</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="9" required="required">
+                                    </div>
+                                  </td>
+                                  
+                                  <td>
+                                    <label>Hạn bảo hành</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_end_date input-mask-date" name="repair_list_end_date[]" tabindex="10">
+                                    </div>
+                                  </td>
+                                </tr>
+                          </tbody></table>
+                          <div class="hr hr-8 dotted hr-double"></div>
+                      </td>
+                      
+                  </tr>
+                  <?php } ?>
+                
+            </tbody>
+            </table>
+         
+            <input type="button" value="Thêm" onclick="addRow_repair('dataTable_repair')">
+
+            <input type="button" value="Xóa" onclick="deleteRow_repair('dataTable_repair')">
+         
+            
         </div>
     </form>
 </div>
-
-
-
 <script type="text/javascript">
-
-  $('#spare_part_code').on("select2:select", function(e) { 
-    var val = $(this).val();
-    $.ajax({
-        type: "GET",
-        url: "<?php echo BASE_URL ?>/sparepartcode/getcode",
-        data: {data:val}, 
-        success: function(answer){
-           $('#spare_part_name').val(answer);
-        }
-    });
+  $('#repair_vehicle').on("select2:select", function(e) { 
+      var val = $(this).val();
+      if (val>0) {
+        $('#repair_romooc').val("").trigger('change.select2');
+      }
   });
+  $('#repair_romooc').on("select2:select", function(e) { 
+      var val = $(this).val();
+      if (val>0) {
+        $('#repair_vehicle').val("").trigger('change.select2');
+      }
+  });
+
+function get_price(){
+
+  var total = 0;
+  $('.repair_list_price').each(function(){
+    total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
+  });
+  $('#repair_price').val(total);
+  $('#repair_price').val(function(index, value) {
+    return value
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+
+  $('#repair_price').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
+$('.repair_list_price').keyup(function(){
+  get_price();
+});
+  
+function addRow_repair(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.repair_list_comment:last').val("");
+    $('.repair_list_price:last').val("");
+    $('.repair_list_end_date:last').val("");
+    
+
+    $('.repair_list_price').keyup(function(){
+      get_price();
+    });
+    
+}
+function deleteRow_repair(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+          if(result) {
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert_form("Không thể xóa hết.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var repair = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/repair/deleterepairdetail", {data: data, repair: repair},
+                               function(data){
+                                
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+
+                    get_price();
+                }
+            }
+          }
+        });
+    }
+    catch(e){
+        alert(e);
+    }
+}
 </script>

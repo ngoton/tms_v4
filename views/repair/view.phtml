@@ -1,37 +1,137 @@
 
 <div class="login_body">
   
-        <div class="col-xs-6">
-          <label for="spare_part_code">Mã vật tư <a title="Thêm mã mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("sparepartcode/add") ?>','Thêm mã mới','spare_part_code','<?php echo $this->url("sparepartcode/getsparepartcode") ?>','add_spare_part_code')"></i></a></label>
+        <div class="col-xs-4">
+          <label for="repair_date">Ngày</label>
           <div class="input-group">
-            <select class="form-control select2" id="spare_part_code" name="spare_part_code" required="required" tabindex="1">
+            <input class="input-mask-date" type="text" id="repair_date" name="repair_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($repair_data->repair_date) ?>">
+          </div>
+          <label for="repair_number">Số phiếu</label>
+          <div class="input-group">
+            <input type="text" id="repair_number" name="repair_number" tabindex="2" value="<?php echo $repair_data->repair_number ?>">
+          </div>
+          <label for="repair_code">Nội dung <a title="Thêm danh mục mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("repaircode/add") ?>','Thêm danh mục mới','repair_code','<?php echo $this->url("repaircode/getrepaircode") ?>','add_repair_code')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_code" name="repair_code" required="required" tabindex="3">
               <?php foreach ($codes as $code) { ?>
-                <option <?php echo $spare_part_data->spare_part_code==$code->spare_part_code_id?'selected="selected"':null ?> value="<?php echo $code->spare_part_code_id ?>" data="<?php echo $code->name ?>"><?php echo $code->code ?></option>
+                <option <?php echo $repair_data->repair_code==$code->repair_code_id?'selected="selected"':null ?> value="<?php echo $code->repair_code_id ?>"><?php echo $code->repair_code_name ?></option>
               <?php } ?>
             </select>
           </div>
-          <label for="spare_part_name">Tên vật tư</label>
+          
+        </div>
+        <div class="col-xs-4">
+          <label for="repair_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','repair_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
           <div class="input-group">
-            <input type="text" id="spare_part_name" name="spare_part_name" tabindex="2" required="required" value="<?php echo $spare_part_data->spare_part_name ?>">
+            <select class="form-control select2" id="repair_vehicle" name="repair_vehicle" tabindex="4">
+              <option value="">Chọn</option>
+              <?php foreach ($vehicles as $vehicle) { ?>
+                <option <?php echo $repair_data->repair_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+              <?php } ?>
+            </select>
           </div>
-          <label for="spare_part_seri">Số seri</label>
+          <label for="repair_staff">Nhân viên <a title="Thêm nhân viên mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("staff/add") ?>','Thêm nhân viên mới','repair_staff','<?php echo $this->url("staff/getstaff") ?>','add_staff')"></i></a></label>
           <div class="input-group">
-            <input type="text" id="spare_part_seri" name="spare_part_seri" tabindex="3" value="<?php echo $spare_part_data->spare_part_seri ?>" >
+            <select class="form-control select2" id="repair_staff" name="repair_staff" tabindex="6">
+              <?php foreach ($staffs as $staff) { ?>
+                <option <?php echo $repair_data->repair_staff==$staff->staff_id?'selected="selected"':null ?> value="<?php echo $staff->staff_id ?>"><?php echo $staff->staff_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+          
+
+        </div>
+        <div class="col-xs-4">
+          <label for="repair_romooc">Mooc <a title="Thêm mooc mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới','repair_romooc','<?php echo $this->url("romooc/getromooc") ?>','add_romooc')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="repair_romooc" name="repair_romooc" tabindex="5">
+              <option value="">Chọn</option>
+              <?php foreach ($romoocs as $romooc) { ?>
+                <option <?php echo $repair_data->repair_romooc==$romooc->romooc_id?'selected="selected"':null ?> value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="repair_price">Chi phí</label>
+          <div class="input-group">
+            <input class="numbers" type="text" id="repair_price" name="repair_price" tabindex="7" readonly="" value="<?php echo $lib->formatMoney($repair_data->repair_price) ?>">
           </div>
         </div>
-        <div class="col-xs-6">
-          <label for="spare_part_brand">Nhà sản xuất</label>
-          <div class="input-group">
-            <input type="text" id="spare_part_brand" name="spare_part_brand" tabindex="4" value="<?php echo $spare_part_data->spare_part_brand ?>">
-          </div>
-          <label for="spare_part_date_manufacture">Ngày sản xuất</label>
-          <div class="input-group">
-            <input class="input-mask-date" type="text" id="spare_part_date_manufacture" name="spare_part_date_manufacture" tabindex="5" value="<?php echo $lib->hien_thi_ngay_thang($spare_part_data->spare_part_date_manufacture) ?>">
-          </div>
-          <label for="spare_part_unit">Đơn vị tính</label>
-          <div class="input-group">
-            <input type="text" id="spare_part_unit" name="spare_part_unit" tabindex="6" value="<?php echo $spare_part_data->spare_part_unit ?>">
-          </div>
+
+        <div>
+            <table id="dataTable_repair" style="width: 100%;">
+                <tbody>
+                  <?php if(count($repair_lists) > 0){ ?>
+                  <?php foreach ($repair_lists as $repair_list_data) { ?>
+                    <tr>
+                      <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $repair_list_data->repair_list_id ?>" title="<?php echo $repair_list_data->repair ?>"></td>
+                      <td>
+                          <table style="width:100%;">
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <label>Chi tiết</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="8" required="required" value="<?php echo $repair_list_data->repair_list_comment ?>">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <label>Đơn giá</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="9" required="required" value="<?php echo $lib->formatMoney($repair_list_data->repair_list_price) ?>" data="<?php echo $repair_list_data->repair_list_id ?>">
+                                    </div>
+                                  </td>
+                                  
+                                  <td>
+                                    <label>Hạn bảo hành</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_end_date input-mask-date" name="repair_list_end_date[]" tabindex="10" value="<?php echo $lib->hien_thi_ngay_thang($repair_list_data->repair_list_end_date) ?>">
+                                    </div>
+                                  </td>
+                                </tr>
+                          </tbody></table>
+                          <div class="hr hr-8 dotted hr-double"></div>
+                      </td>
+                      
+                  </tr>
+                  <?php }}else{ ?>
+                    <tr>
+                      <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                      <td>
+                          <table style="width:100%;">
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <label>Chi tiết</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="8" required="required">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <label>Đơn giá</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="9" required="required">
+                                    </div>
+                                  </td>
+                                  
+                                  <td>
+                                    <label>Hạn bảo hành</label>
+                                    <div class="input-group">
+                                      <input type="text" class="repair_list_end_date input-mask-date" name="repair_list_end_date[]" tabindex="10">
+                                    </div>
+                                  </td>
+                                </tr>
+                          </tbody></table>
+                          <div class="hr hr-8 dotted hr-double"></div>
+                      </td>
+                      
+                  </tr>
+                  <?php } ?>
+                
+            </tbody>
+            </table>
+         
+            
         </div>
-    
+   
 </div>

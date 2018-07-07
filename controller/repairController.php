@@ -224,13 +224,44 @@ Class repairController Extends baseController {
                 'repair_number' => trim($_POST['repair_number']),
                 'repair_vehicle' => trim($_POST['repair_vehicle']),
                 'repair_romooc' => trim($_POST['repair_romooc']),
-                'repair_price' => trim($_POST['repair_price']),
+                'repair_price' => str_replace(',', '', $_POST['repair_price']),
                 'repair_staff' => trim($_POST['repair_staff']),
                 'repair_create_user' => $_SESSION['userid_logined'],
             );
             $repair_model->createRepair($data);
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$repair_model->getLastRepair()->repair_id."|repair|".implode("-",$data)."\n"."\r\n";
+            $id_repair = $repair_model->getLastRepair()->repair_id;
+
+            $repair_list_model = $this->model->get('repairlistModel');
+
+            $repair_list_data = json_decode($_POST['repair_list_data']);
+
+            if (isset($id_repair)) {
+                foreach ($repair_list_data as $v) {
+                    $data_repair_list = array(
+                        'repair' => $id_repair,
+                        'repair_list_comment' => trim($v->repair_list_comment),
+                        'repair_list_price' => str_replace(',', '', $v->repair_list_price),
+                        'repair_list_end_date' => strtotime(str_replace('/', '-', $v->repair_list_end_date)),
+                        'repair_list_date' => $data['repair_date'],
+                        'repair_list_vehicle' => $data['repair_vehicle'],
+                        'repair_list_romooc' => $data['repair_romooc'],
+                    );
+
+                    if ($v->id_repair_list>0) {
+                        $repair_list_model->updateRepair($data_repair_list,array('repair_list_id'=>$v->id_repair_list));
+                    }
+                    else{
+                        if ($data_repair_list['repair_list_price']!="") {
+                            $repair_list_model->createRepair($data_repair_list);
+                        }
+                        
+                    }
+                }
+
+            }
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_repair."|repair|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
 
 
@@ -271,6 +302,11 @@ Class repairController Extends baseController {
 
         $this->view->data['title'] = 'Thêm mới phiếu sửa chữa';
 
+        $repair_model = $this->model->get('repairModel');
+        $lastID = isset($repair_model->getLastRepair()->repair_number)?$repair_model->getLastRepair()->repair_number:'SC00';
+        $lastID++;
+        $this->view->data['lastID'] = $lastID;
+
         $repair_code = $this->model->get('repaircodeModel');
 
         $this->view->data['codes'] = $repair_code->getAllRepair(array('order_by'=>'repair_code_name','order'=>'ASC'));
@@ -306,11 +342,42 @@ Class repairController Extends baseController {
                 'repair_number' => trim($_POST['repair_number']),
                 'repair_vehicle' => trim($_POST['repair_vehicle']),
                 'repair_romooc' => trim($_POST['repair_romooc']),
-                'repair_price' => trim($_POST['repair_price']),
+                'repair_price' => str_replace(',', '', $_POST['repair_price']),
                 'repair_staff' => trim($_POST['repair_staff']),
                 'repair_update_user' => $_SESSION['userid_logined'],
             );
             $repair_model->updateRepair($data,array('repair_id'=>$id));
+
+            $id_repair = $id;
+
+            $repair_list_model = $this->model->get('repairlistModel');
+
+            $repair_list_data = json_decode($_POST['repair_list_data']);
+
+            if (isset($id_repair)) {
+                foreach ($repair_list_data as $v) {
+                    $data_repair_list = array(
+                        'repair' => $id_repair,
+                        'repair_list_comment' => trim($v->repair_list_comment),
+                        'repair_list_price' => str_replace(',', '', $v->repair_list_price),
+                        'repair_list_end_date' => strtotime(str_replace('/', '-', $v->repair_list_end_date)),
+                        'repair_list_date' => $data['repair_date'],
+                        'repair_list_vehicle' => $data['repair_vehicle'],
+                        'repair_list_romooc' => $data['repair_romooc'],
+                    );
+
+                    if ($v->id_repair_list>0) {
+                        $repair_list_model->updateRepair($data_repair_list,array('repair_list_id'=>$v->id_repair_list));
+                    }
+                    else{
+                        if ($data_repair_list['repair_list_price']!="") {
+                            $repair_list_model->createRepair($data_repair_list);
+                        }
+                        
+                    }
+                }
+
+            }
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|repair|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -370,6 +437,11 @@ Class repairController Extends baseController {
 
         }
 
+        $repair_list_model = $this->model->get('repairlistModel');
+
+        $repair_lists = $repair_list_model->getAllRepair(array('where'=>'repair='.$id));
+        $this->view->data['repair_lists'] = $repair_lists;
+
         $repair_code = $this->model->get('repaircodeModel');
 
         $this->view->data['codes'] = $repair_code->getAllRepair(array('order_by'=>'repair_code_name','order'=>'ASC'));
@@ -427,6 +499,11 @@ Class repairController Extends baseController {
             $this->view->redirect('repair');
 
         }
+
+        $repair_list_model = $this->model->get('repairlistModel');
+
+        $repair_lists = $repair_list_model->getAllRepair(array('where'=>'repair='.$id));
+        $this->view->data['repair_lists'] = $repair_lists;
 
         $repair_code = $this->model->get('repaircodeModel');
 
@@ -493,6 +570,28 @@ Class repairController Extends baseController {
         echo json_encode($result);
     }
 
+    public function deleterepairdetail(){
+        if (isset($_POST['data'])) {
+            $repair_list_model = $this->model->get('repairlistModel');
+            $user_log_model = $this->model->get('userlogModel');
+
+            $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair_list_id='.$_POST['data'].' AND repair='.$_POST['repair']);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|repair_list|"."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
+
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'repair_list',
+                'user_log_table_name' => 'Chi tiết phiếu sửa chữa',
+                'user_log_action' => 'Xóa',
+                'user_log_data' => json_encode($_POST['data']),
+            );
+            $user_log_model->createUser($data_log);
+        }
+    }
+
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {
@@ -512,6 +611,7 @@ Class repairController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $repair_model = $this->model->get('repairModel');
+            $repair_list_model = $this->model->get('repairlistModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -522,6 +622,7 @@ Class repairController Extends baseController {
 
                     $repair_model->deleteRepair($data);
 
+                    $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair='.$data);
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|repair|"."\n"."\r\n";
 
@@ -551,6 +652,8 @@ Class repairController Extends baseController {
             else{
 
                 $repair_model->deleteRepair($_POST['data']);
+
+                $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair='.$_POST['data']);
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|repair|"."\n"."\r\n";
 

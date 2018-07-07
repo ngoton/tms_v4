@@ -740,6 +740,7 @@ Class customerController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $customer_model = $this->model->get('customerModel');
+            $contact_person = $this->model->get('contactpersonModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -750,6 +751,7 @@ Class customerController Extends baseController {
 
                     $customer_model->deleteCustomer($data);
 
+                    $contact_person->queryCustomer('DELETE FROM contact_person WHERE contact_person_customer='.$data);
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|customer|"."\n"."\r\n";
 
@@ -779,6 +781,8 @@ Class customerController Extends baseController {
             else{
 
                 $customer_model->deleteCustomer($_POST['data']);
+
+                $contact_person->queryCustomer('DELETE FROM contact_person WHERE contact_person_customer='.$_POST['data']);
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|customer|"."\n"."\r\n";
 
