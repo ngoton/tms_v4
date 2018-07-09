@@ -1,0 +1,485 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+			// Validate form
+			$("#add_importstock").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+				rules: {
+				},
+        submitHandler: function(form) {
+          var spare_stock_data = [];
+
+          var spare_stock_comment = [];
+          var spare_stock_price = [];
+          var spare_stock_end_date = [];
+          var id_spare_stock = [];
+
+          $('.spare_stock_price').each(function() { 
+              spare_stock_price.push($(this).val());
+              id_spare_stock.push($(this).attr('data') || "");
+          });
+          $('.spare_stock_comment').each(function() { 
+              spare_stock_comment.push($(this).val());
+          });
+          $('.spare_stock_end_date').each(function() { 
+              spare_stock_end_date.push($(this).val());
+          });
+
+          for (var i = 0; i < spare_stock_price.length; i++) {
+              spare_stock_data.push({'spare_stock_price':spare_stock_price[i], 'spare_stock_comment':spare_stock_comment[i], 'spare_stock_end_date':spare_stock_end_date[i], 'id_spare_stock':id_spare_stock[i]});
+          };
+
+          var formData = new FormData($("#add_importstock")[0]);
+          formData.append('spare_stock_data', JSON.stringify(spare_stock_data));
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/importstock/addimportstock", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_importstock').hide();
+                  $('#error_importstock').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_importstock').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_importstock').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+<div id="error_importstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div class="tabbable">
+  
+  <form id="add_importstock" method="post" action="" autocomplete="off">
+    <ul class="nav nav-tabs padding-18">
+      <li class="active">
+        <a data-toggle="tab" href="#homestock">
+          <i class="green ace-icon fa fa-file-text-o bigger-120"></i>
+          Thông tin
+        </a>
+      </li>
+
+      <li>
+        <a data-toggle="tab" href="#coststock">
+          <i class="blue ace-icon fa fa-th bigger-120"></i>
+          Chi phí
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content no-border ">
+      <div id="homestock" class="tab-pane in active">
+        <div class="col-md-4 col-xs-6">
+          <label for="import_stock_date">Ngày</label>
+          <div class="input-group">
+            <input class="input-mask-date" type="text" id="import_stock_date" name="import_stock_date" tabindex="1" required="required">
+          </div>
+          <label for="import_stock_house">Kho nhập <a title="Thêm kho mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("house/add") ?>','Thêm kho mới','import_stock_house','<?php echo $this->url("house/gethouse") ?>','add_house')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="import_stock_house" name="import_stock_house" tabindex="4">
+              <?php foreach ($houses as $house) { ?>
+                <option value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+          <label for="import_stock_deliver">Người giao hàng </label>
+          <div class="input-group">
+            <input type="text" id="import_stock_deliver" name="import_stock_deliver" tabindex="7">
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <label for="import_stock_code">Số phiếu</label>
+          <div class="input-group">
+            <input type="text" id="import_stock_code" name="import_stock_code" tabindex="2" value="<?php echo $lastID ?>" required="required">
+          </div>
+          <label for="import_stock_customer">Nhà cung cấp <a title="Thêm nhà cung cấp mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm nhà cung cấp mới','import_stock_customer','<?php echo $this->url("customer/getsupply") ?>','add_customer')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="import_stock_customer" name="import_stock_customer" tabindex="5">
+              <option value="">Chọn</option>
+              <?php foreach ($customers as $customer) { 
+                if ($customer->customer_type==2) {
+                ?>
+                <option value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
+              <?php } ?>
+              <?php } ?>
+            </select>
+          </div>
+          <label for="import_stock_deliver_address">Địa chỉ </label>
+          <div class="input-group">
+            <input type="text" id="import_stock_deliver_address" name="import_stock_deliver_address" tabindex="8">
+          </div>
+
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <label for="import_stock_comment">Nội dung </label>
+          <div class="input-group">
+            <input type="text" id="import_stock_comment" name="import_stock_comment" tabindex="3">
+          </div>
+          <label for="import_stock_invoice_number">Số hóa đơn </label>
+          <div class="input-group">
+            <input type="text" id="import_stock_invoice_number" name="import_stock_invoice_number" tabindex="6">
+          </div>
+          <label for="import_stock_invoice_date">Ngày HĐ </label>
+          <div class="input-group">
+            <input class="form-control input-mask-date" type="text" id="import_stock_invoice_date" name="import_stock_invoice_date" tabindex="9">
+          </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="hr hr-8 dotted hr-double"></div>
+        <div style="background: #73737326;">
+            <table id="dataTable_importstock" style="width: 100%;">
+                <tbody>
+                <tr>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                    <td>
+                      
+                        <table style="width:100%;">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <label>Mã sản phẩm</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Tên sản phẩm</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Nhà sản xuất</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" >
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>Ngày sản xuất</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Đơn vị tính</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Đơn giá</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="15" >
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>VAT</label>
+                                  <div class="input-group">
+                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="16" placeholder="%">
+                                    <input style="width: 100px" type="text" class="spare_stock_vat numbers" name="spare_stock_vat[]" tabindex="17" >
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Số lượng</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="18">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Có số seri</label>
+                                  <div class="input-group">
+                                    <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1"><span class="lbl"></span>
+                                  </div>
+                                </td>
+                                
+                              </tr>
+                        </tbody></table>
+                        <div class="hr hr-8 dotted hr-double"></div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+            </table>
+         
+            <input type="button" value="Thêm" onclick="addRow_importstock('dataTable_importstock')">
+
+            <input type="button" value="Xóa" onclick="deleteRow_importstock('dataTable_importstock')">
+        </div>
+      </div>
+      <div id="coststock" class="tab-pane">
+        <table id="dataTable_coststock" style="width: 100%;">
+        <tbody>
+          <tr>
+              <td style="padding-right: 10px;"><input type="checkbox" name="chk2"></td>
+              <td>
+                  <table style="width:100%;">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.import_stock_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
+                            <div class="input-group">
+                              <select class="form-control import_stock_cost_list" name="import_stock_cost_list[]" tabindex="14">
+                                <?php foreach ($cost_lists as $cost_list) { ?>
+                                  <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </td>
+                          <td>
+                            <label>Nội dung</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_comment" name="import_stock_cost_comment[]" tabindex="15">
+                            </div>
+                          </td>
+                          
+                          <td>
+                            <label>Số tiền <input name="import_stock_cost_money_vat[]" type="checkbox" class="import_stock_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_money numbers" name="import_stock_cost_money[]" tabindex="16">
+                            </div>
+                            
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.import_stock_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
+                            <div class="input-group">
+                              <select class="form-control import_stock_cost_customer select2" name="import_stock_cost_customer[]" tabindex="17">
+                                <?php foreach ($customers as $customer_list) { ?>
+                                  <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </td>
+                          <td>
+                            <label>Số hóa đơn chứng từ</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_invoice" name="import_stock_cost_invoice[]" tabindex="18">
+                            </div>
+                          </td>
+                          <td>
+                            <label>Ngày</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_invoice_date input-mask-date" name="import_stock_cost_invoice_date[]" tabindex="19">
+                            </div>
+                          </td>
+                        </tr>
+                        
+                  </tbody></table>
+                  <div class="hr hr-8 dotted hr-double"></div>
+              </td>
+              
+          </tr>
+        </tbody>
+        </table>
+    
+        <input type="button" value="Thêm" onclick="addRow_coststock('dataTable_coststock')">
+
+        <input type="button" value="Xóa" onclick="deleteRow_coststock('dataTable_coststock')">
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $('#import_stock_customer').on("select2:select", function(e) { 
+      var val = $(this).val();
+      if (val>0) {
+        $('#import_stock_romooc').val("").trigger('change.select2');
+      }
+  });
+  $('#import_stock_romooc').on("select2:select", function(e) { 
+      var val = $(this).val();
+      if (val>0) {
+        $('#import_stock_customer').val("").trigger('change.select2');
+      }
+  });
+
+function get_price(){
+
+  var total = 0;
+  $('.spare_stock_price').each(function(){
+    total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
+  });
+  $('#import_stock_price').val(total);
+  $('#import_stock_price').val(function(index, value) {
+    return value
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+
+  $('#import_stock_price').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
+$('.spare_stock_price').keyup(function(){
+  get_price();
+});
+  
+function addRow_importstock(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.spare_stock_comment:last').val("");
+    $('.spare_stock_price:last').val("");
+    $('.spare_stock_end_date:last').val("");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+    
+
+    $('.spare_stock_price').keyup(function(){
+      get_price();
+    });
+    
+}
+function deleteRow_importstock(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+          if(result) {
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert_form("Không thể xóa hết.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var importstock = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/importstock/deleteimportstockdetail", {data: data, importstock: importstock},
+                               function(data){
+                                
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+
+                    get_price();
+                }
+            }
+          }
+        });
+    }
+    catch(e){
+        alert(e);
+    }
+}
+
+function addRow_coststock(tableID){
+      var table=document.getElementById(tableID);
+      var rowCount=table.rows.length;
+      var row=table.insertRow(rowCount);
+      var colCount=table.rows[0].cells.length;
+      for(var i=0;i<colCount;i++){
+          var newcell=row.insertCell(i);
+          newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+          switch(newcell.childNodes[0].type){
+              case"text":newcell.childNodes[0].value="";
+              break;
+              case"checkbox":newcell.childNodes[0].checked=false;
+              break;
+              case"select-one":newcell.childNodes[0].selectedIndex=0;
+              break;
+          }
+      }
+
+      $('.import_stock_cost_money:last').val("");
+      $('.import_stock_cost_comment:last').val("");
+      $('.import_stock_cost_invoice:last').val("");
+      $('.import_stock_cost_invoice_date:last').val("");
+
+      $('input[name="chk2"]:last').attr('data',"");
+      $('input[name="chk2"]:last').attr('title',"");
+
+      $('.select2-container:last').remove();
+      $('.import_stock_cost_customer:last').removeClass('select2-hidden-accessible');
+      $('.import_stock_cost_customer:last').select2();
+
+     
+
+  }
+  function deleteRow_coststock(tableID){
+      try{
+          var table=document.getElementById(tableID);
+          var rowCount=table.rows.length;
+
+          bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+            if(result) {
+              for(var i=0;i<rowCount;i++){
+                  var row=table.rows[i];
+                  var chkbox=row.cells[0].childNodes[0];
+                  if(null!=chkbox&&true==chkbox.checked){
+                    if(rowCount<=1){
+                          alert_form("Không thể xóa hết.");
+                          break;
+                      }
+                      else if(chkbox.getAttribute("title") > 0){
+                          
+                              var data = chkbox.getAttribute("data");
+                              var importstock = chkbox.getAttribute("title");
+
+                              $.post("<?php echo BASE_URL ?>/importstock/deleteimportstockcost", {data: data, importstock: importstock},
+                                 function(data){
+                                  
+                                 }); 
+
+                      }
+                      
+                      table.deleteRow(i);
+                      rowCount--;
+                      i--;
+
+                  }
+              }
+            }
+          });
+      }
+      catch(e){
+          alert(e);
+      }
+  }
+</script>

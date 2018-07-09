@@ -1,7 +1,7 @@
 
 <div class="login_body">
   
-        <div class="col-xs-4">
+        <div class="col-md-4 col-xs-6">
           <label for="repair_date">Ngày</label>
           <div class="input-group">
             <input class="input-mask-date" type="text" id="repair_date" name="repair_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($repair_data->repair_date) ?>">
@@ -20,7 +20,7 @@
           </div>
           
         </div>
-        <div class="col-xs-4">
+        <div class="col-md-4 col-xs-6">
           <label for="repair_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','repair_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
           <div class="input-group">
             <select class="form-control select2" id="repair_vehicle" name="repair_vehicle" tabindex="4">
@@ -42,7 +42,7 @@
           
 
         </div>
-        <div class="col-xs-4">
+        <div class="col-md-4 col-xs-6">
           <label for="repair_romooc">Mooc <a title="Thêm mooc mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới','repair_romooc','<?php echo $this->url("romooc/getromooc") ?>','add_romooc')"></i></a></label>
           <div class="input-group">
             <select class="form-control select2" id="repair_romooc" name="repair_romooc" tabindex="5">
@@ -58,7 +58,9 @@
           </div>
         </div>
 
-        <div>
+        <div class="clearfix"></div>
+        <div class="hr hr-8 dotted hr-double"></div>
+        <div style="background: #73737326;">
             <table id="dataTable_repair" style="width: 100%;">
                 <tbody>
                   <?php if(count($repair_lists) > 0){ ?>
@@ -66,6 +68,7 @@
                     <tr>
                       <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $repair_list_data->repair_list_id ?>" title="<?php echo $repair_list_data->repair ?>"></td>
                       <td>
+                        
                           <table style="width:100%;">
                               <tbody>
                                 <tr>
@@ -90,7 +93,7 @@
                                   </td>
                                 </tr>
                           </tbody></table>
-                          <div class="hr hr-8 dotted hr-double"></div>
+                          
                       </td>
                       
                   </tr>
@@ -98,6 +101,7 @@
                     <tr>
                       <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
                       <td>
+                        
                           <table style="width:100%;">
                               <tbody>
                                 <tr>
@@ -122,7 +126,7 @@
                                   </td>
                                 </tr>
                           </tbody></table>
-                          <div class="hr hr-8 dotted hr-double"></div>
+                          
                       </td>
                       
                   </tr>

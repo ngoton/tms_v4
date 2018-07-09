@@ -192,7 +192,7 @@ Class repairController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( repair_code_name LIKE "%'.$keyword.'%" OR staff_name  LIKE "%'.$keyword.'%" )';
+            $search = '(repair_number LIKE "%'.$keyword.'%" OR repair_code_name LIKE "%'.$keyword.'%" OR staff_name  LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
@@ -559,7 +559,7 @@ Class repairController Extends baseController {
     public function getrepair(){
         $repair_model = $this->model->get('repairModel');
 
-        $repairs = $repair_model->getAllRepair(array('order_by'=>'repair_name','order'=>'ASC'));
+        $repairs = $repair_model->getAllRepair(array('order_by'=>'repair_number','order'=>'ASC'));
         $result = array();
         $i = 0;
         foreach ($repairs as $repair) {

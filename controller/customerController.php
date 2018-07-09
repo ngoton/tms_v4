@@ -596,6 +596,19 @@ Class customerController Extends baseController {
         return $this->view->show('customer/filter');
     }
 
+    public function getallcustomer(){
+        $customer_model = $this->model->get('customerModel');
+
+        $customers = $customer_model->getAllCustomer(array('order_by'=>'customer_code','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($customers as $customer) {
+            $result[$i]['id'] = $customer->customer_id;
+            $result[$i]['text'] = $customer->customer_name;
+            $i++;
+        }
+        echo json_encode($result);
+    }
     public function getcustomer(){
         $customer_model = $this->model->get('customerModel');
 
@@ -623,32 +636,6 @@ Class customerController Extends baseController {
         echo json_encode($result);
     }
     public function getperson(){
-        $customer_model = $this->model->get('customerModel');
-
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=3','order_by'=>'customer_code','order'=>'ASC'));
-        $result = array();
-        $i = 0;
-        foreach ($customers as $customer) {
-            $result[$i]['id'] = $customer->customer_id;
-            $result[$i]['text'] = $customer->customer_name;
-            $i++;
-        }
-        echo json_encode($result);
-    }
-    public function getncc(){
-        $customer_model = $this->model->get('customerModel');
-
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_code','order'=>'ASC'));
-        $result = array();
-        $i = 0;
-        foreach ($customers as $customer) {
-            $result[$i]['id'] = $customer->customer_id;
-            $result[$i]['text'] = $customer->customer_name;
-            $i++;
-        }
-        echo json_encode($result);
-    }
-    public function getcanhan(){
         $customer_model = $this->model->get('customerModel');
 
         $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=3','order_by'=>'customer_code','order'=>'ASC'));
