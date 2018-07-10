@@ -1010,14 +1010,13 @@ padding:3px;
 	width: 200px;
 	border: 1px solid #eaeaea;
 	position: absolute;
-	z-index: 9;
+	z-index: 9999;
 	background: white;
 	list-style: none;
 	margin:-8px 0px;
-    	height: 10em;
-    	line-height: 10em;
-    	overflow:hidden; 
-    	overflow-y:scroll!important;
+	height: 10em;
+	overflow:hidden; 
+	overflow-y:scroll!important;
 }
 .table_data tbody tr td.fix {
 	border-right: 1px dotted #21759b;

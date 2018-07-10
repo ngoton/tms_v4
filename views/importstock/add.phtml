@@ -1,36 +1,181 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$( ".select2" ).select2({dropdownAutoWidth : true});
+  
 			// Validate form
 			$("#add_importstock").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
 				rules: {
 				},
         submitHandler: function(form) {
-          var spare_stock_data = [];
+          var spare_part = [];
 
-          var spare_stock_comment = [];
+          var check_seri = [];
+
+          var spare_part_name = [];
+          var spare_part_id = [];
+          var spare_part_seri = [];
+
+          var spare_part_code_id = [];
+
+          var spare_part_code2 = [];
+          var spare_part_brand2 = [];
+          var spare_part_date_manufacture2 = [];
+          var spare_part_unit2 = [];
+          var spare_stock_number2 = [];
+          var spare_stock_price2 = [];
+          var spare_stock_vat_percent2 = [];
+          var spare_stock_vat_price2 = [];
+
+          var spare_part_code = [];
+          var spare_part_brand = [];
+          var spare_part_date_manufacture = [];
+          var spare_part_unit = [];
+          var spare_stock_number = [];
           var spare_stock_price = [];
-          var spare_stock_end_date = [];
-          var id_spare_stock = [];
+          var spare_stock_vat_percent = [];
+          var spare_stock_vat_price = [];
+
+          $('.check_seri').each(function() { 
+              
+              if ($(this).is(':checked')) {
+                check_seri.push(1);
+              }
+              else{
+                check_seri.push(0);
+              }
+          });
+          
+          var err = 0;
+
+          $('.spare_part_code').each(function() { 
+            if ($(this).val().trim() == "") {
+              alert_form('Vui lòng nhập vào Mã sản phẩm');
+              err = 1;
+              return false;
+            }
+              spare_part_code2.push($(this).val());
+          });
+
+          if (err == 1) {
+            return false;
+          }
+
+          $('.spare_part_brand').each(function() { 
+              spare_part_brand2.push($(this).val());
+          });
+
+          $('.spare_part_date_manufacture').each(function() { 
+              spare_part_date_manufacture2.push($(this).val());
+          });
+
+          $('.spare_stock_unit').each(function() { 
+              spare_stock_unit2.push($(this).val());
+          });
+
+          $('.spare_stock_number').each(function() { 
+              spare_stock_number2.push($(this).val());
+          });
 
           $('.spare_stock_price').each(function() { 
-              spare_stock_price.push($(this).val());
-              id_spare_stock.push($(this).attr('data') || "");
+              spare_stock_price2.push($(this).val());
           });
-          $('.spare_stock_comment').each(function() { 
-              spare_stock_comment.push($(this).val());
+          $('.spare_stock_vat_percent').each(function() { 
+              spare_stock_vat_percent2.push($(this).val());
           });
-          $('.spare_stock_end_date').each(function() { 
-              spare_stock_end_date.push($(this).val());
+          $('.spare_stock_vat_price').each(function() { 
+              spare_stock_vat_price2.push($(this).val());
           });
 
-          for (var i = 0; i < spare_stock_price.length; i++) {
-              spare_stock_data.push({'spare_stock_price':spare_stock_price[i], 'spare_stock_comment':spare_stock_comment[i], 'spare_stock_end_date':spare_stock_end_date[i], 'id_spare_stock':id_spare_stock[i]});
+          $('.spare_part_name').each(function(index) { 
+            var $this = $(this);
+            if(check_seri[index] == 1){
+              $('.spare_part_seri2[data='+index+']').each(function() { 
+                spare_part_seri.push($(this).val());
+                spare_part_name.push($this.val());
+                spare_part_code_id.push($this.attr('data'));
+                spare_part_id.push($(this).attr('code'));
+                spare_part_code.push(spare_part_code2[index]);
+                spare_part_brand.push(spare_part_brand2[index]);
+                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
+                spare_part_unit.push(spare_part_unit2[index]);
+                spare_stock_number.push(1);
+                spare_stock_price.push(spare_stock_price2[index]);
+                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
+                spare_stock_vat_price.push(parseInt(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+              });
+            }
+            else{
+              $('.spare_part_seri2[data='+index+']').each(function() { 
+                spare_part_seri.push("");
+                spare_part_name.push($this.val());
+                spare_part_code_id.push($this.attr('data'));
+                spare_part_id.push($(this).attr('code'));
+                spare_part_code.push(spare_part_code2[index]);
+                spare_part_brand.push(spare_part_brand2[index]);
+                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
+                spare_stock_number.push(spare_stock_number2[index]);
+                spare_part_unit.push(spare_part_unit2[index]);
+                spare_stock_price.push(spare_stock_price2[index]);
+                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
+                spare_stock_vat_price.push(spare_stock_vat_price2[index]);
+              });
+            }
+              
+          });
+
+
+          for (var i = 0; i < spare_part_name.length; i++) {
+              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i]});
+              
+              
+          };
+
+
+          var import_stock_cost = [];  
+
+          var import_stock_cost_list = [];  
+          var import_stock_cost_comment = [];  
+          var import_stock_cost_money = [];  
+          var import_stock_cost_money_vat = [];  
+          var import_stock_cost_customer = [];  
+          var import_stock_cost_invoice = [];  
+          var import_stock_cost_invoice_date = [];  
+          var id_import_stock_cost = [];  
+
+          $('.import_stock_cost_money').each(function() { 
+              import_stock_cost_money.push($(this).val());
+              id_import_stock_cost.push($(this).attr('data') || "");
+          });
+          $('.import_stock_cost_list').each(function() { 
+              import_stock_cost_list.push($(this).val());
+          });
+          $('.import_stock_cost_comment').each(function() { 
+              import_stock_cost_comment.push($(this).val());
+          });
+          $('.import_stock_cost_money_vat').each(function() { 
+            if ($(this).is(':checked'))
+              import_stock_cost_money_vat.push(1);
+            else
+              import_stock_cost_money_vat.push(0);
+          });
+          $('.import_stock_cost_customer').each(function() { 
+              import_stock_cost_customer.push($(this).val());
+          });
+          $('.import_stock_cost_invoice').each(function() { 
+              import_stock_cost_invoice.push($(this).val());
+          });
+          $('.import_stock_cost_invoice_date').each(function() { 
+              import_stock_cost_invoice_date.push($(this).val());
+          });
+
+          for (var i = 0; i < import_stock_cost_money.length; i++) {
+              import_stock_cost.push({'import_stock_cost_money':import_stock_cost_money[i], 'import_stock_cost_list':import_stock_cost_list[i], 'import_stock_cost_comment':import_stock_cost_comment[i], 'import_stock_cost_money_vat':import_stock_cost_money_vat[i], 'import_stock_cost_customer':import_stock_cost_customer[i], 'import_stock_cost_invoice':import_stock_cost_invoice[i], 'import_stock_cost_invoice_date':import_stock_cost_invoice_date[i], 'id_import_stock_cost':id_import_stock_cost[i]});
           };
 
           var formData = new FormData($("#add_importstock")[0]);
-          formData.append('spare_stock_data', JSON.stringify(spare_stock_data));
+          formData.append('spare_part', JSON.stringify(spare_part));
+          formData.append('import_stock_cost', JSON.stringify(import_stock_cost));
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -138,7 +283,7 @@ $(document).ready(function(){
 
         <div class="clearfix"></div>
         <div class="hr hr-8 dotted hr-double"></div>
-        <div style="background: #73737326;">
+        <div style="background: #73737326; max-height: 500px; overflow: auto;">
             <table id="dataTable_importstock" style="width: 100%;">
                 <tbody>
                 <tr>
@@ -152,12 +297,14 @@ $(document).ready(function(){
                                   <label>Mã sản phẩm</label>
                                   <div class="input-group">
                                     <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required">
+                                    <ul class="name_list_id"></ul>
                                   </div>
                                 </td>
                                 <td>
                                   <label>Tên sản phẩm</label>
                                   <div class="input-group">
                                     <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required">
+                                    <ul class="name_list_id_2"></ul>
                                   </div>
                                 </td>
                                 <td>
@@ -181,26 +328,28 @@ $(document).ready(function(){
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Đơn giá</label>
+                                  <label>Số lượng</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="15" >
+                                    <input type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
                                   </div>
                                 </td>
+                                
                               </tr>
                               <tr>
                                 <td>
-                                  <label>VAT</label>
+                                  <label>Đơn giá</label>
                                   <div class="input-group">
-                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="16" placeholder="%">
-                                    <input style="width: 100px" type="text" class="spare_stock_vat numbers" name="spare_stock_vat[]" tabindex="17" >
+                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" >
                                   </div>
                                 </td>
                                 <td>
-                                  <label>Số lượng</label>
+                                  <label>VAT</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="18">
+                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%">
+                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" >
                                   </div>
                                 </td>
+                                
                                 <td>
                                   <label>Có số seri</label>
                                   <div class="input-group">
@@ -209,6 +358,38 @@ $(document).ready(function(){
                                 </td>
                                 
                               </tr>
+                              <tr class="tr_seri" style="display:none">
+                                <td></td>
+                                <td></td>
+                                <td>
+                                  <div style="max-height: 200px; overflow: auto;">
+                                    <table class="dataTb" id="dataTb0" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                                      <tbody>
+                                        <tr>
+                                          <td><input type="checkbox" name="chk3" class="chk3"></td>
+                                          <td>
+                                            <table style="width:100%">
+                                              <tr>
+                                                <td>
+                                                  <label>Số seri</label>
+                                                  <div class="input-group">
+                                                    <input code="" data="0" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" >
+                                                    <span class="dem" data="1">(1)</span>
+                                                  </div>
+                                                </td>
+                                                
+                                              </tr>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>  
+                                    
+                                    <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb0')" title="Thêm"><i class="fa fa-plus"></i></button>
+                                    <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb0')" title="Xóa"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
                         </tbody></table>
                         <div class="hr hr-8 dotted hr-double"></div>
                     </td>
@@ -217,10 +398,10 @@ $(document).ready(function(){
             </tbody>
             </table>
          
+        </div>
             <input type="button" value="Thêm" onclick="addRow_importstock('dataTable_importstock')">
 
             <input type="button" value="Xóa" onclick="deleteRow_importstock('dataTable_importstock')">
-        </div>
       </div>
       <div id="coststock" class="tab-pane">
         <table id="dataTable_coststock" style="width: 100%;">
@@ -337,6 +518,12 @@ $('.spare_stock_price').keyup(function(){
 });
   
 function addRow_importstock(tableID){
+  var checked = 0;
+  if ($('.check_seri:first').is(':checked')) {
+    checked = 1;
+  }
+  var rowIndex = parseInt($('.dataTb:last').attr('id').replace('dataTb',''));
+
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
     var row=table.insertRow(rowCount);
@@ -354,18 +541,49 @@ function addRow_importstock(tableID){
         }
     }
 
-    $('.spare_stock_comment:last').val("");
+    $('.spare_part_name:last').attr('disabled',false);
+    $('.spare_part_code:last').attr('disabled',false);
+    $('.spare_part_name:last').attr('data',"");
+    $('.spare_part_name:last').val("");
+    $('.spare_part_code:last').val("");
+    $('.spare_part_unit:last').val("");
     $('.spare_stock_price:last').val("");
-    $('.spare_stock_end_date:last').val("");
-
-    $('input[name="chk"]:last').attr('data',"");
-    $('input[name="chk"]:last').attr('title',"");
+    $('.spare_part_brand:last').val("");
+    $('.spare_part_date_manufacture:last').val("");
     
+    $('.spare_stock_vat_percent:last').val("");
+    $('.spare_stock_vat_price:last').val("");
+    
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('tabindex',0);
+    $('input[name="chk"]:last').attr('title',"");
+    $('input[name="chk"]:last').attr('class',"");
+    $('input[name="chk"]:last').attr('alt',0);
+
+    $('.tr_seri:last input').attr('code',"");
+    $('.tr_seri:last input').attr('data',"");
+    $('.tr_seri:last input').attr('alt',"");
+    $('.tr_seri:last').find(":input:not([type=button])").val("");
+
+    $('.spare_stock_number:last').val($('.spare_stock_number:first').val());
+    
+    get_spare();
 
     $('.spare_stock_price').keyup(function(){
       get_price();
     });
     
+    if (checked == 1) {
+      $('.check_seri:last').attr('checked','checked');
+    }
+
+    $('.dataTb:last').attr('id',"dataTb"+parseInt(rowIndex+1));
+    $('.addRow3:last').attr('onClick','addRow3("dataTb'+(parseInt(rowIndex+1))+'")');
+    $('.deleteRow3:last').attr('onClick','deleteRow3("dataTb'+(parseInt(rowIndex+1))+'")');
+    
+    $('#dataTb'+parseInt(rowIndex+1)).find('input[type="text"]').each(function () {
+       $(this).attr('data',rowIndex+1);
+    });
 }
 function deleteRow_importstock(tableID){
     try{
@@ -482,4 +700,430 @@ function addRow_coststock(tableID){
           alert(e);
       }
   }
+
+function addRow3(tableID){
+  var ns = parseInt($('#'+tableID+' .dem:last').attr("data"));
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('#'+tableID+' .spare_part_seri2:last').val("");
+    $('#'+tableID+' .spare_part_seri2:last').attr('code',"");
+    
+    $('#'+tableID+' input[name="chk3"]:last').attr('data',"");
+    $('#'+tableID+' input[name="chk3"]:last').attr('tabindex',0);
+    $('#'+tableID+' input[name="chk3"]:last').attr('title',"");
+    $('#'+tableID+' input[name="chk3"]:last').attr('class',"");
+    $('#'+tableID+' input[name="chk3"]:last').attr('alt',0);
+
+    ns++;
+            
+    $('#'+tableID+' .dem:last').attr("data",ns);
+    $('#'+tableID+' .dem:last').html("("+ns+")");
+
+    var rowIndex = parseInt(tableID.replace('dataTb',''));
+
+    $('.spare_stock_number:eq('+rowIndex+')').val(rowCount+1);
+
+    
+    get_vat(rowIndex);
+    get_spare();
+
+
+}
+function deleteRow3(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+          if(result) {
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                    if(rowCount<=1){
+                        alert_form("Không thể xóa hết.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("data") > 0){
+                        
+                            var import_stock = chkbox.getAttribute("data");
+                            var spare_part = chkbox.getAttribute("alt");
+                            $.post("<?php echo BASE_URL ?>/importstock/deletespare", {import_stock: import_stock, spare_part: spare_part},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+
+                    var rowIndex = parseInt(tableID.replace('dataTb',''));
+
+                    $('.spare_stock_number:eq('+rowIndex+')').val(rowCount);
+
+                    get_vat(rowIndex);
+                    get_spare();
+                }
+            }
+          }
+        });
+    }
+    catch(e){
+        alert(e);
+    }
+}
+</script>
+<script type="text/javascript">
+get_spare();
+
+$('html').click(function(e) {
+    
+    $('.name_list_id').slideUp(200);
+    $('.name_list_id_2').slideUp(200);
+    $('.name_list_id_3').slideUp(200);
+});
+
+function get_spare(){
+  $('.spare_part_code').keyup(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var keyword = $(this).val();
+    $.ajax({
+        url: '<?php echo BASE_URL ?>/sparepart/getSpare',
+        type: 'GET',
+        data: {keyword:keyword, offset:rowIndex},
+        success:function(data){
+            $('.name_list_id:eq('+rowIndex+')').slideDown(200);
+            $('.name_list_id:eq('+rowIndex+')').html(data);
+        }
+    });
+    if ($('.spare_part_code:eq('+rowIndex+')').val() == "" || $('.spare_part_code:eq('+rowIndex+')').attr('data') == "") {
+        
+        $('.spare_part_code:eq('+rowIndex+')').attr('data',"");
+    }
+
+    
+  });
+
+  $('.spare_part_code').on('keydown', function() {
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var key = event.keyCode || event.charCode;
+
+    if( key == 8 || key == 46 ){
+        $('.spare_part_code:eq('+rowIndex+')').attr('data',"");
+    }
+        
+  }); 
+
+  $('.spare_part_name').keyup(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      var keyword = $(this).val();
+      $.ajax({
+          url: '<?php echo BASE_URL ?>/sparepart/getSpare',
+          type: 'GET',
+          data: {keyword:keyword, offset:rowIndex},
+          success:function(data){
+              $('.name_list_id_2:eq('+rowIndex+')').slideDown(200);
+              $('.name_list_id_2:eq('+rowIndex+')').html(data);
+          }
+      });
+      if ($('.spare_part_name:eq('+rowIndex+')').val() == "" || $('.spare_part_name:eq('+rowIndex+')').attr('data') == "") {
+          
+          $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+      }
+
+      
+  });
+  $('.spare_part_name').on('keydown', function() {
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var key = event.keyCode || event.charCode;
+
+    if( key == 8 || key == 46 ){
+        $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+    }
+        
+  }); 
+
+  $('.spare_part_code').blur(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var check_type = 0;
+
+    var val = $(this).val().trim();
+    
+    $('.spare_part_code').each(function() { 
+        if ( val != "" && val == $(this).val().trim()) {
+            check_type ++;
+        }
+    });
+
+
+    if (check_type >= 2) {
+        alert_form('Sản phẩm này đã có!');
+        $(this).val("");
+        $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+        $('.spare_part_name:eq('+rowIndex+')').val("");
+        $('.spare_part_brand:eq('+rowIndex+')').val("");
+        $('.spare_part_seri:eq('+rowIndex+')').val("");
+        $('.spare_part_unit:eq('+rowIndex+')').val("");
+        $('.spare_part_date_manufacture:eq('+rowIndex+')').val("");
+        
+    };
+    
+  });
+  $('.spare_part_name').blur(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      var check_type = 0;
+
+      var val = $(this).val().trim();
+      
+      $('.spare_part_name').each(function() { 
+          if (val != "" && val == $(this).val().trim()) {
+              check_type ++;
+          }
+      });
+
+      
+
+      if (check_type >= 2) {
+          alert_form('Sản phẩm này đã có!');
+          $(this).val("");
+          $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+        $('.spare_part_name:eq('+rowIndex+')').val("");
+        $('.spare_part_brand:eq('+rowIndex+')').val("");
+        $('.spare_part_seri:eq('+rowIndex+')').val("");
+        $('.spare_part_unit:eq('+rowIndex+')').val("");
+        $('.spare_part_date_manufacture:eq('+rowIndex+')').val("");
+          
+      };
+      
+  });
+  $('.spare_part_seri2').blur(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      var check_type = 0;
+
+      var val = $(this).val().trim();
+      
+      $('.tr_seri:eq('+rowIndex+') input[type=text]').each(function() { 
+          if (val != "" && val == $(this).val().trim()) {
+              check_type ++;
+          }
+      });
+
+      if (check_type >= 2) {
+          alert_form('Sản phẩm này đã có!');
+          $(this).val("");
+          
+      };
+      
+  });
+
+  $('.spare_stock_price').keyup(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    get_vat(rowIndex);
+  });
+  $('.spare_stock_vat_percent').keyup(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      get_vat(rowIndex);
+  });
+
+
+  $('.spare_stock_number').keyup(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var number = parseFloat($(this).val());
+    if (number == 0 || number == "") {
+      $(this).val("1");
+    }
+    
+    get_vat(rowIndex);
+
+      if ($('.check_seri:eq('+rowIndex+')').is(':checked')) {
+        var ns = parseInt($('.dem:last').attr("data"));
+        $('.tr_seri:eq('+rowIndex+')').show();
+        var table=document.getElementById('dataTb'+rowIndex);
+        var rowCount=table.rows.length;
+        var val_add = parseInt($(this).val());
+        if (rowCount < val_add) {
+          var num_row = val_add-rowCount;
+          for (var i = 0; i < num_row; i++) {
+            var row=table.insertRow(rowCount);
+            var colCount=table.rows[0].cells.length;
+            for(var j=0;j<colCount;j++){
+                var newcell=row.insertCell(j);
+                newcell.innerHTML=table.rows[0].cells[j].innerHTML;
+                switch(newcell.childNodes[0].type){
+                    case"text":newcell.childNodes[0].value="";
+                    break;
+                    case"checkbox":newcell.childNodes[0].checked=false;
+                    break;
+                    case"select-one":newcell.childNodes[0].selectedIndex=0;
+                    break;
+                }
+            }
+
+            $('.spare_part_seri2:last').val("");
+            $('.spare_part_seri2:last').attr('code',"");
+            
+            $('input[name="chk3"]:last').attr('data',"");
+            $('input[name="chk3"]:last').attr('tabindex',0);
+            $('input[name="chk3"]:last').attr('title',"");
+            $('input[name="chk3"]:last').attr('class',"");
+            $('input[name="chk3"]:last').attr('alt',0);
+
+            ns++;
+            
+            $('.dem:last').attr("data",ns);
+            $('.dem:last').html("("+ns+")");
+
+            rowCount++;
+          }
+        }
+        else if(rowCount > val_add){
+         
+          for(var i=rowCount;i>val_add;i--){
+                if(rowCount>1){
+                  table.deleteRow(rowCount-1);
+                  rowCount--;
+                }
+                
+            }
+        }
+        
+      }
+    });
+
+  $('.check_seri').click(function(){
+  var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+  var rowIndex = row[0].rowIndex;
+
+    if($(this).is(':checked')){
+      var ns = parseInt($('.dem:last').attr("data"));
+      $('.tr_seri:eq('+rowIndex+')').show();
+        var table=document.getElementById('dataTb'+rowIndex);
+        var rowCount=table.rows.length;
+        var val_add = parseInt($('.spare_stock_number:eq('+rowIndex+')').val());
+        if (rowCount < val_add) {
+          var num_row = val_add-rowCount;
+          for (var j = 0; j < num_row; j++) {
+            var row=table.insertRow(rowCount);
+            var colCount=table.rows[0].cells.length;
+            for(var i=0;i<colCount;i++){
+                var newcell=row.insertCell(i);
+                newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+                switch(newcell.childNodes[0].type){
+                    case"text":newcell.childNodes[0].value="";
+                    break;
+                    case"checkbox":newcell.childNodes[0].checked=false;
+                    break;
+                    case"select-one":newcell.childNodes[0].selectedIndex=0;
+                    break;
+                }
+            }
+
+            $('.spare_part_seri2:last').val("");
+            $('.spare_part_seri2:last').attr('code',"");
+            
+            $('input[name="chk3"]:last').attr('data',"");
+            $('input[name="chk3"]:last').attr('tabindex',0);
+            $('input[name="chk3"]:last').attr('title',"");
+            $('input[name="chk3"]:last').attr('class',"");
+            $('input[name="chk3"]:last').attr('alt',0);
+
+            ns++;
+            
+            $('.dem:last').attr("data",ns);
+            $('.dem:last').html("("+ns+")");
+
+            rowCount++;
+          }
+        }
+    }
+    else{
+      $('.tr_seri:eq('+rowIndex+')').hide();
+    }
+  });
+
+}
+
+
+function set_item_other(item,value,code,date,brand,vitri,unit,price) {
+    // change input value
+    $('.spare_part_name:eq('+vitri+')').val(value);
+    $('.spare_part_name:eq('+vitri+')').attr("data",item);
+    $('.spare_part_code:eq('+vitri+')').val(code);
+    $('.spare_part_date_manufacture:eq('+vitri+')').val(date);
+    $('.spare_part_brand:eq('+vitri+')').val(brand);
+    $('.spare_part_unit:eq('+vitri+')').val(unit);
+    $('.spare_stock_price:eq('+vitri+')').val(price);
+
+    get_vat(vitri);
+    
+    // hide proposition list
+    $('.name_list_id').hide();
+    $('.name_list_id_2').hide();
+    $('.spare_part_code:eq('+vitri+')').focus();
+
+    $('.numbers').inputmask("numeric", {
+      radixPoint: ".",
+      groupSeparator: ",",
+      digits: 6,
+      autoGroup: true,
+      rightAlign: true,
+      oncleared: function () { self.Value(''); }
+    });
+
+}
+function get_vat(vitri){
+  var percent = parseFloat(get_number('.spare_stock_vat_percent:eq('+vitri+')')) || 0;
+  var number = parseFloat(get_number('.spare_stock_number:eq('+vitri+')')) || 0;
+  var price = parseFloat(get_number('.spare_stock_price:eq('+vitri+')')) || 0;
+  $('.spare_stock_vat_price:eq('+vitri+')').val(Math.round((price*percent/100)*number));
+
+  $('.numbers').inputmask("numeric", {
+      radixPoint: ".",
+      groupSeparator: ",",
+      digits: 6,
+      autoGroup: true,
+      rightAlign: true,
+      oncleared: function () { self.Value(''); }
+    });
+}
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
 </script>

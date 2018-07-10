@@ -380,6 +380,55 @@ Class sparepartController Extends baseController {
         }
         echo json_encode($result);
     }
+    public function getSpare(){
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $spare_code_model = $this->model->get('sparepartcodeModel');
+            $spare_model = $this->model->get('sparepartModel');
+            $spare_stock_model = $this->model->get('sparestockModel');
+
+            if ($_GET['keyword'] == "*") {
+                $list = $spare_code_model->getAllStock();
+            }
+            else{
+                $data = array(
+                'where'=>'( name LIKE "%'.$_GET['keyword'].'%" )',
+                );
+                $list = $spare_code_model->getAllStock($data);
+
+                if (!$list) {
+                    $data = array(
+                    'where'=>'( code LIKE "%'.$_GET['keyword'].'%" )',
+                    );
+                    $list = $spare_code_model->getAllStock($data);
+                }
+            }
+
+            foreach ($list as $rs) {
+                $spare_name = '['.$rs->code.']-'.$rs->name;
+
+                if ($_GET['keyword'] != "*") {
+                    $spare_name = str_replace($_GET['keyword'], '<b>'.$_GET['keyword'].'</b>', '['.$rs->code.']-'.$rs->name);
+                }
+
+                $stocks = $spare_stock_model->queryStock('SELECT * FROM spare_stock, spare_part WHERE spare_part = spare_part_id AND import_stock > 0 AND spare_part IN (SELECT spare_part_id FROM spare_part WHERE spare_part_code = '.$rs->spare_part_code_id.') ORDER BY spare_stock_id DESC LIMIT 1');
+
+                if ($stocks) {
+                    foreach ($stocks as $stock) {
+                        echo '<li onclick="set_item_other(\''.$rs->spare_part_code_id.'\',\''.$rs->name.'\',\''.$rs->code.'\',\''.$this->lib->hien_thi_ngay_thang($stock->spare_part_date_manufacture).'\',\''.$stock->spare_part_brand.'\',\''.$_GET['offset'].'\',\''.$stock->spare_part_unit.'\',\''.$stock->spare_stock_price.'\')">'.$spare_name.'</li>';
+                    }
+                }
+                else{
+                    $spares = $spare_model->getAllStock(array('where'=>'spare_part_code = '.$rs->spare_part_code_id,'order_by'=>'spare_part_id DESC','limit'=>1));
+                    foreach ($spares as $spare) {
+                        echo '<li onclick="set_item_other(\''.$rs->spare_part_code_id.'\',\''.$rs->name.'\',\''.$rs->code.'\',\''.$this->lib->hien_thi_ngay_thang($spare->spare_part_date_manufacture).'\',\''.$spare->spare_part_brand.'\',\''.$_GET['offset'].'\',\''.$spare->spare_part_unit.'\',\'\')">'.$spare_name.'</li>';
+                    }
+                }
+            }
+        }
+    }
 
     public function delete(){
 

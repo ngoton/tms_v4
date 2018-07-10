@@ -178,7 +178,9 @@ $( document ).ajaxComplete(function() {
   $('.ui-dialog-buttonset .btn-success').attr('disabled',false);
 
 });
-
+function log(data){
+  console.log(data);
+}
 function setNavigation() {
     var path = window.location.pathname;
     path = path.replace(/\/$/, "");

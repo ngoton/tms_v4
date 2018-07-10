@@ -207,16 +207,69 @@ Class importstockController Extends baseController {
 
             $id_importstock = $import_stock_model->getLastStock()->import_stock_id;
 
+            $spare_code_model = $this->model->get('sparepartcodeModel');
+            $spare_model = $this->model->get('sparepartModel');
             $spare_stock_model = $this->model->get('sparestockModel');
 
-            $spare_stock_data = json_decode($_POST['spare_stock_data']);
+            $spare_stock_data = json_decode($_POST['spare_part']);
 
             if (isset($id_importstock)) {
                 foreach ($spare_stock_data as $v) {
+                    if (isset($v->spare_part_code_id) && $v->spare_part_code_id > 0) {
+                        $id_code = $v->spare_part_code_id;
+                    }
+                    else{
+                        $code_data = array(
+                            'code'=>trim($v->spare_part_code),
+                            'name'=>trim($v->spare_part_name),
+                        );
+
+                        if (!$spare_code_model->getStockByWhere(array('code'=>$code_data['code'],'name'=>$code_data['name']))) {
+                            $spare_code_model->createStock($code_data);
+                            $id_code = $spare_code_model->getLastStock()->spare_part_code_id;
+                        }
+                        else{
+                            $id_code = $spare_code_model->getStockByWhere(array('code'=>$code_data['code'],'name'=>$code_data['name']))->spare_part_code_id;
+                        }
+                    }
+
+                    if (isset($v->spare_part_id) && $v->spare_part_id > 0) {
+                        $id_spare_part = $v->spare_part_id;
+                    }
+                    else{
+                        $data_spare_part = array(
+                            'spare_part_name' => trim($v->spare_part_name),
+                            'spare_part_code' => $id_code,
+                            'spare_part_seri' => trim($v->spare_part_seri),
+                            'spare_part_brand' => trim($v->spare_part_brand),
+                            'spare_part_unit' => trim($v->spare_part_unit),
+                            'spare_part_date_manufacture' => strtotime(str_replace('/', '-', $v->spare_part_date_manufacture)),
+                        );
+
+                        if ($data_spare_part['spare_part_seri'] != "") {
+                            if (!$spare_model->getStockByWhere(array('spare_part_seri'=>$data_spare_part['spare_part_seri'],'spare_part_code'=>$id_code))) {
+                                $spare_model->createStock($data_spare_part);
+                                $id_spare_part = $spare_model->getLastStock()->spare_part_id;
+                            }
+                            else{
+                                $id_spare_part = $spare_model->getStockByWhere(array('spare_part_seri'=>$data_spare_part['spare_part_seri'],'spare_part_code'=>$id_code))->spare_part_id;
+                            }
+                        }
+                        else{
+                            if (!$spare_model->getStockByWhere(array('spare_part_name'=>$data_spare_part['spare_part_name'],'spare_part_code'=>$id_code))) {
+                                $spare_model->createStock($data_spare_part);
+                                $id_spare_part = $spare_model->getLastStock()->spare_part_id;
+                            }
+                            else{
+                                $id_spare_part = $spare_model->getStockByWhere(array('spare_part_name'=>$data_spare_part['spare_part_name'],'spare_part_code'=>$id_code))->spare_part_id;
+                            }
+                        }
+                    }
+
                     $data_spare_stock = array(
                         'import_stock' => $id_importstock,
-                        'spare_part' => trim($v->spare_part),
-                        'spare_stock_unit' => trim($v->spare_stock_unit),
+                        'spare_part' => $id_spare_part,
+                        'spare_stock_unit' => trim($v->spare_part_unit),
                         'spare_stock_number' => str_replace(',', '', $v->spare_stock_number),
                         'spare_stock_price' => str_replace(',', '', $v->spare_stock_price),
                         'spare_stock_vat' => str_replace(',', '', $v->spare_stock_vat),
@@ -236,6 +289,38 @@ Class importstockController Extends baseController {
                     }
                 }
 
+            }
+
+            $import_stock_cost_model = $this->model->get('importstockcostModel');
+
+            $import_stock_cost = json_decode($_POST['import_stock_cost']);
+            
+            if (isset($id_importstock)) {
+                foreach ($import_stock_cost as $v) {
+                    $data_import_stock_cost = array(
+                        'import_stock' => $id_importstock,
+                        'import_stock_cost_list' => trim($v->import_stock_cost_list),
+                        'import_stock_cost_comment' => trim($v->import_stock_cost_comment),
+                        'import_stock_cost_money' => str_replace(',', '', $v->import_stock_cost_money),
+                        'import_stock_cost_money_vat' => trim($v->import_stock_cost_money_vat),
+                        'import_stock_cost_customer' => trim($v->import_stock_cost_customer),
+                        'import_stock_cost_invoice' => trim($v->import_stock_cost_invoice),
+                        'import_stock_cost_invoice_date' => strtotime(str_replace('/', '-', $v->import_stock_cost_invoice_date)),
+                    );
+
+                    if ($v->id_import_stock_cost>0) {
+                        $data_import_stock_cost['import_stock_cost_update_user'] = $_SESSION['userid_logined'];
+                        $import_stock_cost_model->updateStock($data_import_stock_cost,array('import_stock_cost_id'=>$v->id_import_stock_cost));
+                    }
+                    else{
+                        if ($data_import_stock_cost['import_stock_cost_money']!="") {
+                            $data_import_stock_cost['import_stock_cost_create_user'] = $_SESSION['userid_logined'];
+                            $import_stock_cost_model->createStock($data_import_stock_cost);
+                        }
+                        
+                    }
+                    
+                }
             }
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_importstock."|import_stock|".implode("-",$data)."\n"."\r\n";
@@ -329,16 +414,69 @@ Class importstockController Extends baseController {
 
             $id_importstock = $id;
 
+            $spare_code_model = $this->model->get('sparepartcodeModel');
+            $spare_model = $this->model->get('sparepartModel');
             $spare_stock_model = $this->model->get('sparestockModel');
 
-            $spare_stock_data = json_decode($_POST['spare_stock_data']);
+            $spare_stock_data = json_decode($_POST['spare_part']);
 
             if (isset($id_importstock)) {
                 foreach ($spare_stock_data as $v) {
+                    if (isset($v->spare_part_code_id) && $v->spare_part_code_id > 0) {
+                        $id_code = $v->spare_part_code_id;
+                    }
+                    else{
+                        $code_data = array(
+                            'code'=>trim($v->spare_part_code),
+                            'name'=>trim($v->spare_part_name),
+                        );
+
+                        if (!$spare_code_model->getStockByWhere(array('code'=>$code_data['code'],'name'=>$code_data['name']))) {
+                            $spare_code_model->createStock($code_data);
+                            $id_code = $spare_code_model->getLastStock()->spare_part_code_id;
+                        }
+                        else{
+                            $id_code = $spare_code_model->getStockByWhere(array('code'=>$code_data['code'],'name'=>$code_data['name']))->spare_part_code_id;
+                        }
+                    }
+
+                    if (isset($v->spare_part_id) && $v->spare_part_id > 0) {
+                        $id_spare_part = $v->spare_part_id;
+                    }
+                    else{
+                        $data_spare_part = array(
+                            'spare_part_name' => trim($v->spare_part_name),
+                            'spare_part_code' => $id_code,
+                            'spare_part_seri' => trim($v->spare_part_seri),
+                            'spare_part_brand' => trim($v->spare_part_brand),
+                            'spare_part_unit' => trim($v->spare_part_unit),
+                            'spare_part_date_manufacture' => strtotime(str_replace('/', '-', $v->spare_part_date_manufacture)),
+                        );
+
+                        if ($data_spare_part['spare_part_seri'] != "") {
+                            if (!$spare_model->getStockByWhere(array('spare_part_seri'=>$data_spare_part['spare_part_seri'],'spare_part_code'=>$id_code))) {
+                                $spare_model->createStock($data_spare_part);
+                                $id_spare_part = $spare_model->getLastStock()->spare_part_id;
+                            }
+                            else{
+                                $id_spare_part = $spare_model->getStockByWhere(array('spare_part_seri'=>$data_spare_part['spare_part_seri'],'spare_part_code'=>$id_code))->spare_part_id;
+                            }
+                        }
+                        else{
+                            if (!$spare_model->getStockByWhere(array('spare_part_name'=>$data_spare_part['spare_part_name'],'spare_part_code'=>$id_code))) {
+                                $spare_model->createStock($data_spare_part);
+                                $id_spare_part = $spare_model->getLastStock()->spare_part_id;
+                            }
+                            else{
+                                $id_spare_part = $spare_model->getStockByWhere(array('spare_part_name'=>$data_spare_part['spare_part_name'],'spare_part_code'=>$id_code))->spare_part_id;
+                            }
+                        }
+                    }
+
                     $data_spare_stock = array(
                         'import_stock' => $id_importstock,
-                        'spare_part' => trim($v->spare_part),
-                        'spare_stock_unit' => trim($v->spare_stock_unit),
+                        'spare_part' => $id_spare_part,
+                        'spare_stock_unit' => trim($v->spare_part_unit),
                         'spare_stock_number' => str_replace(',', '', $v->spare_stock_number),
                         'spare_stock_price' => str_replace(',', '', $v->spare_stock_price),
                         'spare_stock_vat' => str_replace(',', '', $v->spare_stock_vat),
@@ -351,13 +489,45 @@ Class importstockController Extends baseController {
                         $spare_stock_model->updateStock($data_spare_stock,array('spare_stock_id'=>$v->id_spare_stock));
                     }
                     else{
-                        if ($data_spare_stock['spare_stock_price']!="") {
+                        if ($data_spare_stock['spare_stock_number']!="") {
                             $spare_stock_model->createStock($data_spare_stock);
                         }
                         
                     }
                 }
 
+            }
+
+            $import_stock_cost_model = $this->model->get('importstockcostModel');
+
+            $import_stock_cost = json_decode($_POST['import_stock_cost']);
+            
+            if (isset($id_importstock)) {
+                foreach ($import_stock_cost as $v) {
+                    $data_import_stock_cost = array(
+                        'import_stock' => $id_importstock,
+                        'import_stock_cost_list' => trim($v->import_stock_cost_list),
+                        'import_stock_cost_comment' => trim($v->import_stock_cost_comment),
+                        'import_stock_cost_money' => str_replace(',', '', $v->import_stock_cost_money),
+                        'import_stock_cost_money_vat' => trim($v->import_stock_cost_money_vat),
+                        'import_stock_cost_customer' => trim($v->import_stock_cost_customer),
+                        'import_stock_cost_invoice' => trim($v->import_stock_cost_invoice),
+                        'import_stock_cost_invoice_date' => strtotime(str_replace('/', '-', $v->import_stock_cost_invoice_date)),
+                    );
+
+                    if ($v->id_import_stock_cost>0) {
+                        $data_import_stock_cost['import_stock_cost_update_user'] = $_SESSION['userid_logined'];
+                        $import_stock_cost_model->updateStock($data_import_stock_cost,array('import_stock_cost_id'=>$v->id_import_stock_cost));
+                    }
+                    else{
+                        if ($data_import_stock_cost['import_stock_cost_money']!="") {
+                            $data_import_stock_cost['import_stock_cost_create_user'] = $_SESSION['userid_logined'];
+                            $import_stock_cost_model->createStock($data_import_stock_cost);
+                        }
+                        
+                    }
+                    
+                }
             }
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|import_stock|".implode("-",$data)."\n"."\r\n";
