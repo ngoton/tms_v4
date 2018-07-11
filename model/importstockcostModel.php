@@ -1,6 +1,6 @@
 <?php
 
-Class importstoccostkModel Extends baseModel {
+Class importstockcostModel Extends baseModel {
 	protected $table = "import_stock_cost";
 
 	public function getAllStock($data = null,$join = null) 
