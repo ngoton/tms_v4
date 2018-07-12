@@ -1,137 +1,460 @@
 
-<div class="login_body">
+
+<div class="tabbable">
   
+    <ul class="nav nav-tabs padding-18">
+      <li class="active">
+        <a data-toggle="tab" href="#homestock">
+          <i class="green ace-icon fa fa-file-text-o bigger-120"></i>
+          Thông tin
+        </a>
+      </li>
+
+      <li>
+        <a data-toggle="tab" href="#coststock">
+          <i class="blue ace-icon fa fa-th bigger-120"></i>
+          Chi phí
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content no-border ">
+      <div id="homestock" class="tab-pane in active">
         <div class="col-md-4 col-xs-6">
-          <label for="repair_date">Ngày</label>
+          <label for="import_stock_date">Ngày</label>
           <div class="input-group">
-            <input class="input-mask-date" type="text" id="repair_date" name="repair_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($repair_data->repair_date) ?>">
+            <input class="input-mask-date" type="text" id="import_stock_date" name="import_stock_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($import_stock_data->import_stock_date) ?>">
           </div>
-          <label for="repair_number">Số phiếu</label>
+          <label for="import_stock_house">Kho nhập <a title="Thêm kho mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("house/add") ?>','Thêm kho mới','import_stock_house','<?php echo $this->url("house/gethouse") ?>','add_house')"></i></a></label>
           <div class="input-group">
-            <input type="text" id="repair_number" name="repair_number" tabindex="2" value="<?php echo $repair_data->repair_number ?>">
-          </div>
-          <label for="repair_code">Nội dung <a title="Thêm danh mục mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("repaircode/add") ?>','Thêm danh mục mới','repair_code','<?php echo $this->url("repaircode/getrepaircode") ?>','add_repair_code')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="repair_code" name="repair_code" required="required" tabindex="3">
-              <?php foreach ($codes as $code) { ?>
-                <option <?php echo $repair_data->repair_code==$code->repair_code_id?'selected="selected"':null ?> value="<?php echo $code->repair_code_id ?>"><?php echo $code->repair_code_name ?></option>
+            <select class="form-control select2" id="import_stock_house" name="import_stock_house" tabindex="4">
+              <?php foreach ($houses as $house) { ?>
+                <option <?php echo $import_stock_data->import_stock_house==$house->house_id?'selected="selected"':null ?> value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
               <?php } ?>
             </select>
           </div>
           
+          <label for="import_stock_deliver">Người giao hàng </label>
+          <div class="input-group">
+            <input type="text" id="import_stock_deliver" name="import_stock_deliver" tabindex="7" value="<?php echo $import_stock_data->import_stock_deliver ?>">
+          </div>
         </div>
         <div class="col-md-4 col-xs-6">
-          <label for="repair_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','repair_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
+          <label for="import_stock_code">Số phiếu</label>
           <div class="input-group">
-            <select class="form-control select2" id="repair_vehicle" name="repair_vehicle" tabindex="4">
+            <input type="text" id="import_stock_code" name="import_stock_code" tabindex="2" value="<?php echo $import_stock_data->import_stock_code ?>" required="required">
+          </div>
+          <label for="import_stock_customer">Nhà cung cấp <a title="Thêm nhà cung cấp mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm nhà cung cấp mới','import_stock_customer','<?php echo $this->url("customer/getsupply") ?>','add_customer')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="import_stock_customer" name="import_stock_customer" tabindex="5">
               <option value="">Chọn</option>
-              <?php foreach ($vehicles as $vehicle) { ?>
-                <option <?php echo $repair_data->repair_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+              <?php foreach ($customers as $customer) { 
+                if ($customer->customer_type==2) {
+                ?>
+                <option <?php echo $import_stock_data->import_stock_customer==$customer->customer_id?'selected="selected"':null ?> value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
+              <?php } ?>
               <?php } ?>
             </select>
           </div>
-          <label for="repair_staff">Nhân viên <a title="Thêm nhân viên mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("staff/add") ?>','Thêm nhân viên mới','repair_staff','<?php echo $this->url("staff/getstaff") ?>','add_staff')"></i></a></label>
+          <label for="import_stock_deliver_address">Địa chỉ </label>
           <div class="input-group">
-            <select class="form-control select2" id="repair_staff" name="repair_staff" tabindex="6">
-              <?php foreach ($staffs as $staff) { ?>
-                <option <?php echo $repair_data->repair_staff==$staff->staff_id?'selected="selected"':null ?> value="<?php echo $staff->staff_id ?>"><?php echo $staff->staff_name ?></option>
-              <?php } ?>
-            </select>
+            <input type="text" id="import_stock_deliver_address" name="import_stock_deliver_address" tabindex="8" value="<?php echo $import_stock_data->import_stock_deliver_address ?>">
           </div>
-          
-          
 
         </div>
         <div class="col-md-4 col-xs-6">
-          <label for="repair_romooc">Mooc <a title="Thêm mooc mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("romooc/add") ?>','Thêm mooc mới','repair_romooc','<?php echo $this->url("romooc/getromooc") ?>','add_romooc')"></i></a></label>
+          <label for="import_stock_comment">Nội dung </label>
           <div class="input-group">
-            <select class="form-control select2" id="repair_romooc" name="repair_romooc" tabindex="5">
-              <option value="">Chọn</option>
-              <?php foreach ($romoocs as $romooc) { ?>
-                <option <?php echo $repair_data->repair_romooc==$romooc->romooc_id?'selected="selected"':null ?> value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
-              <?php } ?>
-            </select>
+            <input type="text" id="import_stock_comment" name="import_stock_comment" tabindex="3" value="<?php echo $import_stock_data->import_stock_comment ?>">
           </div>
-          <label for="repair_price">Chi phí</label>
+          <label for="import_stock_invoice_number">Số hóa đơn </label>
           <div class="input-group">
-            <input class="numbers" type="text" id="repair_price" name="repair_price" tabindex="7" readonly="" value="<?php echo $lib->formatMoney($repair_data->repair_price) ?>">
+            <input type="text" id="import_stock_invoice_number" name="import_stock_invoice_number" tabindex="6" value="<?php echo $import_stock_data->import_stock_invoice_number ?>">
+          </div>
+          <label for="import_stock_invoice_date">Ngày HĐ </label>
+          <div class="input-group">
+            <input class="form-control input-mask-date" type="text" id="import_stock_invoice_date" name="import_stock_invoice_date" tabindex="9" value="<?php echo $lib->hien_thi_ngay_thang($import_stock_data->import_stock_invoice_date) ?>">
           </div>
         </div>
 
-        <div>
-            <table id="dataTable_repair" style="width: 100%;">
+        <div class="clearfix"></div>
+        <div class="hr hr-8 dotted hr-double"></div>
+        <div style="background: #73737326; max-height: 500px; overflow: auto;">
+            <table id="dataTable_importstock" style="width: 100%;">
                 <tbody>
-                  <?php if(count($repair_lists) > 0){ ?>
-                  <?php foreach ($repair_lists as $repair_list_data) { ?>
-                    <tr>
-                      <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $repair_list_data->repair_list_id ?>" title="<?php echo $repair_list_data->repair ?>"></td>
-                      <td>
-                          <table style="width:100%;">
-                              <tbody>
-                                <tr>
-                                  <td>
-                                    <label>Chi tiết</label>
-                                    <div class="input-group">
-                                      <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="8" required="required" value="<?php echo $repair_list_data->repair_list_comment ?>">
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <label>Đơn giá</label>
-                                    <div class="input-group">
-                                      <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="9" required="required" value="<?php echo $lib->formatMoney($repair_list_data->repair_list_price) ?>" data="<?php echo $repair_list_data->repair_list_id ?>">
-                                    </div>
-                                  </td>
-                                  
-                                  <td>
-                                    <label>Hạn bảo hành</label>
-                                    <div class="input-group">
-                                      <input type="text" class="repair_list_end_date input-mask-date" name="repair_list_end_date[]" tabindex="10" value="<?php echo $lib->hien_thi_ngay_thang($repair_list_data->repair_list_end_date) ?>">
-                                    </div>
-                                  </td>
-                                </tr>
-                          </tbody></table>
-                          <div class="hr hr-8 dotted hr-double"></div>
-                      </td>
+                <?php $l=0; ?>
+                <?php if (count($spare_part_codes)>0) { ?>
+                <?php foreach ($spare_part_codes as $spare_part_code) { 
+                  $sl = $spare_part_data[$spare_part_code->spare_part_code_id]['sl'];
+                ?>
+                <tr>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $spare_part_code->spare_part_code_id ?>" title="<?php echo $import_stock_data->import_stock_id ?>"></td>
+                    <td>
                       
-                  </tr>
-                  <?php }}else{ ?>
-                    <tr>
-                      <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
-                      <td>
-                          <table style="width:100%;">
-                              <tbody>
-                                <tr>
-                                  <td>
-                                    <label>Chi tiết</label>
-                                    <div class="input-group">
-                                      <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="8" required="required">
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <label>Đơn giá</label>
-                                    <div class="input-group">
-                                      <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="9" required="required">
-                                    </div>
-                                  </td>
+                        <table style="width:100%;">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <label>Mã sản phẩm</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required" value="<?php echo $spare_part_code->code ?>">
+                                    <ul class="name_list_id"></ul>
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Tên sản phẩm</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required" value="<?php echo $spare_part_code->name ?>" data="<?php echo $spare_part_code->spare_part_code_id ?>">
+                                    <ul class="name_list_id_2"></ul>
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Nhà sản xuất</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['brand'] ?>" >
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>Ngày sản xuất</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13" value="<?php echo $lib->hien_thi_ngay_thang($spare_part_data[$spare_part_code->spare_part_code_id]['date']) ?>">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Đơn vị tính</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['unit'] ?>">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Số lượng</label>
+                                  <div class="input-group">
+                                    <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="<?php echo $sl ?>">
+                                  </div>
+                                </td>
+                                
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>Đơn giá</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['price']) ?>" >
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>VAT</label>
+                                  <div class="input-group">
+                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['percent']) ?>">
+                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['vat']*$sl) ?>">
+                                  </div>
+                                </td>
+                                
+                                <td>
+                                  <label>Có số seri</label>
+                                  <div class="input-group">
+                                    <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1" <?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['seri'] != ""?'checked':null ?>><span class="lbl"></span>
+                                  </div>
+                                </td>
+                                
+                              </tr>
+                              <tr class="tr_seri" <?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['seri'] == ""?'style="display:none"':null ?> >
+                                <td></td>
+                                <td></td>
+                                <td>
+                                  <div style="max-height: 200px; overflow: auto;">
+                                    <table class="dataTb" id="dataTb<?php echo $l ?>" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                                      <tbody>
+                                        <?php $m=1; 
+                                        foreach ($spare_parts[$spare_part_code->spare_part_code_id] as $spare_part) { ?>
+                                        <tr>
+                                          <td><input type="checkbox" name="chk3" class="chk3" data="<?php echo $spare_part->spare_stock_id ?>" title="<?php echo $spare_part->spare_part_id ?>"></td>
+                                          <td>
+                                            <table style="width:100%">
+                                              <tr>
+                                                <td>
+                                                  <label>Số seri</label>
+                                                  <div class="input-group">
+                                                    <input code="<?php echo $spare_part->spare_part_id ?>" data="<?php echo $l ?>" title="<?php echo $spare_part->spare_stock_id ?>" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" value="<?php echo $spare_part->spare_part_seri ?>" >
+                                                    <span class="dem" data="<?php echo $m ?>">(<?php echo $m ?>)</span>
+                                                  </div>
+                                                </td>
+                                                
+                                              </tr>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      <?php $m++; } ?>
+                                      </tbody>
+                                    </table>
+                                  </div>  
+                                    
+                                    <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb<?php echo $l ?>')" title="Thêm"><i class="fa fa-plus"></i></button>
+                                    <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb<?php echo $l ?>')" title="Xóa"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                        <div class="hr hr-8 dotted hr-double"></div>
+                    </td>
+                    
+                </tr>
+              <?php 
+                $l++; 
+              }}else{ ?>
+                <tr>
+                  <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                  <td>
+                    
+                      <table style="width:100%;">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <label>Mã sản phẩm</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required">
+                                  <ul class="name_list_id"></ul>
+                                </div>
+                              </td>
+                              <td>
+                                <label>Tên sản phẩm</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required">
+                                  <ul class="name_list_id_2"></ul>
+                                </div>
+                              </td>
+                              <td>
+                                <label>Nhà sản xuất</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" >
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <label>Ngày sản xuất</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Đơn vị tính</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Số lượng</label>
+                                <div class="input-group">
+                                  <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
+                                </div>
+                              </td>
+                              
+                            </tr>
+                            <tr>
+                              <td>
+                                <label>Đơn giá</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" >
+                                </div>
+                              </td>
+                              <td>
+                                <label>VAT</label>
+                                <div class="input-group">
+                                  <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%">
+                                  <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" >
+                                </div>
+                              </td>
+                              
+                              <td>
+                                <label>Có số seri</label>
+                                <div class="input-group">
+                                  <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1"><span class="lbl"></span>
+                                </div>
+                              </td>
+                              
+                            </tr>
+                            <tr class="tr_seri" style="display:none">
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <div style="max-height: 200px; overflow: auto;">
+                                  <table class="dataTb" id="dataTb0" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                                    <tbody>
+                                      <tr>
+                                        <td><input type="checkbox" name="chk3" class="chk3"></td>
+                                        <td>
+                                          <table style="width:100%">
+                                            <tr>
+                                              <td>
+                                                <label>Số seri</label>
+                                                <div class="input-group">
+                                                  <input code="" data="0" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" >
+                                                  <span class="dem" data="1">(1)</span>
+                                                </div>
+                                              </td>
+                                              
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>  
                                   
-                                  <td>
-                                    <label>Hạn bảo hành</label>
-                                    <div class="input-group">
-                                      <input type="text" class="repair_list_end_date input-mask-date" name="repair_list_end_date[]" tabindex="10">
-                                    </div>
-                                  </td>
-                                </tr>
-                          </tbody></table>
-                          <div class="hr hr-8 dotted hr-double"></div>
-                      </td>
-                      
-                  </tr>
-                  <?php } ?>
-                
+                                  <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb0')" title="Thêm"><i class="fa fa-plus"></i></button>
+                                  <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb0')" title="Xóa"><i class="fa fa-times"></i></button>
+                              </td>
+                          </tr>
+                      </tbody></table>
+                      <div class="hr hr-8 dotted hr-double"></div>
+                  </td>
+                  
+              </tr>
+              <?php } ?>
             </tbody>
             </table>
          
-            
         </div>
-   
+            <input type="button" value="Thêm" onclick="addRow_importstock('dataTable_importstock')">
+
+            <input type="button" value="Xóa" onclick="deleteRow_importstock('dataTable_importstock')">
+      </div>
+      <div id="coststock" class="tab-pane">
+        <table id="dataTable_coststock" style="width: 100%;">
+        <tbody>
+          <?php if (count($import_stock_costs)>0) { ?>
+          <?php foreach ($import_stock_costs as $import_stock_cost) { ?>
+          <tr>
+              <td style="padding-right: 10px;"><input type="checkbox" name="chk2" data="<?php echo $import_stock_cost->import_stock_cost_id ?>" title="<?php echo $import_stock_cost->import_stock ?>"></td>
+              <td>
+                  <table style="width:100%;">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.import_stock_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
+                          <div class="input-group">
+                            <select class="form-control import_stock_cost_list" name="import_stock_cost_list[]" tabindex="14">
+                              <?php foreach ($cost_lists as $cost_list) { ?>
+                                <option <?php echo $import_stock_cost->import_stock_cost_list==$cost_list->cost_list_id?'selected="selected"':null ?> value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </td>
+                        <td>
+                          <label>Nội dung</label>
+                          <div class="input-group">
+                            <input type="text" class="import_stock_cost_comment" name="import_stock_cost_comment[]" tabindex="15" value="<?php echo $import_stock_cost->import_stock_cost_comment ?>">
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <label>Số tiền <input name="import_stock_cost_money_vat[]" type="checkbox" class="import_stock_cost_money_vat ace" value="1" <?php echo $import_stock_cost->import_stock_cost_money_vat==1?'checked':null ?> ><span class="lbl"></span> VAT</label>
+                          <div class="input-group">
+                            <input type="text" class="import_stock_cost_money numbers" name="import_stock_cost_money[]" tabindex="16" data="<?php echo $import_stock_cost->import_stock_cost_id ?>" value="<?php echo $lib->formatMoney($import_stock_cost->import_stock_cost_money) ?>">
+                          </div>
+                          
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.import_stock_cost_customer','<?php echo $this->url("customer/getallcustomer") ?>','add_customer')"></i></a></label>
+                          <div class="input-group">
+                            <select class="form-control import_stock_cost_customer select2" name="import_stock_cost_customer[]" tabindex="17">
+                              <?php foreach ($customers as $customer_list) { ?>
+                                <option <?php echo $import_stock_cost->import_stock_cost_customer==$customer_list->customer_id?'selected="selected"':null ?> value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </td>
+                        <td>
+                          <label>Số hóa đơn chứng từ</label>
+                          <div class="input-group">
+                            <input type="text" class="import_stock_cost_invoice" name="import_stock_cost_invoice[]" tabindex="18" value="<?php echo $import_stock_cost->import_stock_cost_invoice ?>">
+                          </div>
+                        </td>
+                        <td>
+                          <label>Ngày</label>
+                          <div class="input-group">
+                            <input type="text" class="import_stock_cost_invoice_date input-mask-date" name="import_stock_cost_invoice_date[]" tabindex="19" value="<?php echo $lib->hien_thi_ngay_thang($import_stock_cost->import_stock_cost_invoice_date) ?>">
+                          </div>
+                        </td>
+                      </tr>
+                      
+                </tbody></table>
+                  <div class="hr hr-8 dotted hr-double"></div>
+              </td>
+              
+          </tr>
+        <?php }}else{ ?>
+          <tr>
+              <td style="padding-right: 10px;"><input type="checkbox" name="chk2"></td>
+              <td>
+                  <table style="width:100%;">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.import_stock_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
+                            <div class="input-group">
+                              <select class="form-control import_stock_cost_list" name="import_stock_cost_list[]" tabindex="14">
+                                <?php foreach ($cost_lists as $cost_list) { ?>
+                                  <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </td>
+                          <td>
+                            <label>Nội dung</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_comment" name="import_stock_cost_comment[]" tabindex="15">
+                            </div>
+                          </td>
+                          
+                          <td>
+                            <label>Số tiền <input name="import_stock_cost_money_vat[]" type="checkbox" class="import_stock_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_money numbers" name="import_stock_cost_money[]" tabindex="16">
+                            </div>
+                            
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.import_stock_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
+                            <div class="input-group">
+                              <select class="form-control import_stock_cost_customer select2" name="import_stock_cost_customer[]" tabindex="17">
+                                <?php foreach ($customers as $customer_list) { ?>
+                                  <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </td>
+                          <td>
+                            <label>Số hóa đơn chứng từ</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_invoice" name="import_stock_cost_invoice[]" tabindex="18">
+                            </div>
+                          </td>
+                          <td>
+                            <label>Ngày</label>
+                            <div class="input-group">
+                              <input type="text" class="import_stock_cost_invoice_date input-mask-date" name="import_stock_cost_invoice_date[]" tabindex="19">
+                            </div>
+                          </td>
+                        </tr>
+                        
+                  </tbody></table>
+                  <div class="hr hr-8 dotted hr-double"></div>
+              </td>
+              
+          </tr>
+        <?php } ?>
+        </tbody>
+        </table>
+    
+        <input type="button" value="Thêm" onclick="addRow_coststock('dataTable_coststock')">
+
+        <input type="button" value="Xóa" onclick="deleteRow_coststock('dataTable_coststock')">
+      </div>
+    </div>
+  
 </div>

@@ -35,6 +35,7 @@ $(document).ready(function(){
           var spare_stock_price = [];
           var spare_stock_vat_percent = [];
           var spare_stock_vat_price = [];
+          var id_spare_stock = [];
 
           $('.check_seri').each(function() { 
               
@@ -91,26 +92,29 @@ $(document).ready(function(){
             var $this = $(this);
             if(check_seri[index] == 1){
               $('.spare_part_seri2[data='+index+']').each(function() { 
-                spare_part_seri.push($(this).val());
-                spare_part_name.push($this.val());
-                spare_part_code_id.push($this.attr('data'));
-                spare_part_id.push($(this).attr('code'));
-                spare_part_code.push(spare_part_code2[index]);
-                spare_part_brand.push(spare_part_brand2[index]);
-                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
-                spare_part_unit.push(spare_part_unit2[index]);
-                spare_stock_number.push(1);
-                spare_stock_price.push(spare_stock_price2[index]);
-                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(parseInt(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                if ($(this).val().trim() != "") {
+                  spare_part_seri.push($(this).val());
+                  id_spare_stock.push($(this).attr('title') || "");
+                  spare_part_name.push($this.val());
+                  spare_part_code_id.push($this.attr('data'));
+                  spare_part_id.push($(this).attr('code'));
+                  spare_part_code.push(spare_part_code2[index]);
+                  spare_part_brand.push(spare_part_brand2[index]);
+                  spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
+                  spare_part_unit.push(spare_part_unit2[index]);
+                  spare_stock_number.push(1);
+                  spare_stock_price.push(spare_stock_price2[index]);
+                  spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
+                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                }
               });
             }
             else{
-              $('.spare_part_seri2[data='+index+']').each(function() { 
                 spare_part_seri.push("");
+                id_spare_stock.push($('.spare_part_seri2[data='+index+']').attr('title') || "");
                 spare_part_name.push($this.val());
                 spare_part_code_id.push($this.attr('data'));
-                spare_part_id.push($(this).attr('code'));
+                spare_part_id.push($('.spare_part_seri2[data='+index+']').attr('code'));
                 spare_part_code.push(spare_part_code2[index]);
                 spare_part_brand.push(spare_part_brand2[index]);
                 spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
@@ -118,15 +122,14 @@ $(document).ready(function(){
                 spare_part_unit.push(spare_part_unit2[index]);
                 spare_stock_price.push(spare_stock_price2[index]);
                 spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(spare_stock_vat_price2[index]);
-              });
+                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
             }
               
           });
 
 
           for (var i = 0; i < spare_part_name.length; i++) {
-              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i]});
+              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'id_spare_stock':id_spare_stock[i]});
               
               
           };
@@ -203,7 +206,7 @@ $(document).ready(function(){
 });
 </script>
      
-<div id="error_importstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
 <div class="tabbable">
   
   <form id="add_importstock" method="post" action="" autocomplete="off">
@@ -330,7 +333,7 @@ $(document).ready(function(){
                                 <td>
                                   <label>Số lượng</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
+                                    <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
                                   </div>
                                 </td>
                                 
@@ -477,6 +480,9 @@ $(document).ready(function(){
     </div>
   </form>
 </div>
+<div class="clearfix"></div>
+<div id="error_importstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
 <script type="text/javascript">
   $('#import_stock_customer').on("select2:select", function(e) { 
       var val = $(this).val();
@@ -563,6 +569,7 @@ function addRow_importstock(tableID){
     $('.tr_seri:last input').attr('code',"");
     $('.tr_seri:last input').attr('data',"");
     $('.tr_seri:last input').attr('alt',"");
+    $('.tr_seri:last input').attr('title',"");
     $('.tr_seri:last').find(":input:not([type=button])").val("");
 
     $('.spare_stock_number:last').val($('.spare_stock_number:first').val());
@@ -722,6 +729,7 @@ function addRow3(tableID){
 
     $('#'+tableID+' .spare_part_seri2:last').val("");
     $('#'+tableID+' .spare_part_seri2:last').attr('code',"");
+    $('#'+tableID+' .spare_part_seri2:last').attr('title',"");
     
     $('#'+tableID+' input[name="chk3"]:last').attr('data',"");
     $('#'+tableID+' input[name="chk3"]:last').attr('tabindex',0);
@@ -761,9 +769,9 @@ function deleteRow3(tableID){
                     }
                     else if(chkbox.getAttribute("data") > 0){
                         
-                            var import_stock = chkbox.getAttribute("data");
-                            var spare_part = chkbox.getAttribute("alt");
-                            $.post("<?php echo BASE_URL ?>/importstock/deletespare", {import_stock: import_stock, spare_part: spare_part},
+                            var spare_stock = chkbox.getAttribute("data");
+                            var spare_part = chkbox.getAttribute("title");
+                            $.post("<?php echo BASE_URL ?>/importstock/deletespare", {data: spare_stock, spare_part: spare_part},
                                function(data){
                                 //alert(data);
                                }); 
@@ -998,6 +1006,7 @@ function get_spare(){
 
             $('.spare_part_seri2:last').val("");
             $('.spare_part_seri2:last').attr('code',"");
+            $('.spare_part_seri2:last').attr('title',"");
             
             $('input[name="chk3"]:last').attr('data',"");
             $('input[name="chk3"]:last').attr('tabindex',0);
@@ -1057,6 +1066,7 @@ function get_spare(){
 
             $('.spare_part_seri2:last').val("");
             $('.spare_part_seri2:last').attr('code',"");
+            $('.spare_part_seri2:last').attr('title',"");
             
             $('input[name="chk3"]:last').attr('data',"");
             $('input[name="chk3"]:last').attr('tabindex',0);

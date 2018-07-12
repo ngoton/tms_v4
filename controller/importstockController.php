@@ -622,11 +622,23 @@ Class importstockController Extends baseController {
         $spare_part_codes = $spare_part_code_model->getAllStock(array('where'=>'spare_part_code_id IN (SELECT spare_stock_code FROM spare_stock WHERE import_stock='.$id.')'));
         $this->view->data['spare_part_codes'] = $spare_part_codes;
 
+        $join = array('table'=>'spare_stock','where'=>'spare_part=spare_part_id','join'=>'LEFT JOIN');
+        $spares = $spare_part_model->getAllStock(array('where'=>'import_stock='.$id),$join);
         $spare_parts = array();
-        foreach ($spare_part_codes as $spare_part_code) {
-            $spare_parts[$spare_part_code->spare_part_code_id] = $spare_part_model->getAllStock(array('where'=>'spare_part_id IN (SELECT spare_part FROM spare_stock WHERE spare_stock_code='.$spare_part_code->spare_part_code_id.' AND import_stock='.$id.')'));
+        $spare_part_data = array();
+        foreach ($spares as $spare) {
+            $spare_parts[$spare->spare_part_code][] = $spare;
+            $spare_part_data[$spare->spare_part_code]['brand'] = $spare->spare_part_brand;
+            $spare_part_data[$spare->spare_part_code]['date'] = $spare->spare_part_date_manufacture;
+            $spare_part_data[$spare->spare_part_code]['unit'] = $spare->spare_part_unit;
+            $spare_part_data[$spare->spare_part_code]['price'] = $spare->spare_stock_price;
+            $spare_part_data[$spare->spare_part_code]['percent'] = $spare->spare_stock_vat_percent;
+            $spare_part_data[$spare->spare_part_code]['vat'] = $spare->spare_stock_vat_price;
+            $spare_part_data[$spare->spare_part_code]['seri'] = $spare->spare_part_seri;
+            $spare_part_data[$spare->spare_part_code]['sl'] = isset($spare_part_data[$spare->spare_part_code]['sl'])?$spare_part_data[$spare->spare_part_code]['sl']+$spare->spare_stock_number:$spare->spare_stock_number;
         }
         $this->view->data['spare_parts'] = $spare_parts;
+        $this->view->data['spare_part_data'] = $spare_part_data;
 
         $import_stock_cost_model = $this->model->get('importstockcostModel');
 
@@ -690,10 +702,35 @@ Class importstockController Extends baseController {
 
         }
 
-        $spare_stock_model = $this->model->get('sparestockModel');
+        $spare_part_code_model = $this->model->get('sparepartcodeModel');
+        $spare_part_model = $this->model->get('sparepartModel');
 
-        $spare_stocks = $spare_stock_model->getAllStock(array('where'=>'import_stock='.$id));
-        $this->view->data['spare_stocks'] = $spare_stocks;
+        $spare_part_codes = $spare_part_code_model->getAllStock(array('where'=>'spare_part_code_id IN (SELECT spare_stock_code FROM spare_stock WHERE import_stock='.$id.')'));
+        $this->view->data['spare_part_codes'] = $spare_part_codes;
+
+        $join = array('table'=>'spare_stock','where'=>'spare_part=spare_part_id','join'=>'LEFT JOIN');
+        $spares = $spare_part_model->getAllStock(array('where'=>'import_stock='.$id),$join);
+        $spare_parts = array();
+        $spare_part_data = array();
+        foreach ($spares as $spare) {
+            $spare_parts[$spare->spare_part_code][] = $spare;
+            $spare_part_data[$spare->spare_part_code]['brand'] = $spare->spare_part_brand;
+            $spare_part_data[$spare->spare_part_code]['date'] = $spare->spare_part_date_manufacture;
+            $spare_part_data[$spare->spare_part_code]['unit'] = $spare->spare_part_unit;
+            $spare_part_data[$spare->spare_part_code]['price'] = $spare->spare_stock_price;
+            $spare_part_data[$spare->spare_part_code]['percent'] = $spare->spare_stock_vat_percent;
+            $spare_part_data[$spare->spare_part_code]['vat'] = $spare->spare_stock_vat_price;
+            $spare_part_data[$spare->spare_part_code]['seri'] = $spare->spare_part_seri;
+            $spare_part_data[$spare->spare_part_code]['sl'] = isset($spare_part_data[$spare->spare_part_code]['sl'])?$spare_part_data[$spare->spare_part_code]['sl']+$spare->spare_stock_number:$spare->spare_stock_number;
+        }
+        $this->view->data['spare_parts'] = $spare_parts;
+        $this->view->data['spare_part_data'] = $spare_part_data;
+
+        $import_stock_cost_model = $this->model->get('importstockcostModel');
+
+        $join = array('table'=>'cost_list,customer','where'=>'import_stock_cost_customer=customer_id AND import_stock_cost_list=cost_list_id');
+        $import_stock_costs = $import_stock_cost_model->getAllStock(array('where'=>'import_stock='.$id),$join);
+        $this->view->data['import_stock_costs'] = $import_stock_costs;
 
         $house = $this->model->get('houseModel');
 
@@ -701,7 +738,7 @@ Class importstockController Extends baseController {
 
         $customer = $this->model->get('customerModel');
 
-        $this->view->data['customers'] = $customer->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_name','order'=>'ASC'));
+        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
 
         $costlist_model = $this->model->get('costlistModel');
 
@@ -750,12 +787,12 @@ Class importstockController Extends baseController {
         echo json_encode($result);
     }
 
-    public function deleteimportstockdetail(){
+    public function deletespare(){
         if (isset($_POST['data'])) {
             $spare_stock_model = $this->model->get('sparestockModel');
             $user_log_model = $this->model->get('userlogModel');
 
-            $spare_stock_model->queryStock('DELETE FROM spare_stock WHERE spare_stock_id='.$_POST['data'].' AND import_stock='.$_POST['importstock']);
+            $spare_stock_model->queryStock('DELETE FROM spare_stock WHERE spare_stock_id='.$_POST['data'].' AND spare_part='.$_POST['spare_part']);
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|spare_stock|"."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -765,6 +802,27 @@ Class importstockController Extends baseController {
                 'user_log_date' => time(),
                 'user_log_table' => 'spare_stock',
                 'user_log_table_name' => 'Chi tiết phiếu nhập kho',
+                'user_log_action' => 'Xóa',
+                'user_log_data' => json_encode($_POST['data']),
+            );
+            $user_log_model->createUser($data_log);
+        }
+    }
+    public function deleteimportstockdetail(){
+        if (isset($_POST['data'])) {
+            $spare_stock_model = $this->model->get('sparestockModel');
+            $user_log_model = $this->model->get('userlogModel');
+
+            $spare_stock_model->queryStock('DELETE FROM spare_stock WHERE spare_stock_code='.$_POST['data'].' AND import_stock='.$_POST['importstock']);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|spare_stock|"."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
+
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'spare_stock',
+                'user_log_table_name' => 'Chi tiết phiếu nhập kho (code)',
                 'user_log_action' => 'Xóa',
                 'user_log_data' => json_encode($_POST['data']),
             );

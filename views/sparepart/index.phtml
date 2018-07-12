@@ -152,7 +152,7 @@ $i = $sonews*$page-($sonews-1);
             foreach ($value as $key1) { 
                 foreach($key1 as $sparepart){
                 ?>
-                <tr id="<?php echo $sparepart->spare_part_id ?>" class="edit_tr tr_<?php echo ($l-1) ?>" >
+                <tr style="display: none;" id="<?php echo $sparepart->spare_part_id ?>" class="edit_tr tr_<?php echo ($l-1) ?>" >
                     <td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $sparepart->spare_part_id ?>"><span class="lbl"></span></td>
                     <td class="text-center"><?php echo $h++; ?></td>
                     <td></td>

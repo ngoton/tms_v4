@@ -535,3 +535,67 @@
 
 07/07/2018 09:15:00|admin|edit|1|repair|1530896400-2-PSC001-2--250000-1-1
 
+12/07/2018 13:20:37|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 13:48:52|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 13:50:32|admin|delete|3|spare_stock|
+
+12/07/2018 13:51:00|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 13:57:16|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:32:42|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:33:34|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:34:55|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:36:09|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:41:27|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:51:30|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+
+12/07/2018 14:57:35|admin|edit|2|import_stock|1531242000-PNK02-1-a-745-1531242000-a-a-1-1
+
+12/07/2018 14:58:10|admin|delete|2|spare_stock|
+
+12/07/2018 14:58:24|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 15:01:49|admin|delete|2|spare_stock|
+
+12/07/2018 15:01:52|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 15:03:04|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 15:03:37|admin|delete|7|spare_stock|
+
+12/07/2018 15:03:39|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 15:06:30|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 15:15:06|admin|delete|2|spare_stock|
+
+12/07/2018 15:21:12|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:03:38|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:35:17|admin|delete|2|spare_stock|
+
+12/07/2018 16:35:20|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:35:32|admin|delete|10|spare_stock|
+
+12/07/2018 16:35:52|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:41:23|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:41:54|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:43:13|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:46:20|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+
+12/07/2018 16:47:14|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+

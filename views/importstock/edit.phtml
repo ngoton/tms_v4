@@ -35,6 +35,7 @@ $(document).ready(function(){
           var spare_stock_price = [];
           var spare_stock_vat_percent = [];
           var spare_stock_vat_price = [];
+          var id_spare_stock = [];
 
           $('.check_seri').each(function() { 
               
@@ -91,26 +92,29 @@ $(document).ready(function(){
             var $this = $(this);
             if(check_seri[index] == 1){
               $('.spare_part_seri2[data='+index+']').each(function() { 
-                spare_part_seri.push($(this).val());
-                spare_part_name.push($this.val());
-                spare_part_code_id.push($this.attr('data'));
-                spare_part_id.push($(this).attr('code'));
-                spare_part_code.push(spare_part_code2[index]);
-                spare_part_brand.push(spare_part_brand2[index]);
-                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
-                spare_part_unit.push(spare_part_unit2[index]);
-                spare_stock_number.push(1);
-                spare_stock_price.push(spare_stock_price2[index]);
-                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(parseInt(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                if ($(this).val().trim() != "") {
+                  spare_part_seri.push($(this).val());
+                  id_spare_stock.push($(this).attr('title') || "");
+                  spare_part_name.push($this.val());
+                  spare_part_code_id.push($this.attr('data'));
+                  spare_part_id.push($(this).attr('code'));
+                  spare_part_code.push(spare_part_code2[index]);
+                  spare_part_brand.push(spare_part_brand2[index]);
+                  spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
+                  spare_part_unit.push(spare_part_unit2[index]);
+                  spare_stock_number.push(1);
+                  spare_stock_price.push(spare_stock_price2[index]);
+                  spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
+                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                }
               });
             }
             else{
-              $('.spare_part_seri2[data='+index+']').each(function() { 
                 spare_part_seri.push("");
+                id_spare_stock.push($('.spare_part_seri2[data='+index+']').attr('title') || "");
                 spare_part_name.push($this.val());
                 spare_part_code_id.push($this.attr('data'));
-                spare_part_id.push($(this).attr('code'));
+                spare_part_id.push($('.spare_part_seri2[data='+index+']').attr('code'));
                 spare_part_code.push(spare_part_code2[index]);
                 spare_part_brand.push(spare_part_brand2[index]);
                 spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
@@ -118,15 +122,14 @@ $(document).ready(function(){
                 spare_part_unit.push(spare_part_unit2[index]);
                 spare_stock_price.push(spare_stock_price2[index]);
                 spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(spare_stock_vat_price2[index]);
-              });
+                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
             }
               
           });
 
 
           for (var i = 0; i < spare_part_name.length; i++) {
-              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i]});
+              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'id_spare_stock':id_spare_stock[i]});
               
               
           };
@@ -204,7 +207,7 @@ $(document).ready(function(){
 });
 </script>
      
-<div id="error_importstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
 <div class="tabbable">
   
   <form id="edit_importstock" method="post" action="" autocomplete="off">
@@ -287,8 +290,13 @@ $(document).ready(function(){
         <div style="background: #73737326; max-height: 500px; overflow: auto;">
             <table id="dataTable_importstock" style="width: 100%;">
                 <tbody>
+                <?php $l=0; ?>
+                <?php if (count($spare_part_codes)>0) { ?>
+                <?php foreach ($spare_part_codes as $spare_part_code) { 
+                  $sl = $spare_part_data[$spare_part_code->spare_part_code_id]['sl'];
+                ?>
                 <tr>
-                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $spare_part_code->spare_part_code_id ?>" title="<?php echo $import_stock_data->import_stock_id ?>"></td>
                     <td>
                       
                         <table style="width:100%;">
@@ -297,21 +305,21 @@ $(document).ready(function(){
                                 <td>
                                   <label>Mã sản phẩm</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required">
+                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required" value="<?php echo $spare_part_code->code ?>">
                                     <ul class="name_list_id"></ul>
                                   </div>
                                 </td>
                                 <td>
                                   <label>Tên sản phẩm</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required">
+                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required" value="<?php echo $spare_part_code->name ?>" data="<?php echo $spare_part_code->spare_part_code_id ?>">
                                     <ul class="name_list_id_2"></ul>
                                   </div>
                                 </td>
                                 <td>
                                   <label>Nhà sản xuất</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" >
+                                    <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['brand'] ?>" >
                                   </div>
                                 </td>
                               </tr>
@@ -319,19 +327,19 @@ $(document).ready(function(){
                                 <td>
                                   <label>Ngày sản xuất</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13">
+                                    <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13" value="<?php echo $lib->hien_thi_ngay_thang($spare_part_data[$spare_part_code->spare_part_code_id]['date']) ?>">
                                   </div>
                                 </td>
                                 <td>
                                   <label>Đơn vị tính</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14">
+                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['unit'] ?>">
                                   </div>
                                 </td>
                                 <td>
                                   <label>Số lượng</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
+                                    <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="<?php echo $sl ?>">
                                   </div>
                                 </td>
                                 
@@ -340,42 +348,44 @@ $(document).ready(function(){
                                 <td>
                                   <label>Đơn giá</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" >
+                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['price']) ?>" >
                                   </div>
                                 </td>
                                 <td>
                                   <label>VAT</label>
                                   <div class="input-group">
-                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%">
-                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" >
+                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['percent']) ?>">
+                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['vat']*$sl) ?>">
                                   </div>
                                 </td>
                                 
                                 <td>
                                   <label>Có số seri</label>
                                   <div class="input-group">
-                                    <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1"><span class="lbl"></span>
+                                    <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1" <?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['seri'] != ""?'checked':null ?>><span class="lbl"></span>
                                   </div>
                                 </td>
                                 
                               </tr>
-                              <tr class="tr_seri" style="display:none">
+                              <tr class="tr_seri" <?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['seri'] == ""?'style="display:none"':null ?> >
                                 <td></td>
                                 <td></td>
                                 <td>
                                   <div style="max-height: 200px; overflow: auto;">
-                                    <table class="dataTb" id="dataTb0" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                                    <table class="dataTb" id="dataTb<?php echo $l ?>" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
                                       <tbody>
+                                        <?php $m=1; 
+                                        foreach ($spare_parts[$spare_part_code->spare_part_code_id] as $spare_part) { ?>
                                         <tr>
-                                          <td><input type="checkbox" name="chk3" class="chk3"></td>
+                                          <td><input type="checkbox" name="chk3" class="chk3" data="<?php echo $spare_part->spare_stock_id ?>" title="<?php echo $spare_part->spare_part_id ?>"></td>
                                           <td>
                                             <table style="width:100%">
                                               <tr>
                                                 <td>
                                                   <label>Số seri</label>
                                                   <div class="input-group">
-                                                    <input code="" data="0" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" >
-                                                    <span class="dem" data="1">(1)</span>
+                                                    <input code="<?php echo $spare_part->spare_part_id ?>" data="<?php echo $l ?>" title="<?php echo $spare_part->spare_stock_id ?>" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" value="<?php echo $spare_part->spare_part_seri ?>" >
+                                                    <span class="dem" data="<?php echo $m ?>">(<?php echo $m ?>)</span>
                                                   </div>
                                                 </td>
                                                 
@@ -383,12 +393,13 @@ $(document).ready(function(){
                                             </table>
                                           </td>
                                         </tr>
+                                      <?php $m++; } ?>
                                       </tbody>
                                     </table>
                                   </div>  
                                     
-                                    <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb0')" title="Thêm"><i class="fa fa-plus"></i></button>
-                                    <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb0')" title="Xóa"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb<?php echo $l ?>')" title="Thêm"><i class="fa fa-plus"></i></button>
+                                    <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb<?php echo $l ?>')" title="Xóa"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
                         </tbody></table>
@@ -396,6 +407,119 @@ $(document).ready(function(){
                     </td>
                     
                 </tr>
+              <?php 
+                $l++; 
+              }}else{ ?>
+                <tr>
+                  <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                  <td>
+                    
+                      <table style="width:100%;">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <label>Mã sản phẩm</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required">
+                                  <ul class="name_list_id"></ul>
+                                </div>
+                              </td>
+                              <td>
+                                <label>Tên sản phẩm</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required">
+                                  <ul class="name_list_id_2"></ul>
+                                </div>
+                              </td>
+                              <td>
+                                <label>Nhà sản xuất</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" >
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <label>Ngày sản xuất</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Đơn vị tính</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14">
+                                </div>
+                              </td>
+                              <td>
+                                <label>Số lượng</label>
+                                <div class="input-group">
+                                  <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
+                                </div>
+                              </td>
+                              
+                            </tr>
+                            <tr>
+                              <td>
+                                <label>Đơn giá</label>
+                                <div class="input-group">
+                                  <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" >
+                                </div>
+                              </td>
+                              <td>
+                                <label>VAT</label>
+                                <div class="input-group">
+                                  <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%">
+                                  <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" >
+                                </div>
+                              </td>
+                              
+                              <td>
+                                <label>Có số seri</label>
+                                <div class="input-group">
+                                  <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1"><span class="lbl"></span>
+                                </div>
+                              </td>
+                              
+                            </tr>
+                            <tr class="tr_seri" style="display:none">
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <div style="max-height: 200px; overflow: auto;">
+                                  <table class="dataTb" id="dataTb0" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                                    <tbody>
+                                      <tr>
+                                        <td><input type="checkbox" name="chk3" class="chk3"></td>
+                                        <td>
+                                          <table style="width:100%">
+                                            <tr>
+                                              <td>
+                                                <label>Số seri</label>
+                                                <div class="input-group">
+                                                  <input code="" data="0" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" >
+                                                  <span class="dem" data="1">(1)</span>
+                                                </div>
+                                              </td>
+                                              
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>  
+                                  
+                                  <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb0')" title="Thêm"><i class="fa fa-plus"></i></button>
+                                  <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb0')" title="Xóa"><i class="fa fa-times"></i></button>
+                              </td>
+                          </tr>
+                      </tbody></table>
+                      <div class="hr hr-8 dotted hr-double"></div>
+                  </td>
+                  
+              </tr>
+              <?php } ?>
             </tbody>
             </table>
          
@@ -445,7 +569,7 @@ $(document).ready(function(){
                           <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.import_stock_cost_customer','<?php echo $this->url("customer/getallcustomer") ?>','add_customer')"></i></a></label>
                           <div class="input-group">
                             <select class="form-control import_stock_cost_customer select2" name="import_stock_cost_customer[]" tabindex="17">
-                              <?php foreach ($customer_lists as $customer_list) { ?>
+                              <?php foreach ($customers as $customer_list) { ?>
                                 <option <?php echo $import_stock_cost->import_stock_cost_customer==$customer_list->customer_id?'selected="selected"':null ?> value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
                               <?php } ?>
                             </select>
@@ -543,6 +667,9 @@ $(document).ready(function(){
     </div>
   </form>
 </div>
+<div class="clearfix"></div>
+<div id="error_importstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
 <script type="text/javascript">
   $('#import_stock_customer').on("select2:select", function(e) { 
       var val = $(this).val();
@@ -629,6 +756,7 @@ function addRow_importstock(tableID){
     $('.tr_seri:last input').attr('code',"");
     $('.tr_seri:last input').attr('data',"");
     $('.tr_seri:last input').attr('alt',"");
+    $('.tr_seri:last input').attr('title',"");
     $('.tr_seri:last').find(":input:not([type=button])").val("");
 
     $('.spare_stock_number:last').val($('.spare_stock_number:first').val());
@@ -788,6 +916,7 @@ function addRow3(tableID){
 
     $('#'+tableID+' .spare_part_seri2:last').val("");
     $('#'+tableID+' .spare_part_seri2:last').attr('code',"");
+    $('#'+tableID+' .spare_part_seri2:last').attr('title',"");
     
     $('#'+tableID+' input[name="chk3"]:last').attr('data',"");
     $('#'+tableID+' input[name="chk3"]:last').attr('tabindex',0);
@@ -827,9 +956,9 @@ function deleteRow3(tableID){
                     }
                     else if(chkbox.getAttribute("data") > 0){
                         
-                            var import_stock = chkbox.getAttribute("data");
-                            var spare_part = chkbox.getAttribute("alt");
-                            $.post("<?php echo BASE_URL ?>/importstock/deletespare", {import_stock: import_stock, spare_part: spare_part},
+                            var spare_stock = chkbox.getAttribute("data");
+                            var spare_part = chkbox.getAttribute("title");
+                            $.post("<?php echo BASE_URL ?>/importstock/deletespare", {data: spare_stock, spare_part: spare_part},
                                function(data){
                                 //alert(data);
                                }); 
@@ -1064,6 +1193,7 @@ function get_spare(){
 
             $('.spare_part_seri2:last').val("");
             $('.spare_part_seri2:last').attr('code',"");
+            $('.spare_part_seri2:last').attr('title',"");
             
             $('input[name="chk3"]:last').attr('data',"");
             $('input[name="chk3"]:last').attr('tabindex',0);
@@ -1123,6 +1253,7 @@ function get_spare(){
 
             $('.spare_part_seri2:last').val("");
             $('.spare_part_seri2:last').attr('code',"");
+            $('.spare_part_seri2:last').attr('title',"");
             
             $('input[name="chk3"]:last').attr('data',"");
             $('input[name="chk3"]:last').attr('tabindex',0);
