@@ -1,6 +1,6 @@
 <div class="login_body">
   <form id="add" method="post" action="<?php echo $this->url('importstock') ?>" enctype="multipart/form-data">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <label for="import_stock_house">Kho</label>
       <div class="input-group">
         <select class="form-control multiselect" id="import_stock_house" name="import_stock_house[]" multiple="">
@@ -10,12 +10,22 @@
         </select>
       </div>
     </div>
-    <div class="col-md-6">
-      <label for="import_stock_customer">Nhà cung cấp</label>
+    <div class="col-md-4">
+      <label for="import_stock_customer">NCC</label>
       <div class="input-group">
         <select class="form-control multiselect" id="import_stock_customer" name="import_stock_customer[]" multiple="">
           <?php foreach ($customers as $customer) { ?>
             <option value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="import_stock_spare">Vật tư</label>
+      <div class="input-group">
+        <select class="form-control multiselect" id="import_stock_spare" name="import_stock_spare[]" multiple="">
+          <?php foreach ($spares as $spare) { ?>
+            <option value="<?php echo $spare->spare_part_code_id ?>"><?php echo $spare->name ?></option>
           <?php } ?>
         </select>
       </div>

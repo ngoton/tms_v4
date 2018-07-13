@@ -100,6 +100,9 @@ Class importstockController Extends baseController {
             if (isset($_POST['import_stock_customer'])) {
                 $data['where'] .= ' AND import_stock_customer IN ('.implode(',',$_POST['import_stock_customer']).')';
             }
+            if (isset($_POST['import_stock_spare'])) {
+                $data['where'] .= ' AND import_stock_id IN (SELECT import_stock FROM spare_stock WHERE spare_stock_code IN ('.implode(',',$_POST['import_stock_spare']).'))';
+            }
             $this->view->data['filter'] = 1;
         }
 
@@ -160,6 +163,9 @@ Class importstockController Extends baseController {
             }
             if (isset($_POST['import_stock_customer'])) {
                 $data['where'] .= ' AND import_stock_customer IN ('.implode(',',$_POST['import_stock_customer']).')';
+            }
+            if (isset($_POST['import_stock_spare'])) {
+                $data['where'] .= ' AND import_stock_id IN (SELECT import_stock FROM spare_stock WHERE spare_stock_code IN ('.implode(',',$_POST['import_stock_spare']).'))';
             }
         }
 
@@ -763,6 +769,10 @@ Class importstockController Extends baseController {
         $customer = $this->model->get('customerModel');
 
         $this->view->data['customers'] = $customer->getAllCustomer(array('where'=>'customer_type=2','order_by'=>'customer_name','order'=>'ASC'));
+
+        $spare_part_code_model = $this->model->get('sparepartcodeModel');
+
+        $this->view->data['spares'] = $spare_part_code_model->getAllStock(array('order_by'=>'name','order'=>'ASC'));
 
         $this->view->data['page'] = $_GET['page'];
         $this->view->data['order_by'] = $_GET['order_by'];

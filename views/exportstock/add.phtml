@@ -1,0 +1,760 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$( ".select2" ).select2({dropdownAutoWidth : true});
+  
+			// Validate form
+			$("#add_exportstock").validate({
+				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        ignore: "",
+				rules: {
+				},
+        errorPlacement: function (error, element) {
+          if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+            var controls = element.closest('div[class*="col-"]');
+            if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+            else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+          }
+          else if(element.is('.select2')) {
+            error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+          }
+          else if(element.is('.chosen-select')) {
+            error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+          }
+          else error.insertAfter(element.parent());
+        },
+        submitHandler: function(form) {
+          var spare_part = [];
+
+          var check_seri = [];
+
+          var spare_part_name = [];
+          var spare_part_id = [];
+          var spare_part_seri = [];
+
+          var spare_part_code_id = [];
+
+          var spare_part_code2 = [];
+          var spare_part_brand2 = [];
+          var spare_part_date_manufacture2 = [];
+          var spare_part_unit2 = [];
+          var spare_stock_number2 = [];
+          var spare_stock_price2 = [];
+          var spare_stock_vat_percent2 = [];
+          var spare_stock_vat_price2 = [];
+
+          var spare_part_code = [];
+          var spare_part_brand = [];
+          var spare_part_date_manufacture = [];
+          var spare_part_unit = [];
+          var spare_stock_number = [];
+          var spare_stock_price = [];
+          var spare_stock_vat_percent = [];
+          var spare_stock_vat_price = [];
+          var id_spare_stock = [];
+
+          $('.check_seri').each(function() { 
+              
+              if ($(this).is(':checked')) {
+                check_seri.push(1);
+              }
+              else{
+                check_seri.push(0);
+              }
+          });
+          
+          var err = 0;
+
+          $('.spare_part_code').each(function() { 
+            if ($(this).val().trim() == "") {
+              alert_form('Vui lòng nhập vào Mã sản phẩm');
+              err = 1;
+              return false;
+            }
+              spare_part_code2.push($(this).val());
+          });
+
+          if (err == 1) {
+            return false;
+          }
+
+          $('.spare_part_brand').each(function() { 
+              spare_part_brand2.push($(this).val());
+          });
+
+          $('.spare_part_date_manufacture').each(function() { 
+              spare_part_date_manufacture2.push($(this).val());
+          });
+
+          $('.spare_part_unit').each(function() { 
+              spare_part_unit2.push($(this).val());
+          });
+
+          $('.spare_stock_number').each(function() { 
+              spare_stock_number2.push($(this).val());
+          });
+
+          $('.spare_stock_price').each(function() { 
+              spare_stock_price2.push($(this).val());
+          });
+          $('.spare_stock_vat_percent').each(function() { 
+              spare_stock_vat_percent2.push($(this).val());
+          });
+          $('.spare_stock_vat_price').each(function() { 
+              spare_stock_vat_price2.push($(this).val());
+          });
+
+          $('.spare_part_name').each(function(index) { 
+            var $this = $(this);
+            if(check_seri[index] == 1){
+              $('.spare_part_seri2[data='+index+']').each(function() { 
+                if ($(this).val().trim() != "") {
+                  spare_part_seri.push($(this).val());
+                  id_spare_stock.push($(this).attr('title') || "");
+                  spare_part_name.push($this.val());
+                  spare_part_code_id.push($this.attr('data'));
+                  spare_part_id.push($(this).attr('code'));
+                  spare_part_code.push(spare_part_code2[index]);
+                  spare_part_brand.push(spare_part_brand2[index]);
+                  spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
+                  spare_part_unit.push(spare_part_unit2[index]);
+                  spare_stock_number.push(1);
+                  spare_stock_price.push(spare_stock_price2[index]);
+                  spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
+                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                }
+              });
+            }
+            else{
+                spare_part_seri.push("");
+                id_spare_stock.push($('.spare_part_seri2[data='+index+']').attr('title') || "");
+                spare_part_name.push($this.val());
+                spare_part_code_id.push($this.attr('data'));
+                spare_part_id.push($('.spare_part_seri2[data='+index+']').attr('code'));
+                spare_part_code.push(spare_part_code2[index]);
+                spare_part_brand.push(spare_part_brand2[index]);
+                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
+                spare_stock_number.push(spare_stock_number2[index]);
+                spare_part_unit.push(spare_part_unit2[index]);
+                spare_stock_price.push(spare_stock_price2[index]);
+                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
+                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+            }
+              
+          });
+
+
+          for (var i = 0; i < spare_part_name.length; i++) {
+              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'id_spare_stock':id_spare_stock[i]});
+              
+              
+          };
+
+
+          var export_stock_cost = [];  
+
+          var export_stock_cost_list = [];  
+          var export_stock_cost_comment = [];  
+          var export_stock_cost_money = [];  
+          var export_stock_cost_money_vat = [];  
+          var export_stock_cost_customer = [];  
+          var export_stock_cost_invoice = [];  
+          var export_stock_cost_invoice_date = [];  
+          var id_export_stock_cost = [];  
+
+          $('.export_stock_cost_money').each(function() { 
+              export_stock_cost_money.push($(this).val());
+              id_export_stock_cost.push($(this).attr('data') || "");
+          });
+          $('.export_stock_cost_list').each(function() { 
+              export_stock_cost_list.push($(this).val());
+          });
+          $('.export_stock_cost_comment').each(function() { 
+              export_stock_cost_comment.push($(this).val());
+          });
+          $('.export_stock_cost_money_vat').each(function() { 
+            if ($(this).is(':checked'))
+              export_stock_cost_money_vat.push(1);
+            else
+              export_stock_cost_money_vat.push(0);
+          });
+          $('.export_stock_cost_customer').each(function() { 
+              export_stock_cost_customer.push($(this).val());
+          });
+          $('.export_stock_cost_invoice').each(function() { 
+              export_stock_cost_invoice.push($(this).val());
+          });
+          $('.export_stock_cost_invoice_date').each(function() { 
+              export_stock_cost_invoice_date.push($(this).val());
+          });
+
+          for (var i = 0; i < export_stock_cost_money.length; i++) {
+              export_stock_cost.push({'export_stock_cost_money':export_stock_cost_money[i], 'export_stock_cost_list':export_stock_cost_list[i], 'export_stock_cost_comment':export_stock_cost_comment[i], 'export_stock_cost_money_vat':export_stock_cost_money_vat[i], 'export_stock_cost_customer':export_stock_cost_customer[i], 'export_stock_cost_invoice':export_stock_cost_invoice[i], 'export_stock_cost_invoice_date':export_stock_cost_invoice_date[i], 'id_export_stock_cost':id_export_stock_cost[i]});
+          };
+
+          var formData = new FormData($("#add_exportstock")[0]);
+          formData.append('spare_part', JSON.stringify(spare_part));
+          formData.append('export_stock_cost', JSON.stringify(export_stock_cost));
+          
+          $.ajax({
+              type: "POST", // phương thức gởi đi
+              url: "<?php echo BASE_URL ?>/exportstock/addexportstock", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              data: formData, // giá trị post
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(answer){ // if everything goes well
+                  //alert(answer);
+                  $('#error_exportstock').hide();
+                  $('#error_exportstock').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_exportstock').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_exportstock').fadeOut(10000);
+
+              }
+          });
+          return false;
+           
+       }
+					 
+				 
+			});
+	
+});
+</script>
+     
+
+<div class="tabbable">
+  
+  <form id="add_exportstock" method="post" action="" autocomplete="off">
+    <div class="col-md-3 col-xs-6">
+          <label for="export_stock_date">Ngày</label>
+          <div class="input-group">
+            <input class="input-mask-date" type="text" id="export_stock_date" name="export_stock_date" tabindex="1" required="required">
+          </div>
+          
+          
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <label for="export_stock_code">Số phiếu</label>
+          <div class="input-group">
+            <input type="text" id="export_stock_code" name="export_stock_code" tabindex="2" value="<?php echo $lastID ?>" required="required">
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <label for="export_stock_comment">Nội dung </label>
+          <div class="input-group">
+            <input type="text" id="export_stock_comment" name="export_stock_comment" tabindex="3">
+          </div>
+          
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <label for="export_stock_house">Kho xuất <a title="Thêm kho mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("house/add") ?>','Thêm kho mới','export_stock_house','<?php echo $this->url("house/gethouse") ?>','add_house')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="export_stock_house" name="export_stock_house" tabindex="4">
+              <?php foreach ($houses as $house) { ?>
+                <option value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
+              <?php } ?>
+            </select>
+          </div>
+          
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="hr hr-8 dotted hr-double"></div>
+        <div style="background: #73737326; max-height: 500px; overflow: auto;">
+            <table id="dataTable_exportstock" style="width: 100%;">
+                <tbody>
+                <tr>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
+                    <td>
+                      
+                        <table style="width:100%;">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <label>Mã sản phẩm</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="5" required="required">
+                                    <ul class="name_list_id"></ul>
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Tên sản phẩm</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="6" required="required">
+                                    <ul class="name_list_id_2"></ul>
+                                  </div>
+                                </td>
+                                <td colspan="2">
+                                  <label>Chọn 1 sản phẩm</label>
+                                  <div class="input-group">
+                                    <select class="choose_seri multiselect" name="choose_seri[]" tabindex="7" required="required" multiple="">
+                                      
+                                    </select>
+                                  </div>
+                                </td>
+                                
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>Số lượng</label>
+                                  <div class="input-group">
+                                    <input min="0" max="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="8" value="0">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Đơn vị tính</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="9">
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>Đơn giá</label>
+                                  <div class="input-group">
+                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="10" >
+                                  </div>
+                                </td>
+                                <td>
+                                  <label>VAT</label>
+                                  <div class="input-group">
+                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="11" placeholder="%">
+                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="12" >
+                                  </div>
+                                </td>
+                                
+                                
+                              </tr>
+                              
+                        </tbody></table>
+                        <div class="hr hr-8 dotted hr-double"></div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+            </table>
+         
+        </div>
+            <input type="button" value="Thêm" onclick="addRow_exportstock('dataTable_exportstock')">
+
+            <input type="button" value="Xóa" onclick="deleteRow_exportstock('dataTable_exportstock')">
+  </form>
+</div>
+<div class="clearfix"></div>
+<div id="error_exportstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+<script type="text/javascript">
+ 
+
+function get_price(){
+
+  var total = 0;
+  $('.spare_stock_price').each(function(){
+    total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
+  });
+  $('#export_stock_price').val(total);
+  $('#export_stock_price').val(function(index, value) {
+    return value
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+
+  $('#export_stock_price').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 6,
+    autoGroup: true,
+    rightAlign: true,
+    oncleared: function () { self.Value(''); }
+  });
+}
+$('.spare_stock_price').keyup(function(){
+  get_price();
+});
+  
+function addRow_exportstock(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.spare_part_name:last').attr('disabled',false);
+    $('.spare_part_code:last').attr('disabled',false);
+    $('.spare_part_name:last').attr('data',"");
+    $('.spare_part_name:last').val("");
+    $('.spare_part_code:last').val("");
+    $('.spare_part_unit:last').val("");
+    $('.spare_stock_price:last').val("");
+    $('.spare_part_brand:last').val("");
+    $('.spare_part_date_manufacture:last').val("");
+    
+    $('.spare_stock_vat_percent:last').val("");
+    $('.spare_stock_vat_price:last').val("");
+
+    $('.spare_stock_number:last').val("");
+    $('.spare_stock_number:last').attr("max",0);
+    
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('tabindex',0);
+    $('input[name="chk"]:last').attr('title',"");
+    $('input[name="chk"]:last').attr('class',"");
+    $('input[name="chk"]:last').attr('alt',0);
+    
+    get_spare();
+
+    $('.spare_stock_price').keyup(function(){
+      get_price();
+    });
+
+    $(".choose_seri:last").html('');
+    $(".btn-group:last").remove();
+}
+function deleteRow_exportstock(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
+          if(result) {
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert_form("Không thể xóa hết.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var exportstock = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/exportstock/deleteexportstockdetail", {data: data, exportstock: exportstock},
+                               function(data){
+                                
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+
+                    get_price();
+                }
+            }
+          }
+        });
+    }
+    catch(e){
+        alert(e);
+    }
+}
+
+
+</script>
+<script type="text/javascript">
+get_spare();
+
+$('html').click(function(e) {
+    
+    $('.name_list_id').slideUp(200);
+    $('.name_list_id_2').slideUp(200);
+    $('.name_list_id_3').slideUp(200);
+});
+
+function get_spare(){
+  $('.spare_part_code').keyup(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var keyword = $(this).val();
+    $.ajax({
+        url: '<?php echo BASE_URL ?>/sparepart/getSpare',
+        type: 'GET',
+        data: {keyword:keyword, offset:rowIndex},
+        success:function(data){
+            $('.name_list_id:eq('+rowIndex+')').slideDown(200);
+            $('.name_list_id:eq('+rowIndex+')').html(data);
+        }
+    });
+    if ($('.spare_part_code:eq('+rowIndex+')').val() == "" || $('.spare_part_code:eq('+rowIndex+')').attr('data') == "") {
+        
+        $('.spare_part_code:eq('+rowIndex+')').attr('data',"");
+    }
+
+    
+  });
+
+  $('.spare_part_code').on('keydown', function() {
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var key = event.keyCode || event.charCode;
+
+    if( key == 8 || key == 46 ){
+        $('.spare_part_code:eq('+rowIndex+')').attr('data',"");
+    }
+        
+  }); 
+
+  $('.spare_part_name').keyup(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      var keyword = $(this).val();
+      $.ajax({
+          url: '<?php echo BASE_URL ?>/sparepart/getSpare',
+          type: 'GET',
+          data: {keyword:keyword, offset:rowIndex},
+          success:function(data){
+              $('.name_list_id_2:eq('+rowIndex+')').slideDown(200);
+              $('.name_list_id_2:eq('+rowIndex+')').html(data);
+          }
+      });
+      if ($('.spare_part_name:eq('+rowIndex+')').val() == "" || $('.spare_part_name:eq('+rowIndex+')').attr('data') == "") {
+          
+          $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+      }
+
+      
+  });
+  $('.spare_part_name').on('keydown', function() {
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var key = event.keyCode || event.charCode;
+
+    if( key == 8 || key == 46 ){
+        $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+    }
+        
+  }); 
+
+  $('.spare_part_code').blur(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var check_type = 0;
+
+    var val = $(this).val().trim();
+    
+    $('.spare_part_code').each(function() { 
+        if ( val != "" && val == $(this).val().trim()) {
+            check_type ++;
+        }
+    });
+
+
+    if (check_type >= 2) {
+        alert_form('Sản phẩm này đã có!');
+        $(this).val("");
+        $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+        $('.spare_part_name:eq('+rowIndex+')').val("");
+        $('.spare_part_brand:eq('+rowIndex+')').val("");
+        $('.spare_part_seri:eq('+rowIndex+')').val("");
+        $('.spare_part_unit:eq('+rowIndex+')').val("");
+        $('.spare_part_date_manufacture:eq('+rowIndex+')').val("");
+        
+    };
+    
+  });
+  $('.spare_part_name').blur(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      var check_type = 0;
+
+      var val = $(this).val().trim();
+      
+      $('.spare_part_name').each(function() { 
+          if (val != "" && val == $(this).val().trim()) {
+              check_type ++;
+          }
+      });
+
+      
+
+      if (check_type >= 2) {
+          alert_form('Sản phẩm này đã có!');
+          $(this).val("");
+          $('.spare_part_name:eq('+rowIndex+')').attr('data',"");
+        $('.spare_part_name:eq('+rowIndex+')').val("");
+        $('.spare_part_brand:eq('+rowIndex+')').val("");
+        $('.spare_part_seri:eq('+rowIndex+')').val("");
+        $('.spare_part_unit:eq('+rowIndex+')').val("");
+        $('.spare_part_date_manufacture:eq('+rowIndex+')').val("");
+          
+      };
+      
+  });
+  
+
+  $('.spare_stock_price').keyup(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    get_vat(rowIndex);
+  });
+  $('.spare_stock_vat_percent').keyup(function(){
+      var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+      var rowIndex = row[0].rowIndex;
+
+      get_vat(rowIndex);
+  });
+
+
+  $('.spare_stock_number').keyup(function(){
+    var row = $(this).parent().parent().parent().parent().parent().parent().parent();
+    var rowIndex = row[0].rowIndex;
+
+    var number = parseFloat($(this).val());
+    if (number == 0 || number == "") {
+      $(this).val("1");
+    }
+    
+    get_vat(rowIndex);
+
+     
+    });
+
+  
+
+}
+
+
+function set_item_other(item,value,code,date,brand,vitri,unit,price) {
+    // change input value
+    $('.spare_part_name:eq('+vitri+')').val(value);
+    $('.spare_part_name:eq('+vitri+')').attr("data",item);
+    $('.spare_part_code:eq('+vitri+')').val(code);
+    $('.spare_part_date_manufacture:eq('+vitri+')').val(date);
+    $('.spare_part_brand:eq('+vitri+')').val(brand);
+    $('.spare_part_unit:eq('+vitri+')').val(unit);
+    $('.spare_stock_price:eq('+vitri+')').val(price);
+
+    get_vat(vitri);
+    
+    // hide proposition list
+    $('.name_list_id').hide();
+    $('.name_list_id_2').hide();
+    $('.spare_part_code:eq('+vitri+')').focus();
+
+    $('.numbers').inputmask("numeric", {
+      radixPoint: ".",
+      groupSeparator: ",",
+      digits: 6,
+      autoGroup: true,
+      rightAlign: true,
+      oncleared: function () { self.Value(''); }
+    });
+
+    $.ajax({
+      url: '<?php echo BASE_URL ?>/exportstock/getseri',
+      type: 'GET',
+      data: {data:item},
+      success:function(data){
+        $(".choose_seri:eq("+vitri+")").multiselect('destroy');
+        $(".choose_seri:eq("+vitri+")").html(data);
+        $(".choose_seri:eq("+vitri+")").multiselect({
+           enableFiltering: true,
+           enableCaseInsensitiveFiltering: true,
+           maxHeight: 350,
+           enableHTML: true,
+           nonSelectedText: 'Chọn',
+           includeSelectAllOption: true,
+           buttonClass: 'btn btn-white btn-primary',
+           templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+            ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+            filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+            filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+            li: '<li><a tabindex="0"><label></label></a></li>',
+                divider: '<li class="multiselect-item divider"></li>',
+                liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+           },
+           onChange: function(option, checked, select) {
+              if (option != undefined) {
+                var number = parseFloat($('.spare_stock_number:eq('+vitri+')').val()) || 0;
+               var new_num = parseFloat(option.attr('title'));
+                if(checked == true){
+                    $('.spare_stock_number:eq('+vitri+')').val(number+new_num);
+                    $('.spare_stock_number:eq('+vitri+')').attr('max',number+new_num);
+                }
+                else{
+                    $('.spare_stock_number:eq('+vitri+')').val(number-new_num);
+                    $('.spare_stock_number:eq('+vitri+')').attr('max',number-new_num);
+                }
+              }
+              else{
+                if (checked==true) {
+                  var new_num = 0;
+                  $(".choose_seri:eq("+vitri+") option").each(function(){
+                     new_num += parseFloat($(this).attr('title'));
+                  });
+
+                  $('.spare_stock_number:eq('+vitri+')').val(new_num);
+                  $('.spare_stock_number:eq('+vitri+')').attr('max',new_num);
+                }
+                else{
+                  $('.spare_stock_number:eq('+vitri+')').val(0);
+                  $('.spare_stock_number:eq('+vitri+')').attr('max',0);
+                }
+              }
+              get_vat(vitri);
+            
+            }
+          });
+      }
+    });
+}
+function get_vat(vitri){
+  var percent = parseFloat(get_number('.spare_stock_vat_percent:eq('+vitri+')')) || 0;
+  var number = parseFloat(get_number('.spare_stock_number:eq('+vitri+')')) || 0;
+  var price = parseFloat(get_number('.spare_stock_price:eq('+vitri+')')) || 0;
+  $('.spare_stock_vat_price:eq('+vitri+')').val(Math.round((price*percent/100)*number));
+
+  $('.numbers').inputmask("numeric", {
+      radixPoint: ".",
+      groupSeparator: ",",
+      digits: 6,
+      autoGroup: true,
+      rightAlign: true,
+      oncleared: function () { self.Value(''); }
+    });
+}
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+
+$(document).ready(function(){
+  $('.multiselect').multiselect({
+   enableFiltering: true,
+   enableCaseInsensitiveFiltering: true,
+   maxHeight: 350,
+   enableHTML: true,
+   nonSelectedText: 'Chọn',
+   includeSelectAllOption: true,
+   buttonClass: 'btn btn-white btn-primary',
+   templates: {
+    button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+    ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+    filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+    filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+    li: '<li><a tabindex="0"><label></label></a></li>',
+        divider: '<li class="multiselect-item divider"></li>',
+        liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+   }
+  });
+});
+</script>

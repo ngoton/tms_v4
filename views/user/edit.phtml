@@ -4,13 +4,28 @@ $(document).ready(function(){
 			// Validate form
 			$("#edit_user").validate({
 				errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
-				rules: {
-					username: { rangelength: [2,10] }, //Chiều dài chuỗi trong khoảng từ 4 - 10 ký tự
-					password: { rangelength: [4,16] },
-					confirmpassword: {
+        ignore: "",
+        rules: {
+          username: { rangelength: [2,10] }, //Chiều dài chuỗi trong khoảng từ 4 - 10 ký tự
+          password: { rangelength: [4,16] },
+          confirmpassword: {
             equalTo: "#password" //So sánh với trường cpassword với thành trường có id là password
           },
-				},
+        },
+        errorPlacement: function (error, element) {
+          if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+            var controls = element.closest('div[class*="col-"]');
+            if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+            else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+          }
+          else if(element.is('.select2')) {
+            error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+          }
+          else if(element.is('.chosen-select')) {
+            error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+          }
+          else error.insertAfter(element.parent());
+        },
         submitHandler: function(form) {
                 
           var user_id = "<?php echo $user_id ?>";
