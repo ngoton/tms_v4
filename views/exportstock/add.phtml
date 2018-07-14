@@ -25,43 +25,17 @@ $(document).ready(function(){
         submitHandler: function(form) {
           var spare_part = [];
 
-          var check_seri = [];
-
-          var spare_part_name = [];
-          var spare_part_id = [];
-          var spare_part_seri = [];
-
           var spare_part_code_id = [];
-
-          var spare_part_code2 = [];
-          var spare_part_brand2 = [];
-          var spare_part_date_manufacture2 = [];
-          var spare_part_unit2 = [];
-          var spare_stock_number2 = [];
-          var spare_stock_price2 = [];
-          var spare_stock_vat_percent2 = [];
-          var spare_stock_vat_price2 = [];
-
-          var spare_part_code = [];
-          var spare_part_brand = [];
-          var spare_part_date_manufacture = [];
+          var spare_part_id = [];
           var spare_part_unit = [];
           var spare_stock_number = [];
           var spare_stock_price = [];
           var spare_stock_vat_percent = [];
           var spare_stock_vat_price = [];
-          var id_spare_stock = [];
 
-          $('.check_seri').each(function() { 
-              
-              if ($(this).is(':checked')) {
-                check_seri.push(1);
-              }
-              else{
-                check_seri.push(0);
-              }
-          });
-          
+          var spare_stock_number2 = [];
+          var spare_stock_vat_price2 = [];
+
           var err = 0;
 
           $('.spare_part_code').each(function() { 
@@ -70,130 +44,47 @@ $(document).ready(function(){
               err = 1;
               return false;
             }
-              spare_part_code2.push($(this).val());
           });
 
           if (err == 1) {
             return false;
           }
 
-          $('.spare_part_brand').each(function() { 
-              spare_part_brand2.push($(this).val());
-          });
-
-          $('.spare_part_date_manufacture').each(function() { 
-              spare_part_date_manufacture2.push($(this).val());
-          });
-
           $('.spare_part_unit').each(function() { 
-              spare_part_unit2.push($(this).val());
+              spare_part_unit.push($(this).val());
           });
 
           $('.spare_stock_number').each(function() { 
-              spare_stock_number2.push($(this).val());
+              spare_stock_number.push($(this).val());
+              spare_stock_number2.push($(this).val().replace(/\,/g,'') || 0);
           });
 
           $('.spare_stock_price').each(function() { 
-              spare_stock_price2.push($(this).val());
+              spare_stock_price.push($(this).val());
           });
           $('.spare_stock_vat_percent').each(function() { 
-              spare_stock_vat_percent2.push($(this).val());
+              spare_stock_vat_percent.push($(this).val());
           });
           $('.spare_stock_vat_price').each(function() { 
-              spare_stock_vat_price2.push($(this).val());
+              spare_stock_vat_price2.push($(this).val().replace(/\,/g,'') || 0);
           });
 
           $('.spare_part_name').each(function(index) { 
             var $this = $(this);
-            if(check_seri[index] == 1){
-              $('.spare_part_seri2[data='+index+']').each(function() { 
-                if ($(this).val().trim() != "") {
-                  spare_part_seri.push($(this).val());
-                  id_spare_stock.push($(this).attr('title') || "");
-                  spare_part_name.push($this.val());
-                  spare_part_code_id.push($this.attr('data'));
-                  spare_part_id.push($(this).attr('code'));
-                  spare_part_code.push(spare_part_code2[index]);
-                  spare_part_brand.push(spare_part_brand2[index]);
-                  spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
-                  spare_part_unit.push(spare_part_unit2[index]);
-                  spare_stock_number.push(1);
-                  spare_stock_price.push(spare_stock_price2[index]);
-                  spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
-                }
-              });
-            }
-            else{
-                spare_part_seri.push("");
-                id_spare_stock.push($('.spare_part_seri2[data='+index+']').attr('title') || "");
-                spare_part_name.push($this.val());
-                spare_part_code_id.push($this.attr('data'));
-                spare_part_id.push($('.spare_part_seri2[data='+index+']').attr('code'));
-                spare_part_code.push(spare_part_code2[index]);
-                spare_part_brand.push(spare_part_brand2[index]);
-                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
-                spare_stock_number.push(spare_stock_number2[index]);
-                spare_part_unit.push(spare_part_unit2[index]);
-                spare_stock_price.push(spare_stock_price2[index]);
-                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
-            }
-              
+            spare_part_code_id.push($this.attr('data'));
+            spare_stock_vat_price.push(parseInt(spare_stock_vat_price2[index]/spare_stock_number2[index]));
+            spare_part_id.push($('.choose_seri:eq('+index+')').val());  
           });
 
 
-          for (var i = 0; i < spare_part_name.length; i++) {
-              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'id_spare_stock':id_spare_stock[i]});
+          for (var i = 0; i < spare_part_code_id.length; i++) {
+              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'spare_part_id':spare_part_id[i]});
               
               
           };
-
-
-          var export_stock_cost = [];  
-
-          var export_stock_cost_list = [];  
-          var export_stock_cost_comment = [];  
-          var export_stock_cost_money = [];  
-          var export_stock_cost_money_vat = [];  
-          var export_stock_cost_customer = [];  
-          var export_stock_cost_invoice = [];  
-          var export_stock_cost_invoice_date = [];  
-          var id_export_stock_cost = [];  
-
-          $('.export_stock_cost_money').each(function() { 
-              export_stock_cost_money.push($(this).val());
-              id_export_stock_cost.push($(this).attr('data') || "");
-          });
-          $('.export_stock_cost_list').each(function() { 
-              export_stock_cost_list.push($(this).val());
-          });
-          $('.export_stock_cost_comment').each(function() { 
-              export_stock_cost_comment.push($(this).val());
-          });
-          $('.export_stock_cost_money_vat').each(function() { 
-            if ($(this).is(':checked'))
-              export_stock_cost_money_vat.push(1);
-            else
-              export_stock_cost_money_vat.push(0);
-          });
-          $('.export_stock_cost_customer').each(function() { 
-              export_stock_cost_customer.push($(this).val());
-          });
-          $('.export_stock_cost_invoice').each(function() { 
-              export_stock_cost_invoice.push($(this).val());
-          });
-          $('.export_stock_cost_invoice_date').each(function() { 
-              export_stock_cost_invoice_date.push($(this).val());
-          });
-
-          for (var i = 0; i < export_stock_cost_money.length; i++) {
-              export_stock_cost.push({'export_stock_cost_money':export_stock_cost_money[i], 'export_stock_cost_list':export_stock_cost_list[i], 'export_stock_cost_comment':export_stock_cost_comment[i], 'export_stock_cost_money_vat':export_stock_cost_money_vat[i], 'export_stock_cost_customer':export_stock_cost_customer[i], 'export_stock_cost_invoice':export_stock_cost_invoice[i], 'export_stock_cost_invoice_date':export_stock_cost_invoice_date[i], 'id_export_stock_cost':id_export_stock_cost[i]});
-          };
-
+  
           var formData = new FormData($("#add_exportstock")[0]);
           formData.append('spare_part', JSON.stringify(spare_part));
-          formData.append('export_stock_cost', JSON.stringify(export_stock_cost));
           
           $.ajax({
               type: "POST", // phương thức gởi đi
@@ -287,7 +178,7 @@ $(document).ready(function(){
                                 <td colspan="2">
                                   <label>Chọn 1 sản phẩm</label>
                                   <div class="input-group">
-                                    <select class="choose_seri multiselect" name="choose_seri[]" tabindex="7" required="required" multiple="">
+                                    <select class="choose_seri multiselect" name="choose_seri[]" tabindex="7" required="required" multiple="" data="0">
                                       
                                     </select>
                                   </div>
@@ -371,6 +262,8 @@ $('.spare_stock_price').keyup(function(){
 });
   
 function addRow_exportstock(tableID){
+  var rowIndex = parseInt($('.choose_seri:last').attr('data'));
+
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
     var row=table.insertRow(rowCount);
@@ -416,6 +309,7 @@ function addRow_exportstock(tableID){
       get_price();
     });
 
+    $(".choose_seri:last").attr('data',rowIndex);
     $(".choose_seri:last").html('');
     $(".btn-group:last").remove();
 }
@@ -642,6 +536,7 @@ function set_item_other(item,value,code,date,brand,vitri,unit,price) {
     $('.spare_part_brand:eq('+vitri+')').val(brand);
     $('.spare_part_unit:eq('+vitri+')').val(unit);
     $('.spare_stock_price:eq('+vitri+')').val(price);
+    $('.spare_stock_number:eq('+vitri+')').val(0);
 
     get_vat(vitri);
     

@@ -90,7 +90,7 @@ $(document).ready(function(){
           });
 
           $('.spare_stock_number').each(function() { 
-              spare_stock_number2.push($(this).val());
+              spare_stock_number2.push($(this).val().replace(/\,/g,'') || 0);
           });
 
           $('.spare_stock_price').each(function() { 
@@ -100,7 +100,7 @@ $(document).ready(function(){
               spare_stock_vat_percent2.push($(this).val());
           });
           $('.spare_stock_vat_price').each(function() { 
-              spare_stock_vat_price2.push($(this).val());
+              spare_stock_vat_price2.push($(this).val().replace(/\,/g,'') || 0);
           });
 
           $('.spare_part_name').each(function(index) { 
@@ -120,7 +120,7 @@ $(document).ready(function(){
                   spare_stock_number.push(1);
                   spare_stock_price.push(spare_stock_price2[index]);
                   spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index]/spare_stock_number2[index]));
                 }
               });
             }
@@ -137,7 +137,7 @@ $(document).ready(function(){
                 spare_part_unit.push(spare_part_unit2[index]);
                 spare_stock_price.push(spare_stock_price2[index]);
                 spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
+                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index]/spare_stock_number2[index]));
             }
               
           });
@@ -821,6 +821,7 @@ function deleteRow_importstock(tableID){
                     i--;
 
                     get_price();
+                    re_number()
                 }
             }
           }
@@ -1004,7 +1005,14 @@ $('html').click(function(e) {
     $('.name_list_id_2').slideUp(200);
     $('.name_list_id_3').slideUp(200);
 });
-
+function re_number(){
+  $('.dataTb').each(function(index){
+    $(this).attr('id','dataTb'+index);
+    $(this).find('.spare_part_seri2').attr('data',index);
+    $(this).find('.addRow3').attr('onClick','addRow3("dataTb'+index+'")');
+    $(this).find('.deleteRow3').attr('onClick','deleteRow3("dataTb'+index+'")');
+  });
+}
 function get_spare(){
   $('.spare_part_code').keyup(function(){
     var row = $(this).parent().parent().parent().parent().parent().parent().parent();
@@ -1178,7 +1186,7 @@ function get_spare(){
     get_vat(rowIndex);
 
       if ($('.check_seri:eq('+rowIndex+')').is(':checked')) {
-        var ns = parseInt($('.dem:last').attr("data"));
+        var ns = parseInt($('#dataTb'+rowIndex+' .dem:last').attr("data"));
         $('.tr_seri:eq('+rowIndex+')').show();
         var table=document.getElementById('dataTb'+rowIndex);
         var rowCount=table.rows.length;
@@ -1201,20 +1209,20 @@ function get_spare(){
                 }
             }
 
-            $('.spare_part_seri2:last').val("");
-            $('.spare_part_seri2:last').attr('code',"");
-            $('.spare_part_seri2:last').attr('title',"");
+            $('#dataTb'+rowIndex+' .spare_part_seri2:last').val("");
+            $('#dataTb'+rowIndex+' .spare_part_seri2:last').attr('code',"");
+            $('#dataTb'+rowIndex+' .spare_part_seri2:last').attr('title',"");
             
-            $('input[name="chk3"]:last').attr('data',"");
-            $('input[name="chk3"]:last').attr('tabindex',0);
-            $('input[name="chk3"]:last').attr('title',"");
-            $('input[name="chk3"]:last').attr('class',"");
-            $('input[name="chk3"]:last').attr('alt',0);
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('data',"");
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('tabindex',0);
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('title',"");
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('class',"");
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('alt',0);
 
             ns++;
             
-            $('.dem:last').attr("data",ns);
-            $('.dem:last').html("("+ns+")");
+            $('#dataTb'+rowIndex+' .dem:last').attr("data",ns);
+            $('#dataTb'+rowIndex+' .dem:last').html("("+ns+")");
 
             rowCount++;
           }
@@ -1238,7 +1246,7 @@ function get_spare(){
   var rowIndex = row[0].rowIndex;
 
     if($(this).is(':checked')){
-      var ns = parseInt($('.dem:last').attr("data"));
+      var ns = parseInt($('#dataTb'+rowIndex+' .dem:last').attr("data"));
       $('.tr_seri:eq('+rowIndex+')').show();
         var table=document.getElementById('dataTb'+rowIndex);
         var rowCount=table.rows.length;
@@ -1261,20 +1269,20 @@ function get_spare(){
                 }
             }
 
-            $('.spare_part_seri2:last').val("");
-            $('.spare_part_seri2:last').attr('code',"");
-            $('.spare_part_seri2:last').attr('title',"");
+            $('#dataTb'+rowIndex+' .spare_part_seri2:last').val("");
+            $('#dataTb'+rowIndex+' .spare_part_seri2:last').attr('code',"");
+            $('#dataTb'+rowIndex+' .spare_part_seri2:last').attr('title',"");
             
-            $('input[name="chk3"]:last').attr('data',"");
-            $('input[name="chk3"]:last').attr('tabindex',0);
-            $('input[name="chk3"]:last').attr('title',"");
-            $('input[name="chk3"]:last').attr('class',"");
-            $('input[name="chk3"]:last').attr('alt',0);
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('data',"");
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('tabindex',0);
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('title',"");
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('class',"");
+            $('#dataTb'+rowIndex+' input[name="chk3"]:last').attr('alt',0);
 
             ns++;
             
-            $('.dem:last').attr("data",ns);
-            $('.dem:last').html("("+ns+")");
+            $('#dataTb'+rowIndex+' .dem:last').attr("data",ns);
+            $('#dataTb'+rowIndex+' .dem:last').html("("+ns+")");
 
             rowCount++;
           }
