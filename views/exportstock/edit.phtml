@@ -3,7 +3,7 @@ $(document).ready(function(){
   $( ".select2" ).select2({dropdownAutoWidth : true});
   
       // Validate form
-      $("#edit_importstock").validate({
+      $("#edit_exportstock").validate({
         errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
         ignore: "",
         rules: {
@@ -25,43 +25,17 @@ $(document).ready(function(){
         submitHandler: function(form) {
           var spare_part = [];
 
-          var check_seri = [];
-
-          var spare_part_name = [];
-          var spare_part_id = [];
-          var spare_part_seri = [];
-
           var spare_part_code_id = [];
-
-          var spare_part_code2 = [];
-          var spare_part_brand2 = [];
-          var spare_part_date_manufacture2 = [];
-          var spare_part_unit2 = [];
-          var spare_stock_number2 = [];
-          var spare_stock_price2 = [];
-          var spare_stock_vat_percent2 = [];
-          var spare_stock_vat_price2 = [];
-
-          var spare_part_code = [];
-          var spare_part_brand = [];
-          var spare_part_date_manufacture = [];
+          var spare_part_id = [];
           var spare_part_unit = [];
           var spare_stock_number = [];
           var spare_stock_price = [];
           var spare_stock_vat_percent = [];
           var spare_stock_vat_price = [];
-          var id_spare_stock = [];
 
-          $('.check_seri').each(function() { 
-              
-              if ($(this).is(':checked')) {
-                check_seri.push(1);
-              }
-              else{
-                check_seri.push(0);
-              }
-          });
-          
+          var spare_stock_number2 = [];
+          var spare_stock_vat_price2 = [];
+
           var err = 0;
 
           $('.spare_part_code').each(function() { 
@@ -70,145 +44,62 @@ $(document).ready(function(){
               err = 1;
               return false;
             }
-              spare_part_code2.push($(this).val());
           });
 
           if (err == 1) {
             return false;
           }
 
-          $('.spare_part_brand').each(function() { 
-              spare_part_brand2.push($(this).val());
-          });
-
-          $('.spare_part_date_manufacture').each(function() { 
-              spare_part_date_manufacture2.push($(this).val());
-          });
-
           $('.spare_part_unit').each(function() { 
-              spare_part_unit2.push($(this).val());
+              spare_part_unit.push($(this).val());
           });
 
           $('.spare_stock_number').each(function() { 
-              spare_stock_number2.push($(this).val());
+              spare_stock_number.push($(this).val());
+              spare_stock_number2.push($(this).val().replace(/\,/g,'') || 0);
           });
 
           $('.spare_stock_price').each(function() { 
-              spare_stock_price2.push($(this).val());
+              spare_stock_price.push($(this).val());
           });
           $('.spare_stock_vat_percent').each(function() { 
-              spare_stock_vat_percent2.push($(this).val());
+              spare_stock_vat_percent.push($(this).val());
           });
           $('.spare_stock_vat_price').each(function() { 
-              spare_stock_vat_price2.push($(this).val());
+              spare_stock_vat_price2.push($(this).val().replace(/\,/g,'') || 0);
           });
 
           $('.spare_part_name').each(function(index) { 
             var $this = $(this);
-            if(check_seri[index] == 1){
-              $('.spare_part_seri2[data='+index+']').each(function() { 
-                if ($(this).val().trim() != "") {
-                  spare_part_seri.push($(this).val());
-                  id_spare_stock.push($(this).attr('title') || "");
-                  spare_part_name.push($this.val());
-                  spare_part_code_id.push($this.attr('data'));
-                  spare_part_id.push($(this).attr('code'));
-                  spare_part_code.push(spare_part_code2[index]);
-                  spare_part_brand.push(spare_part_brand2[index]);
-                  spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
-                  spare_part_unit.push(spare_part_unit2[index]);
-                  spare_stock_number.push(1);
-                  spare_stock_price.push(spare_stock_price2[index]);
-                  spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                  spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
-                }
-              });
-            }
-            else{
-                spare_part_seri.push("");
-                id_spare_stock.push($('.spare_part_seri2[data='+index+']').attr('title') || "");
-                spare_part_name.push($this.val());
-                spare_part_code_id.push($this.attr('data'));
-                spare_part_id.push($('.spare_part_seri2[data='+index+']').attr('code'));
-                spare_part_code.push(spare_part_code2[index]);
-                spare_part_brand.push(spare_part_brand2[index]);
-                spare_part_date_manufacture.push(spare_part_date_manufacture2[index]);
-                spare_stock_number.push(spare_stock_number2[index]);
-                spare_part_unit.push(spare_part_unit2[index]);
-                spare_stock_price.push(spare_stock_price2[index]);
-                spare_stock_vat_percent.push(spare_stock_vat_percent2[index]);
-                spare_stock_vat_price.push(parseFloat(spare_stock_vat_price2[index].replace(/\,/g,'')/spare_stock_number2[index]));
-            }
-              
+            spare_part_code_id.push($this.attr('data'));
+            spare_stock_vat_price.push(parseInt(spare_stock_vat_price2[index]/spare_stock_number2[index]));
+            spare_part_id.push($('.choose_seri:eq('+index+')').val());  
           });
 
 
-          for (var i = 0; i < spare_part_name.length; i++) {
-              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_part_code':spare_part_code[i], 'spare_part_seri':spare_part_seri[i], 'spare_part_brand':spare_part_brand[i], 'spare_part_date_manufacture':spare_part_date_manufacture[i], 'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'id_spare_stock':id_spare_stock[i]});
+          for (var i = 0; i < spare_part_code_id.length; i++) {
+              spare_part.push({'spare_part_code_id':spare_part_code_id[i],'spare_part_unit':spare_part_unit[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_vat_percent':spare_stock_vat_percent[i], 'spare_stock_vat_price':spare_stock_vat_price[i], 'spare_part_id':spare_part_id[i]});
               
               
           };
-
-
-          var import_stock_cost = [];  
-
-          var import_stock_cost_list = [];  
-          var import_stock_cost_comment = [];  
-          var import_stock_cost_money = [];  
-          var import_stock_cost_money_vat = [];  
-          var import_stock_cost_customer = [];  
-          var import_stock_cost_invoice = [];  
-          var import_stock_cost_invoice_date = [];  
-          var id_import_stock_cost = [];  
-
-          $('.import_stock_cost_money').each(function() { 
-              import_stock_cost_money.push($(this).val());
-              id_import_stock_cost.push($(this).attr('data') || "");
-          });
-          $('.import_stock_cost_list').each(function() { 
-              import_stock_cost_list.push($(this).val());
-          });
-          $('.import_stock_cost_comment').each(function() { 
-              import_stock_cost_comment.push($(this).val());
-          });
-          $('.import_stock_cost_money_vat').each(function() { 
-            if ($(this).is(':checked'))
-              import_stock_cost_money_vat.push(1);
-            else
-              import_stock_cost_money_vat.push(0);
-          });
-          $('.import_stock_cost_customer').each(function() { 
-              import_stock_cost_customer.push($(this).val());
-          });
-          $('.import_stock_cost_invoice').each(function() { 
-              import_stock_cost_invoice.push($(this).val());
-          });
-          $('.import_stock_cost_invoice_date').each(function() { 
-              import_stock_cost_invoice_date.push($(this).val());
-          });
-
-          for (var i = 0; i < import_stock_cost_money.length; i++) {
-              import_stock_cost.push({'import_stock_cost_money':import_stock_cost_money[i], 'import_stock_cost_list':import_stock_cost_list[i], 'import_stock_cost_comment':import_stock_cost_comment[i], 'import_stock_cost_money_vat':import_stock_cost_money_vat[i], 'import_stock_cost_customer':import_stock_cost_customer[i], 'import_stock_cost_invoice':import_stock_cost_invoice[i], 'import_stock_cost_invoice_date':import_stock_cost_invoice_date[i], 'id_import_stock_cost':id_import_stock_cost[i]});
-          };
-
-          var formData = new FormData($("#edit_importstock")[0]);
-          formData.append('import_stock_id', '<?php echo $import_stock_data->import_stock_id ?>');
+  
+          var formData = new FormData($("#edit_exportstock")[0]);
+          formData.append('export_stock_id', '<?php echo $export_stock_data->export_stock_id ?>');
           formData.append('spare_part', JSON.stringify(spare_part));
-          formData.append('import_stock_cost', JSON.stringify(import_stock_cost));
           
           $.ajax({
               type: "POST", // phương thức gởi đi
-              url: "<?php echo BASE_URL ?>/importstock/editimportstock", // nơi mà dữ liệu sẽ chuyển đến khi submit
+              url: "<?php echo BASE_URL ?>/exportstock/editexportstock", // nơi mà dữ liệu sẽ chuyển đến khi submit
               data: formData, // giá trị post
               cache: false,
               contentType: false,
               processData: false,
               success: function(answer){ // if everything goes well
                   //alert(answer);
-                  $('#error_importstock').hide();
-                  $('#error_importstock').slideToggle(100); // hiển thị thẻ div success
-                  $('#error_importstock').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                  $('#error_importstock').fadeOut(10000);
+                  $('#error_exportstock').hide();
+                  $('#error_exportstock').slideToggle(100); // hiển thị thẻ div success
+                  $('#error_exportstock').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                  $('#error_exportstock').fadeOut(10000);
 
               }
           });
@@ -225,93 +116,51 @@ $(document).ready(function(){
 
 <div class="tabbable">
   
-  <form id="edit_importstock" method="post" action="" autocomplete="off">
-    <ul class="nav nav-tabs padding-18">
-      <li class="active">
-        <a data-toggle="tab" href="#homestock">
-          <i class="green ace-icon fa fa-file-text-o bigger-120"></i>
-          Thông tin
-        </a>
-      </li>
-
-      <li>
-        <a data-toggle="tab" href="#coststock">
-          <i class="blue ace-icon fa fa-th bigger-120"></i>
-          Chi phí
-        </a>
-      </li>
-    </ul>
-    <div class="tab-content no-border ">
-      <div id="homestock" class="tab-pane in active">
-        <div class="col-md-4 col-xs-6">
-          <label for="import_stock_date">Ngày</label>
+  <form id="edit_exportstock" method="post" action="" autocomplete="off">
+    <div class="col-md-3 col-xs-6">
+          <label for="export_stock_date">Ngày</label>
           <div class="input-group">
-            <input class="input-mask-date" type="text" id="import_stock_date" name="import_stock_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($import_stock_data->import_stock_date) ?>">
+            <input class="input-mask-date" type="text" id="export_stock_date" name="export_stock_date" tabindex="1" required="required" value="<?php echo $lib->hien_thi_ngay_thang($export_stock_data->export_stock_date) ?>">
           </div>
-          <label for="import_stock_house">Kho nhập <a title="Thêm kho mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("house/add") ?>','Thêm kho mới','import_stock_house','<?php echo $this->url("house/gethouse") ?>','add_house')"></i></a></label>
+          
+          
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <label for="export_stock_code">Số phiếu</label>
           <div class="input-group">
-            <select class="form-control select2" id="import_stock_house" name="import_stock_house" tabindex="4">
+            <input type="text" id="export_stock_code" name="export_stock_code" tabindex="2" value="<?php echo $export_stock_data->export_stock_code ?>" required="required">
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <label for="export_stock_comment">Nội dung </label>
+          <div class="input-group">
+            <input type="text" id="export_stock_comment" name="export_stock_comment" tabindex="3" value="<?php echo $export_stock_data->export_stock_comment ?>">
+          </div>
+          
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <label for="export_stock_house">Kho xuất <a title="Thêm kho mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("house/add") ?>','Thêm kho mới','export_stock_house','<?php echo $this->url("house/gethouse") ?>','add_house')"></i></a></label>
+          <div class="input-group">
+            <select class="form-control select2" id="export_stock_house" name="export_stock_house" tabindex="4">
               <?php foreach ($houses as $house) { ?>
-                <option <?php echo $import_stock_data->import_stock_house==$house->house_id?'selected="selected"':null ?> value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
+                <option value="<?php echo $export_stock_data->export_stock_house==$house->house_id?'selected="selected"':null ?>" value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
               <?php } ?>
             </select>
           </div>
           
-          <label for="import_stock_deliver">Người giao hàng </label>
-          <div class="input-group">
-            <input type="text" id="import_stock_deliver" name="import_stock_deliver" tabindex="7" value="<?php echo $import_stock_data->import_stock_deliver ?>">
-          </div>
-        </div>
-        <div class="col-md-4 col-xs-6">
-          <label for="import_stock_code">Số phiếu</label>
-          <div class="input-group">
-            <input type="text" id="import_stock_code" name="import_stock_code" tabindex="2" value="<?php echo $import_stock_data->import_stock_code ?>" required="required">
-          </div>
-          <label for="import_stock_customer">Nhà cung cấp <a title="Thêm nhà cung cấp mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm nhà cung cấp mới','import_stock_customer','<?php echo $this->url("customer/getsupply") ?>','add_customer')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="import_stock_customer" name="import_stock_customer" tabindex="5">
-              <option value="">Chọn</option>
-              <?php foreach ($customers as $customer) { 
-                if ($customer->customer_type==2) {
-                ?>
-                <option <?php echo $import_stock_data->import_stock_customer==$customer->customer_id?'selected="selected"':null ?> value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
-              <?php } ?>
-              <?php } ?>
-            </select>
-          </div>
-          <label for="import_stock_deliver_address">Địa chỉ </label>
-          <div class="input-group">
-            <input type="text" id="import_stock_deliver_address" name="import_stock_deliver_address" tabindex="8" value="<?php echo $import_stock_data->import_stock_deliver_address ?>">
-          </div>
-
-        </div>
-        <div class="col-md-4 col-xs-6">
-          <label for="import_stock_comment">Nội dung </label>
-          <div class="input-group">
-            <input type="text" id="import_stock_comment" name="import_stock_comment" tabindex="3" value="<?php echo $import_stock_data->import_stock_comment ?>">
-          </div>
-          <label for="import_stock_invoice_number">Số hóa đơn </label>
-          <div class="input-group">
-            <input type="text" id="import_stock_invoice_number" name="import_stock_invoice_number" tabindex="6" value="<?php echo $import_stock_data->import_stock_invoice_number ?>">
-          </div>
-          <label for="import_stock_invoice_date">Ngày HĐ </label>
-          <div class="input-group">
-            <input class="form-control input-mask-date" type="text" id="import_stock_invoice_date" name="import_stock_invoice_date" tabindex="9" value="<?php echo $lib->hien_thi_ngay_thang($import_stock_data->import_stock_invoice_date) ?>">
-          </div>
         </div>
 
         <div class="clearfix"></div>
         <div class="hr hr-8 dotted hr-double"></div>
         <div style="background: #73737326; max-height: 500px; overflow: auto;">
-            <table id="dataTable_importstock" style="width: 100%;">
+            <table id="dataTable_exportstock" style="width: 100%;">
                 <tbody>
-                <?php $l=0; ?>
                 <?php if (count($spare_part_codes)>0) { ?>
                 <?php foreach ($spare_part_codes as $spare_part_code) { 
                   $sl = $spare_part_data[$spare_part_code->spare_part_code_id]['sl'];
                 ?>
                 <tr>
-                    <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $spare_part_code->spare_part_code_id ?>" title="<?php echo $import_stock_data->import_stock_id ?>"></td>
+                    <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $spare_part_code->spare_part_code_id ?>" title="<?php echo $export_stock_data->export_stock_id ?>"></td>
                     <td>
                       
                         <table style="width:100%;">
@@ -320,110 +169,66 @@ $(document).ready(function(){
                                 <td>
                                   <label>Mã sản phẩm</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required" value="<?php echo $spare_part_code->code ?>">
+                                    <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="5" required="required" value="<?php echo $spare_part_code->code ?>">
                                     <ul class="name_list_id"></ul>
                                   </div>
                                 </td>
                                 <td>
                                   <label>Tên sản phẩm</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required" value="<?php echo $spare_part_code->name ?>" data="<?php echo $spare_part_code->spare_part_code_id ?>">
+                                    <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="6" required="required" value="<?php echo $spare_part_code->name ?>" data="<?php echo $spare_part_code->spare_part_code_id ?>">
                                     <ul class="name_list_id_2"></ul>
                                   </div>
                                 </td>
-                                <td>
-                                  <label>Nhà sản xuất</label>
+                                <td colspan="2">
+                                  <label>Chọn 1 sản phẩm</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['brand'] ?>" >
+                                    <select class="choose_seri multiselect" name="choose_seri[]" tabindex="7" required="required" multiple="" data="0">
+                                      <?php foreach ($spare_parts[$spare_part_code->spare_part_code_id] as $spare_part) { ?>
+                                        <option selected="selected" title="<?php echo $spare_part->spare_stock_number ?>" value="<?php echo $spare_part->spare_part_id ?>"><?php echo $spare_part->spare_part_seri ?> [<?php echo $spare_part->spare_stock_number ?>]</option>
+                                      <?php } ?>
+                                      <?php echo isset($stock[$spare_part_code->spare_part_code_id])?$stock[$spare_part_code->spare_part_code_id]:null ?>
+                                    </select>
                                   </div>
                                 </td>
+                                
                               </tr>
                               <tr>
                                 <td>
-                                  <label>Ngày sản xuất</label>
+                                  <label>Số lượng</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13" value="<?php echo $lib->hien_thi_ngay_thang($spare_part_data[$spare_part_code->spare_part_code_id]['date']) ?>">
+                                    <input min="0" max="<?php echo $sl ?>" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="8" value="<?php echo $sl ?>">
                                   </div>
                                 </td>
                                 <td>
                                   <label>Đơn vị tính</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['unit'] ?>">
+                                    <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="9" value="<?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['unit'] ?>">
                                   </div>
                                 </td>
-                                <td>
-                                  <label>Số lượng</label>
-                                  <div class="input-group">
-                                    <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="<?php echo $sl ?>">
-                                  </div>
-                                </td>
-                                
-                              </tr>
-                              <tr>
                                 <td>
                                   <label>Đơn giá</label>
                                   <div class="input-group">
-                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['price']) ?>" >
+                                    <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="10" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['price']) ?>">
                                   </div>
                                 </td>
                                 <td>
                                   <label>VAT</label>
                                   <div class="input-group">
-                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['percent']) ?>">
-                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['vat']*$sl) ?>">
+                                    <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="11" placeholder="%" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['percent']) ?>">
+                                    <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="12" value="<?php echo $lib->formatMoney($spare_part_data[$spare_part_code->spare_part_code_id]['vat']*$sl) ?>">
                                   </div>
                                 </td>
                                 
-                                <td>
-                                  <label>Có số seri</label>
-                                  <div class="input-group">
-                                    <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1" <?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['seri'] != ""?'checked':null ?>><span class="lbl"></span>
-                                  </div>
-                                </td>
                                 
                               </tr>
-                              <tr class="tr_seri" <?php echo $spare_part_data[$spare_part_code->spare_part_code_id]['seri'] == ""?'style="display:none"':null ?> >
-                                <td></td>
-                                <td></td>
-                                <td>
-                                  <div style="max-height: 200px; overflow: auto;">
-                                    <table class="dataTb" id="dataTb<?php echo $l ?>" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
-                                      <tbody>
-                                        <?php $m=1; 
-                                        foreach ($spare_parts[$spare_part_code->spare_part_code_id] as $spare_part) { ?>
-                                        <tr>
-                                          <td><input type="checkbox" name="chk3" class="chk3" data="<?php echo $spare_part->spare_stock_id ?>" title="<?php echo $spare_part->spare_part_id ?>"></td>
-                                          <td>
-                                            <table style="width:100%">
-                                              <tr>
-                                                <td>
-                                                  <label>Số seri</label>
-                                                  <div class="input-group">
-                                                    <input code="<?php echo $spare_part->spare_part_id ?>" data="<?php echo $l ?>" title="<?php echo $spare_part->spare_stock_id ?>" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" value="<?php echo $spare_part->spare_part_seri ?>" >
-                                                    <span class="dem" data="<?php echo $m ?>">(<?php echo $m ?>)</span>
-                                                  </div>
-                                                </td>
-                                                
-                                              </tr>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      <?php $m++; } ?>
-                                      </tbody>
-                                    </table>
-                                  </div>  
-                                    
-                                    <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb<?php echo $l ?>')" title="Thêm"><i class="fa fa-plus"></i></button>
-                                    <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb<?php echo $l ?>')" title="Xóa"><i class="fa fa-times"></i></button>
-                                </td>
-                            </tr>
+                              
                         </tbody></table>
                         <div class="hr hr-8 dotted hr-double"></div>
                     </td>
                     
                 </tr>
               <?php 
-                $l++; 
               }}else{ ?>
                 <tr>
                   <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
@@ -435,100 +240,57 @@ $(document).ready(function(){
                               <td>
                                 <label>Mã sản phẩm</label>
                                 <div class="input-group">
-                                  <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="10" required="required">
+                                  <input type="text" class="spare_part_code" name="spare_part_code[]" tabindex="5" required="required">
                                   <ul class="name_list_id"></ul>
                                 </div>
                               </td>
                               <td>
                                 <label>Tên sản phẩm</label>
                                 <div class="input-group">
-                                  <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="11" required="required">
+                                  <input type="text" class="spare_part_name" name="spare_part_name[]" tabindex="6" required="required">
                                   <ul class="name_list_id_2"></ul>
                                 </div>
                               </td>
-                              <td>
-                                <label>Nhà sản xuất</label>
+                              <td colspan="2">
+                                <label>Chọn 1 sản phẩm</label>
                                 <div class="input-group">
-                                  <input type="text" class="spare_part_brand" name="spare_part_brand[]" tabindex="12" >
+                                  <select class="choose_seri multiselect" name="choose_seri[]" tabindex="7" required="required" multiple="" data="0">
+                                    
+                                  </select>
                                 </div>
                               </td>
+                              
                             </tr>
                             <tr>
                               <td>
-                                <label>Ngày sản xuất</label>
+                                <label>Số lượng</label>
                                 <div class="input-group">
-                                  <input type="text" class="spare_part_date_manufacture input-mask-date" name="spare_part_date_manufacture[]" tabindex="13">
+                                  <input min="0" max="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="8" value="0">
                                 </div>
                               </td>
                               <td>
                                 <label>Đơn vị tính</label>
                                 <div class="input-group">
-                                  <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="14">
+                                  <input type="text" class="spare_part_unit" name="spare_part_unit[]" tabindex="9">
                                 </div>
                               </td>
-                              <td>
-                                <label>Số lượng</label>
-                                <div class="input-group">
-                                  <input min="0" type="text" class="spare_stock_number numbers" name="spare_stock_number[]" tabindex="15" value="1">
-                                </div>
-                              </td>
-                              
-                            </tr>
-                            <tr>
                               <td>
                                 <label>Đơn giá</label>
                                 <div class="input-group">
-                                  <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="16" >
+                                  <input type="text" class="spare_stock_price numbers" name="spare_stock_price[]" tabindex="10" >
                                 </div>
                               </td>
                               <td>
                                 <label>VAT</label>
                                 <div class="input-group">
-                                  <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="17" placeholder="%">
-                                  <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="18" >
+                                  <input style="width: 50px" type="text" class="spare_stock_vat_percent numbers" name="spare_stock_vat_percent[]" tabindex="11" placeholder="%">
+                                  <input style="width: 100px" type="text" class="spare_stock_vat_price numbers" name="spare_stock_vat_price[]" tabindex="12" >
                                 </div>
                               </td>
                               
-                              <td>
-                                <label>Có số seri</label>
-                                <div class="input-group">
-                                  <input type="checkbox" name="check_seri[]" tabindex="19" class="check_seri ace ace-switch ace-switch-5" value="1"><span class="lbl"></span>
-                                </div>
-                              </td>
                               
                             </tr>
-                            <tr class="tr_seri" style="display:none">
-                              <td></td>
-                              <td></td>
-                              <td>
-                                <div style="max-height: 200px; overflow: auto;">
-                                  <table class="dataTb" id="dataTb0" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
-                                    <tbody>
-                                      <tr>
-                                        <td><input type="checkbox" name="chk3" class="chk3"></td>
-                                        <td>
-                                          <table style="width:100%">
-                                            <tr>
-                                              <td>
-                                                <label>Số seri</label>
-                                                <div class="input-group">
-                                                  <input code="" data="0" type="text" class="spare_part_seri2" name="spare_part_seri2[]" tabindex="6" >
-                                                  <span class="dem" data="1">(1)</span>
-                                                </div>
-                                              </td>
-                                              
-                                            </tr>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>  
-                                  
-                                  <button class="btn btn-minier addRow3" type="button" onclick="addRow3('dataTb0')" title="Thêm"><i class="fa fa-plus"></i></button>
-                                  <button class="btn  btn-minier deleteRow3" type="button" onclick="deleteRow3('dataTb0')" title="Xóa"><i class="fa fa-times"></i></button>
-                              </td>
-                          </tr>
+                            
                       </tbody></table>
                       <div class="hr hr-8 dotted hr-double"></div>
                   </td>
@@ -539,165 +301,16 @@ $(document).ready(function(){
             </table>
          
         </div>
-            <input type="button" value="Thêm" onclick="addRow_importstock('dataTable_importstock')">
+            <input type="button" value="Thêm" onclick="addRow_exportstock('dataTable_exportstock')">
 
-            <input type="button" value="Xóa" onclick="deleteRow_importstock('dataTable_importstock')">
-      </div>
-      <div id="coststock" class="tab-pane">
-        <table id="dataTable_coststock" style="width: 100%;">
-        <tbody>
-          <?php if (count($import_stock_costs)>0) { ?>
-          <?php foreach ($import_stock_costs as $import_stock_cost) { ?>
-          <tr>
-              <td style="padding-right: 10px;"><input type="checkbox" name="chk2" data="<?php echo $import_stock_cost->import_stock_cost_id ?>" title="<?php echo $import_stock_cost->import_stock ?>"></td>
-              <td>
-                  <table style="width:100%;">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.import_stock_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
-                          <div class="input-group">
-                            <select class="form-control import_stock_cost_list" name="import_stock_cost_list[]" tabindex="14">
-                              <?php foreach ($cost_lists as $cost_list) { ?>
-                                <option <?php echo $import_stock_cost->import_stock_cost_list==$cost_list->cost_list_id?'selected="selected"':null ?> value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </td>
-                        <td>
-                          <label>Nội dung</label>
-                          <div class="input-group">
-                            <input type="text" class="import_stock_cost_comment" name="import_stock_cost_comment[]" tabindex="15" value="<?php echo $import_stock_cost->import_stock_cost_comment ?>">
-                          </div>
-                        </td>
-                        
-                        <td>
-                          <label>Số tiền <input name="import_stock_cost_money_vat[]" type="checkbox" class="import_stock_cost_money_vat ace" value="1" <?php echo $import_stock_cost->import_stock_cost_money_vat==1?'checked':null ?> ><span class="lbl"></span> VAT</label>
-                          <div class="input-group">
-                            <input type="text" class="import_stock_cost_money numbers" name="import_stock_cost_money[]" tabindex="16" data="<?php echo $import_stock_cost->import_stock_cost_id ?>" value="<?php echo $lib->formatMoney($import_stock_cost->import_stock_cost_money) ?>">
-                          </div>
-                          
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.import_stock_cost_customer','<?php echo $this->url("customer/getallcustomer") ?>','add_customer')"></i></a></label>
-                          <div class="input-group">
-                            <select class="form-control import_stock_cost_customer select2" name="import_stock_cost_customer[]" tabindex="17">
-                              <?php foreach ($customers as $customer_list) { ?>
-                                <option <?php echo $import_stock_cost->import_stock_cost_customer==$customer_list->customer_id?'selected="selected"':null ?> value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </td>
-                        <td>
-                          <label>Số hóa đơn chứng từ</label>
-                          <div class="input-group">
-                            <input type="text" class="import_stock_cost_invoice" name="import_stock_cost_invoice[]" tabindex="18" value="<?php echo $import_stock_cost->import_stock_cost_invoice ?>">
-                          </div>
-                        </td>
-                        <td>
-                          <label>Ngày</label>
-                          <div class="input-group">
-                            <input type="text" class="import_stock_cost_invoice_date input-mask-date" name="import_stock_cost_invoice_date[]" tabindex="19" value="<?php echo $lib->hien_thi_ngay_thang($import_stock_cost->import_stock_cost_invoice_date) ?>">
-                          </div>
-                        </td>
-                      </tr>
-                      
-                </tbody></table>
-                  <div class="hr hr-8 dotted hr-double"></div>
-              </td>
-              
-          </tr>
-        <?php }}else{ ?>
-          <tr>
-              <td style="padding-right: 10px;"><input type="checkbox" name="chk2"></td>
-              <td>
-                  <table style="width:100%;">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.import_stock_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
-                            <div class="input-group">
-                              <select class="form-control import_stock_cost_list" name="import_stock_cost_list[]" tabindex="14">
-                                <?php foreach ($cost_lists as $cost_list) { ?>
-                                  <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
-                                <?php } ?>
-                              </select>
-                            </div>
-                          </td>
-                          <td>
-                            <label>Nội dung</label>
-                            <div class="input-group">
-                              <input type="text" class="import_stock_cost_comment" name="import_stock_cost_comment[]" tabindex="15">
-                            </div>
-                          </td>
-                          
-                          <td>
-                            <label>Số tiền <input name="import_stock_cost_money_vat[]" type="checkbox" class="import_stock_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
-                            <div class="input-group">
-                              <input type="text" class="import_stock_cost_money numbers" name="import_stock_cost_money[]" tabindex="16">
-                            </div>
-                            
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.import_stock_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
-                            <div class="input-group">
-                              <select class="form-control import_stock_cost_customer select2" name="import_stock_cost_customer[]" tabindex="17">
-                                <?php foreach ($customers as $customer_list) { ?>
-                                  <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
-                                <?php } ?>
-                              </select>
-                            </div>
-                          </td>
-                          <td>
-                            <label>Số hóa đơn chứng từ</label>
-                            <div class="input-group">
-                              <input type="text" class="import_stock_cost_invoice" name="import_stock_cost_invoice[]" tabindex="18">
-                            </div>
-                          </td>
-                          <td>
-                            <label>Ngày</label>
-                            <div class="input-group">
-                              <input type="text" class="import_stock_cost_invoice_date input-mask-date" name="import_stock_cost_invoice_date[]" tabindex="19">
-                            </div>
-                          </td>
-                        </tr>
-                        
-                  </tbody></table>
-                  <div class="hr hr-8 dotted hr-double"></div>
-              </td>
-              
-          </tr>
-        <?php } ?>
-        </tbody>
-        </table>
-    
-        <input type="button" value="Thêm" onclick="addRow_coststock('dataTable_coststock')">
-
-        <input type="button" value="Xóa" onclick="deleteRow_coststock('dataTable_coststock')">
-      </div>
-    </div>
+            <input type="button" value="Xóa" onclick="deleteRow_exportstock('dataTable_exportstock')">
   </form>
 </div>
 <div class="clearfix"></div>
-<div id="error_importstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
+<div id="error_exportstock" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
 <script type="text/javascript">
-  $('#import_stock_customer').on("select2:select", function(e) { 
-      var val = $(this).val();
-      if (val>0) {
-        $('#import_stock_romooc').val("").trigger('change.select2');
-      }
-  });
-  $('#import_stock_romooc').on("select2:select", function(e) { 
-      var val = $(this).val();
-      if (val>0) {
-        $('#import_stock_customer').val("").trigger('change.select2');
-      }
-  });
+ 
 
 function get_price(){
 
@@ -705,14 +318,14 @@ function get_price(){
   $('.spare_stock_price').each(function(){
     total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
   });
-  $('#import_stock_price').val(total);
-  $('#import_stock_price').val(function(index, value) {
+  $('#export_stock_price').val(total);
+  $('#export_stock_price').val(function(index, value) {
     return value
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     ;
   });
 
-  $('#import_stock_price').inputmask("numeric", {
+  $('#export_stock_price').inputmask("numeric", {
     radixPoint: ".",
     groupSeparator: ",",
     digits: 6,
@@ -725,12 +338,8 @@ $('.spare_stock_price').keyup(function(){
   get_price();
 });
   
-function addRow_importstock(tableID){
-  var checked = 0;
-  if ($('.check_seri:first').is(':checked')) {
-    checked = 1;
-  }
-  var rowIndex = parseInt($('.dataTb:last').attr('id').replace('dataTb',''));
+function addRow_exportstock(tableID){
+  var rowIndex = parseInt($('.choose_seri:last').attr('data'));
 
     var table=document.getElementById(tableID);
     var rowCount=table.rows.length;
@@ -761,40 +370,27 @@ function addRow_importstock(tableID){
     
     $('.spare_stock_vat_percent:last').val("");
     $('.spare_stock_vat_price:last').val("");
+
+    $('.spare_stock_number:last').val("");
+    $('.spare_stock_number:last').attr("max",0);
     
     $('input[name="chk"]:last').attr('data',"");
     $('input[name="chk"]:last').attr('tabindex',0);
     $('input[name="chk"]:last').attr('title',"");
     $('input[name="chk"]:last').attr('class',"");
     $('input[name="chk"]:last').attr('alt',0);
-
-    $('.tr_seri:last input').attr('code',"");
-    $('.tr_seri:last input').attr('data',"");
-    $('.tr_seri:last input').attr('alt',"");
-    $('.tr_seri:last input').attr('title',"");
-    $('.tr_seri:last').find(":input:not([type=button])").val("");
-
-    $('.spare_stock_number:last').val($('.spare_stock_number:first').val());
     
     get_spare();
 
     $('.spare_stock_price').keyup(function(){
       get_price();
     });
-    
-    if (checked == 1) {
-      $('.check_seri:last').attr('checked','checked');
-    }
 
-    $('.dataTb:last').attr('id',"dataTb"+parseInt(rowIndex+1));
-    $('.addRow3:last').attr('onClick','addRow3("dataTb'+(parseInt(rowIndex+1))+'")');
-    $('.deleteRow3:last').attr('onClick','deleteRow3("dataTb'+(parseInt(rowIndex+1))+'")');
-    
-    $('#dataTb'+parseInt(rowIndex+1)).find('input[type="text"]').each(function () {
-       $(this).attr('data',rowIndex+1);
-    });
+    $(".choose_seri:last").attr('data',rowIndex);
+    $(".choose_seri:last").html('');
+    $(".btn-group:last").remove();
 }
-function deleteRow_importstock(tableID){
+function deleteRow_exportstock(tableID){
     try{
         var table=document.getElementById(tableID);
         var rowCount=table.rows.length;
@@ -812,9 +408,9 @@ function deleteRow_importstock(tableID){
                     else if(chkbox.getAttribute("title") > 0){
                         
                             var data = chkbox.getAttribute("data");
-                            var importstock = chkbox.getAttribute("title");
+                            var exportstock = chkbox.getAttribute("title");
 
-                            $.post("<?php echo BASE_URL ?>/importstock/deleteimportstockdetail", {data: data, importstock: importstock},
+                            $.post("<?php echo BASE_URL ?>/exportstock/deleteexportstockdetail", {data: data, exportstock: exportstock},
                                function(data){
                                 
                                }); 
@@ -836,169 +432,7 @@ function deleteRow_importstock(tableID){
     }
 }
 
-function addRow_coststock(tableID){
-      var table=document.getElementById(tableID);
-      var rowCount=table.rows.length;
-      var row=table.insertRow(rowCount);
-      var colCount=table.rows[0].cells.length;
-      for(var i=0;i<colCount;i++){
-          var newcell=row.insertCell(i);
-          newcell.innerHTML=table.rows[0].cells[i].innerHTML;
-          switch(newcell.childNodes[0].type){
-              case"text":newcell.childNodes[0].value="";
-              break;
-              case"checkbox":newcell.childNodes[0].checked=false;
-              break;
-              case"select-one":newcell.childNodes[0].selectedIndex=0;
-              break;
-          }
-      }
 
-      $('.import_stock_cost_money:last').val("");
-      $('.import_stock_cost_comment:last').val("");
-      $('.import_stock_cost_invoice:last').val("");
-      $('.import_stock_cost_invoice_date:last').val("");
-
-      $('input[name="chk2"]:last').attr('data',"");
-      $('input[name="chk2"]:last').attr('title',"");
-
-      $('.select2-container:last').remove();
-      $('.import_stock_cost_customer:last').removeClass('select2-hidden-accessible');
-      $('.import_stock_cost_customer:last').select2();
-
-     
-
-  }
-  function deleteRow_coststock(tableID){
-      try{
-          var table=document.getElementById(tableID);
-          var rowCount=table.rows.length;
-
-          bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-            if(result) {
-              for(var i=0;i<rowCount;i++){
-                  var row=table.rows[i];
-                  var chkbox=row.cells[0].childNodes[0];
-                  if(null!=chkbox&&true==chkbox.checked){
-                    if(rowCount<=1){
-                          alert_form("Không thể xóa hết.");
-                          break;
-                      }
-                      else if(chkbox.getAttribute("title") > 0){
-                          
-                              var data = chkbox.getAttribute("data");
-                              var importstock = chkbox.getAttribute("title");
-
-                              $.post("<?php echo BASE_URL ?>/importstock/deleteimportstockcost", {data: data, importstock: importstock},
-                                 function(data){
-                                  
-                                 }); 
-
-                      }
-                      
-                      table.deleteRow(i);
-                      rowCount--;
-                      i--;
-
-                  }
-              }
-            }
-          });
-      }
-      catch(e){
-          alert(e);
-      }
-  }
-
-function addRow3(tableID){
-  var ns = parseInt($('#'+tableID+' .dem:last').attr("data"));
-    var table=document.getElementById(tableID);
-    var rowCount=table.rows.length;
-    var row=table.insertRow(rowCount);
-    var colCount=table.rows[0].cells.length;
-    for(var i=0;i<colCount;i++){
-        var newcell=row.insertCell(i);
-        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
-        switch(newcell.childNodes[0].type){
-            case"text":newcell.childNodes[0].value="";
-            break;
-            case"checkbox":newcell.childNodes[0].checked=false;
-            break;
-            case"select-one":newcell.childNodes[0].selectedIndex=0;
-            break;
-        }
-    }
-
-    $('#'+tableID+' .spare_part_seri2:last').val("");
-    $('#'+tableID+' .spare_part_seri2:last').attr('code',"");
-    $('#'+tableID+' .spare_part_seri2:last').attr('title',"");
-    
-    $('#'+tableID+' input[name="chk3"]:last').attr('data',"");
-    $('#'+tableID+' input[name="chk3"]:last').attr('tabindex',0);
-    $('#'+tableID+' input[name="chk3"]:last').attr('title',"");
-    $('#'+tableID+' input[name="chk3"]:last').attr('class',"");
-    $('#'+tableID+' input[name="chk3"]:last').attr('alt',0);
-
-    ns++;
-            
-    $('#'+tableID+' .dem:last').attr("data",ns);
-    $('#'+tableID+' .dem:last').html("("+ns+")");
-
-    var rowIndex = parseInt(tableID.replace('dataTb',''));
-
-    $('.spare_stock_number:eq('+rowIndex+')').val(rowCount+1);
-
-    
-    get_vat(rowIndex);
-    get_spare();
-
-
-}
-function deleteRow3(tableID){
-    try{
-        var table=document.getElementById(tableID);
-        var rowCount=table.rows.length;
-
-        bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-          if(result) {
-            for(var i=0;i<rowCount;i++){
-                var row=table.rows[i];
-                var chkbox=row.cells[0].childNodes[0];
-                if(null!=chkbox&&true==chkbox.checked){
-                    if(rowCount<=1){
-                        alert_form("Không thể xóa hết.");
-                        break;
-                    }
-                    else if(chkbox.getAttribute("data") > 0){
-                        
-                            var spare_stock = chkbox.getAttribute("data");
-                            var spare_part = chkbox.getAttribute("title");
-                            $.post("<?php echo BASE_URL ?>/importstock/deletespare", {data: spare_stock, spare_part: spare_part},
-                               function(data){
-                                //alert(data);
-                               }); 
-                        
-                    }
-                    
-                    table.deleteRow(i);
-                    rowCount--;
-                    i--;
-
-                    var rowIndex = parseInt(tableID.replace('dataTb',''));
-
-                    $('.spare_stock_number:eq('+rowIndex+')').val(rowCount);
-
-                    get_vat(rowIndex);
-                    get_spare();
-                }
-            }
-          }
-        });
-    }
-    catch(e){
-        alert(e);
-    }
-}
 </script>
 <script type="text/javascript">
 get_spare();
@@ -1135,27 +569,7 @@ function get_spare(){
       };
       
   });
-  $('.spare_part_seri2').blur(function(){
-      var row = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
-      var rowIndex = row[0].rowIndex;
-
-      var check_type = 0;
-
-      var val = $(this).val().trim();
-      
-      $('.tr_seri:eq('+rowIndex+') input[type=text]').each(function() { 
-          if (val != "" && val == $(this).val().trim()) {
-              check_type ++;
-          }
-      });
-
-      if (check_type >= 2) {
-          alert_form('Sản phẩm này đã có!');
-          $(this).val("");
-          
-      };
-      
-  });
+  
 
   $('.spare_stock_price').keyup(function(){
     var row = $(this).parent().parent().parent().parent().parent().parent().parent();
@@ -1182,113 +596,9 @@ function get_spare(){
     
     get_vat(rowIndex);
 
-      if ($('.check_seri:eq('+rowIndex+')').is(':checked')) {
-        var ns = parseInt($('.dem:last').attr("data"));
-        $('.tr_seri:eq('+rowIndex+')').show();
-        var table=document.getElementById('dataTb'+rowIndex);
-        var rowCount=table.rows.length;
-        var val_add = parseInt($(this).val());
-        if (rowCount < val_add) {
-          var num_row = val_add-rowCount;
-          for (var i = 0; i < num_row; i++) {
-            var row=table.insertRow(rowCount);
-            var colCount=table.rows[0].cells.length;
-            for(var j=0;j<colCount;j++){
-                var newcell=row.insertCell(j);
-                newcell.innerHTML=table.rows[0].cells[j].innerHTML;
-                switch(newcell.childNodes[0].type){
-                    case"text":newcell.childNodes[0].value="";
-                    break;
-                    case"checkbox":newcell.childNodes[0].checked=false;
-                    break;
-                    case"select-one":newcell.childNodes[0].selectedIndex=0;
-                    break;
-                }
-            }
-
-            $('.spare_part_seri2:last').val("");
-            $('.spare_part_seri2:last').attr('code',"");
-            $('.spare_part_seri2:last').attr('title',"");
-            
-            $('input[name="chk3"]:last').attr('data',"");
-            $('input[name="chk3"]:last').attr('tabindex',0);
-            $('input[name="chk3"]:last').attr('title',"");
-            $('input[name="chk3"]:last').attr('class',"");
-            $('input[name="chk3"]:last').attr('alt',0);
-
-            ns++;
-            
-            $('.dem:last').attr("data",ns);
-            $('.dem:last').html("("+ns+")");
-
-            rowCount++;
-          }
-        }
-        else if(rowCount > val_add){
-         
-          for(var i=rowCount;i>val_add;i--){
-                if(rowCount>1){
-                  table.deleteRow(rowCount-1);
-                  rowCount--;
-                }
-                
-            }
-        }
-        
-      }
+     
     });
 
-  $('.check_seri').click(function(){
-  var row = $(this).parent().parent().parent().parent().parent().parent().parent();
-  var rowIndex = row[0].rowIndex;
-
-    if($(this).is(':checked')){
-      var ns = parseInt($('.dem:last').attr("data"));
-      $('.tr_seri:eq('+rowIndex+')').show();
-        var table=document.getElementById('dataTb'+rowIndex);
-        var rowCount=table.rows.length;
-        var val_add = parseInt($('.spare_stock_number:eq('+rowIndex+')').val());
-        if (rowCount < val_add) {
-          var num_row = val_add-rowCount;
-          for (var j = 0; j < num_row; j++) {
-            var row=table.insertRow(rowCount);
-            var colCount=table.rows[0].cells.length;
-            for(var i=0;i<colCount;i++){
-                var newcell=row.insertCell(i);
-                newcell.innerHTML=table.rows[0].cells[i].innerHTML;
-                switch(newcell.childNodes[0].type){
-                    case"text":newcell.childNodes[0].value="";
-                    break;
-                    case"checkbox":newcell.childNodes[0].checked=false;
-                    break;
-                    case"select-one":newcell.childNodes[0].selectedIndex=0;
-                    break;
-                }
-            }
-
-            $('.spare_part_seri2:last').val("");
-            $('.spare_part_seri2:last').attr('code',"");
-            $('.spare_part_seri2:last').attr('title',"");
-            
-            $('input[name="chk3"]:last').attr('data',"");
-            $('input[name="chk3"]:last').attr('tabindex',0);
-            $('input[name="chk3"]:last').attr('title',"");
-            $('input[name="chk3"]:last').attr('class',"");
-            $('input[name="chk3"]:last').attr('alt',0);
-
-            ns++;
-            
-            $('.dem:last').attr("data",ns);
-            $('.dem:last').html("("+ns+")");
-
-            rowCount++;
-          }
-        }
-    }
-    else{
-      $('.tr_seri:eq('+rowIndex+')').hide();
-    }
-  });
 
 }
 
@@ -1302,6 +612,7 @@ function set_item_other(item,value,code,date,brand,vitri,unit,price) {
     $('.spare_part_brand:eq('+vitri+')').val(brand);
     $('.spare_part_unit:eq('+vitri+')').val(unit);
     $('.spare_stock_price:eq('+vitri+')').val(price);
+    $('.spare_stock_number:eq('+vitri+')').val(0);
 
     get_vat(vitri);
     
@@ -1319,6 +630,64 @@ function set_item_other(item,value,code,date,brand,vitri,unit,price) {
       oncleared: function () { self.Value(''); }
     });
 
+    $.ajax({
+      url: '<?php echo BASE_URL ?>/exportstock/getseri',
+      type: 'GET',
+      data: {data:item},
+      success:function(data){
+        $(".choose_seri:eq("+vitri+")").multiselect('destroy');
+        $(".choose_seri:eq("+vitri+")").html(data);
+        $(".choose_seri:eq("+vitri+")").multiselect({
+           enableFiltering: true,
+           enableCaseInsensitiveFiltering: true,
+           maxHeight: 350,
+           enableHTML: true,
+           nonSelectedText: 'Chọn',
+           includeSelectAllOption: true,
+           buttonClass: 'btn btn-white btn-primary',
+           templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+            ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+            filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+            filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+            li: '<li><a tabindex="0"><label></label></a></li>',
+                divider: '<li class="multiselect-item divider"></li>',
+                liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+           },
+           onChange: function(option, checked, select) {
+              if (option != undefined) {
+                var number = parseFloat($('.spare_stock_number:eq('+vitri+')').val()) || 0;
+               var new_num = parseFloat(option.attr('title'));
+                if(checked == true){
+                    $('.spare_stock_number:eq('+vitri+')').val(number+new_num);
+                    $('.spare_stock_number:eq('+vitri+')').attr('max',number+new_num);
+                }
+                else{
+                    $('.spare_stock_number:eq('+vitri+')').val(number-new_num);
+                    $('.spare_stock_number:eq('+vitri+')').attr('max',number-new_num);
+                }
+              }
+              else{
+                if (checked==true) {
+                  var new_num = 0;
+                  $(".choose_seri:eq("+vitri+") option").each(function(){
+                     new_num += parseFloat($(this).attr('title'));
+                  });
+
+                  $('.spare_stock_number:eq('+vitri+')').val(new_num);
+                  $('.spare_stock_number:eq('+vitri+')').attr('max',new_num);
+                }
+                else{
+                  $('.spare_stock_number:eq('+vitri+')').val(0);
+                  $('.spare_stock_number:eq('+vitri+')').attr('max',0);
+                }
+              }
+              get_vat(vitri);
+            
+            }
+          });
+      }
+    });
 }
 function get_vat(vitri){
   var percent = parseFloat(get_number('.spare_stock_vat_percent:eq('+vitri+')')) || 0;
@@ -1338,4 +707,58 @@ function get_vat(vitri){
 function get_number(id){
     return $(id).val().replace(/\,/g,'');
 }
+
+$(document).ready(function(){
+  $('.multiselect').multiselect({
+   enableFiltering: true,
+   enableCaseInsensitiveFiltering: true,
+   maxHeight: 350,
+   enableHTML: true,
+   nonSelectedText: 'Chọn',
+   includeSelectAllOption: true,
+   buttonClass: 'btn btn-white btn-primary',
+   templates: {
+    button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+    ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+    filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+    filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+    li: '<li><a tabindex="0"><label></label></a></li>',
+        divider: '<li class="multiselect-item divider"></li>',
+        liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+   },
+   onChange: function(option, checked, select) {
+    var row = option.parent().parent().parent().parent().parent().parent().parent().parent();
+    var vitri = row[0].rowIndex;
+      if (option != undefined) {
+        var number = parseFloat($('.spare_stock_number:eq('+vitri+')').val()) || 0;
+       var new_num = parseFloat(option.attr('title'));
+        if(checked == true){
+            $('.spare_stock_number:eq('+vitri+')').val(number+new_num);
+            $('.spare_stock_number:eq('+vitri+')').attr('max',number+new_num);
+        }
+        else{
+            $('.spare_stock_number:eq('+vitri+')').val(number-new_num);
+            $('.spare_stock_number:eq('+vitri+')').attr('max',number-new_num);
+        }
+      }
+      else{
+        if (checked==true) {
+          var new_num = 0;
+          $(".choose_seri:eq("+vitri+") option").each(function(){
+             new_num += parseFloat($(this).attr('title'));
+          });
+
+          $('.spare_stock_number:eq('+vitri+')').val(new_num);
+          $('.spare_stock_number:eq('+vitri+')').attr('max',new_num);
+        }
+        else{
+          $('.spare_stock_number:eq('+vitri+')').val(0);
+          $('.spare_stock_number:eq('+vitri+')').attr('max',0);
+        }
+      }
+      get_vat(vitri);
+    
+    }
+  });
+});
 </script>

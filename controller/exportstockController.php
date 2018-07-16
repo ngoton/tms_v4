@@ -232,7 +232,7 @@ Class exportstockController Extends baseController {
                                 'spare_stock_price' => str_replace(',', '', $v->spare_stock_price),
                                 'spare_stock_vat_percent' => trim($v->spare_stock_vat_percent),
                                 'spare_stock_vat_price' => str_replace(',', '', $v->spare_stock_vat_price),
-                                'spare_stock_date' => $data['import_stock_date'],
+                                'spare_stock_date' => $data['export_stock_date'],
                                 
                             );
 
@@ -318,16 +318,6 @@ Class exportstockController Extends baseController {
 
         $this->view->data['houses'] = $house->getAllHouse(array('order_by'=>'house_name','order'=>'ASC'));
 
-        $customer = $this->model->get('customerModel');
-
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
-
-        $costlist_model = $this->model->get('costlistModel');
-
-        $cost_lists = $costlist_model->getAllCost(array('order_by'=>'cost_list_name','order'=>'ASC'));
-
-        $this->view->data['cost_lists'] = $cost_lists;
-
 
         return $this->view->show('exportstock/add');
     }
@@ -383,7 +373,7 @@ Class exportstockController Extends baseController {
                                 'spare_stock_price' => str_replace(',', '', $v->spare_stock_price),
                                 'spare_stock_vat_percent' => trim($v->spare_stock_vat_percent),
                                 'spare_stock_vat_price' => str_replace(',', '', $v->spare_stock_vat_price),
-                                'spare_stock_date' => $data['import_stock_date'],
+                                'spare_stock_date' => $data['export_stock_date'],
                                 
                             );
 
@@ -477,9 +467,46 @@ Class exportstockController Extends baseController {
 
         $spare_part_code_model = $this->model->get('sparepartcodeModel');
         $spare_part_model = $this->model->get('sparepartModel');
+        $spare_stock_model = $this->model->get('sparestockModel');
 
         $spare_part_codes = $spare_part_code_model->getAllStock(array('where'=>'spare_part_code_id IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock='.$id.')'));
         $this->view->data['spare_part_codes'] = $spare_part_codes;
+
+        $join = array('table'=>'spare_part','where'=>'spare_part = spare_part_id');
+        $data_im = array(
+            'where' => 'import_stock > 0 AND spare_stock_code IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock = '.$id.')',
+        );
+        $stock_ims = $spare_stock_model->getAllStock($data_im,$join);
+
+        $data_ex = array(
+            'where' => 'export_stock > 0 AND spare_stock_code IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock = '.$id.')',
+        );
+        $stock_exs = $spare_stock_model->getAllStock($data_ex,$join);
+    
+        $data_stock = array();
+        foreach ($stock_ims as $stock) {
+            $data_stock[$stock->spare_part] = isset($data_stock[$stock->spare_part])?$data_stock[$stock->spare_part]+$stock->spare_stock_number:$stock->spare_stock_number;
+        }
+        foreach ($stock_exs as $stock) {
+            $data_stock[$stock->spare_part] = isset($data_stock[$stock->spare_part])?$data_stock[$stock->spare_part]-$stock->spare_stock_number:0-$stock->spare_stock_number;
+        }
+
+        $data = array(
+            'where' => 'spare_part_code IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock = '.$id.') AND spare_part_id NOT IN (SELECT spare_part FROM spare_stock WHERE export_stock = '.$id.')',
+        );
+
+        $spares = $spare_part_model->getAllStock($data);
+
+        $stock = array();
+
+        foreach ($spares as $spare) {
+            if (isset($data_stock[$spare->spare_part_id]) && $data_stock[$spare->spare_part_id]>0) {
+                $stock[$spare->spare_part_code] = isset($stock[$spare->spare_part_code])?$stock[$spare->spare_part_code].'<option title="'.$data_stock[$spare->spare_part_id].'" value="'.$spare->spare_part_id.'">'.($spare->spare_part_seri!=""?$spare->spare_part_seri:$spare->spare_part_name).' ['.$data_stock[$spare->spare_part_id].']</option>':'<option title="'.$data_stock[$spare->spare_part_id].'" value="'.$spare->spare_part_id.'">'.($spare->spare_part_seri!=""?$spare->spare_part_seri:$spare->spare_part_name).' ['.$data_stock[$spare->spare_part_id].']</option>';
+            }
+            
+        }
+
+        $this->view->data['stock'] = $stock;
 
         $join = array('table'=>'spare_stock','where'=>'spare_part=spare_part_id','join'=>'LEFT JOIN');
         $spares = $spare_part_model->getAllStock(array('where'=>'export_stock='.$id),$join);
@@ -499,25 +526,10 @@ Class exportstockController Extends baseController {
         $this->view->data['spare_parts'] = $spare_parts;
         $this->view->data['spare_part_data'] = $spare_part_data;
 
-        $export_stock_cost_model = $this->model->get('exportstockcostModel');
-
-        $join = array('table'=>'cost_list,customer','where'=>'export_stock_cost_customer=customer_id AND export_stock_cost_list=cost_list_id');
-        $export_stock_costs = $export_stock_cost_model->getAllStock(array('where'=>'export_stock='.$id),$join);
-        $this->view->data['export_stock_costs'] = $export_stock_costs;
-
         $house = $this->model->get('houseModel');
 
         $this->view->data['houses'] = $house->getAllHouse(array('order_by'=>'house_name','order'=>'ASC'));
 
-        $customer = $this->model->get('customerModel');
-
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
-
-        $costlist_model = $this->model->get('costlistModel');
-
-        $cost_lists = $costlist_model->getAllCost(array('order_by'=>'cost_list_name','order'=>'ASC'));
-
-        $this->view->data['cost_lists'] = $cost_lists;
 
         return $this->view->show('exportstock/edit');
 
@@ -563,9 +575,46 @@ Class exportstockController Extends baseController {
 
         $spare_part_code_model = $this->model->get('sparepartcodeModel');
         $spare_part_model = $this->model->get('sparepartModel');
+        $spare_stock_model = $this->model->get('sparestockModel');
 
         $spare_part_codes = $spare_part_code_model->getAllStock(array('where'=>'spare_part_code_id IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock='.$id.')'));
         $this->view->data['spare_part_codes'] = $spare_part_codes;
+
+        $join = array('table'=>'spare_part','where'=>'spare_part = spare_part_id');
+        $data_im = array(
+            'where' => 'import_stock > 0 AND spare_stock_code IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock = '.$id.')',
+        );
+        $stock_ims = $spare_stock_model->getAllStock($data_im,$join);
+
+        $data_ex = array(
+            'where' => 'export_stock > 0 AND spare_stock_code IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock = '.$id.')',
+        );
+        $stock_exs = $spare_stock_model->getAllStock($data_ex,$join);
+    
+        $data_stock = array();
+        foreach ($stock_ims as $stock) {
+            $data_stock[$stock->spare_part] = isset($data_stock[$stock->spare_part])?$data_stock[$stock->spare_part]+$stock->spare_stock_number:$stock->spare_stock_number;
+        }
+        foreach ($stock_exs as $stock) {
+            $data_stock[$stock->spare_part] = isset($data_stock[$stock->spare_part])?$data_stock[$stock->spare_part]-$stock->spare_stock_number:0-$stock->spare_stock_number;
+        }
+
+        $data = array(
+            'where' => 'spare_part_code IN (SELECT spare_stock_code FROM spare_stock WHERE export_stock = '.$id.') AND spare_part_id NOT IN (SELECT spare_part FROM spare_stock WHERE export_stock = '.$id.')',
+        );
+
+        $spares = $spare_part_model->getAllStock($data);
+
+        $stock = array();
+
+        foreach ($spares as $spare) {
+            if (isset($data_stock[$spare->spare_part_id]) && $data_stock[$spare->spare_part_id]>0) {
+                $stock[$spare->spare_part_code] = isset($stock[$spare->spare_part_code])?$stock[$spare->spare_part_code].'<option title="'.$data_stock[$spare->spare_part_id].'" value="'.$spare->spare_part_id.'">'.($spare->spare_part_seri!=""?$spare->spare_part_seri:$spare->spare_part_name).' ['.$data_stock[$spare->spare_part_id].']</option>':'<option title="'.$data_stock[$spare->spare_part_id].'" value="'.$spare->spare_part_id.'">'.($spare->spare_part_seri!=""?$spare->spare_part_seri:$spare->spare_part_name).' ['.$data_stock[$spare->spare_part_id].']</option>';
+            }
+            
+        }
+
+        $this->view->data['stock'] = $stock;
 
         $join = array('table'=>'spare_stock','where'=>'spare_part=spare_part_id','join'=>'LEFT JOIN');
         $spares = $spare_part_model->getAllStock(array('where'=>'export_stock='.$id),$join);
@@ -585,25 +634,9 @@ Class exportstockController Extends baseController {
         $this->view->data['spare_parts'] = $spare_parts;
         $this->view->data['spare_part_data'] = $spare_part_data;
 
-        $export_stock_cost_model = $this->model->get('exportstockcostModel');
-
-        $join = array('table'=>'cost_list,customer','where'=>'export_stock_cost_customer=customer_id AND export_stock_cost_list=cost_list_id');
-        $export_stock_costs = $export_stock_cost_model->getAllStock(array('where'=>'export_stock='.$id),$join);
-        $this->view->data['export_stock_costs'] = $export_stock_costs;
-
         $house = $this->model->get('houseModel');
 
         $this->view->data['houses'] = $house->getAllHouse(array('order_by'=>'house_name','order'=>'ASC'));
-
-        $customer = $this->model->get('customerModel');
-
-        $this->view->data['customers'] = $customer->getAllCustomer(array('order_by'=>'customer_name','order'=>'ASC'));
-
-        $costlist_model = $this->model->get('costlistModel');
-
-        $cost_lists = $costlist_model->getAllCost(array('order_by'=>'cost_list_name','order'=>'ASC'));
-
-        $this->view->data['cost_lists'] = $cost_lists;
 
         return $this->view->show('exportstock/view');
 
@@ -691,6 +724,7 @@ Class exportstockController Extends baseController {
         }
 
     }
+    
 
     public function deletespare(){
         if (isset($_POST['data'])) {
@@ -734,28 +768,7 @@ Class exportstockController Extends baseController {
             $user_log_model->createUser($data_log);
         }
     }
-    public function deleteexportstockcost(){
-        if (isset($_POST['data'])) {
-            $export_stock_cost_model = $this->model->get('exportstockcostModel');
-            $user_log_model = $this->model->get('userlogModel');
-
-            $export_stock_cost_model->queryStock('DELETE FROM export_stock_cost WHERE export_stock_cost_id='.$_POST['data'].' AND export_stock='.$_POST['exportstock']);
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|export_stock_cost|"."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'export_stock_cost',
-                'user_log_table_name' => 'Chi phí xuất kho',
-                'user_log_action' => 'Xóa',
-                'user_log_data' => json_encode($_POST['data']),
-            );
-            $user_log_model->createUser($data_log);
-        }
-    }
-
+    
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {
