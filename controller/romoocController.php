@@ -133,6 +133,7 @@ Class romoocController Extends baseController {
 
             $data = array(
                 'romooc_number' => trim($_POST['romooc_number']),
+                'romooc_license' => trim($_POST['romooc_license']),
             );
             $romooc_model->createRomooc($data);
 
@@ -192,6 +193,7 @@ Class romoocController Extends baseController {
 
             $data = array(
                 'romooc_number' => trim($_POST['romooc_number']),
+                'romooc_license' => trim($_POST['romooc_license']),
             );
             $romooc_model->updateRomooc($data,array('romooc_id'=>$id));
 

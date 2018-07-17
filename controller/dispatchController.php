@@ -115,10 +115,10 @@ Class dispatchController Extends baseController {
                 $data['where'] .= ' AND dispatch_vehicle IN ('.implode(',',$_POST['dispatch_vehicle']).')';
             }
             if (isset($_POST['dispatch_customer'])) {
-                $data['where'] .= ' AND dispatch_booking_detail IN (SELECT booking_detail_id FROM booking_detail WHERE booking IN (SELECT booking_id FROM booking WHERE booking_customer IN ('.implode(',',$_POST['dispatch_customer']).')))';
+                $data['where'] .= ' AND dispatch_customer IN ('.implode(',',$_POST['dispatch_customer']).')';
             }
             if (isset($_POST['dispatch_type'])) {
-                $data['where'] .= ' AND dispatch_booking_detail IN (SELECT booking_detail_id FROM booking_detail WHERE booking IN (SELECT booking_id FROM booking WHERE booking_type IN ('.implode(',',$_POST['dispatch_type']).')))';
+                $data['where'] .= ' AND dispatch_booking_type IN ('.implode(',',$_POST['dispatch_type']).')';
             }
 
             $this->view->data['filter'] = 1;
@@ -185,10 +185,10 @@ Class dispatchController Extends baseController {
                 $data['where'] .= ' AND dispatch_vehicle IN ('.implode(',',$_POST['dispatch_vehicle']).')';
             }
             if (isset($_POST['dispatch_customer'])) {
-                $data['where'] .= ' AND dispatch_booking_detail IN (SELECT booking_detail_id FROM booking_detail WHERE booking IN (SELECT booking_id FROM booking WHERE booking_customer IN ('.implode(',',$_POST['dispatch_customer']).')))';
+                $data['where'] .= ' AND dispatch_customer IN ('.implode(',',$_POST['dispatch_customer']).')';
             }
             if (isset($_POST['dispatch_type'])) {
-                $data['where'] .= ' AND dispatch_booking_detail IN (SELECT booking_detail_id FROM booking_detail WHERE booking IN (SELECT booking_id FROM booking WHERE booking_type IN ('.implode(',',$_POST['dispatch_type']).')))';
+                $data['where'] .= ' AND dispatch_booking_type IN ('.implode(',',$_POST['dispatch_type']).')';
             }
         }
         

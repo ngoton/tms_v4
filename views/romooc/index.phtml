@@ -5,6 +5,8 @@ if ($order_by == 'romooc_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'romooc_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'romooc_license')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
 ?>
@@ -106,7 +108,9 @@ $i = $sonews*$page-($sonews-1);
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_number','<?php echo $url_order ?>')">Số mooc <?php if ($order_by == 'romooc_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-           
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_license','<?php echo $url_order ?>')">Biển số <?php if ($order_by == 'romooc_license'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>   
         <th>
             
         </th>
@@ -118,6 +122,7 @@ $i = $sonews*$page-($sonews-1);
         	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $romooc->romooc_id ?>"><span class="lbl"></span></td>
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $romooc->romooc_number; ?></td>
+            <td><?php echo $romooc->romooc_license; ?></td>
             
             <td class="text-right">
                 <div class="tools action-buttons">
