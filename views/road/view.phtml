@@ -93,6 +93,10 @@
           <div class="input-group">
             <input class="form-control numbers" type="text" id="road_over" name="road_over" tabindex="12" value="<?php echo $lib->formatMoney($road_data->road_over) ?>">
           </div>
+          <label for="road_start_date">Ngày áp dụng</label>
+          <div class="input-group">
+            <input class="form-control start-date" type="text" id="road_start_date" name="road_start_date" required="required" tabindex="17" value="<?php echo $lib->hien_thi_ngay_thang($road_data->road_start_date) ?>">
+          </div>
        </div>
        <div class="col-md-3 col-xs-6">
           <label for="road_add">Tiền đi đường</label>
@@ -103,13 +107,18 @@
           <div class="input-group">
             <input class="form-control numbers" type="text" id="road_salary" name="road_salary" tabindex="14" value="<?php echo $lib->formatMoney($road_data->road_salary) ?>">
           </div>
-          <label for="road_start_date">Ngày áp dụng</label>
+          <label for="road_salary_import">Lương chuyến (Nhập)</label>
           <div class="input-group">
-            <input class="form-control start-date" type="text" id="road_start_date" name="road_start_date" required="required" tabindex="15" value="<?php echo $lib->hien_thi_ngay_thang($road_data->road_start_date) ?>">
+            <input class="form-control numbers" type="text" id="road_salary_import" name="road_salary_import" tabindex="15" value="<?php echo $lib->formatMoney($road_data->road_salary_import) ?>">
           </div>
+          <label for="road_salary_export">Lương chuyến (Xuất)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_salary_export" name="road_salary_export" tabindex="16" value="<?php echo $lib->formatMoney($road_data->road_salary_export) ?>">
+          </div>
+          
           <label for="road_end_date">Ngày hết hạn</label>
           <div class="input-group">
-            <input class="form-control end-date" type="text" id="road_end_date" name="road_end_date" tabindex="16" value="<?php echo $lib->hien_thi_ngay_thang($road_data->road_end_date) ?>">
+            <input class="form-control end-date" type="text" id="road_end_date" name="road_end_date" tabindex="18" value="<?php echo $lib->hien_thi_ngay_thang($road_data->road_end_date) ?>">
           </div>
        </div>
      </div>

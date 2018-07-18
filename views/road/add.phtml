@@ -282,6 +282,10 @@ function get_number(id){
           <div class="input-group">
             <input class="form-control numbers" type="text" id="road_over" name="road_over" tabindex="12">
           </div>
+          <label for="road_start_date">Ngày áp dụng</label>
+          <div class="input-group">
+            <input class="form-control start-date" type="text" id="road_start_date" name="road_start_date" required="required" tabindex="17">
+          </div>
        </div>
        <div class="col-md-3 col-xs-6">
           <label for="road_add">Tiền đi đường</label>
@@ -292,13 +296,18 @@ function get_number(id){
           <div class="input-group">
             <input class="form-control numbers" type="text" id="road_salary" name="road_salary" tabindex="14">
           </div>
-          <label for="road_start_date">Ngày áp dụng</label>
+          <label for="road_salary_import">Lương chuyến (Nhập)</label>
           <div class="input-group">
-            <input class="form-control start-date" type="text" id="road_start_date" name="road_start_date" required="required" tabindex="15">
+            <input class="form-control numbers" type="text" id="road_salary_import" name="road_salary_import" tabindex="15">
           </div>
+          <label for="road_salary_export">Lương chuyến (Xuất)</label>
+          <div class="input-group">
+            <input class="form-control numbers" type="text" id="road_salary_export" name="road_salary_export" tabindex="16">
+          </div>
+          
           <label for="road_end_date">Ngày hết hạn</label>
           <div class="input-group">
-            <input class="form-control end-date" type="text" id="road_end_date" name="road_end_date" tabindex="16">
+            <input class="form-control end-date" type="text" id="road_end_date" name="road_end_date" tabindex="18">
           </div>
        </div>
      </div>

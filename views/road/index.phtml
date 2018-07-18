@@ -163,9 +163,6 @@ $i = $sonews*$page-($sonews-1);
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_add','<?php echo $url_order ?>')">Đi đường <?php if ($order_by == 'road_add'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_salary','<?php echo $url_order ?>')">Lương chuyến <?php if ($order_by == 'road_salary'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','road_start_date','<?php echo $url_order ?>')">Ngày áp dụng <?php if ($order_by == 'road_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
@@ -185,7 +182,7 @@ $i = $sonews*$page-($sonews-1);
             <td><?php echo $l++; ?></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng','<?php echo $place_data['name'][$key] ?>','none')"><?php echo $key; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng','<?php echo $place_data['name'][key($value)] ?>','none')"><?php echo key($value); ?></a></td>
-            <td colspan="11"></td>
+            <td colspan="10"></td>
         </tr>
         <?php $h=1;
             foreach ($value as $key1) { 
@@ -203,7 +200,6 @@ $i = $sonews*$page-($sonews-1);
                     <td class="text-right"><?php echo $lib->formatMoney($road->road_oil_ton,2); ?></td>
                     <td class="text-right"><?php echo $lib->formatMoney($road->road_bridge); ?></td>
                     <td class="text-right"><?php echo $lib->formatMoney($road->road_add); ?></td>
-                    <td class="text-right"><?php echo $lib->formatMoney($road->road_salary); ?></td>
                     <td><?php echo $lib->hien_thi_ngay_thang($road->road_start_date); ?></td>
                     <td><?php echo $lib->hien_thi_ngay_thang($road->road_end_date); ?></td>
                     

@@ -212,6 +212,8 @@ Class roadController Extends baseController {
                 'road_over' => str_replace(',', '', $_POST['road_over']),
                 'road_add' => str_replace(',', '', $_POST['road_add']),
                 'road_salary' => str_replace(',', '', $_POST['road_salary']),
+                'road_salary_import' => str_replace(',', '', $_POST['road_salary_import']),
+                'road_salary_export' => str_replace(',', '', $_POST['road_salary_export']),
             );
 
             $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['road_start_date']).' -1 day')));
@@ -418,6 +420,8 @@ Class roadController Extends baseController {
                 'road_over' => str_replace(',', '', $_POST['road_over']),
                 'road_add' => str_replace(',', '', $_POST['road_add']),
                 'road_salary' => str_replace(',', '', $_POST['road_salary']),
+                'road_salary_import' => str_replace(',', '', $_POST['road_salary_import']),
+                'road_salary_export' => str_replace(',', '', $_POST['road_salary_export']),
             );
 
             $road_model->updateRoad($data,array('road_id'=>$id));
