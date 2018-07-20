@@ -1,27 +1,7 @@
 <div class="login_body">
   <form id="add" method="post" action="<?php echo $this->url('booking') ?>" enctype="multipart/form-data">
     
-    <div class="col-xs-3">
-      <label for="booking_place_from">Kho đi</label>
-      <div class="input-group">
-        <select class="form-control multiselect" id="booking_place_from" name="booking_place_from[]" multiple="">
-          <?php foreach ($places as $place) { ?>
-            <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
-          <?php } ?>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-3">
-      <label for="booking_place_to">Kho đến</label>
-      <div class="input-group">
-        <select class="form-control multiselect" id="booking_place_to" name="booking_place_to[]" multiple="">
-          <?php foreach ($places as $place) { ?>
-            <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
-          <?php } ?>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-3">
+    <div class="col-xs-6">
       <label for="booking_customer">Khách hàng</label>
       <div class="input-group">
         <select class="form-control multiselect" id="booking_customer" name="booking_customer[]" multiple="">
@@ -31,7 +11,7 @@
         </select>
       </div>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-6">
       <label for="booking_type">Loại hàng</label>
       <div class="input-group">
         <select class="form-control multiselect" id="booking_type" name="booking_type[]" multiple="">

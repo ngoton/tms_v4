@@ -105,12 +105,6 @@ Class bookingController Extends baseController {
         $join = array('table'=>'customer','where'=>'booking_customer=customer_id','join'=>'LEFT JOIN');
 
         if (isset($_POST['filter'])) {
-            if (isset($_POST['booking_place_from'])) {
-                $data['where'] .= ' AND booking_place_from IN ('.implode(',',$_POST['booking_place_from']).')';
-            }
-            if (isset($_POST['booking_place_to'])) {
-                $data['where'] .= ' AND booking_place_to IN ('.implode(',',$_POST['booking_place_to']).')';
-            }
             if (isset($_POST['booking_customer'])) {
                 $data['where'] .= ' AND booking_customer IN ('.implode(',',$_POST['booking_customer']).')';
             }
@@ -172,12 +166,6 @@ Class bookingController Extends baseController {
         }
 
         if (isset($_POST['filter'])) {
-            if (isset($_POST['booking_place_from'])) {
-                $data['where'] .= ' AND booking_place_from IN ('.implode(',',$_POST['booking_place_from']).')';
-            }
-            if (isset($_POST['booking_place_to'])) {
-                $data['where'] .= ' AND booking_place_to IN ('.implode(',',$_POST['booking_place_to']).')';
-            }
             if (isset($_POST['booking_customer'])) {
                 $data['where'] .= ' AND booking_customer IN ('.implode(',',$_POST['booking_customer']).')';
             }
@@ -189,11 +177,9 @@ Class bookingController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( booking_place_from IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
-                        OR booking_place_to IN (SELECT place_id FROM place WHERE place_name LIKE "%'.$keyword.'%") 
-                        OR customer_name  LIKE "%'.$keyword.'%" 
+            $search = '( 
+                        customer_name  LIKE "%'.$keyword.'%" 
                         OR booking_number  LIKE "%'.$keyword.'%" 
-                        OR booking_code  LIKE "%'.$keyword.'%" 
                     )';
 
             $data['where'] = $search;
@@ -218,19 +204,12 @@ Class bookingController Extends baseController {
 
             $data = array(
                 'booking_date' => strtotime(str_replace('/', '-', $_POST['booking_date'])),
-                'booking_code'=>trim($_POST['booking_code']),
                 'booking_customer'=>trim($_POST['booking_customer']),
                 'booking_number'=>trim($_POST['booking_number']),
                 'booking_type'=>trim($_POST['booking_type']),
                 'booking_shipping'=>trim($_POST['booking_shipping']),
                 'booking_shipping_name'=>trim($_POST['booking_shipping_name']),
                 'booking_shipping_number'=>trim($_POST['booking_shipping_number']),
-                'booking_place_from'=>trim($_POST['booking_place_from']),
-                'booking_place_to'=>trim($_POST['booking_place_to']),
-                'booking_start_date' => strtotime(str_replace('/', '-', $_POST['booking_start_date'])),
-                'booking_end_date' => strtotime(str_replace('/', '-', $_POST['booking_end_date'])),
-                'booking_sum' => str_replace(',', '', $_POST['booking_sum']),
-                'booking_total' => str_replace(',', '', $_POST['booking_total']),
                 'booking_comment'=>trim($_POST['booking_comment']),
                 'booking_create_user'=>$_SESSION['userid_logined'],
             );
@@ -238,62 +217,7 @@ Class bookingController Extends baseController {
             $booking_model->createBooking($data);
             $id_booking = $booking_model->getLastBooking()->booking_id;
 
-            $customer_sub_model = $this->model->get('customersubModel');
-
-            $booking_detail_model = $this->model->get('bookingdetailModel');
-
-            $booking_detail_data = json_decode($_POST['booking_detail_data']);
-
-            if (isset($id_booking)) {
-                foreach ($booking_detail_data as $v) {
-                    $data_booking_detail = array(
-                        'booking' => $id_booking,
-                        'booking_detail_container' => trim($v->booking_detail_container),
-                        'booking_detail_seal' => trim($v->booking_detail_seal),
-                        'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
-                        'booking_detail_unit' => trim($v->booking_detail_unit),
-                        'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
-                    );
-
-                    $contributor = "";
-                    if(trim($v->booking_detail_customer_sub) != ""){
-                        $support = explode(',', trim($v->booking_detail_customer_sub));
-
-                        if ($support) {
-                            foreach ($support as $key) {
-                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
-                                if ($name) {
-                                    if ($contributor == "")
-                                        $contributor .= $name->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$name->customer_sub_id;
-                                }
-                                else{
-                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
-                                    if ($contributor == "")
-                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
-                                }
-                                
-                            }
-                        }
-
-                    }
-                    $data_booking_detail['booking_detail_customer_sub'] = $contributor;
-
-                    if ($v->id_booking_detail>0) {
-                        $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
-                    }
-                    else{
-                        if ($data_booking_detail['booking_detail_number']!="") {
-                            $booking_detail_model->createBooking($data_booking_detail);
-                        }
-                        
-                    }
-                }
-
-            }
+            
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_booking."|booking|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -336,16 +260,6 @@ Class bookingController Extends baseController {
 
         $this->view->data['title'] = 'Thêm mới đơn hàng';
 
-        $booking_model = $this->model->get('bookingModel');
-        $lastID = isset($booking_model->getLastBooking()->booking_code)?$booking_model->getLastBooking()->booking_code:'DH00';
-        $lastID++;
-        $this->view->data['lastID'] = $lastID;
-
-        $place_model = $this->model->get('placeModel');
-
-        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
-
-        $this->view->data['places'] = $places;
 
         $customer_model = $this->model->get('customerModel');
 
@@ -359,11 +273,7 @@ Class bookingController Extends baseController {
 
         $this->view->data['shippings'] = $shippings;
 
-        $unit_model = $this->model->get('unitModel');
-
-        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
-
-        $this->view->data['units'] = $units;
+        
 
         return $this->view->show('booking/add');
     }
@@ -376,83 +286,19 @@ Class bookingController Extends baseController {
             
             $data = array(
                 'booking_date' => strtotime(str_replace('/', '-', $_POST['booking_date'])),
-                'booking_code'=>trim($_POST['booking_code']),
                 'booking_customer'=>trim($_POST['booking_customer']),
                 'booking_number'=>trim($_POST['booking_number']),
                 'booking_type'=>trim($_POST['booking_type']),
                 'booking_shipping'=>trim($_POST['booking_shipping']),
                 'booking_shipping_name'=>trim($_POST['booking_shipping_name']),
                 'booking_shipping_number'=>trim($_POST['booking_shipping_number']),
-                'booking_place_from'=>trim($_POST['booking_place_from']),
-                'booking_place_to'=>trim($_POST['booking_place_to']),
-                'booking_start_date' => strtotime(str_replace('/', '-', $_POST['booking_start_date'])),
-                'booking_end_date' => strtotime(str_replace('/', '-', $_POST['booking_end_date'])),
-                'booking_sum' => str_replace(',', '', $_POST['booking_sum']),
-                'booking_total' => str_replace(',', '', $_POST['booking_total']),
                 'booking_comment'=>trim($_POST['booking_comment']),
                 'booking_update_user'=>$_SESSION['userid_logined'],
             );
 
             $booking_model->updateBooking($data,array('booking_id'=>$id));
             
-            $id_booking = $id;
-
-            $customer_sub_model = $this->model->get('customersubModel');
-
-            $booking_detail_model = $this->model->get('bookingdetailModel');
-
-            $booking_detail_data = json_decode($_POST['booking_detail_data']);
-
-            if (isset($id_booking)) {
-                foreach ($booking_detail_data as $v) {
-                    $data_booking_detail = array(
-                        'booking' => $id_booking,
-                        'booking_detail_container' => trim($v->booking_detail_container),
-                        'booking_detail_seal' => trim($v->booking_detail_seal),
-                        'booking_detail_number' => str_replace(',', '', $v->booking_detail_number),
-                        'booking_detail_unit' => trim($v->booking_detail_unit),
-                        'booking_detail_price' => str_replace(',', '', $v->booking_detail_price),
-                    );
-
-                    $contributor = "";
-                    if(trim($v->booking_detail_customer_sub) != ""){
-                        $support = explode(',', trim($v->booking_detail_customer_sub));
-
-                        if ($support) {
-                            foreach ($support as $key) {
-                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
-                                if ($name) {
-                                    if ($contributor == "")
-                                        $contributor .= $name->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$name->customer_sub_id;
-                                }
-                                else{
-                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
-                                    if ($contributor == "")
-                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
-                                }
-                                
-                            }
-                        }
-
-                    }
-                    $data_booking_detail['booking_detail_customer_sub'] = $contributor;
-
-                    if ($v->id_booking_detail>0) {
-                        $booking_detail_model->updateBooking($data_booking_detail,array('booking_detail_id'=>$v->id_booking_detail));
-                    }
-                    else{
-                        if ($data_booking_detail['booking_detail_number']!="") {
-                            $booking_detail_model->createBooking($data_booking_detail);
-                        }
-                        
-                    }
-                }
-
-            }
+            
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|booking|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -512,35 +358,7 @@ Class bookingController Extends baseController {
 
         }
 
-        $booking_detail_model = $this->model->get('bookingdetailModel');
-
-        $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$id));
-        $this->view->data['booking_details'] = $booking_details;
-
-        $customer_sub_model = $this->model->get('customersubModel');
-        $customer_sub = array();
-        foreach ($booking_details as $booking_detail) {
-            $sts = explode(',', $booking_detail->booking_detail_customer_sub);
-            foreach ($sts as $key) {
-                $subs = $customer_sub_model->getCustomer($key);
-                if($subs){
-                    if (!isset($customer_sub[$booking_detail->booking_detail_id]))
-                        $customer_sub[$booking_detail->booking_detail_id] = $subs->customer_sub_name;
-                    else
-                        $customer_sub[$booking_detail->booking_detail_id] .= ','.$subs->customer_sub_name;
-                }
-                
-            }
-        }
         
-        
-        $this->view->data['customer_sub'] = $customer_sub;
-
-        $place_model = $this->model->get('placeModel');
-
-        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
-
-        $this->view->data['places'] = $places;
 
         $customer_model = $this->model->get('customerModel');
 
@@ -553,12 +371,6 @@ Class bookingController Extends baseController {
         $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
 
         $this->view->data['shippings'] = $shippings;
-
-        $unit_model = $this->model->get('unitModel');
-
-        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
-
-        $this->view->data['units'] = $units;
 
 
         return $this->view->show('booking/edit');
@@ -603,35 +415,6 @@ Class bookingController Extends baseController {
 
         }
 
-        $booking_detail_model = $this->model->get('bookingdetailModel');
-
-        $booking_details = $booking_detail_model->getAllBooking(array('where'=>'booking='.$id));
-        $this->view->data['booking_details'] = $booking_details;
-
-        $customer_sub_model = $this->model->get('customersubModel');
-        $customer_sub = array();
-        foreach ($booking_details as $booking_detail) {
-            $sts = explode(',', $booking_detail->booking_detail_customer_sub);
-            foreach ($sts as $key) {
-                $subs = $customer_sub_model->getCustomer($key);
-                if($subs){
-                    if (!isset($customer_sub[$booking_detail->booking_detail_id]))
-                        $customer_sub[$booking_detail->booking_detail_id] = $subs->customer_sub_name;
-                    else
-                        $customer_sub[$booking_detail->booking_detail_id] .= ','.$subs->customer_sub_name;
-                }
-                
-            }
-        }
-        
-        
-        $this->view->data['customer_sub'] = $customer_sub;
-
-        $place_model = $this->model->get('placeModel');
-
-        $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
-
-        $this->view->data['places'] = $places;
 
         $customer_model = $this->model->get('customerModel');
 
@@ -644,12 +427,6 @@ Class bookingController Extends baseController {
         $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
 
         $this->view->data['shippings'] = $shippings;
-
-        $unit_model = $this->model->get('unitModel');
-
-        $units = $unit_model->getAllUnit(array('order_by'=>'unit_name','order'=>'ASC'));
-
-        $this->view->data['units'] = $units;
 
 
         return $this->view->show('booking/view');
@@ -681,7 +458,7 @@ Class bookingController Extends baseController {
 
         $str = "";
         foreach ($bookings as $booking) {
-            $str .= '<option value="'.$booking->booking_id.'">'.$booking->booking_number.'-['.$booking->booking_code.']</option>';
+            $str .= '<option value="'.$booking->booking_id.'">'.$booking->booking_number.'</option>';
         }
 
         $booking_data = array(
@@ -691,72 +468,7 @@ Class bookingController Extends baseController {
         echo json_encode($booking_data);
 
     }
-    public function getbookingdetail(){
-
-        $booking = $_GET['booking'];
-
-        $booking_model = $this->model->get('bookingModel');
-        $customer_model = $this->model->get('customerModel');
-        $booking_detail_model = $this->model->get('bookingdetailModel');
-
-        $books = $booking_model->getBooking($booking);
-        $customers = $customer_model->getCustomer($books->booking_customer);
-
-        $data = array(
-            'where'=>'booking = '.$booking,
-        );
-
-        $bookings = $booking_detail_model->getAllBooking($data);
-
-        $str = "";
-        foreach ($bookings as $booking) {
-            $str .= '<option value="'.$booking->booking_detail_id.'">'.$booking->booking_detail_container.'</option>';
-        }
-
-        $booking_data = array(
-            'container'=>$str,
-            'customer'=>$customers->customer_id,
-            'type'=>$books->booking_type,
-            'from'=>$books->booking_place_from,
-            'to'=>$books->booking_place_to,
-            'start'=>$this->lib->hien_thi_ngay_thang($books->booking_start_date),
-            'end'=>$this->lib->hien_thi_ngay_thang($books->booking_end_date),
-        );
-
-        echo json_encode($booking_data);
-
-    }
-    public function getbookingcont(){
-
-        if (!isset($_GET['detail'])) {
-            $booking_data = array(
-                'number'=>null,
-                'unit'=>null,
-                'price'=>null
-            );
-
-            echo json_encode($booking_data);
-            return;
-        }
-        
-        $detail = $_GET['detail'];
-
-        $booking_detail_model = $this->model->get('bookingdetailModel');
-        $unit_model = $this->model->get('unitModel');
-
-        $bookings = $booking_detail_model->getBooking($detail);
-        $units = $unit_model->getUnit($bookings->booking_detail_unit);
-
-        $booking_data = array(
-            'number'=>$bookings->booking_detail_number,
-            'unit'=>$units->unit_id,
-            'price'=>$bookings->booking_detail_price,
-        );
-
-        echo json_encode($booking_data);
-
-    }
-
+   
     public function filter(){
         $this->view->disableLayout();
 
@@ -786,28 +498,6 @@ Class bookingController Extends baseController {
         return $this->view->show('booking/filter');
     }
 
-    public function deletebookingdetail(){
-        if (isset($_POST['data'])) {
-            $booking_detail_model = $this->model->get('bookingdetailModel');
-            $user_log_model = $this->model->get('userlogModel');
-
-            $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking_detail_id='.$_POST['data'].' AND booking='.$_POST['booking']);
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|booking_detail|"."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'booking_detail',
-                'user_log_table_name' => 'Chi tiết đơn hàng',
-                'user_log_action' => 'Xóa',
-                'user_log_data' => json_encode($_POST['data']),
-            );
-            $user_log_model->createUser($data_log);
-        }
-    }
-
     public function delete(){
 
         if (!isset($_SESSION['userid_logined'])) {
@@ -827,7 +517,6 @@ Class bookingController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $booking_model = $this->model->get('bookingModel');
-            $booking_detail_model = $this->model->get('bookingdetailModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -837,8 +526,6 @@ Class bookingController Extends baseController {
                 foreach ($datas as $data) {
                     
                     $booking_model->deleteBooking($data);
-
-                    $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking='.$data);
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|booking|"."\n"."\r\n";
 
@@ -868,8 +555,6 @@ Class bookingController Extends baseController {
             else{
 
                 $booking_model->deleteBooking($_POST['data']);
-
-                $booking_detail_model->queryBooking('DELETE FROM booking_detail WHERE booking='.$_POST['data']);
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|booking|"."\n"."\r\n";
 

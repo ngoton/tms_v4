@@ -3,27 +3,13 @@
 $url_order = 'DESC';
 if ($order_by == 'booking_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_place_from')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_place_to')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_date')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'booking_type')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'customer_name')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_sum')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_total')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_start_date')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'booking_end_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
@@ -170,36 +156,15 @@ $i = $sonews*$page-($sonews-1);
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'booking_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_code','<?php echo $url_order ?>')">Số ĐH <?php if ($order_by == 'booking_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_number','<?php echo $url_order ?>')">BK/BL <?php if ($order_by == 'booking_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
+        
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Khách hàng <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_sum','<?php echo $url_order ?>')">Sản lượng <?php if ($order_by == 'booking_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_total','<?php echo $url_order ?>')">Thành tiền <?php if ($order_by == 'booking_total'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_type','<?php echo $url_order ?>')">Loại hàng <?php if ($order_by == 'booking_type'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_place_from','<?php echo $url_order ?>')">Kho đi <?php if ($order_by == 'booking_place_from'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_place_to','<?php echo $url_order ?>')">Kho đến <?php if ($order_by == 'booking_place_to'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_start_date','<?php echo $url_order ?>')">Bắt đầu <?php if ($order_by == 'booking_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_end_date','<?php echo $url_order ?>')">Kết thúc <?php if ($order_by == 'booking_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_number','<?php echo $url_order ?>')">BK/BL <?php if ($order_by == 'booking_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_comment','<?php echo $url_order ?>')">Diễn giải <?php if ($order_by == 'booking_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -214,7 +179,7 @@ $i = $sonews*$page-($sonews-1);
    </thead>
    <tbody>
     <?php foreach ($bookings as $booking) : ?>
-        <tr id="<?php echo $booking->booking_id ?>" class="edit_tr" <?php echo ($booking->booking_end_date=="" || $booking->booking_end_date==0 || $booking->booking_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+        <tr id="<?php echo $booking->booking_id ?>" class="edit_tr" >
             <td class="text-center">
                 <?php if($booking->booking_status=="" || $booking->booking_status==0){ ?>
                 <input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $booking->booking_id ?>"><span class="lbl"></span>
@@ -222,16 +187,9 @@ $i = $sonews*$page-($sonews-1);
             </td>
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_date); ?></td>
-            <td><?php echo $booking->booking_code; ?></td>
-            <td><?php echo $booking->booking_number; ?></td>
             <td><a onclick="view_click('<?php echo $this->url("customer/view/") ?>','Thông tin khách hàng',<?php echo $booking->booking_customer ?>,'none')"><?php echo $booking->customer_name; ?></a></td>
-            <td class="text-right"><?php echo $lib->formatMoney($booking->booking_sum,2); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($booking->booking_total,2); ?></td>
             <td><?php echo $booking->booking_type==1?"Hàng nhập":($booking->booking_type==2?"Hàng xuất":"Khác"); ?></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $booking->booking_place_from ?>,'none')"><?php echo isset($place_data[$booking->booking_place_from])?$place_data[$booking->booking_place_from]:null; ?></a></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $booking->booking_place_to ?>,'none')"><?php echo isset($place_data[$booking->booking_place_to])?$place_data[$booking->booking_place_to]:null; ?></a></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_start_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($booking->booking_end_date); ?></td>
+            <td><?php echo $booking->booking_number; ?></td>
             <td><?php echo $booking->booking_comment; ?></td>
             <td>
                 <?php
