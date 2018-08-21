@@ -21,6 +21,8 @@ elseif ($order_by == 'place_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'coordinate_comment')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'coordinate_type')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 $i = $sonews*$page-($sonews-1);
 
 ?>
@@ -170,6 +172,9 @@ $i = $sonews*$page-($sonews-1);
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','coordinate_code','<?php echo $url_order ?>')">Số lệnh <?php if ($order_by == 'coordinate_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','coordinate_type','<?php echo $url_order ?>')">Loại hàng <?php if ($order_by == 'coordinate_type'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','booking_number','<?php echo $url_order ?>')">BK/BL <?php if ($order_by == 'booking_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th>
@@ -207,7 +212,8 @@ $i = $sonews*$page-($sonews-1);
             <td class="text-center"><?php echo $i++; ?></td>
             <td><?php echo $lib->hien_thi_ngay_thang($coordinate->coordinate_date); ?></td>
             <td><?php echo $coordinate->coordinate_code; ?></td>
-            <td><?php echo $coordinate->booking_number; ?></td>
+            <td><?php echo $coordinate->coordinate_type==1?"Hàng nhập":($coordinate->coordinate_type==2?"Hàng xuất":"Khác"); ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("booking/view/") ?>','Thông tin đơn hàng',<?php echo $coordinate->coordinate_booking ?>,'none')"><?php echo $coordinate->coordinate_booking_number; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $coordinate->coordinate_place ?>,'none')"><?php echo $coordinate->place_name; ?></a></td>
             <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $coordinate->coordinate_vehicle ?>,'none')"><?php echo $coordinate->vehicle_number; ?></a></td>
             <td><?php echo $coordinate->coordinate_number; ?></td>

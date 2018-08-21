@@ -197,106 +197,77 @@ Class coordinateController Extends baseController {
 
     }
 
+    public function getBooking(){
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $booking_model = $this->model->get('bookingModel');
+
+            if ($_GET['keyword'] == "*") {
+                $list = $booking_model->getAllBooking();
+            }
+            else{
+                $data = array(
+                'where'=>'( booking_number LIKE "%'.$_GET['keyword'].'%" )',
+                );
+                $list = $booking_model->getAllBooking($data);
+            }
+
+            foreach ($list as $rs) {
+                $booking_number = $rs->booking_number;
+
+                if ($_GET['keyword'] != "*") {
+                    $booking_number = str_replace($_GET['keyword'], '<b>'.$_GET['keyword'].'</b>', $rs->booking_number);
+                }
+
+                echo '<li onclick="set_item(\''.$rs->booking_id.'\',\''.$rs->booking_number.'\',\''.$rs->booking_type.'\',\''.$_GET['offset'].'\')">'.$booking_number.'</li>';
+            }
+        }
+    }
 
     public function addcoordinate(){
         $coordinate_model = $this->model->get('coordinateModel');
+        $user_log_model = $this->model->get('userlogModel');
 
-        if (isset($_POST['coordinate_customer']) ) {
+        if (isset($_POST['coordinate_data']) ) {
             
+            $coordinate_data = json_decode($_POST['coordinate_data']);
+            foreach ($coordinate_data as $v) {
+                $data = array(
+                    'coordinate_date' => strtotime(str_replace('/', '-', $_POST['coordinate_date'])),
+                    'coordinate_code'=>trim($_POST['coordinate_code']),
+                    'coordinate_vehicle'=>trim($v->coordinate_vehicle),
+                    'coordinate_booking'=>trim($v->coordinate_booking),
+                    'coordinate_booking_number'=>trim($v->coordinate_booking_number),
+                    'coordinate_place'=>trim($v->coordinate_place),
+                    'coordinate_unit'=>trim($v->coordinate_unit),
+                    'coordinate_number'=>trim($v->coordinate_number),
+                    'coordinate_type'=>trim($v->coordinate_type),
+                    'coordinate_comment'=>trim($v->coordinate_comment),
+                    'coordinate_create_user'=>$_SESSION['userid_logined'],
+                );
 
-            $data = array(
-                'coordinate_date' => strtotime(str_replace('/', '-', $_POST['coordinate_date'])),
-                'coordinate_code'=>trim($_POST['coordinate_code']),
-                'coordinate_customer'=>trim($_POST['coordinate_customer']),
-                'coordinate_number'=>trim($_POST['coordinate_number']),
-                'coordinate_type'=>trim($_POST['coordinate_type']),
-                'coordinate_shipping'=>trim($_POST['coordinate_shipping']),
-                'coordinate_shipping_name'=>trim($_POST['coordinate_shipping_name']),
-                'coordinate_shipping_number'=>trim($_POST['coordinate_shipping_number']),
-                'coordinate_place_from'=>trim($_POST['coordinate_place_from']),
-                'coordinate_place_to'=>trim($_POST['coordinate_place_to']),
-                'coordinate_start_date' => strtotime(str_replace('/', '-', $_POST['coordinate_start_date'])),
-                'coordinate_end_date' => strtotime(str_replace('/', '-', $_POST['coordinate_end_date'])),
-                'coordinate_sum' => str_replace(',', '', $_POST['coordinate_sum']),
-                'coordinate_total' => str_replace(',', '', $_POST['coordinate_total']),
-                'coordinate_comment'=>trim($_POST['coordinate_comment']),
-                'coordinate_create_user'=>$_SESSION['userid_logined'],
-            );
+                $coordinate_model->createCoordinate($data);
+                $id_coordinate = $coordinate_model->getLastCoordinate()->coordinate_id;
 
-            $coordinate_model->createcoordinate($data);
-            $id_coordinate = $coordinate_model->getLastcoordinate()->coordinate_id;
 
-            $customer_sub_model = $this->model->get('customersubModel');
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_coordinate."|coordinate|".implode("-",$data)."\n"."\r\n";
+                $this->lib->ghi_file("action_logs.txt",$text);
 
-            $coordinate_detail_model = $this->model->get('coordinatedetailModel');
 
-            $coordinate_detail_data = json_decode($_POST['coordinate_detail_data']);
-
-            if (isset($id_coordinate)) {
-                foreach ($coordinate_detail_data as $v) {
-                    $data_coordinate_detail = array(
-                        'coordinate' => $id_coordinate,
-                        'coordinate_detail_container' => trim($v->coordinate_detail_container),
-                        'coordinate_detail_seal' => trim($v->coordinate_detail_seal),
-                        'coordinate_detail_number' => str_replace(',', '', $v->coordinate_detail_number),
-                        'coordinate_detail_unit' => trim($v->coordinate_detail_unit),
-                        'coordinate_detail_price' => str_replace(',', '', $v->coordinate_detail_price),
-                    );
-
-                    $contributor = "";
-                    if(trim($v->coordinate_detail_customer_sub) != ""){
-                        $support = explode(',', trim($v->coordinate_detail_customer_sub));
-
-                        if ($support) {
-                            foreach ($support as $key) {
-                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
-                                if ($name) {
-                                    if ($contributor == "")
-                                        $contributor .= $name->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$name->customer_sub_id;
-                                }
-                                else{
-                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
-                                    if ($contributor == "")
-                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
-                                }
-                                
-                            }
-                        }
-
-                    }
-                    $data_coordinate_detail['coordinate_detail_customer_sub'] = $contributor;
-
-                    if ($v->id_coordinate_detail>0) {
-                        $coordinate_detail_model->updatecoordinate($data_coordinate_detail,array('coordinate_detail_id'=>$v->id_coordinate_detail));
-                    }
-                    else{
-                        if ($data_coordinate_detail['coordinate_detail_number']!="") {
-                            $coordinate_detail_model->createcoordinate($data_coordinate_detail);
-                        }
-                        
-                    }
-                }
-
+                
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'coordinate',
+                    'user_log_table_name' => 'Lệnh điều xe',
+                    'user_log_action' => 'Thêm mới',
+                    'user_log_data' => json_encode($data),
+                );
+                $user_log_model->createUser($data_log);
             }
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_coordinate."|coordinate|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'coordinate',
-                'user_log_table_name' => 'lệnh điều xe',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
+            
 
 
             echo "Thêm thành công";
@@ -325,7 +296,7 @@ Class coordinateController Extends baseController {
         $this->view->data['title'] = 'Thêm mới lệnh điều xe';
 
         $coordinate_model = $this->model->get('coordinateModel');
-        $lastID = isset($coordinate_model->getLastcoordinate()->coordinate_code)?$coordinate_model->getLastcoordinate()->coordinate_code:'DH00';
+        $lastID = isset($coordinate_model->getLastCoordinate()->coordinate_code)?$coordinate_model->getLastCoordinate()->coordinate_code:'DX00';
         $lastID++;
         $this->view->data['lastID'] = $lastID;
 
@@ -335,17 +306,11 @@ Class coordinateController Extends baseController {
 
         $this->view->data['places'] = $places;
 
-        $customer_model = $this->model->get('customerModel');
+        $vehicle_model = $this->model->get('vehicleModel');
 
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
 
-        $this->view->data['customers'] = $customers;
-
-        $shipping_model = $this->model->get('shippingModel');
-
-        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
-
-        $this->view->data['shippings'] = $shippings;
+        $this->view->data['vehicles'] = $vehicles;
 
         $unit_model = $this->model->get('unitModel');
 
@@ -365,82 +330,21 @@ Class coordinateController Extends baseController {
             $data = array(
                 'coordinate_date' => strtotime(str_replace('/', '-', $_POST['coordinate_date'])),
                 'coordinate_code'=>trim($_POST['coordinate_code']),
-                'coordinate_customer'=>trim($_POST['coordinate_customer']),
+                'coordinate_vehicle'=>trim($_POST['coordinate_vehicle']),
+                'coordinate_booking'=>trim($_POST['coordinate_booking']),
+                'coordinate_booking_number'=>trim($_POST['coordinate_booking_number']),
+                'coordinate_place'=>trim($_POST['coordinate_place']),
+                'coordinate_unit'=>trim($_POST['coordinate_unit']),
                 'coordinate_number'=>trim($_POST['coordinate_number']),
                 'coordinate_type'=>trim($_POST['coordinate_type']),
-                'coordinate_shipping'=>trim($_POST['coordinate_shipping']),
-                'coordinate_shipping_name'=>trim($_POST['coordinate_shipping_name']),
-                'coordinate_shipping_number'=>trim($_POST['coordinate_shipping_number']),
-                'coordinate_place_from'=>trim($_POST['coordinate_place_from']),
-                'coordinate_place_to'=>trim($_POST['coordinate_place_to']),
-                'coordinate_start_date' => strtotime(str_replace('/', '-', $_POST['coordinate_start_date'])),
-                'coordinate_end_date' => strtotime(str_replace('/', '-', $_POST['coordinate_end_date'])),
-                'coordinate_sum' => str_replace(',', '', $_POST['coordinate_sum']),
-                'coordinate_total' => str_replace(',', '', $_POST['coordinate_total']),
                 'coordinate_comment'=>trim($_POST['coordinate_comment']),
                 'coordinate_update_user'=>$_SESSION['userid_logined'],
             );
 
-            $coordinate_model->updatecoordinate($data,array('coordinate_id'=>$id));
+            $coordinate_model->updateCoordinate($data,array('coordinate_id'=>$id));
             
             $id_coordinate = $id;
 
-            $customer_sub_model = $this->model->get('customersubModel');
-
-            $coordinate_detail_model = $this->model->get('coordinatedetailModel');
-
-            $coordinate_detail_data = json_decode($_POST['coordinate_detail_data']);
-
-            if (isset($id_coordinate)) {
-                foreach ($coordinate_detail_data as $v) {
-                    $data_coordinate_detail = array(
-                        'coordinate' => $id_coordinate,
-                        'coordinate_detail_container' => trim($v->coordinate_detail_container),
-                        'coordinate_detail_seal' => trim($v->coordinate_detail_seal),
-                        'coordinate_detail_number' => str_replace(',', '', $v->coordinate_detail_number),
-                        'coordinate_detail_unit' => trim($v->coordinate_detail_unit),
-                        'coordinate_detail_price' => str_replace(',', '', $v->coordinate_detail_price),
-                    );
-
-                    $contributor = "";
-                    if(trim($v->coordinate_detail_customer_sub) != ""){
-                        $support = explode(',', trim($v->coordinate_detail_customer_sub));
-
-                        if ($support) {
-                            foreach ($support as $key) {
-                                $name = $customer_sub_model->getCustomerByWhere(array('customer_sub_name'=>trim($key)));
-                                if ($name) {
-                                    if ($contributor == "")
-                                        $contributor .= $name->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$name->customer_sub_id;
-                                }
-                                else{
-                                    $customer_sub_model->createCustomer(array('customer_sub_name'=>trim($key)));
-                                    if ($contributor == "")
-                                        $contributor .= $customer_sub_model->getLastCustomer()->customer_sub_id;
-                                    else
-                                        $contributor .= ','.$customer_sub_model->getLastCustomer()->customer_sub_id;
-                                }
-                                
-                            }
-                        }
-
-                    }
-                    $data_coordinate_detail['coordinate_detail_customer_sub'] = $contributor;
-
-                    if ($v->id_coordinate_detail>0) {
-                        $coordinate_detail_model->updatecoordinate($data_coordinate_detail,array('coordinate_detail_id'=>$v->id_coordinate_detail));
-                    }
-                    else{
-                        if ($data_coordinate_detail['coordinate_detail_number']!="") {
-                            $coordinate_detail_model->createcoordinate($data_coordinate_detail);
-                        }
-                        
-                    }
-                }
-
-            }
 
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|coordinate|".implode("-",$data)."\n"."\r\n";
             $this->lib->ghi_file("action_logs.txt",$text);
@@ -451,7 +355,7 @@ Class coordinateController Extends baseController {
                 'user_log' => $_SESSION['userid_logined'],
                 'user_log_date' => time(),
                 'user_log_table' => 'coordinate',
-                'user_log_table_name' => 'lệnh điều xe',
+                'user_log_table_name' => 'Lệnh điều xe',
                 'user_log_action' => 'Cập nhật',
                 'user_log_data' => json_encode($data),
             );
@@ -490,7 +394,7 @@ Class coordinateController Extends baseController {
 
         $coordinate_model = $this->model->get('coordinateModel');
 
-        $coordinate_data = $coordinate_model->getcoordinate($id);
+        $coordinate_data = $coordinate_model->getCoordinate($id);
 
         $this->view->data['coordinate_data'] = $coordinate_data;
 
@@ -500,29 +404,6 @@ Class coordinateController Extends baseController {
 
         }
 
-        $coordinate_detail_model = $this->model->get('coordinatedetailModel');
-
-        $coordinate_details = $coordinate_detail_model->getAllcoordinate(array('where'=>'coordinate='.$id));
-        $this->view->data['coordinate_details'] = $coordinate_details;
-
-        $customer_sub_model = $this->model->get('customersubModel');
-        $customer_sub = array();
-        foreach ($coordinate_details as $coordinate_detail) {
-            $sts = explode(',', $coordinate_detail->coordinate_detail_customer_sub);
-            foreach ($sts as $key) {
-                $subs = $customer_sub_model->getCustomer($key);
-                if($subs){
-                    if (!isset($customer_sub[$coordinate_detail->coordinate_detail_id]))
-                        $customer_sub[$coordinate_detail->coordinate_detail_id] = $subs->customer_sub_name;
-                    else
-                        $customer_sub[$coordinate_detail->coordinate_detail_id] .= ','.$subs->customer_sub_name;
-                }
-                
-            }
-        }
-        
-        
-        $this->view->data['customer_sub'] = $customer_sub;
 
         $place_model = $this->model->get('placeModel');
 
@@ -530,17 +411,17 @@ Class coordinateController Extends baseController {
 
         $this->view->data['places'] = $places;
 
-        $customer_model = $this->model->get('customerModel');
+        $vehicle_model = $this->model->get('vehicleModel');
 
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
 
-        $this->view->data['customers'] = $customers;
+        $this->view->data['vehicles'] = $vehicles;
 
-        $shipping_model = $this->model->get('shippingModel');
+        $booking_model = $this->model->get('bookingModel');
 
-        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
+        $bookings = $booking_model->getAllBooking(array('order_by'=>'booking_number','order'=>'ASC'));
 
-        $this->view->data['shippings'] = $shippings;
+        $this->view->data['bookings'] = $bookings;
 
         $unit_model = $this->model->get('unitModel');
 
@@ -581,7 +462,7 @@ Class coordinateController Extends baseController {
 
         $coordinate_model = $this->model->get('coordinateModel');
 
-        $coordinate_data = $coordinate_model->getcoordinate($id);
+        $coordinate_data = $coordinate_model->getCoordinate($id);
 
         $this->view->data['coordinate_data'] = $coordinate_data;
 
@@ -591,47 +472,23 @@ Class coordinateController Extends baseController {
 
         }
 
-        $coordinate_detail_model = $this->model->get('coordinatedetailModel');
-
-        $coordinate_details = $coordinate_detail_model->getAllcoordinate(array('where'=>'coordinate='.$id));
-        $this->view->data['coordinate_details'] = $coordinate_details;
-
-        $customer_sub_model = $this->model->get('customersubModel');
-        $customer_sub = array();
-        foreach ($coordinate_details as $coordinate_detail) {
-            $sts = explode(',', $coordinate_detail->coordinate_detail_customer_sub);
-            foreach ($sts as $key) {
-                $subs = $customer_sub_model->getCustomer($key);
-                if($subs){
-                    if (!isset($customer_sub[$coordinate_detail->coordinate_detail_id]))
-                        $customer_sub[$coordinate_detail->coordinate_detail_id] = $subs->customer_sub_name;
-                    else
-                        $customer_sub[$coordinate_detail->coordinate_detail_id] .= ','.$subs->customer_sub_name;
-                }
-                
-            }
-        }
-        
-        
-        $this->view->data['customer_sub'] = $customer_sub;
-
         $place_model = $this->model->get('placeModel');
 
         $places = $place_model->getAllPlace(array('order_by'=>'place_name','order'=>'ASC'));
 
         $this->view->data['places'] = $places;
 
-        $customer_model = $this->model->get('customerModel');
+        $vehicle_model = $this->model->get('vehicleModel');
 
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
 
-        $this->view->data['customers'] = $customers;
+        $this->view->data['vehicles'] = $vehicles;
 
-        $shipping_model = $this->model->get('shippingModel');
+        $booking_model = $this->model->get('bookingModel');
 
-        $shippings = $shipping_model->getAllShipping(array('order_by'=>'shipping_name','order'=>'ASC'));
+        $bookings = $booking_model->getAllBooking(array('order_by'=>'booking_number','order'=>'ASC'));
 
-        $this->view->data['shippings'] = $shippings;
+        $this->view->data['bookings'] = $bookings;
 
         $unit_model = $this->model->get('unitModel');
 
@@ -644,120 +501,23 @@ Class coordinateController Extends baseController {
 
     }
 
-    public function getcoordinate(){
-
-        $customer = $_GET['customer'];
-
-        $type = $_GET['type'];
-
-        $coordinate_model = $this->model->get('coordinateModel');
-
-        $data = array(
-            'where'=>'(coordinate_sum_run IS NULL OR coordinate_sum_run=0 OR coordinate_sum_run<coordinate_sum)',
-            'order_by'=>'coordinate_date',
-            'order'=>'ASC',
-        );
-        
-        if ($customer>0) {
-            $data['where'] .= ' AND coordinate_customer='.$customer;
-        }
-        if ($type>0) {
-            $data['where'] .= ' AND coordinate_type='.$type;
-        }
-
-        $coordinates = $coordinate_model->getAllcoordinate($data);
-
-        $str = "";
-        foreach ($coordinates as $coordinate) {
-            $str .= '<option value="'.$coordinate->coordinate_id.'">'.$coordinate->coordinate_number.'-['.$coordinate->coordinate_code.']</option>';
-        }
-
-        $coordinate_data = array(
-            'coordinate'=>$str,
-        );
-
-        echo json_encode($coordinate_data);
-
-    }
-    public function getcoordinatedetail(){
-
-        $coordinate = $_GET['coordinate'];
-
-        $coordinate_model = $this->model->get('coordinateModel');
-        $customer_model = $this->model->get('customerModel');
-        $coordinate_detail_model = $this->model->get('coordinatedetailModel');
-
-        $books = $coordinate_model->getcoordinate($coordinate);
-        $customers = $customer_model->getCustomer($books->coordinate_customer);
-
-        $data = array(
-            'where'=>'coordinate = '.$coordinate,
-        );
-
-        $coordinates = $coordinate_detail_model->getAllcoordinate($data);
-
-        $str = "";
-        foreach ($coordinates as $coordinate) {
-            $str .= '<option value="'.$coordinate->coordinate_detail_id.'">'.$coordinate->coordinate_detail_container.'</option>';
-        }
-
-        $coordinate_data = array(
-            'container'=>$str,
-            'customer'=>$customers->customer_id,
-            'type'=>$books->coordinate_type,
-            'from'=>$books->coordinate_place_from,
-            'to'=>$books->coordinate_place_to,
-            'start'=>$this->lib->hien_thi_ngay_thang($books->coordinate_start_date),
-            'end'=>$this->lib->hien_thi_ngay_thang($books->coordinate_end_date),
-        );
-
-        echo json_encode($coordinate_data);
-
-    }
-    public function getcoordinatecont(){
-
-        if (!isset($_GET['detail'])) {
-            $coordinate_data = array(
-                'number'=>null,
-                'unit'=>null,
-                'price'=>null
-            );
-
-            echo json_encode($coordinate_data);
-            return;
-        }
-        
-        $detail = $_GET['detail'];
-
-        $coordinate_detail_model = $this->model->get('coordinatedetailModel');
-        $unit_model = $this->model->get('unitModel');
-
-        $coordinates = $coordinate_detail_model->getcoordinate($detail);
-        $units = $unit_model->getUnit($coordinates->coordinate_detail_unit);
-
-        $coordinate_data = array(
-            'number'=>$coordinates->coordinate_detail_number,
-            'unit'=>$units->unit_id,
-            'price'=>$coordinates->coordinate_detail_price,
-        );
-
-        echo json_encode($coordinate_data);
-
-    }
-
+    
     public function filter(){
         $this->view->disableLayout();
 
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Lọc dữ liệu';
 
-        $customer_model = $this->model->get('customerModel');
+        $vehicle_model = $this->model->get('vehicleModel');
         $place_model = $this->model->get('placeModel');
+        $booking_model = $this->model->get('bookingModel');
 
-        $customers = $customer_model->getAllCustomer(array('where'=>'customer_type=1','order_by'=>'customer_name','order'=>'ASC'));
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
         $places = $place_model->getAllPlace(array('order_by'=>'place_code','order'=>'ASC'));
+        $bookings = $booking_model->getAllBooking(array('order_by'=>'booking_number','order'=>'ASC'));
 
-        $this->view->data['customers'] = $customers;
+        $this->view->data['bookings'] = $bookings;
+        $this->view->data['vehicles'] = $vehicles;
         $this->view->data['places'] = $places;
 
         $this->view->data['page'] = $_GET['page'];
@@ -772,28 +532,6 @@ Class coordinateController Extends baseController {
         $this->view->data['ketthuc'] = $_GET['ketthuc'];
 
         return $this->view->show('coordinate/filter');
-    }
-
-    public function deletecoordinatedetail(){
-        if (isset($_POST['data'])) {
-            $coordinate_detail_model = $this->model->get('coordinatedetailModel');
-            $user_log_model = $this->model->get('userlogModel');
-
-            $coordinate_detail_model->querycoordinate('DELETE FROM coordinate_detail WHERE coordinate_detail_id='.$_POST['data'].' AND coordinate='.$_POST['coordinate']);
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|coordinate_detail|"."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'coordinate_detail',
-                'user_log_table_name' => 'Chi tiết lệnh điều xe',
-                'user_log_action' => 'Xóa',
-                'user_log_data' => json_encode($_POST['data']),
-            );
-            $user_log_model->createUser($data_log);
-        }
     }
 
     public function delete(){
@@ -815,7 +553,6 @@ Class coordinateController Extends baseController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $coordinate_model = $this->model->get('coordinateModel');
-            $coordinate_detail_model = $this->model->get('coordinatedetailModel');
             $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
@@ -824,9 +561,7 @@ Class coordinateController Extends baseController {
 
                 foreach ($datas as $data) {
                     
-                    $coordinate_model->deletecoordinate($data);
-
-                    $coordinate_detail_model->querycoordinate('DELETE FROM coordinate_detail WHERE coordinate='.$data);
+                    $coordinate_model->deleteCoordinate($data);
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|coordinate|"."\n"."\r\n";
 
@@ -841,7 +576,7 @@ Class coordinateController Extends baseController {
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
                     'user_log_table' => 'coordinate',
-                    'user_log_table_name' => 'lệnh điều xe',
+                    'user_log_table_name' => 'Lệnh điều xe',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($datas),
                 );
@@ -855,9 +590,7 @@ Class coordinateController Extends baseController {
 
             else{
 
-                $coordinate_model->deletecoordinate($_POST['data']);
-
-                $coordinate_detail_model->querycoordinate('DELETE FROM coordinate_detail WHERE coordinate='.$_POST['data']);
+                $coordinate_model->deleteCoordinate($_POST['data']);
 
                 $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|coordinate|"."\n"."\r\n";
 
@@ -867,7 +600,7 @@ Class coordinateController Extends baseController {
                     'user_log' => $_SESSION['userid_logined'],
                     'user_log_date' => time(),
                     'user_log_table' => 'coordinate',
-                    'user_log_table_name' => 'lệnh điều xe',
+                    'user_log_table_name' => 'Lệnh điều xe',
                     'user_log_action' => 'Xóa',
                     'user_log_data' => json_encode($_POST['data']),
                 );

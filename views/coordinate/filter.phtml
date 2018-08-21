@@ -1,10 +1,10 @@
 <div class="login_body">
-  <form id="add" method="post" action="<?php echo $this->url('booking') ?>" enctype="multipart/form-data">
+  <form id="add" method="post" action="<?php echo $this->url('coordinate') ?>" enctype="multipart/form-data">
     
     <div class="col-xs-3">
-      <label for="booking_place_from">Kho đi</label>
+      <label for="coordinate_place_from">Nơi lấy</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="booking_place_from" name="booking_place_from[]" multiple="">
+        <select class="form-control multiselect" id="coordinate_place" name="coordinate_place[]" multiple="">
           <?php foreach ($places as $place) { ?>
             <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
           <?php } ?>
@@ -12,29 +12,29 @@
       </div>
     </div>
     <div class="col-xs-3">
-      <label for="booking_place_to">Kho đến</label>
+      <label for="coordinate_booking">Booking</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="booking_place_to" name="booking_place_to[]" multiple="">
-          <?php foreach ($places as $place) { ?>
-            <option value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
+        <select class="form-control multiselect" id="coordinate_booking" name="coordinate_booking[]" multiple="">
+          <?php foreach ($bookings as $booking) { ?>
+            <option value="<?php echo $booking->booking_id ?>"><?php echo $booking->booking_number ?></option>
           <?php } ?>
         </select>
       </div>
     </div>
     <div class="col-xs-3">
-      <label for="booking_customer">Khách hàng</label>
+      <label for="coordinate_vehicle">Xe</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="booking_customer" name="booking_customer[]" multiple="">
-          <?php foreach ($customers as $customer) { ?>
-            <option value="<?php echo $customer->customer_id ?>"><?php echo $customer->customer_name ?></option>
+        <select class="form-control multiselect" id="coordinate_vehicle" name="coordinate_vehicle[]" multiple="">
+          <?php foreach ($vehicles as $vehicle) { ?>
+            <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
           <?php } ?>
         </select>
       </div>
     </div>
     <div class="col-xs-3">
-      <label for="booking_type">Loại hàng</label>
+      <label for="coordinate_type">Loại hàng</label>
       <div class="input-group">
-        <select class="form-control multiselect" id="booking_type" name="booking_type[]" multiple="">
+        <select class="form-control multiselect" id="coordinate_type" name="coordinate_type[]" multiple="">
           <option value="1">Hàng nhập</option>
           <option value="2">Hàng xuất</option>
           <option value="3">Khác</option>
