@@ -27,7 +27,7 @@
           <div class="input-group">
             <select class="form-control select2" id="export_stock_house" name="export_stock_house" tabindex="4">
               <?php foreach ($houses as $house) { ?>
-                <option value="<?php echo $export_stock_data->export_stock_house==$house->house_id?'selected="selected"':null ?>" value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
+                <option <?php echo $export_stock_data->export_stock_house==$house->house_id?'selected="selected"':null ?> value="<?php echo $house->house_id ?>"><?php echo $house->house_name ?></option>
               <?php } ?>
             </select>
           </div>
