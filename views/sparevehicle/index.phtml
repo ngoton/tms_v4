@@ -96,7 +96,15 @@
         </form>
       </div>
       <div class="clearfix"></div>
-
+      <div id="launchPad">  
+        <div>Phụ tùng thiết bị lắp vào</div>
+        <?php foreach ($spare_parts as $m) { ?>
+          <div class="card col-md-4 col-xs-4" id="<?php echo $m->spare_part_id ?>">
+              <?php echo '['.$m->spare_part_code.'-'.$m->spare_part_name.']-'.$m->spare_part_seri ?><input type="number" style="width:40px" min="1" max="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" value="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" class="num">
+          </div> 
+        <?php }  ?>
+          
+      </div>
       <div id="dropZone">
           <div class="stack">
               <div class="stackHdr">
@@ -116,15 +124,7 @@
               </div>
           </div>
       </div>
-      <div id="launchPad">  
-        <div>Phụ tùng thiết bị lắp vào</div>
-        <?php foreach ($spare_parts as $m) { ?>
-          <div class="card col-md-4 col-xs-4" id="<?php echo $m->spare_part_id ?>">
-              <?php echo '['.$m->spare_part_code.'-'.$m->spare_part_name.']-'.$m->spare_part_seri ?><input type="number" style="width:40px" min="1" max="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" value="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" class="num">
-          </div> 
-        <?php }  ?>
-          
-      </div>
+      
 
       <div class="clearfix"></div>
     </div>
