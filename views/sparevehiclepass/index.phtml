@@ -1,0 +1,231 @@
+
+<div>
+  <div class="error">
+    *Lưu ý: Mỗi lần thực hiện chỉ chuyển được 1 đầu xe hoặc rơmooc. <br>
+  </div>
+  <div id="content" style="padding:5px;">
+
+    <div class="tablenav top">
+        <div class="alignleft actions">
+          <div class="form-group">
+            <label for="ngay">Ngày thực hiện</label>
+            <input style="width:100px" type="text"  class="input-mask-date" id="ngay" name="ngay" value="<?php echo date('d/m/Y') ?>" required="required">
+            <input type="submit" value="Hoàn thành" id="update">
+          </div>
+        </div>
+
+      </div>
+
+  </div>
+</div>
+<div class="clearfix"></div>
+<div id="show"></div>
+<form id="spare_form" action="" method="post">
+
+<div id="launchPad">  
+  <div class="stackHdr">Đầu thay</div>
+  <select id="vehicle" name="vehicle" class="select2" >
+    <option value="0">Xe</option>
+    <?php foreach ($vehicles as $vehicle) { ?>
+      <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+    <?php } ?>
+  </select>
+  <div class="clearfix"></div>
+  <?php foreach ($spare_vehicles as $m) { ?>
+  <?php 
+  $con = $m->total-(isset($spare_vehicle_outs[$m->vehicle][$m->spare_part])?$spare_vehicle_outs[$m->vehicle][$m->spare_part]:0);
+  if($con > 0){
+  ?>
+    <div class="card-vehicle spare-card ui-draggable col-md-3 col-xs-3" id="<?php echo $m->spare_part_id ?>" >
+      <input type="checkbox" name="out[]" class="out" value="<?php echo $m->spare_part_id ?>">
+      <?php echo '['.$m->spare_part_code.'-'.$m->spare_part_name.']-'.$m->spare_part_seri ?><input type="number" style="width:40px" min="1" value="<?php echo $con ?>" max="<?php echo $con ?>" class="num" data="<?php echo $m->spare_part_id ?>">
+    </div>
+  <?php }} ?>
+</div>
+<div id="launchPad2">  
+  <div class="stackHdr">Mooc thay</div>
+  <select id="romooc" name="romooc" class="select2" >
+    <option value="0">Mooc</option>
+    <?php foreach ($romoocs as $romooc) { ?>
+      <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+    <?php } ?>
+  </select>
+  <div class="clearfix"></div>
+  <?php foreach ($spare_romoocs as $m) { ?>
+  <?php
+  $con = $m->total-(isset($spare_romooc_outs[$m->romooc][$m->spare_part])?$spare_romooc_outs[$m->romooc][$m->spare_part]:0);
+  if($con > 0){
+  ?>
+    <div class="card-romooc spare-card ui-draggable col-md-3 col-xs-3" id="<?php echo $m->spare_part_id ?>" >
+      <input type="checkbox" name="out[]" class="out" value="<?php echo $m->spare_part_id ?>">
+      <?php echo '['.$m->spare_part_code.'-'.$m->spare_part_name.']-'.$m->spare_part_seri ?><input type="number" style="width:40px" min="1" value="<?php echo $con ?>" max="<?php echo $con ?>" class="num" data="<?php echo $m->spare_part_id ?>">
+    </div>
+  <?php }} ?>
+  
+</div>
+</form>
+<div id="dropZone">
+    <div class="stack">
+        <div class="stackHdr">
+            Đầu nhận
+        </div>
+        <select id="vehicle_in" name="vehicle_in" class="select2" >
+          <option value="0">Xe</option>
+          <?php foreach ($vehicles as $vehicle) { ?>
+            <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+          <?php } ?>
+        </select>
+    </div>
+    
+    <div class="stack">
+        <div class="stackHdr">
+            Mooc nhận
+        </div>
+        <select id="romooc_in" name="romooc_in" class="select2" >
+          <option value="0">Mooc</option>
+          <?php foreach ($romoocs as $romooc) { ?>
+            <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+          <?php } ?>
+        </select>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+
+<style type="text/css">
+#show{
+  width: 760px;
+  height: 100px;
+  background-size: cover;
+  background: url("/public/images/truck_outline_res.png") center center no-repeat;
+}
+#launchPad, #launchPad2 {
+    float:left;
+    border: 1px solid #eaeaea;
+    background-color: #f5f5f5;
+    width: 380px;
+}
+#dropZone {
+    float:right;
+    border: 1px solid #eaeaea;
+    background-size: cover;
+    background: url("/public/images/truck_outline_res.png") center center no-repeat;
+}
+.card, .card2 { 
+    width: 70px; 
+    padding: 5px;
+    margin:5px;
+    border:1px solid #ccc;
+    background-color: #eaeaea;
+}
+.stack {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+}
+.stackHdr {
+    padding: 5px 
+}
+.stackDrop1, .stackDrop2 {
+    min-height:100px;
+    padding: 15px;
+}
+.card:hover, .card2:hover{
+  cursor: move;
+}
+.ui-state-default{
+  border: 1px dashed #DB2E66;
+  background: transparent;
+}
+
+
+.dragContainer{
+  bottom:0;
+  left:0;
+  position:relative;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+  $( ".select2" ).select2({dropdownAutoWidth : true});
+});
+
+$('#update').click(function(){
+  var vehicle_out = $('#vehicle').val();
+  var romooc_out = $('#romooc').val();
+  var vehicle_in = $('#vehicle_in').val();
+  var romooc_in = $('#romooc_in').val();
+
+  var start_time = $('#ngay').val();
+  if (start_time == "") {
+    $('#ngay').focus();
+    return false;
+  }
+  
+  var spare_out = [];
+  var out = [];
+  var num = [];
+
+  $('.out:checked').each(function(){
+    out.push($(this).val());
+    num.push($('.num[data='+$(this).val()+']').val());
+  });
+
+  for (var i = 0; i < out.length; i++) {
+    spare_out.push({'spare':out[i], 'num':num[i]});
+          
+  };
+
+  var yes = "";
+
+  $.ajax({
+    type: "POST", // phương thức gởi đi
+    url: "<?php echo BASE_URL ?>/sparevehiclepass/exchange", // nơi mà dữ liệu sẽ chuyển đến khi submit
+    data: {
+        vehicle_in: vehicle_in,
+        romooc_in: romooc_in,
+        vehicle_out: vehicle_out,
+        romooc_out: romooc_out,
+        spare_out: spare_out,
+        start_time: start_time,
+        yes: yes,
+        }, // giá trị post
+    success: function(answer){ // if everything goes well
+      
+        $('#error').hide();
+        $('#error').slideToggle(100); // hiển thị thẻ div success
+        $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+        $('#error').fadeOut(10000);
+
+        setTimeout(function() {
+          location.reload(true);
+        }, 500);
+    }
+});
+});
+
+var x = "<?php echo $xe ?>";
+$('#vehicle option[value='+x+']').attr('selected','selected');
+
+var m = "<?php echo $mooc ?>";
+$('#romooc option[value='+m+']').attr('selected','selected');
+
+$('#vehicle').change(function(){
+  $('#romooc option[value=0]').attr('selected','selected');
+  $('#spare_form').submit();
+});
+$('#romooc').change(function(){
+  $('#vehicle option[value=0]').attr('selected','selected');
+  $('#spare_form').submit();
+});
+
+$('#vehicle_in').change(function(){
+  $('#romooc_in option[value=0]').attr('selected','selected');
+});
+$('#romooc_in').change(function(){
+  $('#vehicle_in option[value=0]').attr('selected','selected');
+});
+</script>

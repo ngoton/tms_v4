@@ -309,7 +309,7 @@ Class exportstockController Extends baseController {
         $this->view->data['title'] = 'Thêm mới phiếu xuất kho';
 
         $export_stock_model = $this->model->get('exportstockModel');
-        $lastID = isset($export_stock_model->getLastStock()->export_stock_code)?$export_stock_model->getLastStock()->export_stock_code:'PNK00';
+        $lastID = isset($export_stock_model->getLastStock()->export_stock_code)?$export_stock_model->getLastStock()->export_stock_code:'PXK00';
         $lastID++;
         $this->view->data['lastID'] = $lastID;
 

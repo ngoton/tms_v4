@@ -1,0 +1,248 @@
+
+<?php
+$url_order = 'DESC';
+if ($order_by == 'spare_drap_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_code')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_seri')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_brand')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_date_manufacture')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'end_time')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'vehicle')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'romooc')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<div class="col-xs-7">
+    <div class="pull-left">
+      <select id="sl_nv" name="sl_nv" style="width:70px">
+       <option value="1">Quý I</option>
+       <option value="2">Quý II</option>
+       <option value="3">Quý III</option>
+       <option value="4">Quý IV</option>
+      </select>
+      <select id="sl_tha" name="sl_tha" style="width:80px">
+       <?php 
+          for ($k=1; $k < 13; $k++) { 
+              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <select id="sl_na" name="sl_na" style="width:90px">
+       <?php 
+          $nam = date('Y');
+          for ($k=($nam-5); $k < ($nam+5); $k++) { 
+              echo '<option value="'.$k.'">Năm '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+        
+      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+      
+    </div>
+</div>
+<div class="col-xs-5">
+    <div class="tools action-buttons pull-right">
+        <?php
+        if (isset($filter)) {
+            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+        }
+        ?>
+        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+            <option value="18446744073709">All</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
+        
+        <div class="pull-right pos-rel dropdown-hover">
+            <button class="btn btn-minier bigger" style="line-height: 26px">
+                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                <li>
+                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                        <span class="orange">
+                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                        <span class="green">
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("sparedrap/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
+                        </span>
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>                        
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblexport" >
+<thead>
+    <tr>
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+      <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_drap_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'spare_drap_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','end_time','<?php echo $url_order ?>')">Ngày thay ra <?php if ($order_by == 'end_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'vehicle'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'romooc'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Mã SP <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_name','<?php echo $url_order ?>')">Tên SP <?php if ($order_by == 'spare_part_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_seri','<?php echo $url_order ?>')">Số seri <?php if ($order_by == 'spare_part_seri'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_brand','<?php echo $url_order ?>')">Nhà SX <?php if ($order_by == 'spare_part_brand'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_date_manufacture','<?php echo $url_order ?>')">Ngày SX <?php if ($order_by == 'spare_part_date_manufacture'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_number','<?php echo $url_order ?>')">Số lượng <?php if ($order_by == 'spare_part_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+    </tr>
+   </thead>
+   <tbody>
+    <?php foreach ($spares as $spare_part) : ?>
+        <tr id="<?php echo $spare_part->spare_drap_id ?>" class="edit_tr">
+            <td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $spare_part->spare_drap_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($spare_part->end_time) ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $spare_part->vehicle ?>,'none')"><?php echo isset($vehicle_data[$spare_part->vehicle])?$vehicle_data[$spare_part->vehicle]:null ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("romooc/view/") ?>','Thông tin mooc',<?php echo $spare_part->romooc ?>,'none')"><?php echo isset($romooc_data[$spare_part->romooc])?$romooc_data[$spare_part->romooc]:null ?></a></td>
+            <td><a onclick="view_click('<?php echo $this->url("sparepart/view/") ?>','Thông tin vật tư',<?php echo $spare_part->spare_part ?>,'none')"><?php echo $spare_part->code ?></a></td>
+            <td><?php echo $spare_part->spare_part_name ?></td>
+            <td><?php echo $spare_part->spare_part_seri ?></td>
+            <td><?php echo $spare_part->spare_part_brand ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($spare_part->spare_part_date_manufacture) ?></td>
+            <td><?php echo $spare_part->spare_part_number ?></td>
+        </tr>
+    <?php endforeach; ?>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+</div>
+<script type="text/javascript">
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
+
+$(document).ready(function(){
+    $('#batdau').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
+      });
+    $('#ketthuc').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
+      });
+});
+
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
+
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+</script>

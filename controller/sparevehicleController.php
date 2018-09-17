@@ -172,7 +172,7 @@ Class sparevehicleController Extends baseController {
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->exchangeromooc) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->sparevehicle) && $_SESSION['user_permission_action'] != '["all"]') {
 
             echo "Bạn không có quyền thực hiện thao tác này";
             return false;

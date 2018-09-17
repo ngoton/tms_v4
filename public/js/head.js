@@ -400,7 +400,7 @@ function sapxep(page,cot,sapxep){
             type: "POST", // phương thức gởi đi
             url: "#", // nơi mà dữ liệu sẽ chuyển đến khi submit
             data: "page="+ page +"&order_by="+ cot +"&order="+ sapxep+"&limit="+ loc+"&keyword="+ keyword+"&ngaytao="+ ngaytao+"&ngaytaobatdau="+ ngaytaobatdau+"&batdau="+ batdau+"&ketthuc="+ ketthuc+"&trangthai="+ trangthai+"&nv="+nv+"&tha="+tha+"&na="+na+"&tu="+tu+"&den="+den+"&xe="+xe+"&vong="+vong,
-            success: function(answer){ // if everything goes well
+            success: function(server_response){ // if everything goes well
               
               var success =  $(server_response).find('.widget-main').html();
               $('.widget-main').html(success);
