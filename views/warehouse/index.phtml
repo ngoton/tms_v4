@@ -1,197 +1,143 @@
 
 <?php
-$url_order = 'DESC';
+$url_order = 'ASC';
 if ($order_by == 'warehouse_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'place_name')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'warehouse_cont')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'warehouse_ton')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'warehouse_add')
+
+elseif ($order_by == 'warehouse_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'warehouse_weight')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'warehouse_ton')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'warehouse_clean')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'warehouse_gate')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'warehouse_start_date')
+elseif ($order_by == 'warehouse_add')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'warehouse_end_date')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-$i = $sonews*$page-($sonews-1);
+
+
+
+    $i = $sonews*$page-($sonews-1);
 
 ?>
 
 <div id="loading"></div>
 <div id="winpopup"></div>
-<div class="tools action-buttons pull-right">
-    <?php
-    if (isset($filter)) {
-        echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
-    }
-    ?>
-    <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
-        <option value="18446744073709">All</option>
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-        <option value="500">500</option>
-    </select>
-    <a class="purpose" data-original-title="Thêm mới">
-        <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("warehouse/add") ?>','Thêm bồi dưỡng kho mới')"></i>
-    </a> 
-    <div class="pull-right pos-rel dropdown-hover">
-        <button class="btn btn-minier bigger" style="line-height: 26px">
-            <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
-        </button>
-
-        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-            <li>
-                <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
-                    <span class="orange">
-                        <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
-                    <span class="green">
-                        <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("warehouse/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
-                    <span class="red">
-                        <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
-                    <span class="purple">
-                        <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("warehouse/import") ?>','Nhập dữ liệu từ file Excel')"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                
-                <div class="text-center pos-rel dropdown-hover">
-                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
-                        <span class="blue">
-                            <i class="ace-icon fa fa-cloud-download bigger-150"></i>
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                        <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
-                                <span class="green">
-                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
-                                <span class="red">
-                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
-                                <span class="blue">
-                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            
-        </ul>
-    </div>                        
-</div>
-<div class="clearfix"></div>
+<section class="content-header">
+    <h1>BỒI DƯỠNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('warehouse') ?>">Bồi dưỡng</a></li>
+  </ol>
+</section>
 <div id="content" style="padding:5px;">
-   
-<table class="table_data" id="tblExport" >
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+          <option  value="18446744073709">Hiển thị tất cả</option>
+          <option value="50">Hiển thị 50 giá trị</option>
+                <option value="100">Hiển thị 100 giá trị</option>
+                <option value="150">Hiển thị 150 giá trị</option>
+                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
 <thead>
     <tr>
-    	<th rowspan="2"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th rowspan="2"><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'warehouse_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
-        <th rowspan="2">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','place_name','<?php echo $url_order ?>')">Kho <?php if ($order_by == 'place_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th colspan="5">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_cont','<?php echo $url_order ?>')">Bồi dưỡng cont <?php if ($order_by == 'warehouse_cont'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th rowspan="2">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_ton','<?php echo $url_order ?>')">Bồi dưỡng tấn <?php if ($order_by == 'warehouse_ton'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+    	<th  class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'warehouse_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         
-        <th rowspan="2">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_start_date','<?php echo $url_order ?>')">Ngày áp dụng <?php if ($order_by == 'warehouse_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_name','<?php echo $url_order ?>')">Tên kho <?php if ($order_by == 'warehouse_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th rowspan="2">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_end_date','<?php echo $url_order ?>')">Ngày hết hạn <?php if ($order_by == 'warehouse_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-           
-        <th rowspan="2">
-            
-        </th>
-    </tr>
-    <tr>
-        <th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_add','<?php echo $url_order ?>')">Bồi dưỡng <?php if ($order_by == 'warehouse_add'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_weight','<?php echo $url_order ?>')">Cân xe <?php if ($order_by == 'warehouse_weight'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_clean','<?php echo $url_order ?>')">Quét cont <?php if ($order_by == 'warehouse_clean'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_gate','<?php echo $url_order ?>')">Vé cổng <?php if ($order_by == 'warehouse_gate'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_cont','<?php echo $url_order ?>')">Tổng <?php if ($order_by == 'warehouse_cont'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warehouse_ton','<?php echo $url_order ?>')">Giá theo tấn <?php if ($order_by == 'warehouse_ton'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','start_time','<?php echo $url_order ?>')">Áp dụng<?php if ($order_by == 'start_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','end_time','<?php echo $url_order ?>')">Hết hiệu lực<?php if ($order_by == 'end_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','status','<?php echo $url_order ?>')">Trạng thái<?php if ($order_by == 'status'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        
+        <?php if(!isset($disable_control)){ ?>
+           
+        <th  class="fix">&nbsp;</th>
+        <?php } ?>
     </tr>
+    
    </thead>
    <tbody>
     <?php foreach ($warehouses as $warehouse) : ?>
-        <tr id="<?php echo $warehouse->warehouse_id ?>" class="edit_tr" <?php echo ($warehouse->warehouse_end_date=="" || $warehouse->warehouse_end_date==0 || $warehouse->warehouse_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $warehouse->warehouse_id ?>"><span class="lbl"></span></td>
-            <td class="text-center"><?php echo $i++; ?></td>
-            <td><a onclick="view_click('<?php echo $this->url("place/view/") ?>','Thông tin kho hàng',<?php echo $warehouse->warehouse_place ?>,'none')"><?php echo $warehouse->place_name; ?></a></td>
-            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_add); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_weight); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_clean); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_gate); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_cont); ?></td>
-            <td class="text-right"><?php echo $lib->formatMoney($warehouse->warehouse_ton); ?></td>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $warehouse->warehouse_id ?>" class="edit_tr">
+        	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $warehouse->warehouse_id ?>"></td>
+            <td class="fix"><?php echo $i++; ?></td>
             
-            <td><?php echo $lib->hien_thi_ngay_thang($warehouse->warehouse_start_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($warehouse->warehouse_end_date); ?></td>
+            <td class="fix" id="warehouse_name_<?php echo $warehouse->warehouse_id; ?>"><a target="_blank" href="<?php echo $this->url('place/view/'.$warehouse->warehouse_code) ?>" ><?php echo $warehouse->warehouse_name; ?></a></td>
+            <td class="fix"  id="warehouse_add_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->formatMoney($warehouse->warehouse_add); ?></td>
+            <td class="fix"  id="warehouse_weight_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->formatMoney($warehouse->warehouse_weight); ?></td>
+            <td class="fix"  id="warehouse_clean_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->formatMoney($warehouse->warehouse_clean); ?></td>
+            <td class="fix"  id="warehouse_gate_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->formatMoney($warehouse->warehouse_gate); ?></td>
+            <td class="fix" id="warehouse_ton_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->formatMoney($warehouse->warehouse_ton); ?></td>
+            <td class="fix" id="start_time_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->hien_thi_ngay_thang($warehouse->start_time); ?></td>
+            <td class="fix" id="end_time_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->hien_thi_ngay_thang($warehouse->end_time); ?></td>
+            <td class="fix" data="<?php echo $warehouse->status; ?>" id="status_<?php echo $warehouse->warehouse_id; ?>"><?php echo $warehouse->status==1?'Sử dụng':'Không sử dụng'; ?></td>
+            <td class="fix" style="display:none" id="warehouse_cont_<?php echo $warehouse->warehouse_id; ?>"><?php echo $lib->formatMoney($warehouse->warehouse_cont); ?></td>
+            <td class="fix" style="display:none" id="warehouse_code_<?php echo $warehouse->warehouse_id; ?>"><?php echo $warehouse->warehouse_code; ?></td>
             
-            <td class="text-right">
-                <div class="tools action-buttons">
-                    <a class="blue"  onclick="view_click('<?php echo $this->url("warehouse/view/") ?>','Thông tin bồi dưỡng kho',<?php echo $warehouse->warehouse_id ?>)">
-                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
-                    </a>
-                    <a class="green"  onclick="edit_click('<?php echo $this->url("warehouse/edit/") ?>','Cập nhật bồi dưỡng kho',<?php echo $warehouse->warehouse_id ?>)">
-                        <i class="ace-icon fa fa-pencil bigger-130"></i>
-                    </a>
-
-                    <a class="red" >
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $warehouse->warehouse_id ?>)"></i>
-                    </a>
-                </div>
+            <?php if(!isset($disable_control)){ ?>
+            <td class="pull-right">
+                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $warehouse->warehouse_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
             </td>
+            <?php } ?>
         </tr>
     <?php endforeach; ?>
    </tbody>
@@ -199,8 +145,520 @@ $i = $sonews*$page-($sonews-1);
 <?php
 $this->helper('slidePaginator');
 ?>
+
+<div class="add-field">
+    <section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="add_warehouse" role="form" method="post" action="" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="warehouse_name">Tên kho <a target="_blank" title="Thêm kho" href="<?php echo $this->url('place') ?>"><i class="fa fa-plus"></i></a></label>
+                      <input type="text" autofocus autocomplete="off"   id="warehouse_name" name="warehouse_name" tabindex="1" required="required" placeholder="Nhập tên hoặc * để chọn" >
+                        <ul id="road_from_list_id"></ul>
+                    </div>
+                    <div class="form-group">
+                      <label for="warehouse_weight">Cân xe</label>
+                      <input type="text" id="warehouse_weight" class="number" name="warehouse_weight" tabindex="2" required="required">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="warehouse_gate">Vé cổng</label>
+                      <input type="text" id="warehouse_gate" class="number" name="warehouse_gate" tabindex="3" required="required">
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="warehouse_add">Bồi dưỡng</label>
+                      <input type="text"  id="warehouse_add" class="number" name="warehouse_add" tabindex="4" required="required">
+                    </div>
+                    <div class="form-group">
+                      <label for="warehouse_clean">Quét cont</label>
+                      <input type="text" id="warehouse_clean" class="number" name="warehouse_clean" tabindex="5" required="required">
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                      <label for="warehouse_cont">Bồi dưỡng theo cont</label>
+                      <input type="text" disabled id="warehouse_cont" class="number" name="warehouse_cont" tabindex="6" >
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="warehouse_ton">Bồi dưỡng theo tấn</label>
+                      <input type="text" class="number" id="warehouse_ton" name="warehouse_ton" tabindex="7" >
+                    </div>
+                    <div class="form-group">
+                      <label for="start_time">Ngày áp dụng</label>
+                      <input class="ngay" type="text"   id="start_time" name="start_time" tabindex="8" required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label for="end_time">Ngày hết hạn</label>
+                      <input class="ngay" type="text"   id="end_time" name="end_time" tabindex="9" required="required" >
+                    </div>
+                    
+                    
+                    
+                  </div>
+                  <!-- /.box-body -->
+
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-body">
+                    <div class="form-group">
+                      <label for="status">Trạng thái</label>
+                      <input type="radio" checked  name="status" tabindex="10" value="1"> Sử dụng
+                    <input type="radio"  name="status"  value="0"> Không sử dụng
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                    
+                </div>
+              </div>
+              <?php if(!isset($disable_control)){ ?>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+                    <button type="submit" class="btn btn-primary" tabindex="11">Hoàn thành</button>
+                    <button type="reset" class="btn" tabindex="12">Nhập lại</button>
+                  </div>
+                  <div class="box-footer">
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </form>
+          </div>
+          <!-- /.box -->
+
+        </div>
+        <!--/.col (left) -->
+        
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+       
 </div>
+
+
 <script type="text/javascript">
+
+    $('.edit_tr').click(function(e){
+      if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
+        if(!$('.checkbox').is(':checked')){
+            $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+        }
+        
+        var warehouse_name = $(this).find("#warehouse_name_"+$(this).attr('id')).text();
+        var warehouse_code = $(this).find("#warehouse_code_"+$(this).attr('id')).text();
+        var warehouse_cont = $(this).find("#warehouse_cont_"+$(this).attr('id')).text();
+        var warehouse_ton = $(this).find("#warehouse_ton_"+$(this).attr('id')).text();
+        var warehouse_weight = $(this).find("#warehouse_weight_"+$(this).attr('id')).text();
+        var warehouse_clean = $(this).find("#warehouse_clean_"+$(this).attr('id')).text();
+        var warehouse_gate = $(this).find("#warehouse_gate_"+$(this).attr('id')).text();
+        var warehouse_add = $(this).find("#warehouse_add_"+$(this).attr('id')).text();
+        var start_time = $(this).find("#start_time_"+$(this).attr('id')).text();
+        var end_time = $(this).find("#end_time_"+$(this).attr('id')).text();
+        var status = $(this).find("#status_"+$(this).attr('id')).attr('data');
+        //alert(warehouse_from);
+        $('#yes').val($(this).attr('id'));
+        
+
+        $('#warehouse_name').val(warehouse_name);
+        $('#warehouse_name').attr('data',warehouse_code);
+        $("#warehouse_name").prop('disabled', true);
+        $("#warehouse_name").attr("code",'true');
+        $('#warehouse_cont').val(warehouse_cont);
+        $('#warehouse_ton').val(warehouse_ton);
+        
+        $('#warehouse_weight').val(warehouse_weight);
+        $('#warehouse_clean').val(warehouse_clean);
+        $('#warehouse_gate').val(warehouse_gate);
+        $('#warehouse_add').val(warehouse_add);
+        $('#start_time').val(start_time.replace(/\//g,"-"));
+        $('#end_time').val(end_time.replace(/\//g,"-"));
+
+        var radioLength2 = $("input[name='status']").length;
+        for(var i = 0; i < radioLength2; i++) {
+            $("input[name='status']")[i].checked = false;
+            if($("input[name='status']")[i].value == status) {
+                $("input[name='status']")[i].checked = true;
+            }
+        }
+
+        $( ".add-field" ).dialog( "open" );
+      }
+        
+    });
+
+
+</script>
+<script type="text/javascript">
+$('html').click(function(e) {
+   $('#road_from_list_id').slideUp(200);
+});
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+    $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+
+        $('#warehouse_name').focus();
+        $('#warehouse_name').val("");
+        $('#warehouse_name').attr('data',"");
+        $("#warehouse_name").prop('disabled', false);
+        $("#warehouse_name").attr("code",'false');
+        $('#warehouse_cont').val(0);
+        $('#warehouse_ton').val(0);
+
+        $('#warehouse_weight').val(0);
+        $('#warehouse_clean').val(0);
+        $('#warehouse_gate').val(0);
+        $('#warehouse_add').val(0);
+        $('#start_time').val("");
+        $('#end_time').val("");
+        
+        $('.number').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.number').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+        $( ".add-field" ).dialog( "open" );
+}
+
+
+$(document).ready(function(){
+            // Validate form
+            $("#add_warehouse").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+                
+                    if ($('#warehouse_name').attr('code') == 'false') {
+                        $('#warehouse_name').val("");
+                        $('#warehouse_name').focus();
+                        return false;
+                    };
+                
+                    var warehouse_cont = $('#warehouse_cont').attr('value');
+                    var warehouse_ton = $('#warehouse_ton').attr('value');
+                    var warehouse_name = $('#warehouse_name').attr('value');
+                    var warehouse_code = $('#warehouse_name').attr('data');
+                    var warehouse_weight = $('#warehouse_weight').attr('value');
+                    var warehouse_clean = $('#warehouse_clean').attr('value');
+                    var warehouse_gate = $('#warehouse_gate').attr('value');
+                    var warehouse_add = $('#warehouse_add').attr('value');
+                    var status = $('input[name=status]:checked').val();
+                    var start_time = $('#start_time').attr('value');
+                    var end_time = $('#end_time').attr('value');
+                    
+                    var yes = $('#yes').attr('value');
+                    
+                    var action      = "them";
+                 
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/warehouse/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            warehouse_name: warehouse_name,
+                            warehouse_code: warehouse_code,
+                            warehouse_cont: warehouse_cont,
+                            warehouse_ton: warehouse_ton,
+                            warehouse_weight: warehouse_weight,
+                            warehouse_clean: warehouse_clean,
+                            warehouse_gate: warehouse_gate,
+                            warehouse_add: warehouse_add,
+                            start_time: start_time,
+                            end_time: end_time,
+                            status: status,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            $('#error').hide();
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error').fadeOut(10000);
+
+                            if (yes != "") {
+                                setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                $('#warehouse_cont_'+yes).text(warehouse_cont);
+                                $('#warehouse_ton_'+yes).text(warehouse_ton);
+                                $('#warehouse_name_'+yes).text(warehouse_name);
+                                $('#warehouse_weight_'+yes).text(warehouse_weight);
+                                $('#warehouse_clean_'+yes).text(warehouse_clean);
+                                $('#warehouse_gate_'+yes).text(warehouse_gate);
+                                $('#warehouse_add_'+yes).text(warehouse_add);
+                                $('#warehouse_code_'+yes).text(warehouse_code);
+                                $('#start_time_'+yes).text(start_time);
+                                $('#end_time_'+yes).text(end_time);
+                                $('#status_'+yes).text(status==1?"Sử dụng":"Không sử dụng");
+                                
+                            }
+                            else{
+                                if (answer.trim() != "Bảng giá này đã tồn tại") {
+                                    setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    var lastID = parseInt($('#lasted').html());
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+                                    $('.table_data > tbody:last')
+                                    .append(
+                                        '<tr onclick="HighLightTR(this,"#4d90fe","cc3333");" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="warehouse_name_'+parseInt(lastID+1)+'">'+warehouse_name+'</td><td class="fix" id="warehouse_add_'+parseInt(lastID+1)+'">'+warehouse_add+'</td><td class="fix" id="warehouse_weight_'+parseInt(lastID+1)+'">'+warehouse_weight+'</td><td class="fix" id="warehouse_clean_'+parseInt(lastID+1)+'">'+warehouse_clean+'</td><td class="fix" id="warehouse_gate_'+parseInt(lastID+1)+'">'+warehouse_gate+'</td><td class="fix" id="warehouse_ton_'+parseInt(lastID+1)+'">'+warehouse_ton+'</td><td class="fix" id="start_time_'+parseInt(lastID+1)+'">'+start_time+'</td><td class="fix" id="end_time_'+parseInt(lastID+1)+'">'+end_time+'</td><td class="fix" id="status_'+parseInt(lastID+1)+'">'+(status==1?"Sử dụng":"Không sử dụng")+'</td><td style="display:none" class="fix" id="warehouse_cont_'+parseInt(lastID+1)+'">'+warehouse_cont+'</td><td style="display:none" class="fix" id="warehouse_code_'+parseInt(lastID+1)+'">'+warehouse_code+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+                                    );
+
+                                    $('#lasted').html(parseInt(lastID+2));
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+   
+   
+   $('#warehouse_name').keyup(function(){
+      
+        var keyword = $(this).val();
+        $.ajax({
+            url: '<?php echo BASE_URL ?>/warehouse/getplace',
+            type: 'POST',
+            data: {keyword:keyword},
+            success:function(data){
+                $('#road_from_list_id').slideDown(200);
+                $('#road_from_list_id').html(data);
+            }
+        });
+        if ($('#warehouse_name').val() == "" || $('#warehouse_name').attr('data') == "") {
+            //$('#loc_from').val("");
+            $('#warehouse_name').attr('data',"");
+            $('#warehouse_name').attr('code',false);
+        }
+      
+   });
+
+   
+   $('.number').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+    
+
+    $('#warehouse_weight').keyup(function(){
+        
+            $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add')) + parseFloat(get_number('#warehouse_clean')) + parseFloat(get_number('#warehouse_gate')) + parseFloat(get_number('#warehouse_weight')) );
+
+            $('#warehouse_cont').val(function(index, value) {
+            return value
+              .replace(/[^0-9\.-]/g, "")
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            ;
+          });
+        
+    });
+    $('#warehouse_clean').keyup(function(){
+        var w = $(this).val();
+            $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add')) + parseFloat(get_number('#warehouse_weight')) + parseFloat(get_number('#warehouse_gate')) + parseFloat(get_number('#warehouse_clean')) );
+
+            $('#warehouse_cont').val(function(index, value) {
+            return value
+              .replace(/[^0-9\.-]/g, "")
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            ;
+          });
+        
+    });
+    $('#warehouse_gate').keyup(function(){
+        var w = $(this).val();
+            $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add')) + parseFloat(get_number('#warehouse_clean')) + parseFloat(get_number('#warehouse_weight')) + parseFloat(get_number('#warehouse_gate')) );
+
+            $('#warehouse_cont').val(function(index, value) {
+            return value
+              .replace(/[^0-9\.-]/g, "")
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            ;
+          });
+        
+    });
+    $('#warehouse_add').keyup(function(){
+        var w = $(this).val();
+            $('#warehouse_cont').val(parseFloat(get_number('#warehouse_add')) + parseFloat(get_number('#warehouse_clean')) + parseFloat(get_number('#warehouse_weight')) + parseFloat(get_number('#warehouse_gate')) );
+
+            $('#warehouse_cont').val(function(index, value) {
+            return value
+              .replace(/[^0-9\.-]/g, "")
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            ;
+          });
+        
+    });
+
+});
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+function set_item(value,name,cont,ton,weight,clean,gate,add) {
+    // change input value
+    $('#warehouse_name').val(name);
+    $("#warehouse_name").attr("data",value);
+    $("#warehouse_name").attr("code",'true');
+    $('#warehouse_cont').val(cont);
+    $('#warehouse_ton').val(ton);
+    $('#warehouse_weight').val(weight);
+    $('#warehouse_clean').val(clean);
+    $('#warehouse_gate').val(gate);
+    $('#warehouse_add').val(add);
+    
+    // hide proposition list
+    $('#road_from_list_id').hide();
+    $('#warehouse_name').focus();
+
+    $(".number").val(function(index, value) {
+      return value
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      ;
+    });
+
+}
+</script>
+
+
+<div style="display:none" id="lasted"></div>
+<script type="text/javascript">
+    var count = parseInt(<?php echo $lastID ?>);
+    $('#lasted').html(count);
+
+    $("#import_excel").click(function(){
+        $("#winpopup").dialog({
+            draggable:true,
+            modal: true,
+            autoOpen: false,
+            height:200,
+            width:500,
+            resizable: false,
+            title:'Import Excel',
+            
+        });
+        $("#winpopup").load($(this).attr('href'));
+        $("#winpopup").dialog("open");
+         
+        return false;
+    });
+
     var ch = "<?php echo $limit ?>";
 $('#chonloc option[value='+ch+']').attr('selected','selected');
+
+var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+5",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onSelect: function(dateStr) {
+          if ($('#end_time').val()=="") {
+            var d = $.datepicker.parseDate('dd-mm-yy', dateStr);
+            var years = parseInt(10, 10);
+
+            d.setFullYear(d.getFullYear() + years);
+
+            $('#end_time').datepicker('setDate', d);
+          }
+            
+        },
+        onClose: function(selectedDate) {
+                
+                $( "#end_time" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+    }; 
+    $("#start_time").datepicker(pickerOpts);
+
+    var pickerOpts2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+5",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#start_time" ).datepicker( "option", "maxDate", selectedDate );
+
+         },
+    }; 
+    $("#end_time").datepicker(pickerOpts2);
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "auto",
+    title: "Bảng bồi dưỡng kho",
+    hide: 'fold',
+    show: 'blind'
+});
 </script>
+</div>

@@ -12,6 +12,12 @@ Class permissionController Extends baseController {
 
         }
 
+        if (!isset(json_decode($_SESSION['user_permission_action'])->permission) || json_decode($_SESSION['user_permission_action'])->permission != "permission") {
+
+            return $this->view->redirect('user/login');
+
+        }
+
         $this->view->data['lib'] = $this->lib;
 
         $this->view->data['title'] = 'Phân quyền hệ thống';
@@ -86,14 +92,6 @@ Class permissionController Extends baseController {
     }
 
     public function setpermission(){
-        if (!isset(json_decode($_SESSION['user_permission_action'])->permission) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        $user_log_model = $this->model->get('userlogModel');
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $permission = isset($_POST['data'])?json_encode($_POST['data']):null;
             $permission_action = isset($_POST['act'])?json_encode($_POST['act']):null;
@@ -108,16 +106,6 @@ Class permissionController Extends baseController {
 
                 $user_model->updateUser($data,array('user_id'=>$_POST['user']));
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'user',
-                    'user_log_table_name' => 'Người dùng',
-                    'user_log_action' => 'Phân quyền',
-                    'user_log_data' => json_encode($data),
-                );
-                $user_log_model->createUser($data_log);
-
                 echo "Cập nhật thành công";
             }
             else {
@@ -129,16 +117,6 @@ Class permissionController Extends baseController {
                 );
 
                 $role_model->updateRole($data,array('role_id'=>$_POST['role']));
-
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'role',
-                    'user_log_table_name' => 'Nhóm người dùng',
-                    'user_log_action' => 'Phân quyền',
-                    'user_log_data' => json_encode($data),
-                );
-                $user_log_model->createUser($data_log);
 
                 echo "Cập nhật thành công";
             }

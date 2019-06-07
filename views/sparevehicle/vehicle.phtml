@@ -1,0 +1,447 @@
+
+<?php
+$url_order = 'ASC';
+if ($order_by == 'vehicle_romooc_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+elseif ($order_by == 'vehicle_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'romooc_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+
+
+    $i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>BẢNG THAY MOOC</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('vehicleromooc/vehicle') ?>">Thay mooc</a></li>
+  </ol>
+</section>
+<div id="content" style="padding:5px;">
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+            <option  value="18446744073709">Hiển thị tất cả</option>
+            <option value="50">Hiển thị 50 giá trị</option>
+            <option value="100">Hiển thị 100 giá trị</option>
+            <option value="150">Hiển thị 150 giá trị</option>
+            <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
+<thead>
+    <tr>
+    	<th  class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_romooc_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'vehicle_romooc_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Số đầu <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc_number','<?php echo $url_order ?>')">Số mooc <?php if ($order_by == 'romooc_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','start_time','<?php echo $url_order ?>')">Ngày thay vào<?php if ($order_by == 'start_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','end_time','<?php echo $url_order ?>')">Ngày thay ra<?php if ($order_by == 'end_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        <?php if(!isset($disable_control)){ ?>
+           
+        <th  class="fix">&nbsp;</th>
+        <?php } ?>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php foreach ($vehicle_romoocs as $vehicle_romooc) : ?>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $vehicle_romooc->vehicle_romooc_id ?>" class="edit_tr">
+        	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $vehicle_romooc->vehicle_romooc_id ?>"></td>
+            <td class="fix"><?php echo $i++; ?></td>
+            
+            <td class="fix" id="vehicle_number_<?php echo $vehicle_romooc->vehicle_romooc_id; ?>"><?php echo $vehicle_romooc->vehicle_number; ?></td>
+            <td class="fix"  id="romooc_number_<?php echo $vehicle_romooc->vehicle_romooc_id; ?>"><?php echo $vehicle_romooc->romooc_number; ?></td>
+            
+            <td class="fix" id="start_time_<?php echo $vehicle_romooc->vehicle_romooc_id; ?>"><?php echo $lib->hien_thi_ngay_thang($vehicle_romooc->start_time); ?></td>
+            <td class="fix" id="end_time_<?php echo $vehicle_romooc->vehicle_romooc_id; ?>"><?php echo $vehicle_romooc->end_time>0?$lib->hien_thi_ngay_thang($vehicle_romooc->end_time):null; ?></td>
+            
+            <?php if(!isset($disable_control)){ ?>
+            <td class="pull-right">
+                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $vehicle_romooc->vehicle_romooc_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
+            </td>
+            <?php } ?>
+        </tr>
+    <?php endforeach; ?>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+
+<div class="add-field">
+    <section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="add_vehicle_romooc" role="form" method="post" action="" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="vehicle">Số đầu</label>
+                      <select id="vehicle" name="vehicle" tabindex="1" required="required">
+                        <?php foreach ($vehicles as $vehicle) { ?>
+                          <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="romooc">Số mooc</label>
+                      <select id="romooc" name="romooc" tabindex="2" required="required">
+                        <?php foreach ($romoocs as $romooc) { ?>
+                          <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                    
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="start_time">Ngày thay vào</label>
+                      <input class="ngay" type="text"   id="start_time" name="start_time" tabindex="3" required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label for="end_time">Ngày thay ra</label>
+                      <input class="ngay" type="text"   id="end_time" name="end_time" tabindex="4"  >
+                    </div>
+                    
+                    
+                    
+                  </div>
+                  <!-- /.box-body -->
+
+                </div>
+
+              </div>
+              <?php if(!isset($disable_control)){ ?>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+                    <button type="submit" class="btn btn-primary" tabindex="5">Hoàn thành</button>
+                    <button type="reset" class="btn" tabindex="6">Nhập lại</button>
+                  </div>
+                  <div class="box-footer">
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </form>
+          </div>
+          <!-- /.box -->
+
+        </div>
+        <!--/.col (left) -->
+        
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+       
+</div>
+
+
+<script type="text/javascript">
+
+    $('.edit_tr').click(function(){
+        if(!$('.checkbox').is(':checked')){
+            $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+        }
+        
+        var vehicle_number = $(this).find("#vehicle_number_"+$(this).attr('id')).text();
+        var romooc_number = $(this).find("#romooc_number_"+$(this).attr('id')).text();
+        
+        var start_time = $(this).find("#start_time_"+$(this).attr('id')).text();
+        var end_time = $(this).find("#end_time_"+$(this).attr('id')).text();
+        
+        //alert(vehicle_romooc_from);
+        $('#yes').val($(this).attr('id'));
+        
+
+        $('#vehicle option[value='+vehicle_number+']').attr('selected','selected');
+        $('#romooc option[value='+romooc_number+']').attr('selected','selected');
+        $('#start_time').val(start_time.replace(/\//g,"-"));
+        $('#end_time').val(end_time.replace(/\//g,"-"));
+
+        
+        $( ".add-field" ).dialog( "open" );
+        
+    });
+
+
+</script>
+<script type="text/javascript">
+$('html').click(function(e) {
+   $('#road_from_list_id').slideUp(200);
+});
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+    $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+
+        $('#vehicle_number').focus();
+        $('#start_time').val("<?php echo date('d-m-Y') ?>");
+        $('#end_time').val("");
+        
+        $('.number').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.number').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+        $( ".add-field" ).dialog( "open" );
+}
+
+
+$(document).ready(function(){
+            // Validate form
+            $("#add_vehicle_romooc").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+                
+                    
+                
+                    var vehicle = $('#vehicle').attr('value');
+                    var romooc = $('#romooc').attr('value');
+                    
+                    var start_time = $('#start_time').attr('value');
+                    var end_time = $('#end_time').attr('value');
+                    
+                    var yes = $('#yes').attr('value');
+                    
+                    var action      = "them";
+                 
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/vehicleromooc/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            vehicle: vehicle,
+                            romooc: romooc,
+                            start_time: start_time,
+                            end_time: end_time,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            $('#error').hide();
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error').fadeOut(10000);
+
+                            if (yes != "") {
+                                setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                $('#vehicle_romooc_cont_'+yes).text(vehicle_romooc_cont);
+                                $('#vehicle_romooc_ton_'+yes).text(vehicle_romooc_ton);
+                                $('#vehicle_number_'+yes).text(vehicle_number);
+                                $('#romooc_number_'+yes).text(romooc_number);
+                                $('#vehicle_romooc_clean_'+yes).text(vehicle_romooc_clean);
+                                $('#vehicle_romooc_gate_'+yes).text(vehicle_romooc_gate);
+                                $('#vehicle_romooc_add_'+yes).text(vehicle_romooc_add);
+                                $('#vehicle_romooc_code_'+yes).text(vehicle_romooc_code);
+                                $('#start_time_'+yes).text(start_time);
+                                $('#end_time_'+yes).text(end_time);
+                                $('#status_'+yes).text(status==1?"Sử dụng":"Không sử dụng");
+                                
+                            }
+                            else{
+                                if (answer.trim() != "Bảng giá này đã tồn tại") {
+                                    setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    var lastID = parseInt($('#lasted').html());
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+                                    $('.table_data > tbody:last')
+                                    .append(
+                                        '<tr onclick="HighLightTR(this,"#4d90fe","cc3333");" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="vehicle_number_'+parseInt(lastID+1)+'">'+vehicle_number+'</td><td class="fix" id="vehicle_romooc_add_'+parseInt(lastID+1)+'">'+vehicle_romooc_add+'</td><td class="fix" id="romooc_number_'+parseInt(lastID+1)+'">'+romooc_number+'</td><td class="fix" id="vehicle_romooc_clean_'+parseInt(lastID+1)+'">'+vehicle_romooc_clean+'</td><td class="fix" id="vehicle_romooc_gate_'+parseInt(lastID+1)+'">'+vehicle_romooc_gate+'</td><td class="fix" id="vehicle_romooc_ton_'+parseInt(lastID+1)+'">'+vehicle_romooc_ton+'</td><td class="fix" id="start_time_'+parseInt(lastID+1)+'">'+start_time+'</td><td class="fix" id="end_time_'+parseInt(lastID+1)+'">'+end_time+'</td><td class="fix" id="status_'+parseInt(lastID+1)+'">'+(status==1?"Sử dụng":"Không sử dụng")+'</td><td style="display:none" class="fix" id="vehicle_romooc_cont_'+parseInt(lastID+1)+'">'+vehicle_romooc_cont+'</td><td style="display:none" class="fix" id="vehicle_romooc_code_'+parseInt(lastID+1)+'">'+vehicle_romooc_code+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+                                    );
+
+                                    $('#lasted').html(parseInt(lastID+2));
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+   
+   
+   $('.number').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+    
+
+    
+
+});
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+
+</script>
+
+
+<div style="display:none" id="lasted"></div>
+<script type="text/javascript">
+    var count = parseInt(<?php echo $lastID ?>);
+    $('#lasted').html(count);
+
+    $("#import_excel").click(function(){
+        $("#winpopup").dialog({
+            draggable:true,
+            modal: true,
+            autoOpen: false,
+            height:200,
+            width:500,
+            resizable: false,
+            title:'Import Excel',
+            
+        });
+        $("#winpopup").load($(this).attr('href'));
+        $("#winpopup").dialog("open");
+         
+        return false;
+    });
+
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+5",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#end_time" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+    }; 
+    $("#start_time").datepicker(pickerOpts);
+
+    var pickerOpts2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+5",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#start_time" ).datepicker( "option", "maxDate", selectedDate );
+
+         },
+    }; 
+    $("#end_time").datepicker(pickerOpts2);
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "auto",
+    title: "Bảng thay thế mooc",
+    hide: 'fold',
+    show: 'blind'
+});
+</script>
+</div>

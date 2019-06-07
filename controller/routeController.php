@@ -1,453 +1,232 @@
 <?php
-
 Class routeController Extends baseController {
-
     public function index() {
-
         $this->view->setLayout('admin');
-
         if (!isset($_SESSION['userid_logined'])) {
-
             return $this->view->redirect('user/login');
-
         }
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            return $this->view->redirect('admin');
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->route) || json_decode($_SESSION['user_permission_action'])->route != "route") {
+            $this->view->data['disable_control'] = 1;
         }
-
-
         $this->view->data['lib'] = $this->lib;
-
-        $this->view->data['title'] = 'Quản lý địa điểm';
-
-
+        $this->view->data['title'] = 'Quản lý thông tin địa điểm';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $order_by = isset($_POST['order_by']) ? $_POST['order_by'] : null;
-
             $order = isset($_POST['order']) ? $_POST['order'] : null;
-
             $page = isset($_POST['page']) ? $_POST['page'] : null;
-
             $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : null;
-
             $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
-
         }
-
         else{
-
             $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'route_name';
-
-            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
-
+            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
-
             $keyword = "";
-
-            $limit = 100;
-
+            $limit = 50;
         }
+        $province_model = $this->model->get('provinceModel');
+        $provinces = $province_model->getAllProvince(array('order_by'=>'province_name','order'=>'ASC'));
+        $this->view->data['provinces'] = $provinces;
 
-
-
+        $id = $this->registry->router->param_id;
 
         $route_model = $this->model->get('routeModel');
-
         $sonews = $limit;
-
         $x = ($page-1) * $sonews;
-
         $pagination_stages = 2;
 
-        $join = array('table'=>'province','where'=>'route_province=province_id');
-
-        $tongsodong = count($route_model->getAllRoute(null,$join));
-
-        $tongsotrang = ceil($tongsodong / $sonews);
-
-        
-
-
-
-        $this->view->data['page'] = $page;
-
-        $this->view->data['order_by'] = $order_by;
-
-        $this->view->data['order'] = $order;
-
-        $this->view->data['keyword'] = $keyword;
-
-        $this->view->data['limit'] = $limit;
-
-        $this->view->data['pagination_stages'] = $pagination_stages;
-
-        $this->view->data['tongsotrang'] = $tongsotrang;
-
-        $this->view->data['sonews'] = $sonews;
-
-
+        $join = array('table'=>'province','where'=>'province=province_id');
 
         $data = array(
+            'where' => '1=1',
+        );
 
-            'order_by'=>$order_by,
-
-            'order'=>$order,
-
-            'limit'=>$x.','.$sonews,
-
-            );
-
+        if (isset($id) && $id > 0) {
+            $data['where'] .= ' AND route_id = '.$id;
+        }
+        
+        $tongsodong = count($route_model->getAllPlace($data,$join));
+        $tongsotrang = ceil($tongsodong / $sonews);
         
 
+        $this->view->data['page'] = $page;
+        $this->view->data['order_by'] = $order_by;
+        $this->view->data['order'] = $order;
+        $this->view->data['keyword'] = $keyword;
+        $this->view->data['pagination_stages'] = $pagination_stages;
+        $this->view->data['tongsotrang'] = $tongsotrang;
+        $this->view->data['sonews'] = $sonews;
+        $this->view->data['limit'] = $limit;
+
+        $data = array(
+            'order_by'=>$order_by,
+            'order'=>$order,
+            'limit'=>$x.','.$sonews,
+            'where' => '1=1',
+            );
+
+        if (isset($id) && $id > 0) {
+            $data['where'] .= ' AND route_id = '.$id;
+        }
+        
         if ($keyword != '') {
-
-            $search = '( route_name LIKE "%'.$keyword.'%" OR province_name LIKE "%'.$keyword.'%" )';
-
-            $data['where'] = $search;
-
+            $search = ' AND ( route_name LIKE "%'.$keyword.'%" 
+                        OR province_name LIKE "%'.$keyword.'%" )';
+            $data['where'] .= $search;
         }
+        
+        $this->view->data['routes'] = $route_model->getAllPlace($data,$join);
 
-
-
-        $this->view->data['routes'] = $route_model->getAllRoute($data,$join);
-
-
-
-        return $this->view->show('route/index');
-
-    }
-
-
-    public function addroute(){
-        $route_model = $this->model->get('routeModel');
-
-        if (isset($_POST['route_name'])) {
-            if($route_model->getRouteByWhere(array('route_name'=>trim($_POST['route_name']),'route_province'=>trim($_POST['route_province'])))){
-                echo 'Tên địa điểm đã tồn tại';
-                return false;
-            }
-
-            $data = array(
-                'route_province' => trim($_POST['route_province']),
-                'route_name' => trim($_POST['route_name']),
-                'route_lat' => trim($_POST['route_lat']),
-                'route_long' => trim($_POST['route_long']),
-            );
-            $route_model->createRoute($data);
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$route_model->getLastRoute()->route_id."|route|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'route',
-                'user_log_table_name' => 'Địa điểm',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Thêm thành công";
-        }
-
+        $this->view->data['lastID'] = isset($route_model->getLastPlace()->route_id)?$route_model->getLastPlace()->route_id:0;
+        
+        $this->view->show('route/index');
     }
 
     public function add(){
-
-        $this->view->disableLayout();
-
         if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+            return $this->view->redirect('user/login');
         }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->route) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->route) || json_decode($_SESSION['user_permission_action'])->route != "route") {
+            return $this->view->redirect('user/login');
         }
-
-        $this->view->data['title'] = 'Thêm mới địa điểm';
-
-        $province = $this->model->get('provinceModel');
-
-        $this->view->data['provinces'] = $province->getAllProvince();
-
-        return $this->view->show('route/add');
-    }
-
-    public function editroute(){
-        $route_model = $this->model->get('routeModel');
-
-        if (isset($_POST['route_id'])) {
-            $id = $_POST['route_id'];
-            if($route_model->getAllRouteByWhere($id.' AND route_name = "'.trim($_POST['route_name']).'"'.' AND route_province = '.trim($_POST['route_province']))){
-                echo 'Tên địa điểm đã tồn tại';
-                return false;
-            }
-
+        if (isset($_POST['yes'])) {
+            $route = $this->model->get('routeModel');
+            $route_temp = $this->model->get('routetempModel');
             $data = array(
-                'route_province' => trim($_POST['route_province']),
-                'route_name' => trim($_POST['route_name']),
-                'route_lat' => trim($_POST['route_lat']),
-                'route_long' => trim($_POST['route_long']),
-            );
-            $route_model->updateRoute($data,array('route_id'=>$id));
+                        
+                        'province' => trim($_POST['province']),
+                        'route_name' => trim($_POST['route_name']),
+                        );
 
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|route|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
 
+            if ($_POST['yes'] != "") {
 
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'route',
-                'user_log_table_name' => 'Địa điểm',
-                'user_log_action' => 'Cập nhật',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Cập nhật thành công";
-        }
-    }
-
-    public function edit($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->route) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('route');
-
-        }
-
-        $this->view->data['title'] = 'Cập nhật địa điểm';
-
-        $route_model = $this->model->get('routeModel');
-
-        $route_data = $route_model->getRoute($id);
-
-        $this->view->data['route_data'] = $route_data;
-
-        if (!$route_data) {
-
-            $this->view->redirect('route');
-
-        }
-
-        $province = $this->model->get('provinceModel');
-
-        $this->view->data['provinces'] = $province->getAllProvince();
-
-        return $this->view->show('route/edit');
-
-    }
-
-    public function view($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('route');
-
-        }
-
-        $this->view->data['title'] = 'Thông tin địa điểm';
-
-        $route_model = $this->model->get('routeModel');
-
-        $route_data = $route_model->getRoute($id);
-
-        $this->view->data['route_data'] = $route_data;
-
-        if (!$route_data) {
-
-            $this->view->redirect('route');
-
-        }
-
-        $province = $this->model->get('provinceModel');
-
-        $this->view->data['provinces'] = $province->getAllProvince();
-
-        return $this->view->show('route/view');
-
-    }
-
-    public function getroute(){
-        $route_model = $this->model->get('routeModel');
-
-        $routes = $route_model->getAllRoute();
-        $result = array();
-        $i = 0;
-        foreach ($routes as $route) {
-            $result[$i]['id'] = $route->route_id;
-            $result[$i]['text'] = $route->route_name;
-            $i++;
-        }
-        echo json_encode($result);
-    }
-
-    public function delete(){
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->route) || json_decode($_SESSION['user_permission_action'])->route != "route") && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $route_model = $this->model->get('routeModel');
-            $user_log_model = $this->model->get('userlogModel');
-
-            if (isset($_POST['xoa'])) {
-
-                $datas = explode(',', $_POST['xoa']);
-
-                foreach ($datas as $data) {
-
-                    $route_model->deleteRoute($data);
-
-
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|route|"."\n"."\r\n";
-
-                        $this->lib->ghi_file("action_logs.txt",$text);
-
-
-
+                if ($route->checkPlace($_POST['yes'],trim($_POST['route_name']))) {
+                    echo "Tên đã được sử dụng";
+                    return false;
                 }
+                else{
+                    $route->updatePlace($data,array('route_id' => $_POST['yes']));
 
+                    $data2 = array('route_id'=>$_POST['yes'],'route_temp_date'=>strtotime(date('d-m-Y')),'route_temp_action'=>2,'route_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS địa điểm');
+                    $data_temp = array_merge($data, $data2);
+                    $route_temp->createPlace($data_temp);
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'route',
-                    'user_log_table_name' => 'Địa điểm',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($datas),
-                );
-                $user_log_model->createUser($data_log);
+                    /*Log*/
+                    /**/
+                    echo "Cập nhật thành công";
 
-
-                echo "Xóa thành công";
-                return true;
-
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|route|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                }
+                    
+                
+                
             }
-
             else{
 
-                $route_model->deleteRoute($_POST['data']);
+                if ($route->getPlaceByWhere(array('route_name'=>$data['route_name']))) {
+                    echo "Tên đã được sử dụng";
+                    return false;
+                }
+                else{
+                    $route->createPlace($data);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|route|"."\n"."\r\n";
+                    $data2 = array('route_id'=>$route->getLastPlace()->route_id,'route_temp_date'=>strtotime(date('d-m-Y')),'route_temp_action'=>1,'route_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS địa điểm');
+                    $data_temp = array_merge($data, $data2);
+                    $route_temp->createPlace($data_temp);
 
-                $this->lib->ghi_file("action_logs.txt",$text);
+                    /*Log*/
+                    /**/
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'route',
-                    'user_log_table_name' => 'Địa điểm',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($_POST['data']),
-                );
-                $user_log_model->createUser($data_log);
+                    echo "Thêm thành công";
 
-                echo "Xóa thành công";
-                return true;
-
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$route->getLastPlace()->route_id."|route|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                }
+                    
+                
+                
             }
-
-            
-
-        }
-
-    }
-
-    public function importroute(){
-        if (isset($_FILES['import']['name'])) {
-            $total = count($_FILES['import']['name']);
-            for( $i=0 ; $i < $total ; $i++ ) {
-              $tmpFilePath = $_FILES['import']['name'][$i];
-              echo $tmpFilePath;
-            }
+                    
         }
     }
-    public function import(){
-
-        $this->view->disableLayout();
-
+    public function delete(){
         if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+            return $this->view->redirect('user/login');
         }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->route) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->route) || json_decode($_SESSION['user_permission_action'])->route != "route") {
+            return $this->view->redirect('user/login');
         }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $route = $this->model->get('routeModel');
+            $route_temp = $this->model->get('routetempModel');
+            if (isset($_POST['xoa'])) {
+                $data = explode(',', $_POST['xoa']);
+                foreach ($data as $data) {
+                    $route_data = (array)$route->getPlace($data);
 
-        $this->view->data['title'] = 'Nhập dữ liệu';
+                    $route->deletePlace($data);
+                    
+                    $data2 = array('route_id'=>$data,'route_temp_date'=>strtotime(date('d-m-Y')),'route_temp_action'=>3,'route_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS địa điểm');
+                    $data_temp = array_merge($route_data, $data2);
+                    $route_temp->createPlace($data_temp);
 
-       
-        return $this->view->show('route/import');
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|route|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                }
+
+                /*Log*/
+                    /**/
+
+                return true;
+            }
+            else{
+                /*Log*/
+                    /**/
+                    $route_data = (array)$route->getPlace($_POST['data']);
+                    $data2 = array('route_id'=>$_POST['data'],'route_temp_date'=>strtotime(date('d-m-Y')),'route_temp_action'=>3,'route_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS địa điểm');
+                    $data_temp = array_merge($route_data, $data2);
+                    $route_temp->createPlace($data_temp);
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|route|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+
+                return $route->deletePlace($_POST['data']);
+            }
+            
+        }
+    }
+
+    public function getPlace($id){
+        return $this->getByID($this->table,$id);
+    }
+
+    private function getUrl(){
 
     }
 
 
 }
-
 ?>

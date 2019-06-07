@@ -11,16 +11,14 @@ Class vehicleworkController Extends baseController {
             return $this->view->redirect('user/login');
 
         }
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
 
-            return $this->view->redirect('admin');
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) || json_decode($_SESSION['user_permission_action'])->vehiclework != "vehiclework") {
+            $this->view->data['disable_control'] = 1;
         }
-
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý tạm dừng xe';
+        $this->view->data['title'] = 'Quản lý hoạt động xe';
 
 
 
@@ -40,22 +38,33 @@ Class vehicleworkController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'vehicle_number,vehicle_work_start_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'vehicle_number ASC, start_work';
 
-            $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
+            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
 
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
 
             $keyword = "";
 
-            $limit = 100;
+            $limit = 50;
 
         }
 
 
 
+        $vehicle_model = $this->model->get('vehicleModel');
 
-        $vehicle_model = $this->model->get('vehicleworkModel');
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $this->view->data['vehicles'] = $vehicles;
+
+
+
+        $join = array('table'=>'vehicle','where'=>'vehicle.vehicle_id = vehicle_work.vehicle');
+
+
+
+        $vehicle_work_model = $this->model->get('vehicleworkModel');
 
         $sonews = $limit;
 
@@ -63,9 +72,9 @@ Class vehicleworkController Extends baseController {
 
         $pagination_stages = 2;
 
-        $join = array('table'=>'vehicle', 'where'=>'vehicle=vehicle_id');
+        
 
-        $tongsodong = count($vehicle_model->getAllVehicle(null,$join));
+        $tongsodong = count($vehicle_work_model->getAllVehicle(null,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -105,342 +114,200 @@ Class vehicleworkController Extends baseController {
 
         if ($keyword != '') {
 
-            $search = '( vehicle_number LIKE "%'.$keyword.'%" )';
+            $search = '( vehicle_number LIKE "%'.$keyword.'%"  )';
 
             $data['where'] = $search;
 
         }
 
+        
+
+        
+
+        
+
+        $this->view->data['works'] = $vehicle_work_model->getAllVehicle($data,$join);
 
 
-        $this->view->data['vehicles'] = $vehicle_model->getAllVehicle($data,$join);
 
+        $this->view->data['lastID'] = isset($vehicle_work_model->getLastVehicle()->vehicle_work_id)?$vehicle_work_model->getLastVehicle()->vehicle_work_id:0;
 
+        
 
-        return $this->view->show('vehiclework/index');
-
-    }
-
-
-    public function addvehiclework(){
-        $vehicle_model = $this->model->get('vehicleworkModel');
-
-        if (isset($_POST['vehicle_work_start_date'])) {
-            if($vehicle_model->getVehicleByWhere(array('vehicle'=>$_POST['vehicle'],'vehicle_work_start_date'=>strtotime(str_replace('/', '-', $_POST['vehicle_work_start_date']))))){
-                echo 'Thông tin đã tồn tại';
-                return false;
-            }
-
-            $data = array(
-                'vehicle_work_start_date' => strtotime(str_replace('/', '-', $_POST['vehicle_work_start_date'])),
-                'vehicle_work_end_date' => $_POST['vehicle_work_end_date']!=""?strtotime(str_replace('/', '-', $_POST['vehicle_work_end_date'])):null,
-                'vehicle' => trim($_POST['vehicle']),
-            );
-
-            $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['vehicle_work_start_date']).' -1 day')));
-
-            if ($data['vehicle_work_end_date'] == null) {
-                $vehicle_model->queryVehicle('UPDATE vehicle_work SET vehicle_work_end_date = '.$ngaytruoc.' WHERE vehicle='.$data['vehicle'].' AND (vehicle_work_end_date IS NULL OR vehicle_work_end_date = 0)');
-                $vehicle_model->createVehicle($data);
-            }
-            else{
-                $dm1 = $vehicle_model->queryVehicle('SELECT * FROM vehicle_work WHERE vehicle='.$data['vehicle'].' AND vehicle_work_start_date <= '.$data['vehicle_work_start_date'].' AND vehicle_work_end_date <= '.$data['vehicle_work_end_date'].' AND vehicle_work_end_date >= '.$data['vehicle_work_start_date'].' ORDER BY vehicle_work_end_date ASC LIMIT 1');
-                $dm2 = $vehicle_model->queryVehicle('SELECT * FROM vehicle_work WHERE vehicle='.$data['vehicle'].' AND vehicle_work_end_date >= '.$data['vehicle_work_end_date'].' AND vehicle_work_start_date >= '.$data['vehicle_work_start_date'].' AND vehicle_work_start_date <= '.$data['vehicle_work_end_date'].' ORDER BY vehicle_work_end_date ASC LIMIT 1');
-                $dm3 = $vehicle_model->queryVehicle('SELECT * FROM vehicle_work WHERE vehicle='.$data['vehicle'].' AND vehicle_work_start_date <= '.$data['vehicle_work_start_date'].' AND vehicle_work_end_date >= '.$data['vehicle_work_end_date'].' ORDER BY vehicle_work_end_date ASC LIMIT 1');
-
-                if ($dm3) {
-                    foreach ($dm3 as $row) {
-                        $d = array(
-                            'vehicle_work_end_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['vehicle_work_start_date']).' -1 day'))),
-                            );
-                        $vehicle_model->updateVehicle($d,array('vehicle_work_id'=>$row->vehicle_work_id));
-
-                        $c = array(
-                            'vehicle' => $row->vehicle,
-                            'vehicle_work_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['vehicle_work_end_date']).' +1 day'))),
-                            'vehicle_work_end_date' => $row->vehicle_work_end_date,
-                            );
-                        $vehicle_model->createVehicle($c);
-
-                    }
-                    $vehicle_model->createVehicle($data);
-
-                }
-                else if ($dm1 || $dm2) {
-                    if($dm1){
-                        foreach ($dm1 as $row) {
-                            $d = array(
-                                'vehicle_work_end_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['vehicle_work_start_date']).' -1 day'))),
-                                );
-                            $vehicle_model->updateVehicle($d,array('vehicle_work_id'=>$row->vehicle_work_id));
-                        }
-                    }
-                    if($dm2){
-                        foreach ($dm2 as $row) {
-                            $d = array(
-                                'vehicle_work_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['vehicle_work_end_date']).' +1 day'))),
-                                );
-                            $vehicle_model->updateVehicle($d,array('vehicle_work_id'=>$row->vehicle_work_id));
-                        }
-                    }
-                    $vehicle_model->createVehicle($data);
-                }
-                else{
-                    $vehicle_model->createVehicle($data);
-                }
-            }
-            
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicle_model->getLastVehicle()->vehicle_work_id."|vehicle_work|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'vehicle_work',
-                'user_log_table_name' => 'Tạm dừng xe',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Thêm thành công";
-        }
+        $this->view->show('vehiclework/index');
 
     }
+
+
+
 
     public function add(){
 
-        $this->view->disableLayout();
+        $this->view->setLayout('admin');
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) || json_decode($_SESSION['user_permission_action'])->vehiclework != "vehiclework") {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
-        $this->view->data['title'] = 'Thêm mới tạm dừng xe';
+        if (isset($_POST['yes'])) {
 
-        $vehicle = $this->model->get('vehicleModel');
+            $vehicle_work_model = $this->model->get('vehicleworkModel');
+            $vehicle_work_temp_model = $this->model->get('vehicleworktempModel');
 
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        return $this->view->show('vehiclework/add');
-    }
-
-    public function editvehiclework(){
-        $vehicle_model = $this->model->get('vehicleworkModel');
-
-        if (isset($_POST['vehicle_work_id'])) {
-            $id = $_POST['vehicle_work_id'];
-            
             $data = array(
-                'vehicle_work_start_date' => strtotime(str_replace('/', '-', $_POST['vehicle_work_start_date'])),
-                'vehicle_work_end_date' => $_POST['vehicle_work_end_date']!=""?strtotime(str_replace('/', '-', $_POST['vehicle_work_end_date'])):null,
-                'vehicle' => trim($_POST['vehicle']),
-            );
-
-            $vehicle_model->updateVehicle($data,array('vehicle_work_id'=>$id));
-            
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|vehicle_work|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
 
 
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'vehicle_work',
-                'user_log_table_name' => 'Tạm dừng xe',
-                'user_log_action' => 'Cập nhật',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
+                        'vehicle' => trim($_POST['vehicle']),
 
+                        'start_work' => strtotime(trim($_POST['start_work'])),
 
-            echo "Cập nhật thành công";
-        }
-    }
+                        'end_work' => strtotime(trim($_POST['end_work'])),
 
-    public function edit($id){
+                        );
 
-        $this->view->disableLayout();
+            if ($_POST['yes'] != "") {
+                
+                    
+                    $vehicle_work_model->updateVehicle($data,array('vehicle_work_id' => trim($_POST['yes'])));
+                    echo "Cập nhật thành công";
 
-        if (!isset($_SESSION['userid_logined'])) {
+                    $data2 = array('vehicle_work_id'=>$_POST['yes'],'vehicle_work_temp_date'=>strtotime(date('d-m-Y')),'vehicle_work_temp_action'=>2,'vehicle_work_temp_user'=>$_SESSION['userid_logined'],'name'=>'Hoạt động xe');
+                    $data_temp = array_merge($data, $data2);
+                    $vehicle_work_temp_model->createVehicle($data_temp);
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|vehicle_work|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                
+                
+            }
+            else{
+                
+                $vehicle_work_model->createVehicle($data);
 
-        }
+                    
+                    echo "Thêm thành công";
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) && $_SESSION['user_permission_action'] != '["all"]') {
+                 $data2 = array('vehicle_work_id'=>$vehicle_work_model->getLastVehicle()->vehicle_work_id,'vehicle_work_temp_date'=>strtotime(date('d-m-Y')),'vehicle_work_temp_action'=>1,'vehicle_work_temp_user'=>$_SESSION['userid_logined'],'name'=>'Hoạt động xe');
+                    $data_temp = array_merge($data, $data2);
+                    $vehicle_work_temp_model->createVehicle($data_temp);
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicle_work_model->getLastVehicle()->vehicle_work_id."|vehicle_work|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                
+                
+            }
 
-        }
-        if (!$id) {
-
-            $this->view->redirect('vehiclework');
-
-        }
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Cập nhật tạm dừng xe';
-
-        $vehicle_model = $this->model->get('vehicleworkModel');
-
-        $vehicle_data = $vehicle_model->getVehicle($id);
-
-        $this->view->data['vehicle_data'] = $vehicle_data;
-
-        if (!$vehicle_data) {
-
-            $this->view->redirect('vehiclework');
+                    
 
         }
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        return $this->view->show('vehiclework/edit');
 
     }
 
-    public function view($id){
 
-        $this->view->disableLayout();
 
-        if (!isset($_SESSION['userid_logined'])) {
+    
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+    
 
-        }
 
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('vehiclework');
-
-        }
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Thông tin tạm dừng xe';
-
-        $vehicle_model = $this->model->get('vehicleworkModel');
-
-        $vehicle_data = $vehicle_model->getVehicle($id);
-
-        $this->view->data['vehicle_data'] = $vehicle_data;
-
-        if (!$vehicle_data) {
-
-            $this->view->redirect('vehiclework');
-
-        }
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        return $this->view->show('vehiclework/view');
-
-    }
 
     public function delete(){
 
+        $this->view->setLayout('admin');
+
         if (!isset($_SESSION['userid_logined'])) {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) || json_decode($_SESSION['user_permission_action'])->vehiclework != "vehiclework") && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) || json_decode($_SESSION['user_permission_action'])->vehiclework != "vehiclework") {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $vehicle_model = $this->model->get('vehicleworkModel');
-            $user_log_model = $this->model->get('userlogModel');
+            $vehicle = $this->model->get('vehicleworkModel');
+            $vehicle_work_temp = $this->model->get('vehicleworktempModel');
 
             if (isset($_POST['xoa'])) {
 
-                $datas = explode(',', $_POST['xoa']);
+                $data = explode(',', $_POST['xoa']);
 
-                foreach ($datas as $data) {
+                foreach ($data as $data) {
 
-                    $vehicle_model->deleteVehicle($data);
+                    $vehicle_work_data = (array)$vehicle->getVehicle($data);
 
+                    $vehicle->deleteVehicle($data);                    
+                    
+                    $data2 = array('vehicle_work_id'=>$data,'vehicle_work_temp_date'=>strtotime(date('d-m-Y')),'vehicle_work_temp_action'=>3,'vehicle_work_temp_user'=>$_SESSION['userid_logined'],'name'=>'Hoạt động xe');
+                    $data_temp = array_merge($vehicle_work_data, $data2);
+                    $vehicle_work_temp->createVehicle($data_temp);
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+
+                        $filename = "action_logs.txt";
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|vehicle_work|"."\n"."\r\n";
 
-                        $this->lib->ghi_file("action_logs.txt",$text);
+                        
 
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
 
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
 
                 }
 
-
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'vehicle_work',
-                    'user_log_table_name' => 'Tạm dừng xe',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($datas),
-                );
-                $user_log_model->createUser($data_log);
-
-
-                echo "Xóa thành công";
                 return true;
 
             }
 
             else{
 
-                $vehicle_model->deleteVehicle($_POST['data']);
+                $vehicle_work_data = (array)$vehicle->getVehicle($_POST['data']);
+                $data2 = array('vehicle_work_id'=>$_POST['data'],'vehicle_work_temp_date'=>strtotime(date('d-m-Y')),'vehicle_work_temp_action'=>3,'vehicle_work_temp_user'=>$_SESSION['userid_logined'],'name'=>'Hoạt động xe');
+                    $data_temp = array_merge($vehicle_work_data, $data2);
+                    $vehicle_work_temp->createVehicle($data_temp);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|vehicle_work|"."\n"."\r\n";
+                date_default_timezone_set("Asia/Ho_Chi_Minh"); 
 
-                $this->lib->ghi_file("action_logs.txt",$text);
+                        $filename = "action_logs.txt";
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'vehicle_work',
-                    'user_log_table_name' => 'Tạm dừng xe',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($_POST['data']),
-                );
-                $user_log_model->createUser($data_log);
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|vehicle_work|"."\n"."\r\n";
 
-                echo "Xóa thành công";
-                return true;
+                        
+
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
+
+
+
+                return $vehicle->deleteVehicle($_POST['data']);
 
             }
 
@@ -450,40 +317,9 @@ Class vehicleworkController Extends baseController {
 
     }
 
-    public function importvehiclework(){
-        if (isset($_FILES['import']['name'])) {
-            $total = count($_FILES['import']['name']);
-            for( $i=0 ; $i < $total ; $i++ ) {
-              $tmpFilePath = $_FILES['import']['name'][$i];
-              echo $tmpFilePath;
-            }
-        }
-    }
-    public function import(){
 
-        $this->view->disableLayout();
 
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehiclework) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        $this->view->data['title'] = 'Nhập dữ liệu';
-
-       
-        return $this->view->show('vehiclework/import');
-
-    }
-
+    
 
 }
 

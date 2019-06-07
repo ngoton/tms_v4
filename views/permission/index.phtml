@@ -1,9 +1,16 @@
 
 <div id="loading"></div>
 <div id="winpopup"></div>
+<section class="content-header">
+    <h1>PHÂN QUYỀN HỆ THỐNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('permission') ?>">Phân quyền</a></li>
+  </ol>
+</section>
 
 <form id="add_permission" role="form" method="post" action="" enctype="multipart/form-data">
-<div class="box box-primary" style="padding: 5px">
+<div class="box box-primary">
   <div class="row">
     <div class="col-md-2 col-xs-6">
       <div class="box-body">
@@ -42,7 +49,7 @@
     <div class="col-md-2 col-xs-6">
       <div class="box-body">
         <div class="form-group">
-          <button type="submit" class="btn btn-white btn-danger btn-round"><i class="ace-icon fa fa-floppy-o bigger-120 red"></i> Lưu</button>
+          <button type="submit" class="btn btn-primary">Lưu</button>
         </div>
       </div>
     </div>
@@ -53,672 +60,558 @@
         <th class="fix">Nghiệp vụ</th>
         <th class="fix">Truy cập</th>
         <th class="fix">Cập nhật</th>
-        <th class="fix">Xóa</th>
       </tr>
     </thead>
     <tbody>
       <tr class="edit_tr">
-        <td class="fix"><b>Thông tin</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('thongtin', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('thongtin2', this)" data="thongtin2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('thongtin3', this)" data="thongtin3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Thông tin</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('thongtin', this)" value=""></td>
+        <td class="fix"><input type="radio" data="thongtin2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Định mức</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('dinhmuc', this)" class="thongtin" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('dinhmuc2', this)" data="dinhmuc2" class="thongtin2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('dinhmuc2', this)" data="dinhmuc2" class="thongtin3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('dinhmuc', this)" class="thongtin" value=""></td>
+        <td class="fix"><input type="radio" data="dinhmuc2" class="thongtin2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Định mức dầu</td>
-        <td class="fix text-center"><input type="checkbox" id="dmdau" value="oil" class="dinhmuc thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dmdau2" value="oil" class="dinhmuc2 thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dmdau3" value="oil" class="dinhmuc3 thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dmdau" value="oil" class="dinhmuc thongtin"></td>
+        <td class="fix"><input type="radio" id="dmdau2" value="oil" class="dinhmuc2 thongtin2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Định mức tuyến đường</td>
-        <td class="fix text-center"><input type="checkbox" id="dmtuyenduong" value="road" class="dinhmuc thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dmtuyenduong2" value="road" class="dinhmuc2 thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dmtuyenduong3" value="road" class="dinhmuc3 thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dmtuyenduong" value="road" class="dinhmuc thongtin"></td>
+        <td class="fix"><input type="radio" id="dmtuyenduong2" value="road" class="dinhmuc2 thongtin2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Bồi dưỡng kho</td>
-        <td class="fix text-center"><input type="checkbox" id="bdkho" value="warehouse" class="dinhmuc thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bdkho2" value="warehouse" class="dinhmuc2 thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bdkho3" value="warehouse" class="dinhmuc3 thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bdkho" value="warehouse" class="dinhmuc thongtin"></td>
+        <td class="fix"><input type="radio" id="bdkho2" value="warehouse" class="dinhmuc2 thongtin2"></td>
       </tr>
 
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Khách hàng - Đối tác - Người thụ hưởng</td>
-        <td class="fix text-center"><input type="checkbox" id="dskhachhang" value="customer" class="thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dskhachhang2" value="customer" class="thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dskhachhang3" value="customer" class="thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dskhachhang" value="customer" class="thongtin"></td>
+        <td class="fix"><input type="radio" id="dskhachhang2" value="customer" class="thongtin2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách xe</td>
-        <td class="fix text-center"><input type="checkbox" id="dsxe" value="vehicle" class="thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsxe2" value="vehicle" class="thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsxe3" value="vehicle" class="thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsxe" value="vehicle" class="thongtin"></td>
+        <td class="fix"><input type="radio" id="dsxe2" value="vehicle" class="thongtin2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách mooc</td>
-        <td class="fix text-center"><input type="checkbox" id="dsmooc" value="romooc" class="thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsmooc2" value="romooc" class="thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsmooc3" value="romooc" class="thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsmooc" value="romooc" class="thongtin"></td>
+        <td class="fix"><input type="radio" id="dsmooc2" value="romooc" class="thongtin2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách kho hàng</td>
-        <td class="fix text-center"><input type="checkbox" id="dskhohang" value="place" class="thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dskhohang2" value="place" class="thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dskhohang3" value="place" class="thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dskhohang" value="place" class="thongtin"></td>
+        <td class="fix"><input type="radio" id="dskhohang2" value="place" class="thongtin2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách địa điểm</td>
-        <td class="fix text-center"><input type="checkbox" id="dsdiadiem" value="route" class="thongtin"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsdiadiem2" value="route" class="thongtin2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsdiadiem3" value="route" class="thongtin3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsdiadiem" value="route" class="thongtin"></td>
+        <td class="fix"><input type="radio" id="dsdiadiem2" value="route" class="thongtin2"></td>
       </tr>
 
       <tr class="edit_tr">
-        <td class="fix"><b>Nhân sự</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('nhansu', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('nhansu2', this)" data="nhansu2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('nhansu3', this)" data="nhansu3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Nhân sự</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('nhansu', this)" value=""></td>
+        <td class="fix"><input type="radio" data="nhansu2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Lương tài xế</td>
-        <td class="fix text-center"><input type="checkbox" id="luongtaixe" value="salary" class="nhansu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="luongtaixe2" value="salary" class="nhansu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="luongtaixe3" value="salary" class="nhansu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="luongtaixe" value="salary" class="nhansu"></td>
+        <td class="fix"><input type="radio" id="luongtaixe2" value="salary" class="nhansu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Thưởng phạt dầu</td>
-        <td class="fix text-center"><input type="checkbox" id="tpdau" value="salarybonus" class="nhansu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tpdau2" value="salarybonus" class="nhansu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tpdau3" value="salarybonus" class="nhansu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tpdau" value="salarybonus" class="nhansu"></td>
+        <td class="fix"><input type="radio" id="tpdau2" value="salarybonus" class="nhansu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách tài xế</td>
-        <td class="fix text-center"><input type="checkbox" id="dstaixe" value="steersman" class="nhansu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dstaixe2" value="steersman" class="nhansu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dstaixe3" value="steersman" class="nhansu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dstaixe" value="steersman" class="nhansu"></td>
+        <td class="fix"><input type="radio" id="dstaixe2" value="steersman" class="nhansu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách nhân viên</td>
-        <td class="fix text-center"><input type="checkbox" id="dsnhanvien" value="staff" class="nhansu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsnhanvien2" value="staff" class="nhansu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsnhanvien3" value="staff" class="nhansu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsnhanvien" value="staff" class="nhansu"></td>
+        <td class="fix"><input type="radio" id="dsnhanvien2" value="staff" class="nhansu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách phòng ban</td>
-        <td class="fix text-center"><input type="checkbox" id="dsphongban" value="department" class="nhansu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsphongban2" value="department" class="nhansu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsphongban3" value="department" class="nhansu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsphongban" value="department" class="nhansu"></td>
+        <td class="fix"><input type="radio" id="dsphongban2" value="department" class="nhansu2"></td>
       </tr>
 
       <tr class="edit_tr">
-        <td class="fix"><b>Vật tư</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('vattu', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('vattu2', this)" data="vattu2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('vattu3', this)" data="vattu3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Vật tư</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('vattu', this)" value=""></td>
+        <td class="fix"><input type="radio" data="vattu2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Nhập kho</td>
-        <td class="fix text-center"><input type="checkbox" id="nhapkho" value="importstock" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="nhapkho2" value="importstock" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="nhapkho3" value="importstock" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="nhapkho" value="importstock" class="vattu"></td>
+        <td class="fix"><input type="radio" id="nhapkho2" value="importstock" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Xuất kho</td>
-        <td class="fix text-center"><input type="checkbox" id="xuatkho" value="exportstock" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuatkho2" value="exportstock" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuatkho3" value="exportstock" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="xuatkho" value="exportstock" class="vattu"></td>
+        <td class="fix"><input type="radio" id="xuatkho2" value="exportstock" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách kho vật tư</td>
-        <td class="fix text-center"><input type="checkbox" id="dskhovt" value="house" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dskhovt2" value="house" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dskhovt3" value="house" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dskhovt" value="house" class="vattu"></td>
+        <td class="fix"><input type="radio" id="dskhovt2" value="house" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh sách vật tư</td>
-        <td class="fix text-center"><input type="checkbox" id="dsvattu" value="sparepart" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsvattu2" value="sparepart" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsvattu3" value="sparepart" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsvattu" value="sparepart" class="vattu"></td>
+        <td class="fix"><input type="radio" id="dsvattu2" value="sparepart" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Phiếu sử chữa bảo dưỡng</td>
-        <td class="fix text-center"><input type="checkbox" id="phieusc" value="repair" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phieusc2" value="repair" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phieusc3" value="repair" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phieusc" value="repair" class="vattu"></td>
+        <td class="fix"><input type="radio" id="phieusc2" value="repair" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Kiểm định, bảo hiểm</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kiemdinh', this)" class="vattu" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kiemdinh2', this)" data="kiemdinh2" class="vattu2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kiemdinh3', this)" data="kiemdinh3" class="vattu3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('kiemdinh', this)" class="vattu" value=""></td>
+        <td class="fix"><input type="radio" data="kiemdinh2" class="vattu2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phí sử dụng đường bộ</td>
-        <td class="fix text-center"><input type="checkbox" id="phisddb" value="roadcost" class="kiemdinh vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phisddb2" value="roadcost" class="kiemdinh2 vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phisddb3" value="roadcost" class="kiemdinh3 vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phisddb" value="roadcost" class="kiemdinh vattu"></td>
+        <td class="fix"><input type="radio" id="phisddb2" value="roadcost" class="kiemdinh2 vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phí kiểm định</td>
-        <td class="fix text-center"><input type="checkbox" id="phikd" value="checkingcost" class="kiemdinh vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phikd2" value="checkingcost" class="kiemdinh2 vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phikd3" value="checkingcost" class="kiemdinh3 vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phikd" value="checkingcost" class="kiemdinh vattu"></td>
+        <td class="fix"><input type="radio" id="phikd2" value="checkingcost" class="kiemdinh2 vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phí bảo hiểm</td>
-        <td class="fix text-center"><input type="checkbox" id="phibh" value="insurancecost" class="kiemdinh vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phibh2" value="insurancecost" class="kiemdinh2 vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phibh3" value="insurancecost" class="kiemdinh3 vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phibh" value="insurancecost" class="kiemdinh vattu"></td>
+        <td class="fix"><input type="radio" id="phibh2" value="insurancecost" class="kiemdinh2 vattu2"></td>
       </tr>
 
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Thay thế phụ tùng</td>
-        <td class="fix text-center"><input type="checkbox" id="thaythept" value="sparevehicle" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="thaythept2" value="sparevehicle" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="thaythept3" value="sparevehicle" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="thaythept" value="sparevehicle" class="vattu"></td>
+        <td class="fix"><input type="radio" id="thaythept2" value="sparevehicle" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Chuyển phụ tùng</td>
-        <td class="fix text-center"><input type="checkbox" id="chuyenpt" value="sparevehiclepass" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chuyenpt2" value="sparevehiclepass" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chuyenpt3" value="sparevehiclepass" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="chuyenpt" value="sparevehiclepass" class="vattu"></td>
+        <td class="fix"><input type="radio" id="chuyenpt2" value="sparevehiclepass" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Phụ tùng sử dụng</td>
-        <td class="fix text-center"><input type="checkbox" id="phutungsd" value="sparevehiclelist" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phutungsd2" value="sparevehiclelist" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phutungsd3" value="sparevehiclelist" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phutungsd" value="sparevehiclelist" class="vattu"></td>
+        <td class="fix"><input type="radio" id="phutungsd2" value="sparevehiclelist" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Vật tư thay ra</td>
-        <td class="fix text-center"><input type="checkbox" id="vattuthayra" value="sparedrap" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="vattuthayra2" value="sparedrap" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="vattuthayra3" value="sparedrap" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="vattuthayra" value="sparedrap" class="vattu"></td>
+        <td class="fix"><input type="radio" id="vattuthayra2" value="sparedrap" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tồn kho</td>
-        <td class="fix text-center"><input type="checkbox" id="tonkho" value="stock" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tonkho2" value="stock" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tonkho3" value="stock" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tonkho" value="stock" class="vattu"></td>
+        <td class="fix"><input type="radio" id="tonkho2" value="stock" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tình trạng sử dụng</td>
-        <td class="fix text-center"><input type="checkbox" id="tinhtrangsd" value="used" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tinhtrangsd2" value="used" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tinhtrangsd3" value="used" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tinhtrangsd" value="used" class="vattu"></td>
+        <td class="fix"><input type="radio" id="tinhtrangsd2" value="used" class="vattu2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Bảng theo dõi</td>
-        <td class="fix text-center"><input type="checkbox" id="bangtheodoi" value="spareparttracking" class="vattu"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangtheodoi2" value="spareparttracking" class="vattu2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangtheodoi3" value="spareparttracking" class="vattu3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bangtheodoi" value="spareparttracking" class="vattu"></td>
+        <td class="fix"><input type="radio" id="bangtheodoi2" value="spareparttracking" class="vattu2"></td>
       </tr>
 
       <tr class="edit_tr">
-        <td class="fix"><b>Điều độ</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('dieudo', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('dieudo2', this)" data="dieudo2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('dieudo3', this)" data="dieudo3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Điều độ</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('dieudo', this)" value=""></td>
+        <td class="fix"><input type="radio" data="dieudo2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Điều xe</td>
-        <td class="fix text-center"><input type="checkbox" id="dieuxe" value="shipment" class="dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dieuxe2" value="shipment" class="dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dieuxe3" value="shipment" class="dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dieuxe" value="shipment" class="dieudo"></td>
+        <td class="fix"><input type="radio" id="dieuxe2" value="shipment" class="dieudo2"></td>
       </tr>
       
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Lô hàng</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('lohang', this)" class="dieudo" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('lohang2', this)" data="lohang2" class="dieudo2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('lohang3', this)" data="lohang3" class="dieudo3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('lohang', this)" class="dieudo" value=""></td>
+        <td class="fix"><input type="radio" data="lohang2" class="dieudo2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Lô hàng mới</td>
-        <td class="fix text-center"><input type="checkbox" id="lhmoi" value="newshipment" class="lohang dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="lhmoi2" value="newshipment" class="lohang2 dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="lhmoi3" value="newshipment" class="lohang3 dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="lhmoi" value="newshipment" class="lohang dieudo"></td>
+        <td class="fix"><input type="radio" id="lhmoi2" value="newshipment" class="lohang2 dieudo2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Lô hàng đã nhận</td>
-        <td class="fix text-center"><input type="checkbox" id="lhdanhan" value="shipmenttemp" class="lohang dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="lhdanhan2" value="shipmenttemp" class="lohang2 dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="lhdanhan3" value="shipmenttemp" class="lohang3 dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="lhdanhan" value="shipmenttemp" class="lohang dieudo"></td>
+        <td class="fix"><input type="radio" id="lhdanhan2" value="shipmenttemp" class="lohang2 dieudo2"></td>
       </tr>
 
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Bàn giao xe</td>
-        <td class="fix text-center"><input type="checkbox" id="bangiaoxe" value="driver" class="dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangiaoxe2" value="driver" class="dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangiaoxe3" value="driver" class="dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bangiaoxe" value="driver" class="dieudo"></td>
+        <td class="fix"><input type="radio" id="bangiaoxe2" value="driver" class="dieudo2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tạm dừng xe</td>
-        <td class="fix text-center"><input type="checkbox" id="tamdungxe" value="vehiclework" class="dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tamdungxe2" value="vehiclework" class="dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tamdungxe3" value="vehiclework" class="dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tamdungxe" value="vehiclework" class="dieudo"></td>
+        <td class="fix"><input type="radio" id="tamdungxe2" value="vehiclework" class="dieudo2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Mooc theo xe</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('mooc', this)" class="dieudo" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('mooc2', this)" data="mooc2" class="dieudo2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('mooc3', this)" data="mooc3" class="dieudo3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('mooc', this)" class="dieudo" value=""></td>
+        <td class="fix"><input type="radio" data="mooc2" class="dieudo2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Đổi mooc</td>
-        <td class="fix text-center"><input type="checkbox" id="doimooc" value="vehicleromooc" class="mooc dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="doimooc2" value="vehicleromooc" class="mooc2 dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="doimooc3" value="vehicleromooc" class="mooc3 dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="doimooc" value="vehicleromooc" class="mooc dieudo"></td>
+        <td class="fix"><input type="radio" id="doimooc2" value="vehicleromooc" class="mooc2 dieudo2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Danh sách mooc</td>
-        <td class="fix text-center"><input type="checkbox" id="dsdoimooc" value="vehicleromooc" class="mooc dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsdoimooc2" value="vehicleromooc" class="mooc2 dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dsdoimooc3" value="vehicleromooc" class="mooc3 dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dsdoimooc" value="vehicleromooc" class="mooc dieudo"></td>
+        <td class="fix"><input type="radio" id="dsdoimooc2" value="vehicleromooc" class="mooc2 dieudo2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Phiếu cầu đường</td>
-        <td class="fix text-center"><input type="checkbox" id="phieucd" value="tollcost" class="dieudo"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phieucd2" value="tollcost" class="dieudo2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phieucd3" value="tollcost" class="dieudo3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phieucd" value="tollcost" class="dieudo"></td>
+        <td class="fix"><input type="radio" id="phieucd2" value="tollcost" class="dieudo2"></td>
+      </tr>
+      <tr class="edit_tr">
+        <td class="fix">&nbsp;&nbsp; - Bảng kê phiếu cầu đường</td>
+        <td class="fix"><input type="checkbox" id="bkphieucd" value="tolllist" class="dieudo"></td>
+        <td class="fix"><input type="radio" id="bkphieucd2" value="tolllist" class="dieudo2"></td>
+      </tr>
+      <tr class="edit_tr">
+        <td class="fix">&nbsp;&nbsp; - Bảng kê tiền đi đường</td>
+        <td class="fix"><input type="checkbox" id="bktiendiduong" value="roadlist" class="dieudo"></td>
+        <td class="fix"><input type="radio" id="bktiendiduong2" value="roadlist" class="dieudo2"></td>
       </tr>
       
       <tr class="edit_tr">
-        <td class="fix"><b>Kinh doanh</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kinhdoanh', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kinhdoanh2', this)" data="kinhdoanh2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kinhdoanh3', this)" data="kinhdoanh3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Kinh doanh</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('kinhdoanh', this)" value=""></td>
+        <td class="fix"><input type="radio" data="kinhdoanh2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Lô hàng</td>
-        <td class="fix text-center"><input type="checkbox" id="lohang" value="marketing" class="kinhdoanh"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="lohang2" value="marketing" class="kinhdoanh2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="lohang3" value="marketing" class="kinhdoanh3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="lohang" value="marketing" class="kinhdoanh"></td>
+        <td class="fix"><input type="radio" id="lohang2" value="marketing" class="kinhdoanh2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Bảng kê</td>
-        <td class="fix text-center"><input type="checkbox" id="bangke" value="shipmentlist" class="kinhdoanh"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangke2" value="shipmentlist" class="kinhdoanh2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangke3" value="shipmentlist" class="kinhdoanh3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bangke" value="shipmentlist" class="kinhdoanh"></td>
+        <td class="fix"><input type="radio" id="bangke2" value="shipmentlist" class="kinhdoanh2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Bảng kê chi hộ</td>
-        <td class="fix text-center"><input type="checkbox" id="bangke" value="loanlist" class="kinhdoanh"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangke2" value="loanlist" class="kinhdoanh2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bangke3" value="loanlist" class="kinhdoanh3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bangke" value="loanlist" class="kinhdoanh"></td>
+        <td class="fix"><input type="radio" id="bangke2" value="loanlist" class="kinhdoanh2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Xuất bán hàng hóa</td>
-        <td class="fix text-center"><input type="checkbox" id="xuatbanhh" value="sell" class="kinhdoanh"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuatbanhh2" value="sell" class="kinhdoanh2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuatbanhh3" value="sell" class="kinhdoanh3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="xuatbanhh" value="sell" class="kinhdoanh"></td>
+        <td class="fix"><input type="radio" id="xuatbanhh2" value="sell" class="kinhdoanh2"></td>
       </tr>
 
       <tr class="edit_tr">
-        <td class="fix"><b>Kế toán</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ketoan', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ketoan2', this)" data="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ketoan3', this)" data="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Kế toán</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('ketoan', this)" value=""></td>
+        <td class="fix"><input type="radio" data="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tiền mặt - Tiền gửi</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('tienmat', this)" class="ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('tienmat2', this)" data="tienmat2" class="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('tienmat3', this)" data="tienmat3" class="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('tienmat', this)" class="ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="tienmat2" class="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Thu</td>
-        <td class="fix text-center"><input type="checkbox" id="thu" value="receiptvoucher" class="tienmat ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="thu2" value="receiptvoucher" class="tienmat2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="thu3" value="receiptvoucher" class="tienmat3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="thu" value="receiptvoucher" class="tienmat ketoan"></td>
+        <td class="fix"><input type="radio" id="thu2" value="receiptvoucher" class="tienmat2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Chi</td>
-        <td class="fix text-center"><input type="checkbox" id="chi" value="paymentvoucher" class="tienmat ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chi2" value="paymentvoucher" class="tienmat2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chi3" value="paymentvoucher" class="tienmat3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="chi" value="paymentvoucher" class="tienmat ketoan"></td>
+        <td class="fix"><input type="radio" id="chi2" value="paymentvoucher" class="tienmat2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Chuyển tiền nội bộ</td>
-        <td class="fix text-center"><input type="checkbox" id="chuyentien" value="internaltransfer" class="tienmat ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chuyentien2" value="internaltransfer" class="tienmat2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chuyentien3" value="internaltransfer" class="tienmat3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="chuyentien" value="internaltransfer" class="tienmat ketoan"></td>
+        <td class="fix"><input type="radio" id="chuyentien2" value="internaltransfer" class="tienmat2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Số dư tài khoản</td>
-        <td class="fix text-center"><input type="checkbox" id="sodutk" value="bankbalance" class="tienmat ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="sodutk2" value="bankbalance" class="tienmat2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="sodutk3" value="bankbalance" class="tienmat3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="sodutk" value="bankbalance" class="tienmat ketoan"></td>
+        <td class="fix"><input type="radio" id="sodutk2" value="bankbalance" class="tienmat2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Công nợ</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('congno', this)" class="ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('congno2', this)" data="congno2" class="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('congno3', this)" data="congno3" class="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('congno', this)" class="ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="congno2" class="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phải thu</td>
-        <td class="fix text-center"><input type="checkbox" id="phaithu" value="receivable" class="congno ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phaithu2" value="receivable" class="congno2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phaithu3" value="receivable" class="congno3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phaithu" value="receivable" class="congno ketoan"></td>
+        <td class="fix"><input type="radio" id="phaithu2" value="receivable" class="congno2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phải trả</td>
-        <td class="fix text-center"><input type="checkbox" id="phaitra" value="payable" class="congno ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phaitra2" value="payable" class="congno2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phaitra3" value="payable" class="congno3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phaitra" value="payable" class="congno ketoan"></td>
+        <td class="fix"><input type="radio" id="phaitra2" value="payable" class="congno2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Chi hộ</td>
-        <td class="fix text-center"><input type="checkbox" id="chiho" value="loan" class="congno ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chiho2" value="loan" class="congno2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chiho3" value="loan" class="congno3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="chiho" value="loan" class="congno ketoan"></td>
+        <td class="fix"><input type="radio" id="chiho2" value="loan" class="congno2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Kho</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kho', this)" class="ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kho2', this)" data="kho2" class="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('kho3', this)" data="kho3" class="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('kho', this)" class="ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="kho2" class="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Nhập</td>
-        <td class="fix text-center"><input type="checkbox" id="nhap" value="importstock" class="kho ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="nhap2" value="importstock" class="kho2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="nhap3" value="importstock" class="kho3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="nhap" value="importstock" class="kho ketoan"></td>
+        <td class="fix"><input type="radio" id="nhap2" value="importstock" class="kho2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Xuất</td>
-        <td class="fix text-center"><input type="checkbox" id="xuat" value="exportstock" class="kho ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuat2" value="exportstock" class="kho2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuat3" value="exportstock" class="kho3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="xuat" value="exportstock" class="kho ketoan"></td>
+        <td class="fix"><input type="radio" id="xuat2" value="exportstock" class="kho2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Tồn</td>
-        <td class="fix text-center"><input type="checkbox" id="ton" value="stock" class="kho ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ton2" value="stock" class="kho2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ton3" value="stock" class="kho3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="ton" value="stock" class="kho ketoan"></td>
+        <td class="fix"><input type="radio" id="ton2" value="stock" class="kho2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Thuế</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('thue', this)" class="ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('thue2', this)" data="thue2" class="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('thue3', this)" data="thue3" class="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('thue', this)" class="ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="thue2" class="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + VAT đầu vào</td>
-        <td class="fix text-center"><input type="checkbox" id="vatdauvao" value="vat" class="thue ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="vatdauvao2" value="vat" class="thue2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="vatdauvao3" value="vat" class="thue3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="vatdauvao" value="vat" class="thue ketoan"></td>
+        <td class="fix"><input type="radio" id="vatdauvao2" value="vat" class="thue2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + VAT đầu ra</td>
-        <td class="fix text-center"><input type="checkbox" id="vatdaura" value="vat" class="thue ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="vatdaura2" value="vat" class="thue2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="vatdaura3" value="vat" class="thue3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="vatdaura" value="vat" class="thue ketoan"></td>
+        <td class="fix"><input type="radio" id="vatdaura2" value="vat" class="thue2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Lô hàng</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ktlohang', this)" class="ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ktlohang2', this)" data="ktlohang2" class="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ktlohang3', this)" data="ktlohang3" class="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('ktlohang', this)" class="ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="ktlohang2" class="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Xuất hóa đơn</td>
-        <td class="fix text-center"><input type="checkbox" id="xuathd" value="exvat" class="ktlohang ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuathd2" value="exvat" class="ktlohang2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="xuathd3" value="exvat" class="ktlohang3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="xuathd" value="exvat" class="ktlohang ketoan"></td>
+        <td class="fix"><input type="radio" id="xuathd2" value="exvat" class="ktlohang2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Doanh thu</td>
-        <td class="fix text-center"><input type="checkbox" id="ktdoanhthu" value="sales" class="ktlohang ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktdoanhthu2" value="sales" class="ktlohang2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktdoanhthu3" value="sales" class="ktlohang3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="ktdoanhthu" value="sales" class="ktlohang ketoan"></td>
+        <td class="fix"><input type="radio" id="ktdoanhthu2" value="sales" class="ktlohang2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Chi phí</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ktchiphi', this)" class="ktlohang ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ktchiphi2', this)" data="ktchiphi2" class="ktlohang2 ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('ktchiphi3', this)" data="ktchiphi3" class="ktlohang3 ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('ktchiphi', this)" class="ktlohang ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="ktchiphi2" class="ktlohang2 ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ Chi phí</td>
-        <td class="fix text-center"><input type="checkbox" id="ktchiphi" value="cost" class="ktchiphi ktlohang ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktchiphi2" value="cost" class="ktchiphi2 ktlohang2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktchiphi3" value="cost" class="ktchiphi3 ktlohang3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="ktchiphi" value="cost" class="ktchiphi ktlohang ketoan"></td>
+        <td class="fix"><input type="radio" id="ktchiphi2" value="cost" class="ktchiphi2 ktlohang2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ Chi phí không hóa đơn</td>
-        <td class="fix text-center"><input type="checkbox" id="chiphikvat" value="noinvoice" class="ktchiphi ktlohang ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chiphikvat2" value="noinvoice" class="ktchiphi2 ktlohang2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chiphikvat3" value="noinvoice" class="ktchiphi3 ktlohang3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="chiphikvat" value="noinvoice" class="ktchiphi ktlohang ketoan"></td>
+        <td class="fix"><input type="radio" id="chiphikvat2" value="noinvoice" class="ktchiphi2 ktlohang2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ Phí cầu đường</td>
-        <td class="fix text-center"><input type="checkbox" id="phicauduong" value="tolls" class="ktchiphi ktlohang ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phicauduong2" value="tolls" class="ktchiphi2 ktlohang2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phicauduong3" value="tolls" class="ktchiphi3 ktlohang3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phicauduong" value="tolls" class="ktchiphi ktlohang ketoan"></td>
+        <td class="fix"><input type="radio" id="phicauduong2" value="tolls" class="ktchiphi2 ktlohang2 ketoan2"></td>
       </tr>
 
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tiền lương</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('tienluong', this)" class="ketoan" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('tienluong2', this)" data="tienluong2" class="ketoan2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('tienluong3', this)" data="tienluong3" class="ketoan3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('tienluong', this)" class="ketoan" value=""></td>
+        <td class="fix"><input type="radio" data="tienluong2" class="ketoan2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Lương nhân viên</td>
-        <td class="fix text-center"><input type="checkbox" id="ktluongnv" value="salary" class="tienluong ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktluongnv2" value="salary" class="tienluong2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktluongnv3" value="salary" class="tienluong3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="ktluongnv" value="salary" class="tienluong ketoan"></td>
+        <td class="fix"><input type="radio" id="ktluongnv2" value="salary" class="tienluong2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Lương tài xế</td>
-        <td class="fix text-center"><input type="checkbox" id="ktluongtx" value="salary" class="tienluong ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktluongtx2" value="salary" class="tienluong2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ktluongtx3" value="salary" class="tienluong3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="ktluongtx" value="salary" class="tienluong ketoan"></td>
+        <td class="fix"><input type="radio" id="ktluongtx2" value="salary" class="tienluong2 ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Sửa chữa bảo dưỡng</td>
-        <td class="fix text-center"><input type="checkbox" id="luongsc" value="repairsalary" class="tienluong ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="luongsc2" value="repairsalary" class="tienluong2 ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="luongsc3" value="repairsalary" class="tienluong3 ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="luongsc" value="repairsalary" class="tienluong ketoan"></td>
+        <td class="fix"><input type="radio" id="luongsc2" value="repairsalary" class="tienluong2 ketoan2"></td>
       </tr>
 
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Danh mục chi phí</td>
-        <td class="fix text-center"><input type="checkbox" id="dmchiphi" value="costlist" class="ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dmchiphi2" value="costlist" class="ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="dmchiphi3" value="costlist" class="ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="dmchiphi" value="costlist" class="ketoan"></td>
+        <td class="fix"><input type="radio" id="dmchiphi2" value="costlist" class="ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tài khoản TM-NH</td>
-        <td class="fix text-center"><input type="checkbox" id="tktienmat" value="bank" class="ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tktienmat2" value="bank" class="ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tktienmat3" value="bank" class="ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tktienmat" value="bank" class="ketoan"></td>
+        <td class="fix"><input type="radio" id="tktienmat2" value="bank" class="ketoan2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tài khoản kế toán</td>
-        <td class="fix text-center"><input type="checkbox" id="tkketoan" value="account" class="ketoan"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tkketoan2" value="account" class="ketoan2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tkketoan3" value="account" class="ketoan3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tkketoan" value="account" class="ketoan"></td>
+        <td class="fix"><input type="radio" id="tkketoan2" value="account" class="ketoan2"></td>
       </tr>
 
       <tr class="edit_tr">
-        <td class="fix"><b>Báo cáo</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('baocao', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('baocao2', this)" data="baocao2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('baocao3', this)" data="baocao3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Báo cáo</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('baocao', this)" value=""></td>
+        <td class="fix"><input type="radio" data="baocao2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Phiếu vận chuyển</td>
-        <td class="fix text-center"><input type="checkbox" id="phieuvc" value="trucking" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phieuvc2" value="trucking" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phieuvc3" value="trucking" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phieuvc" value="trucking" class="baocao"></td>
+        <td class="fix"><input type="radio" id="phieuvc2" value="trucking" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Sản lượng khách hàng</td>
-        <td class="fix text-center"><input type="checkbox" id="slkhachhang" value="customership" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="slkhachhang2" value="customership" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="slkhachhang3" value="customership" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="slkhachhang" value="customership" class="baocao"></td>
+        <td class="fix"><input type="radio" id="slkhachhang2" value="customership" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Bảng kê sản lượng</td>
-        <td class="fix text-center"><input type="checkbox" id="bksanluong" value="truckinglist" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bksanluong2" value="truckinglist" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bksanluong3" value="truckinglist" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bksanluong" value="truckinglist" class="baocao"></td>
+        <td class="fix"><input type="radio" id="bksanluong2" value="truckinglist" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Chi phí xe</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('chiphixe', this)" class="baocao" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('chiphixe2', this)" data="chiphixe2" class="baocao2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('chiphixe3', this)" data="chiphixe3" class="baocao3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('chiphixe', this)" class="baocao" value=""></td>
+        <td class="fix"><input type="radio" data="chiphixe2" class="baocao2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Sửa chữa bảo dưỡng</td>
-        <td class="fix text-center"><input type="checkbox" id="cpsuachua" value="repairlist" class="chiphixe baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="cpsuachua2" value="repairlist" class="chiphixe2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="cpsuachua3" value="repairlist" class="chiphixe3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="cpsuachua" value="repairlist" class="chiphixe baocao"></td>
+        <td class="fix"><input type="radio" id="cpsuachua2" value="repairlist" class="chiphixe2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phí sử dụng đường bộ</td>
-        <td class="fix text-center"><input type="checkbox" id="phisddb" value="roadcostlist" class="chiphixe baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phisddb2" value="roadcostlist" class="chiphixe2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phisddb3" value="roadcostlist" class="chiphixe3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phisddb" value="roadcostlist" class="chiphixe baocao"></td>
+        <td class="fix"><input type="radio" id="phisddb2" value="roadcostlist" class="chiphixe2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Phí kiểm định</td>
-        <td class="fix text-center"><input type="checkbox" id="phikiemdinh" value="checkingcostlist" class="chiphixe baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phikiemdinh2" value="checkingcostlist" class="chiphixe2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phikiemdinh3" value="checkingcostlist" class="chiphixe3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phikiemdinh" value="checkingcostlist" class="chiphixe baocao"></td>
+        <td class="fix"><input type="radio" id="phikiemdinh2" value="checkingcostlist" class="chiphixe2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Bảo hiểm</td>
-        <td class="fix text-center"><input type="checkbox" id="phibaohiem" value="insurancecostlist" class="chiphixe baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phibaohiem2" value="insurancecostlist" class="chiphixe2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phibaohiem3" value="insurancecostlist" class="chiphixe3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phibaohiem" value="insurancecostlist" class="chiphixe baocao"></td>
+        <td class="fix"><input type="radio" id="phibaohiem2" value="insurancecostlist" class="chiphixe2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Báo cáo dầu</td>
-        <td class="fix text-center"><input type="checkbox" id="bcdau" value="oilreport" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bcdau2" value="oilreport" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="bcdau3" value="oilreport" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="bcdau" value="oilreport" class="baocao"></td>
+        <td class="fix"><input type="radio" id="bcdau2" value="oilreport" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tạm ứng</td>
-        <td class="fix text-center"><input type="checkbox" id="tamung" value="advance" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tamung2" value="advance" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="tamung3" value="advance" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="tamung" value="advance" class="baocao"></td>
+        <td class="fix"><input type="radio" id="tamung2" value="advance" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Hoa hồng</td>
-        <td class="fix text-center"><input type="checkbox" id="hoahong" value="commission" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="hoahong2" value="commission" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="hoahong3" value="commission" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="hoahong" value="commission" class="baocao"></td>
+        <td class="fix"><input type="radio" id="hoahong2" value="commission" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Doanh thu - Chi phí</td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('doanhthuchiphi', this)" class="baocao" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('doanhthuchiphi2', this)" data="doanhthuchiphi2" class="baocao2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('doanhthuchiphi3', this)" data="doanhthuchiphi3" class="baocao3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('doanhthuchiphi', this)" class="baocao" value=""></td>
+        <td class="fix"><input type="radio" data="doanhthuchiphi2" class="baocao2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Theo tuyến</td>
-        <td class="fix text-center"><input type="checkbox" id="theotuyen" value="quantity" class="doanhthuchiphi baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="theotuyen2" value="quantity" class="doanhthuchiphi2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="theotuyen3" value="quantity" class="doanhthuchiphi3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="theotuyen" value="quantity" class="doanhthuchiphi baocao"></td>
+        <td class="fix"><input type="radio" id="theotuyen2" value="quantity" class="doanhthuchiphi2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Theo vòng</td>
-        <td class="fix text-center"><input type="checkbox" id="theovong" value="profit" class="doanhthuchiphi baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="theovong2" value="profit" class="doanhthuchiphi2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="theovong3" value="profit" class="doanhthuchiphi3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="theovong" value="profit" class="doanhthuchiphi baocao"></td>
+        <td class="fix"><input type="radio" id="theovong2" value="profit" class="doanhthuchiphi2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp;&nbsp;&nbsp; + Chi phí vòng</td>
-        <td class="fix text-center"><input type="checkbox" id="chiphivong" value="round" class="doanhthuchiphi baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chiphivong2" value="round" class="doanhthuchiphi2 baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="chiphivong3" value="round" class="doanhthuchiphi3 baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="chiphivong" value="round" class="doanhthuchiphi baocao"></td>
+        <td class="fix"><input type="radio" id="chiphivong2" value="round" class="doanhthuchiphi2 baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Chi phí hành chính</td>
-        <td class="fix text-center"><input type="checkbox" id="cphanhchinh" value="officecost" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="cphanhchinh2" value="officecost" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="cphanhchinh3" value="officecost" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="cphanhchinh" value="officecost" class="baocao"></td>
+        <td class="fix"><input type="radio" id="cphanhchinh2" value="officecost" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Quá trình hoạt động</td>
-        <td class="fix text-center"><input type="checkbox" id="quatrinhhd" value="vehicleanalytics" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="quatrinhhd2" value="vehicleanalytics" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="quatrinhhd3" value="vehicleanalytics" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="quatrinhhd" value="vehicleanalytics" class="baocao"></td>
+        <td class="fix"><input type="radio" id="quatrinhhd2" value="vehicleanalytics" class="baocao2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Kết quả hoạt động đội xe</td>
-        <td class="fix text-center"><input type="checkbox" id="kqhoatdong" value="report" class="baocao"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="kqhoatdong2" value="report" class="baocao2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="kqhoatdong3" value="report" class="baocao3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="kqhoatdong" value="report" class="baocao"></td>
+        <td class="fix"><input type="radio" id="kqhoatdong2" value="report" class="baocao2"></td>
       </tr>
 
       <tr class="edit_tr">
-        <td class="fix"><b>Hệ thống</b><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('hethong', this)" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('hethong2', this)" data="hethong2" class="checkbox2" value=""><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" onclick="check_all('hethong3', this)" data="hethong3" class="checkbox3" value=""><span class="lbl"></span></td>
+        <td class="fix"><b>Hệ thống</b></td>
+        <td class="fix"><input type="checkbox" onclick="check_all('hethong', this)" value=""></td>
+        <td class="fix"><input type="radio" data="hethong2" value=""></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Thông tin doanh nghiệp</td>
-        <td class="fix text-center"><input type="checkbox" id="ttdoanhnghiep" value="info" class="hethong"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ttdoanhnghiep2" value="info" class="hethong2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="ttdoanhnghiep3" value="info" class="hethong3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="ttdoanhnghiep" value="info" class="hethong"></td>
+        <td class="fix"><input type="radio" id="ttdoanhnghiep2" value="info" class="hethong2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Tài khoản</td>
-        <td class="fix text-center"><input type="checkbox" id="taikhoanuser" value="user" class="hethong"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="taikhoanuser2" value="user" class="hethong2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="taikhoanuser3" value="user" class="hethong3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="taikhoanuser" value="user" class="hethong"></td>
+        <td class="fix"><input type="radio" id="taikhoanuser2" value="user" class="hethong2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Phân quyền</td>
-        <td class="fix text-center"><input type="checkbox" id="phanquyen" value="permission" class="hethong"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phanquyen2" value="permission" class="hethong2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="phanquyen3" value="permission" class="hethong3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="phanquyen" value="permission" class="hethong"></td>
+        <td class="fix"><input type="radio" id="phanquyen2" value="permission" class="hethong2"></td>
       </tr>
       <tr class="edit_tr">
         <td class="fix">&nbsp;&nbsp; - Sao lưu & Phục hồi</td>
-        <td class="fix text-center"><input type="checkbox" id="backup" value="adminbackup" class="hethong"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="backup2" value="adminbackup" class="hethong2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="backup3" value="adminbackup" class="hethong3 checkbox3"><span class="lbl"></span></td>
-      </tr>
-      <tr class="edit_tr">
-        <td class="fix">&nbsp;&nbsp; - Cập nhật phần mềm</td>
-        <td class="fix text-center"><input type="checkbox" id="update" value="adminupdate" class="hethong"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="update2" value="adminupdate" class="hethong2 checkbox2"><span class="lbl"></span></td>
-        <td class="fix text-center"><input type="checkbox" id="update3" value="adminupdate" class="hethong3 checkbox3"><span class="lbl"></span></td>
+        <td class="fix"><input type="checkbox" id="backup" value="backup" class="hethong"></td>
+        <td class="fix"><input type="radio" id="backup2" value="backup" class="hethong2"></td>
       </tr>
     </tbody>
   </table>
-  <div class="row text-right">
-    <div class="col-md-12 col-xs-6">
-      <div class="box-body">
-        <div class="form-group">
-          <button type="submit" class="btn btn-white btn-danger btn-round"><i class="ace-icon fa fa-floppy-o bigger-120 red"></i> Lưu</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 </form>
 
 <script type="text/javascript">
-  $('input[type=checkbox]').addClass('ace');
-  $('input[type=checkbox]').addClass('ace-switch');
-  $('input[type=checkbox]').addClass('ace-switch-5');
-
 function check_all(class_name, obj) {
     var items = document.getElementsByClassName(class_name);
     if(obj.checked == true) 
@@ -766,11 +659,11 @@ $('#role_name').change(function(){
       data: {data:val},
 
       success:function(data){
-          $('input[type=checkbox][class!=checkbox2][class!=checkbox3]').prop('checked',false);
+          $('input[type=checkbox]').prop('checked',false);
           if (data.trim() != "") {
             var data = jQuery.parseJSON(data);
             $.each(data, function(i, item) {
-                $('input[type=checkbox][class!=checkbox2][class!=checkbox3][value='+data[i]+']').prop('checked',true);
+                $('input[type=checkbox][value='+data[i]+']').prop('checked',true);
             })
           }
       }
@@ -799,13 +692,12 @@ $('#role_name').change(function(){
       data: {data:val},
 
       success:function(data){
-          $('.checkbox2').prop('checked',false);
-          $('.checkbox3').prop('checked',false);
+          $('input[type=radio]').prop('checked',false);
           if (data.trim() != "") {
             var data = jQuery.parseJSON(data);
             $.each(data, function(i, item) {
-                $('.checkbox2[value='+i+']').prop('checked',true);
-                $('.checkbox3[value='+data[i]+']').prop('checked',true);
+                $('input[type=radio][value='+data[i]+']').prop('checked',true);
+                $('input[type=radio][value='+data[i]+']').attr('previousValue','checked');
             })
           }
       }
@@ -824,11 +716,11 @@ $('#user_name').change(function(){
       data: {data:val},
 
       success:function(data){
-        $('input[type=checkbox][class!=checkbox2][class!=checkbox3]').prop('checked',false);
+        $('input[type=checkbox]').prop('checked',false);
         if (data.trim() != "") {
           var data = jQuery.parseJSON(data);
           $.each(data, function(i, item) {
-              $('input[type=checkbox][class!=checkbox2][class!=checkbox3][value='+data[i]+']').prop('checked',true);
+              $('input[type=checkbox][value='+data[i]+']').prop('checked',true);
           })
         }
           
@@ -845,13 +737,12 @@ $('#user_name').change(function(){
       data: {data:val},
 
       success:function(data){
-        $('.checkbox2').prop('checked',false);
-        $('.checkbox3').prop('checked',false);
+        $('input[type=radio]').prop('checked',false);
         if (data.trim() != "") {
           var data = jQuery.parseJSON(data);
           $.each(data, function(i, item) {
-              $('.checkbox2[value='+i+']').prop('checked',true);
-              $('.checkbox3[value='+data[i]+']').prop('checked',true);
+              $('input[type=radio][value='+data[i]+']').prop('checked',true);
+              $('input[type=radio][value='+data[i]+']').attr('previousValue','checked');
           })
         }
           
@@ -871,19 +762,14 @@ $("#add_permission").validate({
     var str = [];
     var act = {};
 
-    $('input[type=checkbox]:not(.checkbox2):not(.checkbox3)').each(function() { 
+    $('input[type=checkbox]').each(function() { 
         if($(this).is(':checked')){
           var val = $(this).val();
           if ($(this).val() != "") {
             str.push(val);
 
-            if($('.checkbox2[value='+val+']').is(':checked')){
-              if($('.checkbox3[value='+val+']').is(':checked')){
-                act[val] = val;
-              }
-              else{
-                act[val] = 1;
-              }
+            if($('input[type=radio][value='+val+']').is(':checked')){
+              act[val] = val;
             }
             
           }
@@ -900,7 +786,7 @@ $("#add_permission").validate({
             role: role,
             }, // giá trị post
         success: function(answer){ // if everything goes well
-            alert_form(answer);
+            alert(answer);
             
         }
       });

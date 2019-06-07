@@ -11,16 +11,14 @@ Class driverController Extends baseController {
             return $this->view->redirect('user/login');
 
         }
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
 
-            return $this->view->redirect('admin');
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) || json_decode($_SESSION['user_permission_action'])->driver != "driver") {
+            $this->view->data['disable_control'] = 1;
         }
-
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý bàn giao xe';
+        $this->view->data['title'] = 'Quản lý tài xế';
 
 
 
@@ -40,18 +38,29 @@ Class driverController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'vehicle_number,driver_start_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'vehicle_number ASC, start_work';
 
-            $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
+            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
 
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
 
             $keyword = "";
 
-            $limit = 100;
+            $limit = 50;
 
         }
 
+
+
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $this->view->data['vehicles'] = $vehicles;
+
+
+
+        $join = array('table'=>'vehicle, steersman','where'=>'vehicle.vehicle_id = driver.vehicle AND steersman.steersman_id = driver.steersman');
 
 
 
@@ -63,23 +72,9 @@ Class driverController Extends baseController {
 
         $pagination_stages = 2;
 
-        $data = array(
-            'where'=>'1=1',
-        );
+        
 
-        $join = array('table'=>'vehicle', 'where'=>'driver_vehicle=vehicle_id LEFT JOIN staff ON driver_staff=staff_id','join'=>'LEFT JOIN');
-
-        if (isset($_POST['filter'])) {
-            if (isset($_POST['driver_vehicle'])) {
-                $data['where'] .= ' AND driver_vehicle IN ('.implode(',',$_POST['driver_vehicle']).')';
-            }
-            if (isset($_POST['driver_staff'])) {
-                $data['where'] .= ' AND driver_staff IN ('.implode(',',$_POST['driver_staff']).')';
-            }
-            $this->view->data['filter'] = 1;
-        }
-
-        $tongsodong = count($driver_model->getAllVehicle($data,$join));
+        $tongsodong = count($driver_model->getAllDriver(null,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -106,7 +101,6 @@ Class driverController Extends baseController {
 
 
         $data = array(
-            'where'=>'1=1',
 
             'order_by'=>$order_by,
 
@@ -116,481 +110,394 @@ Class driverController Extends baseController {
 
             );
 
-        if (isset($_POST['filter'])) {
-            if (isset($_POST['driver_vehicle'])) {
-                $data['where'] .= ' AND driver_vehicle IN ('.implode(',',$_POST['driver_vehicle']).')';
-            }
-            if (isset($_POST['driver_staff'])) {
-                $data['where'] .= ' AND driver_staff IN ('.implode(',',$_POST['driver_staff']).')';
-            }
-            $this->view->data['filter'] = 1;
-        }
+        
 
         if ($keyword != '') {
 
-            $search = '( vehicle_number LIKE "%'.$keyword.'%" OR staff_name LIKE "%'.$keyword.'%" )';
+            $search = '( vehicle_number LIKE "%'.$keyword.'%" OR steersman_name LIKE "%'.$keyword.'%" OR steersman_phone LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
         }
 
-
-
-        $this->view->data['vehicles'] = $driver_model->getAllVehicle($data,$join);
-
-
-
-        return $this->view->show('driver/index');
-
-    }
-
-
-    public function adddriver(){
-        $driver_model = $this->model->get('driverModel');
-
-        if (isset($_POST['driver_start_date'])) {
-            if($driver_model->getVehicleByWhere(array('driver_vehicle'=>$_POST['driver_vehicle'],'driver_start_date'=>strtotime(str_replace('/', '-', $_POST['driver_start_date']))))){
-                echo 'Thông tin đã tồn tại';
-                return false;
-            }
-
-            $data = array(
-                'driver_start_date' => strtotime(str_replace('/', '-', $_POST['driver_start_date'])),
-                'driver_end_date' => $_POST['driver_end_date']!=""?strtotime(str_replace('/', '-', $_POST['driver_end_date'])):null,
-                'driver_vehicle' => trim($_POST['driver_vehicle']),
-                'driver_staff' => trim($_POST['driver_staff']),
-            );
-
-            $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['driver_start_date']).' -1 day')));
-
-            if ($data['driver_end_date'] == null) {
-                $driver_model->queryVehicle('UPDATE driver SET driver_end_date = '.$ngaytruoc.' WHERE driver_vehicle='.$data['driver_vehicle'].' AND (driver_end_date IS NULL OR driver_end_date = 0)');
-                $driver_model->createVehicle($data);
-            }
-            else{
-                $dm1 = $driver_model->queryVehicle('SELECT * FROM driver WHERE driver_vehicle='.$data['driver_vehicle'].' AND driver_start_date <= '.$data['driver_start_date'].' AND driver_end_date <= '.$data['driver_end_date'].' AND driver_end_date >= '.$data['driver_start_date'].' ORDER BY driver_end_date ASC LIMIT 1');
-                $dm2 = $driver_model->queryVehicle('SELECT * FROM driver WHERE driver_vehicle='.$data['driver_vehicle'].' AND driver_end_date >= '.$data['driver_end_date'].' AND driver_start_date >= '.$data['driver_start_date'].' AND driver_start_date <= '.$data['driver_end_date'].' ORDER BY driver_end_date ASC LIMIT 1');
-                $dm3 = $driver_model->queryVehicle('SELECT * FROM driver WHERE driver_vehicle='.$data['driver_vehicle'].' AND driver_start_date <= '.$data['driver_start_date'].' AND driver_end_date >= '.$data['driver_end_date'].' ORDER BY driver_end_date ASC LIMIT 1');
-
-                if ($dm3) {
-                    foreach ($dm3 as $row) {
-                        $d = array(
-                            'driver_end_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['driver_start_date']).' -1 day'))),
-                            );
-                        $driver_model->updateVehicle($d,array('driver_id'=>$row->driver_id));
-
-                        $c = array(
-                            'driver_vehicle' => $row->driver_vehicle,
-                            'driver_staff' => $row->driver_staff,
-                            'driver_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['driver_end_date']).' +1 day'))),
-                            'driver_end_date' => $row->driver_end_date,
-                            );
-                        $driver_model->createVehicle($c);
-
-                    }
-                    $driver_model->createVehicle($data);
-
-                }
-                else if ($dm1 || $dm2) {
-                    if($dm1){
-                        foreach ($dm1 as $row) {
-                            $d = array(
-                                'driver_end_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['driver_start_date']).' -1 day'))),
-                                );
-                            $driver_model->updateVehicle($d,array('driver_id'=>$row->driver_id));
-                        }
-                    }
-                    if($dm2){
-                        foreach ($dm2 as $row) {
-                            $d = array(
-                                'driver_start_date' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['driver_end_date']).' +1 day'))),
-                                );
-                            $driver_model->updateVehicle($d,array('driver_id'=>$row->driver_id));
-                        }
-                    }
-                    $driver_model->createVehicle($data);
-                }
-                else{
-                    $driver_model->createVehicle($data);
-                }
-            }
-            
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$driver_model->getLastVehicle()->driver_id."|driver|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'driver',
-                'user_log_table_name' => 'Bàn giao xe',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Thêm thành công";
-        }
-
-    }
-
-    public function add(){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        $this->view->data['title'] = 'Thêm mới bàn giao xe';
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        return $this->view->show('driver/add');
-    }
-
-    public function editdriver(){
-        $driver_model = $this->model->get('driverModel');
-
-        if (isset($_POST['driver_id'])) {
-            $id = $_POST['driver_id'];
-            
-            $data = array(
-                'driver_start_date' => strtotime(str_replace('/', '-', $_POST['driver_start_date'])),
-                'driver_end_date' => $_POST['driver_end_date']!=""?strtotime(str_replace('/', '-', $_POST['driver_end_date'])):null,
-                'driver_vehicle' => trim($_POST['driver_vehicle']),
-                'driver_staff' => trim($_POST['driver_staff']),
-            );
-
-            $driver_model->updateVehicle($data,array('driver_id'=>$id));
-            
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|driver|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'driver',
-                'user_log_table_name' => 'Bàn giao xe',
-                'user_log_action' => 'Cập nhật',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Cập nhật thành công";
-        }
-    }
-
-    public function edit($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('driver');
-
-        }
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Cập nhật bàn giao xe';
-
-        $driver_model = $this->model->get('driverModel');
-
-        $driver_data = $driver_model->getVehicle($id);
-
-        $this->view->data['driver_data'] = $driver_data;
-
-        if (!$driver_data) {
-
-            $this->view->redirect('driver');
-
-        }
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        return $this->view->show('driver/edit');
-
-    }
-
-    public function view($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('driver');
-
-        }
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Thông tin bàn giao xe';
-
-        $driver_model = $this->model->get('driverModel');
-
-        $driver_data = $driver_model->getVehicle($id);
-
-        $this->view->data['driver_data'] = $driver_data;
-
-        if (!$driver_data) {
-
-            $this->view->redirect('driver');
-
-        }
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        return $this->view->show('driver/view');
-
-    }
-    public function viewdriver(){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
         
 
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Thông tin bàn giao xe';
+        
 
-        $id = $_GET['id'];
+        
 
-        $info = explode('~', $id);
+        $this->view->data['drivers'] = $driver_model->getAllDriver($data,$join);
 
-        $driver_model = $this->model->get('driverModel');
 
-        $data = array(
-            'where'=>'driver_vehicle = '.$info[0].' AND driver_start_date <= '.strtotime(str_replace('/', '-', $info[1])).' AND (driver_end_date IS NULL OR driver_end_date=0 OR driver_end_date >= '.strtotime(str_replace('/', '-', $info[1])).')',
-            'order_by'=>'driver_start_date',
-            'order'=>'DESC',
-            'limit'=>1
-        );
 
-        $drivers = $driver_model->getAllVehicle($data);
-        foreach ($drivers as $driver) {
-            $driver_data = $driver;
-        }
+        $this->view->data['lastID'] = isset($driver_model->getLastDriver()->driver_id)?$driver_model->getLastDriver()->driver_id:0;
 
-        $this->view->data['driver_data'] = $driver_data;
+        
 
-        if (!$driver_data) {
-
-            $this->view->redirect('driver');
-
-        }
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        return $this->view->show('driver/view');
+        $this->view->show('driver/index');
 
     }
+
+
 
     public function getdriver(){
 
-        $vehicle = $_GET['vehicle'];
-
-        $date = $_GET['date'];
-
-        $driver_model = $this->model->get('driverModel');
-
-        $data = array(
-            'where'=>'driver_vehicle = '.$vehicle.' AND driver_start_date <= '.strtotime(str_replace('/', '-', $date)).' AND (driver_end_date IS NULL OR driver_end_date=0 OR driver_end_date >= '.strtotime(str_replace('/', '-', $date)).')',
-            'order_by'=>'driver_start_date',
-            'order'=>'DESC',
-            'limit'=>1
-        );
-        $join = array('table'=>'staff','where'=>'driver_staff=staff_id');
-
-        $drivers = $driver_model->getAllVehicle($data,$join);
-        $driver_data = array(
-            'staff_id'=>null,
-            'staff_name'=>null,
-        );
-        foreach ($drivers as $driver) {
-            $driver_data['staff_id'] = $driver->staff_id;
-            $driver_data['staff_name'] = $driver->staff_name;
-        }
-
-        echo json_encode($driver_data);
-
-    }
-
-    public function filter(){
-        $this->view->disableLayout();
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Lọc dữ liệu';
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        $this->view->data['page'] = $_GET['page'];
-        $this->view->data['order_by'] = $_GET['order_by'];
-        $this->view->data['order'] = $_GET['order'];
-        $this->view->data['limit'] = $_GET['limit'];
-        $this->view->data['keyword'] = $_GET['keyword'];
-
-        return $this->view->show('driver/filter');
-    }
-
-    public function delete(){
-
         if (!isset($_SESSION['userid_logined'])) {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->driver) || json_decode($_SESSION['user_permission_action'])->driver != "driver") && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $driver_model = $this->model->get('driverModel');
-            $user_log_model = $this->model->get('userlogModel');
+            $steersman_model = $this->model->get('steersmanModel');
 
-            if (isset($_POST['xoa'])) {
+            
 
-                $datas = explode(',', $_POST['xoa']);
-
-                foreach ($datas as $data) {
-
-                    $driver_model->deleteVehicle($data);
+            if ($_POST['keyword'] == "*") {
 
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|driver|"."\n"."\r\n";
 
-                        $this->lib->ghi_file("action_logs.txt",$text);
+                $list = $steersman_model->getAllSteersman();
 
+            }
 
+            else{
+
+                $data = array(
+
+                'where'=>'( steersman_name LIKE "%'.$_POST['keyword'].'%" )',
+
+                );
+
+                $list = $steersman_model->getAllSteersman($data);
+
+            }
+
+            
+
+            foreach ($list as $rs) {
+
+                // put in bold the written text
+
+                $steersman_name = $rs->steersman_name;
+
+                if ($_POST['keyword'] != "*") {
+
+                    $steersman_name = str_replace($_POST['keyword'], '<b>'.$_POST['keyword'].'</b>', $rs->steersman_name);
 
                 }
 
+                
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'driver',
-                    'user_log_table_name' => 'Bàn giao xe',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($datas),
-                );
-                $user_log_model->createUser($data_log);
+                // add new option
+
+                echo '<li onclick="set_item_driver(\''.$rs->steersman_id.'\',\''.$rs->steersman_name.'\',\''.$rs->steersman_code.'\',\''.$rs->steersman_cmnd.'\',\''.date('d-m-Y',$rs->steersman_birth).'\',\''.$rs->steersman_phone.'\',\''.$rs->steersman_bank.'\')">'.$steersman_name.'</li>';
+
+            }
+
+        }
+
+    }
 
 
-                echo "Xóa thành công";
+
+    public function add(){
+
+        $this->view->setLayout('admin');
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) || json_decode($_SESSION['user_permission_action'])->driver != "driver") {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        if (isset($_POST['yes'])) {
+
+            $driver = $this->model->get('driverModel');
+            $driver_temp = $this->model->get('drivertempModel');
+            $shipment = $this->model->get('shipmentModel');
+
+            $data = array(
+
+                        'vehicle' => trim($_POST['vehicle']),
+
+                        'start_work' => strtotime(trim($_POST['start_work'])),
+
+                        'end_work' => strtotime(trim($_POST['end_work'])),
+
+                        'steersman' => trim($_POST['steersman']),
+
+                        );
+
+            if ($_POST['yes'] != "") {
+
+                //$data['driver_update_user'] = $_SESSION['userid_logined'];
+
+                //$data['driver_update_time'] = time();
+
+                //var_dump($data);
+
+                
+
+                    $driver_d = $driver->getDriver($_POST['yes']);
+
+                    $driver1 = $driver->getDriverByWhere(array('vehicle'=>$driver_d->vehicle,'end_work'=>(strtotime(date('d-m-Y',strtotime(date('d-m-Y',$driver_d->start_work).' -1 day'))))));
+                    $driver2 = $driver->getDriverByWhere(array('vehicle'=>$driver_d->vehicle,'start_work'=>(strtotime(date('d-m-Y',strtotime(date('d-m-Y',$driver_d->end_work).' +1 day'))))));
+                    if($driver1)
+                        $driver->updateDriver(array('vehicle'=>$driver_d->vehicle,'end_work'=>(strtotime(date('d-m-Y',strtotime($_POST['start_work'].' -1 day'))))),array('driver_id' => $driver1->driver_id));
+                    if($driver2)
+                        $driver->updateDriver(array('vehicle'=>$driver_d->vehicle,'start_work'=>(strtotime(date('d-m-Y',strtotime($_POST['end_work'].' +1 day'))))),array('driver_id' => $driver2->driver_id));
+
+
+                    $driver->updateDriver($data,array('driver_id' => trim($_POST['yes'])));
+
+                    $s_data = array(
+                        'where'=> 'vehicle = '.$data['vehicle'].' AND shipment_date >= '.$data['start_work'].' AND shipment_date <= '.$data['end_work'],
+                    );
+                    $shipments = $shipment->getAllShipment($s_data);
+
+                    foreach ($shipments as $ship) {
+                        $shipment->updateShipment(array('steersman'=>$data['steersman']),array('shipment_id'=>$ship->shipment_id));
+                    }
+
+
+                    echo "Cập nhật thành công";
+
+                    $data2 = array('driver_id'=>$_POST['yes'],'driver_temp_date'=>strtotime(date('d-m-Y')),'driver_temp_action'=>2,'driver_temp_user'=>$_SESSION['userid_logined'],'name'=>'Bàn giao xe');
+                    $data_temp = array_merge($data, $data2);
+                    $driver_temp->createDriver($data_temp);
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+
+                        $filename = "action_logs.txt";
+
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|driver|".implode("-",$data)."\n"."\r\n";
+
+                        
+
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
+
+                    
+
+            }
+
+            else{
+
+                //$data['driver_create_user'] = $_SESSION['userid_logined'];
+
+                //$data['staff'] = $_POST['staff'];
+
+                //var_dump($data);
+
+                if ($driver->getDriverByWhere(array('steersman'=>$data['steersman'],'vehicle'=>$data['vehicle'],'start_work'=>$data['start_work'],'end_work'=>$data['end_work']))) {
+
+                    echo "Thông tin này đã tồn tại";
+
+                    return false;
+
+                }
+
+                else{
+
+                    $dm1 = $driver->queryDriver('SELECT * FROM driver WHERE vehicle='.$data['vehicle'].' AND start_work <= '.$data['start_work'].' AND end_work <= '.$data['end_work'].' AND end_work >= '.$data['start_work'].' ORDER BY end_work ASC LIMIT 1');
+                    $dm2 = $driver->queryDriver('SELECT * FROM driver WHERE vehicle='.$data['vehicle'].' AND end_work >= '.$data['end_work'].' AND start_work >= '.$data['start_work'].' AND start_work <= '.$data['end_work'].' ORDER BY end_work ASC LIMIT 1');
+                    $dm3 = $driver->queryDriver('SELECT * FROM driver WHERE vehicle='.$data['vehicle'].' AND start_work <= '.$data['start_work'].' AND end_work >= '.$data['end_work'].' ORDER BY end_work ASC LIMIT 1');
+
+                    if ($dm3) {
+                            foreach ($dm3 as $row) {
+                                $d = array(
+                                    'end_work' => strtotime(date('d-m-Y',strtotime($_POST['start_work'].' -1 day'))),
+                                    );
+                                $driver->updateDriver($d,array('driver_id'=>$row->driver_id));
+
+                                $c = array(
+                                    'vehicle' => $row->vehicle,
+                                    'steersman' => $row->steersman,
+                                    'start_work' => strtotime(date('d-m-Y',strtotime($_POST['end_work'].' +1 day'))),
+                                    'end_work' => $row->end_work,
+                                    );
+                                $driver->createDriver($c);
+
+                            }
+
+                            
+
+                            
+                            $driver->createDriver($data);
+
+                        }
+                        else if ($dm1 || $dm2) {
+                            if($dm1){
+                                foreach ($dm1 as $row) {
+                                    $d = array(
+                                        'end_work' => strtotime(date('d-m-Y',strtotime($_POST['start_work'].' -1 day'))),
+                                        );
+                                    $driver->updateDriver($d,array('driver_id'=>$row->driver_id));
+
+                                    
+                                }
+                            }
+                            if($dm2){
+                                foreach ($dm2 as $row) {
+                                    $d = array(
+                                        'start_work' => strtotime(date('d-m-Y',strtotime($_POST['end_work'].' +1 day'))),
+                                        );
+                                    $driver->updateDriver($d,array('driver_id'=>$row->driver_id));
+
+
+                                }
+                            }
+
+
+                            
+                            $driver->createDriver($data);
+
+                        
+                    }
+                    else{
+                        $driver->createDriver($data);
+
+                    }
+
+                    $s_data = array(
+                        'where'=> 'vehicle = '.$data['vehicle'].' AND shipment_date >= '.$data['start_work'].' AND shipment_date <= '.$data['end_work'],
+                    );
+                    $shipments = $shipment->getAllShipment($s_data);
+
+                    foreach ($shipments as $ship) {
+                        $shipment->updateShipment(array('steersman'=>$data['steersman']),array('shipment_id'=>$ship->shipment_id));
+                    }
+
+                    echo "Thêm thành công";
+
+                    $data2 = array('driver_id'=>$driver->getLastDriver()->driver_id,'driver_temp_date'=>strtotime(date('d-m-Y')),'driver_temp_action'=>1,'driver_temp_user'=>$_SESSION['userid_logined'],'name'=>'Bàn giao xe');
+                    $data_temp = array_merge($data, $data2);
+                    $driver_temp->createDriver($data_temp);
+
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+
+                        $filename = "action_logs.txt";
+
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$driver->getLastDriver()->driver_id."|driver|".implode("-",$data)."\n"."\r\n";
+
+                        
+
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
+
+                }
+
+                
+
+            }
+
+                    
+
+        }
+
+    }
+
+
+
+    
+
+    
+
+
+
+    public function delete(){
+
+        $this->view->setLayout('admin');
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) || json_decode($_SESSION['user_permission_action'])->driver != "driver") {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $driver = $this->model->get('driverModel');
+            $driver_temp = $this->model->get('drivertempModel');
+
+            if (isset($_POST['xoa'])) {
+
+                $data = explode(',', $_POST['xoa']);
+
+                foreach ($data as $data) {
+                    $driver_data = (array)$driver->getDriver($data);
+
+                    $driver->deleteDriver($data);
+                    
+                    $data2 = array('driver_id'=>$data,'driver_temp_date'=>strtotime(date('d-m-Y')),'driver_temp_action'=>3,'driver_temp_user'=>$_SESSION['userid_logined'],'name'=>'Bàn giao xe');
+                    $data_temp = array_merge($driver_data, $data2);
+                    $driver_temp->createDriver($data_temp);
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+
+                        $filename = "action_logs.txt";
+
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|driver|"."\n"."\r\n";
+
+                        
+
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
+
+                }
+
                 return true;
 
             }
 
             else{
 
-                $driver_model->deleteVehicle($_POST['data']);
+                $driver_data = (array)$driver->getDriver($_POST['data']);
+                $data2 = array('driver_id'=>$_POST['data'],'driver_temp_date'=>strtotime(date('d-m-Y')),'driver_temp_action'=>3,'driver_temp_user'=>$_SESSION['userid_logined'],'name'=>'Bàn giao xe');
+                    $data_temp = array_merge($driver_data, $data2);
+                    $driver_temp->createDriver($data_temp);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|driver|"."\n"."\r\n";
+                date_default_timezone_set("Asia/Ho_Chi_Minh"); 
 
-                $this->lib->ghi_file("action_logs.txt",$text);
+                        $filename = "action_logs.txt";
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'driver',
-                    'user_log_table_name' => 'Bàn giao xe',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($_POST['data']),
-                );
-                $user_log_model->createUser($data_log);
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|driver|"."\n"."\r\n";
 
-                echo "Xóa thành công";
-                return true;
+                        
+
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
+
+
+
+                return $driver->deleteDriver($_POST['data']);
 
             }
 
@@ -600,39 +507,210 @@ Class driverController Extends baseController {
 
     }
 
-    public function importdriver(){
-        if (isset($_FILES['import']['name'])) {
-            $total = count($_FILES['import']['name']);
-            for( $i=0 ; $i < $total ; $i++ ) {
-              $tmpFilePath = $_FILES['import']['name'][$i];
-              echo $tmpFilePath;
-            }
-        }
-    }
+
+
+    
+
     public function import(){
 
         $this->view->disableLayout();
 
+        header('Content-Type: text/html; charset=utf-8');
+
         if (!isset($_SESSION['userid_logined'])) {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) && $_SESSION['user_permission_action'] != '["all"]') {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->driver) || json_decode($_SESSION['user_permission_action'])->driver != "driver") {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
-        $this->view->data['title'] = 'Nhập dữ liệu';
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_FILES['import']['name'] != null) {
 
-       
-        return $this->view->show('driver/import');
+
+
+            require("lib/Classes/PHPExcel/IOFactory.php");
+
+            require("lib/Classes/PHPExcel.php");
+
+
+
+            $driver = $this->model->get('driverModel');
+
+
+
+            $objPHPExcel = new PHPExcel();
+
+            // Set properties
+
+            if (pathinfo($_FILES['import']['name'], PATHINFO_EXTENSION) == "xls") {
+
+                $objReader = PHPExcel_IOFactory::createReader('Excel5');
+
+            }
+
+            else if (pathinfo($_FILES['import']['name'], PATHINFO_EXTENSION) == "xlsx") {
+
+                $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+
+            }
+
+            
+
+            $objReader->setReadDataOnly(false);
+
+
+
+            $objPHPExcel = $objReader->load($_FILES['import']['tmp_name']);
+
+            $objWorksheet = $objPHPExcel->getActiveSheet();
+
+
+
+            
+
+
+
+            $highestRow = $objWorksheet->getHighestRow(); // e.g. 10
+
+            $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
+
+
+
+            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
+
+
+
+            //var_dump($objWorksheet->getMergeCells());die();
+
+            
+
+             
+
+
+
+                for ($row = 2; $row <= $highestRow; ++ $row) {
+
+                    $val = array();
+
+                    for ($col = 0; $col < $highestColumnIndex; ++ $col) {
+
+                        $cell = $objWorksheet->getCellByColumnAndRow($col, $row);
+
+                        // Check if cell is merged
+
+                        foreach ($objWorksheet->getMergeCells() as $cells) {
+
+                            if ($cell->isInRange($cells)) {
+
+                                $currMergedCellsArray = PHPExcel_Cell::splitRange($cells);
+
+                                $cell = $objWorksheet->getCell($currMergedCellsArray[0][0]);
+
+                                break;
+
+                                
+
+                            }
+
+                        }
+
+                        //$val[] = $cell->getValue();
+
+                        $val[] = is_numeric($cell->getCalculatedValue()) ? round($cell->getCalculatedValue()) : $cell->getCalculatedValue();
+
+                        //here's my prob..
+
+                        //echo $val;
+
+                    }
+
+                    if ($val[1] != null && $val[2] != null) {
+
+
+
+                            if(!$driver->getDriverByWhere(array('driver_number'=>trim($val[1])))) {
+
+                                $driver_data = array(
+
+                                'driver_number' => trim($val[1]),
+
+                                'driver_name' => trim($val[2]),
+
+                                'driver_phone' => trim($val[3]),
+
+                                );
+
+                                $driver->createDriver($driver_data);
+
+                            }
+
+                            else if($driver->getDriverByWhere(array('driver_number'=>trim($val[1])))){
+
+                                $id_driver = $driver->getDriverByWhere(array('driver_number'=>trim($val[1])))->driver_id;
+
+                                $driver_data = array(
+
+                                'driver_name' => trim($val[2]),
+
+                                'driver_phone' => trim($val[3]),
+
+                                );
+
+                                $driver->updateDriver($driver_data,array('driver_id' => $id_driver));
+
+                            }
+
+
+
+
+
+                        
+
+                    }
+
+                    
+
+                    //var_dump($this->getNameDistrict($this->lib->stripUnicode($val[1])));
+
+                    // insert
+
+
+
+
+
+                }
+
+                //return $this->view->redirect('transport');
+
+            
+
+            return $this->view->redirect('driver');
+
+        }
+
+        $this->view->show('driver/import');
+
+
 
     }
+
+    
+
+
+
+    public function view() {
+
+        
+
+        $this->view->show('handling/view');
+
+    }
+
 
 
 }

@@ -1,0 +1,2849 @@
+<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/jquery.multiselect.css" />
+
+<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.multiselect.js"></script>
+
+<?php
+
+$url_order = 'ASC';
+
+if ($order_by == 'vat_id')
+
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+
+
+elseif ($order_by == 'vat_date')
+
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+elseif ($order_by == 'vat_number')
+
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+elseif ($order_by == 'customer_name')
+
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+
+
+
+
+    $ii = $sonews*$page-($sonews-1);
+
+
+
+?>
+
+
+
+<div id="loading"></div>
+
+<div id="winpopup"></div>
+
+<section class="content-header">
+
+    <h1>HÓA ĐƠN</h1>
+
+  <ol class="breadcrumb">
+
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+
+    <li class="active"><a href="<?php echo $this->url('exvat') ?>">Hoá đơn</a></li>
+
+  </ol>
+
+</section>
+
+<div id="content" style="padding:5px;">
+
+
+
+    <div class="search-box">
+
+        
+
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+
+        <?php if(!isset($disable_control)){ ?>
+
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+
+        <?php } ?>
+
+    </div>
+
+    <div class="tablenav top">
+
+        <div class="add-box">
+
+            <select id="sl_round" name="sl_round" style="width:90px">
+
+             <?php 
+
+                for ($k=1; $k < 13; $k++) { 
+
+                    echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+
+                }
+
+             ?>
+
+            </select>
+
+            <select id="sl_staff" name="sl_staff" style="width:100px">
+
+             <?php 
+
+                $nam = date('Y');
+
+                for ($k=($nam-5); $k < ($nam+5); $k++) { 
+
+                    echo '<option value="'.$k.'">Năm '.$k.'</option>';
+
+                }
+
+             ?>
+
+            </select>
+
+
+
+            <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+
+            
+
+        </div>
+
+    </div>
+
+    <div class="tablenav top">
+
+        <div style="clear:both"></div>
+
+        <div class="add-box">
+
+                  
+
+            Từ  <input style="width:80px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+
+            Đến  <input style="width:80px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+
+             <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+
+            
+
+        </div>
+
+
+
+      </div>
+
+      <div class="tablenav top">
+
+        <div style="clear:both"></div>
+
+        
+
+        <div class="add-box">
+
+            <input type="button" name="chon" id="chon" value="Chọn" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+
+        </div>
+
+        
+
+        <div class="add-box" style="margin-right: 5px">
+
+
+            <select style="width:120px" name="sl_nv" id="sl_nv">
+
+                <option value="0">Khách hàng</option>
+
+                <?php foreach ($customers as $sm) { ?>
+
+                <option value="<?php echo $sm->customer_id ?>"><?php echo $sm->customer_name ?></option>
+
+                <?php } ?>
+
+            </select>
+
+
+
+            
+
+            
+
+        </div>
+
+        <?php if(!isset($disable_control)){ ?>
+
+        <div class="alignleft actions">
+
+            <select name="action" id="action">
+
+                <option value="-1" selected="selected">Chọn</option>
+
+                
+
+                <option value="delete">Xóa</option>
+
+            </select>
+
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+
+        </div>
+
+        <?php } ?>
+
+        <div class="alignleft actions">
+
+        <select name="m" id="chonloc" style="width:200px">
+
+            <option value="18446744073709">Hiển thị tất cả</option>
+
+            <option value="50">Hiển thị 50 giá trị</option>
+
+            <option value="100">Hiển thị 100 giá trị</option>
+
+            <option value="150">Hiển thị 150 giá trị</option>
+
+            <option value="200">Hiển thị 200 giá trị</option>
+
+            <option selected="selected" value="250">Hiển thị 250 giá trị</option>
+
+        </select>
+
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+
+        </div>
+
+
+
+      </div>
+
+</div>
+
+
+
+
+
+<table class="table_data" id="tblExport">
+
+<thead>
+
+    <tr>
+
+    	<th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+
+        <th  class="fix" >
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'vat_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+
+        
+
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'vat_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_number','<?php echo $url_order ?>')">Số hóa đơn <?php if ($order_by == 'vat_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Khách hàng <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+
+        <?php if(!isset($disable_control)){ ?>
+
+           
+
+        <th  class="fix">&nbsp;</th>
+
+        <?php } ?>
+
+    </tr>
+
+    
+
+   </thead>
+
+   <tbody>
+
+    <?php foreach ($vats as $vat) : ?>
+
+    
+
+        
+
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $vat->vat_id ?>" class="edit_tr">
+
+        	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $vat->vat_id ?>"></td>
+
+            <td  class="fix"><?php echo $ii++; ?></td>
+
+            <td class="fix" id="vat_date_<?php echo $vat->vat_id; ?>"><?php echo $lib->hien_thi_ngay_thang($vat->vat_date); ?></td>
+
+            <td class="fix" id="vat_number_<?php echo $vat->vat_id; ?>"><?php echo $vat->vat_number; ?></td>
+
+            <td class="fix" data="<?php echo $vat->customer; ?>" id="customer_<?php echo $vat->vat_id; ?>"><?php echo $vat->customer_name; ?></td>
+
+            <td class="fix" style="display:none" id="payment_<?php echo $vat->vat_id; ?>"><?php echo $vat->payment; ?></td>
+
+            <td class="fix" style="display:none" id="shipment_list_<?php echo $vat->vat_id; ?>"><?php echo $vat->shipment_list; ?></td>
+
+            <td class="fix" style="display:none" id="vat_percent_<?php echo $vat->vat_id; ?>"><?php echo $vat->vat_percent; ?></td>
+
+            <?php if(!isset($disable_control)){ ?>
+
+            <td class="pull-right">
+
+                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+
+                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $vat->vat_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
+
+            </td>
+
+            <?php } ?>
+
+        </tr>
+
+
+
+    <?php endforeach; ?>
+
+        
+
+   </tbody>
+
+</table>
+
+<?php
+
+$this->helper('slidePaginator');
+
+?>
+
+
+
+<div class="add-field">
+
+    <section class="content">
+
+      <div class="row">
+
+        <!-- left column -->
+
+        <div class="col-md-12">
+
+          <!-- general form elements -->
+
+          <div class="box box-primary">
+
+            <!-- /.box-header -->
+
+            <!-- form start -->
+
+            <form id="add_vat" role="form" method="post" action="" enctype="multipart/form-data">
+
+              <div class="row">
+
+                <div class="col-md-4 col-xs-6">
+
+                  <div class="box-body">
+
+                    <div class="form-group">
+
+                      <label for="vat_date">Ngày</label>
+
+                      <input class="ngay" type="text" id="vat_date"  name="vat_date" tabindex="1" required="required" >
+
+                    </div>
+
+                    <div class="form-group">
+
+                      <label for="customer">Khách hàng <a target="_blank" title="Thêm khách hàng" href="<?php echo $this->url('customer') ?>"><i class="fa fa-plus"></i></a></label>
+
+                      <input type="text" autocomplete="off" id="customer"  name="customer" tabindex="3"  placeholder="Nhập tên hoặc * để chọn" required="required" >
+
+                        <ul id="customer_list_id"></ul>
+
+                    </div>
+
+                    <div class="form-group">
+
+                      <label for="payment">Hình thức thanh toán</label>
+
+                      <input type="text" id="payment"  name="payment" tabindex="4">
+
+                    </div>
+
+                  </div>
+
+                  <!-- /.box-body -->
+
+                  
+
+                </div>
+
+                <div class="col-md-4 col-xs-6">
+
+                  <div class="box-body">
+
+                    <div class="form-group">
+
+                      <label for="vat_number">Số hóa đơn</label>
+
+                      <input type="text" id="vat_number"  name="vat_number" tabindex="2" required="required" >
+
+                    </div>
+
+                    <div class="form-group">
+
+                      <label for="customer_mst">Mã số thuế</label>
+
+                      <input type="text" id="customer_mst"  name="customer_mst" disabled >
+
+                    </div>
+
+                    <div class="form-group">
+
+                      <label for="shipment_list">Bảng kê</label>
+
+                      <select id="shipment_list" name="shipment_list" tabindex="5" required="required" multiple >
+
+                      </select>
+
+                    </div>
+
+                  </div>
+
+                  <!-- /.box-body -->
+
+                  
+
+                </div>
+
+                <div class="col-md-4 col-xs-6">
+
+                  <div class="box-body">
+
+                    <div class="form-group">
+
+                      <label for="vat_total">Tổng cộng theo bảng kê</label>
+
+                      <input type="text" class="numbers" id="vat_total"  name="vat_total" disabled >
+
+                    </div>
+
+                    <div class="form-group">
+
+                      <label for="customer_address">Địa chỉ</label>
+
+                      <input type="text" id="customer_address"  name="customer_address" disabled >
+
+                    </div>
+
+                  </div>
+
+                  <!-- /.box-body -->
+
+                  
+
+                </div>
+
+
+
+              </div>
+
+              <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="box-body">
+
+                        <fieldset class="groupbox">
+
+                                <table id="dataTable" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td><input type="checkbox" name="chk2" data=""></td>
+
+                                            <td>
+
+                                                <table style="width:100%">
+
+                                                    <tr>
+
+                                                        <td>Tên hàng hóa, dịch vụ <br>
+
+                                                            <input type="text" class="vat_out_comment" name="vat_out_comment[]" value="Cước vận chuyển" >
+
+                                                        </td>
+
+                                                        <td>Đơn vị tính <br>
+
+                                                            <input type="text" class="vat_out_unit" name="vat_out_unit[]" style="width:80px" >
+
+                                                        </td>
+
+                                                        <td>Số lượng <br>
+
+                                                            <input type="text" class="vat_out_number number" name="vat_out_number[]" style="width:80px" >
+
+                                                        </td>
+
+                                                        <td>Đơn giá <br>
+
+                                                            <input type="text" class="vat_out_price numbers" name="vat_out_number[]" style="width:120px" >
+
+                                                        </td>
+
+                                                        <td>Thành tiền <br>
+
+                                                            <input type="text" class="vat_out_total numbers" name="vat_out_total[]" style="width:120px" disabled >
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                </table>
+
+                                            </td>
+
+                                        </tr>
+
+                                        
+
+                                    </tbody>
+
+                                </table>
+
+                                <input type="button" value="Thêm" onclick="addRow('dataTable')">
+
+                                <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+
+
+
+                            </fieldset>
+
+                    </div>
+
+                </div>
+
+              </div>
+
+              <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="pull-right">
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Cộng</td>
+
+                            <td><input type="text" class="text-right numbers" id="vat_sum"  name="vat_sum" disabled ></td>
+
+                        </tr>
+
+                        <tr>
+                            <td>VAT </td>
+                            <td style="width:30%" ><input style="width:30px" type="text" class="text-left numbers" id="vat_percent"  name="vat_percent" value="10" ></td>
+                            <td>Tiền thuế GTGT</td>
+
+                            <td><input type="text" class="text-right numbers" id="vat_price"  name="vat_price" disabled ></td>
+
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Tổng cộng thanh toán</td>
+
+                            <td><input type="text" class="text-right numbers" id="vat_price_total"  name="vat_price_total" disabled ></td>
+
+                        </tr>
+
+                    </table>
+
+                    
+
+                </div>
+
+            </div>
+
+              <?php if(!isset($disable_control)){ ?>
+
+              <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="box-footer">
+
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+
+                    <button type="submit" class="btn btn-primary" tabindex="6">Hoàn thành</button>
+
+                    <button type="reset" class="btn" tabindex="7">Nhập lại</button>
+
+                  </div>
+
+                  <div class="box-footer">
+
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <?php } ?>
+
+            </form>
+
+          </div>
+
+          <!-- /.box -->
+
+
+
+        </div>
+
+        <!--/.col (left) -->
+
+        
+
+      </div>
+
+      <!-- /.row -->
+
+    </section>
+
+    <!-- /.content -->
+
+       
+
+</div>
+
+
+
+<script type="text/javascript">
+
+$('html').click(function(e) {
+
+    $('#customer_list_id').slideUp(200);
+
+});
+
+
+
+    $('.edit_tr').click(function(e){
+
+        if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
+
+            if(!$('.checkbox').is(':focus')){
+
+                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+
+            }
+
+            var vat_number = $(this).find("#vat_number_"+$(this).attr('id')).text();
+
+            var payment = $(this).find("#payment_"+$(this).attr('id')).text();
+
+            var customer_name = $(this).find("#customer_"+$(this).attr('id')).text();
+
+            var customer = $(this).find("#customer_"+$(this).attr('id')).attr('data');
+
+            var vat_date = $(this).find("#vat_date_"+$(this).attr('id')).text();
+
+            var shipment_list = $(this).find("#shipment_list_"+$(this).attr('id')).text();
+
+            var vat_percent = $(this).find("#vat_percent_"+$(this).attr('id')).text();
+
+
+            $('#vat_percent').val(vat_percent);
+
+            $('#vat_number').val(vat_number);
+
+            $('#payment').val(payment);
+
+            $('#customer').val(customer_name);
+
+            $('#customer').attr('data',customer);
+
+            $('#customer').attr('code',true);
+
+            $('#vat_date').val(vat_date.replace(/\//g,"-"));
+
+
+
+            $('#yes').val($(this).attr('id'));
+
+
+
+            $.ajax({
+
+                url: '<?php echo BASE_URL ?>/exvat/getshipmentadd',
+
+                type: 'POST',
+
+                data: {customer:customer,shipment_list:shipment_list},
+
+                success:function(data){
+
+
+
+                    $('#shipment_list').html(data);
+
+                    $('#shipment_list').multiselect( 'refresh' );
+
+
+
+                    var num = 0;
+
+                    $("#shipment_list").multiselect("widget").find(":checkbox:checked").each(function(){
+
+                       num += parseFloat(this.title);
+
+                    });
+
+
+
+                    $('#vat_total').attr('data',num);
+
+                    $('#vat_total').val(num);
+
+
+
+                    $("#shipment_list").multiselect({
+
+                      click: function(event, ui){
+
+                          var vat_total = parseFloat($('#vat_total').attr('data')) || 0;
+
+                          var new_num = parseFloat(ui.text);
+
+                          if(ui.checked == 1){
+
+                              $('#vat_total').attr('data',vat_total+new_num);
+
+                              $('#vat_total').val(vat_total+new_num);
+
+                          }
+
+                          else{
+
+                              $('#vat_total').attr('data',vat_total-new_num);
+
+                              $('#vat_total').val(vat_total-new_num);
+
+                          }
+
+                          $(".numbers").val(function(index, value) {
+
+                            return value
+                              .replace(/[^0-9-.]/g, "")
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                            ;
+
+                          }); 
+
+                      },
+
+                      checkAll: function(){
+
+                          var vat_total = parseFloat($('#vat_total').attr('data')) || 0;
+
+                          var new_num = 0;
+
+                          $("#shipment_list").multiselect("widget").find(":checkbox").each(function(){
+
+                             new_num += parseFloat(this.title);
+
+                          });
+
+
+
+                          $('#vat_total').attr('data',vat_total+new_num);
+
+                          $('#vat_total').val(vat_total+new_num);
+
+
+
+                          $(".numbers").val(function(index, value) {
+
+                            return value
+                              .replace(/[^0-9-.]/g, "")
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                            ;
+
+                          }); 
+
+                      },
+
+                      uncheckAll: function(){
+
+                          $('#vat_total').attr('data',0);
+
+                          $('#vat_total').val(0);
+
+                      }
+
+                    });
+
+                }
+
+            });
+
+
+
+            $('#dataTable tbody tr').remove();
+
+        
+
+            var vat_id = $(this).attr('id');
+
+            $.ajax({
+
+                url: '<?php echo BASE_URL ?>/exvat/getout',
+
+                type: 'POST',
+
+                data: {vat:vat_id},
+
+                success:function(data){
+
+                    //alert(data);
+
+                    $('#dataTable tbody').append(data);
+
+
+
+                    var total = 0;
+                    var percent = parseFloat($('#vat_percent').val())/100;
+
+                      $('.vat_out_total').each(function() { 
+
+                        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+                        $('#vat_sum').val(total);
+
+                        $('#vat_price').val(Math.round(total*percent));
+
+                        $('#vat_price_total').val(total+Math.round(total*percent));
+
+                    });
+
+
+
+                    $('.vat_out_number').keyup(function(){
+
+                      var row = $(this).parent().parent().parent().parent().parent().parent();
+
+                      var rowIndex = row[0].rowIndex;
+
+
+
+                      var number = parseFloat($(this).val());
+
+                      var price = parseFloat(get_number('.vat_out_price:eq('+rowIndex+')')) || 0;
+
+
+
+                      $('.vat_out_total:eq('+rowIndex+')').val(
+
+                          Math.round(
+
+                          price*number
+
+                          )
+
+                      );
+
+
+
+                      var total = 0;
+                      var percent = parseFloat($('#vat_percent').val())/100;
+
+                      $('.vat_out_total').each(function() { 
+
+                        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+                        $('#vat_sum').val(total);
+
+                        $('#vat_price').val(Math.round(total*percent));
+
+                        $('#vat_price_total').val(total+Math.round(total*percent));
+
+                    });
+
+
+
+                      /*if (total > parseFloat($('#vat_total').attr('data'))) {
+
+                        $(this).val(0);
+
+                        $('.vat_out_total:eq('+rowIndex+')').val(0);
+
+                        var total = 0;
+
+                          $('.vat_out_total').each(function() { 
+
+                            total += parseFloat($(this).val().replace(/\,/g, ""));
+
+                            $('#vat_sum').val(total);
+
+                            $('#vat_price').val(Math.round(total*0.1));
+
+                            $('#vat_price_total').val(total+Math.round(total*0.1));
+
+                        });
+
+
+
+                        $('#error').hide();
+
+                        $('#error').slideToggle(100); // hiển thị thẻ div success
+
+                        $('#error').html('<div class="successbox">Vượt quá tổng số tiền phải thu của đơn hàng</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+                        $('#error').fadeOut(100000);
+
+                      }*/
+
+
+
+                      $('.numbers').val(function(index, value) {
+
+                          return value
+
+                            .replace(/[^0-9-.]/g, "")
+
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                          ;
+
+                        });
+
+
+
+                      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+                          return value
+
+                            .replace(/[^0-9-.]/g, "")
+
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                          ;
+
+                        });
+
+
+
+                    });
+
+                   $('.vat_out_price').keyup(function(){
+
+                      var row = $(this).parent().parent().parent().parent().parent().parent();
+
+                      var rowIndex = row[0].rowIndex;
+
+
+
+                      var price = parseFloat($(this).val().replace(/\,/g, ""));
+
+                      var number = parseFloat($('.vat_out_number:eq('+rowIndex+')').val()) || 0;
+
+
+
+                      $('.vat_out_total:eq('+rowIndex+')').val(
+
+                          Math.round(
+
+                          price*number
+
+                          )
+
+                      );
+
+
+
+                      var total = 0;
+                      var percent = parseFloat($('#vat_percent').val())/100;
+
+                      $('.vat_out_total').each(function() { 
+
+                        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+                        $('#vat_sum').val(total);
+
+                        $('#vat_price').val(Math.round(total*percent));
+
+                        $('#vat_price_total').val(total+Math.round(total*percent));
+
+                    });
+
+
+
+                      /*if (total > parseFloat($('#vat_total').attr('data'))) {
+
+                        $(this).val(0);
+
+                        $('.vat_out_total:eq('+rowIndex+')').val(0);
+
+                        var total = 0;
+
+                          $('.vat_out_total').each(function() { 
+
+                            total += parseFloat($(this).val().replace(/\,/g, ""));
+
+                            $('#vat_sum').val(total);
+
+                            $('#vat_price').val(Math.round(total*0.1));
+
+                            $('#vat_price_total').val(total+Math.round(total*0.1));
+
+                        });
+
+
+
+                        $('#error').hide();
+
+                        $('#error').slideToggle(100); // hiển thị thẻ div success
+
+                        $('#error').html('<div class="successbox">Vượt quá tổng số tiền phải thu của đơn hàng</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+                        $('#error').fadeOut(10000);
+
+                      }*/
+
+
+
+                      $('.numbers').val(function(index, value) {
+
+                          return value
+
+                            .replace(/[^0-9-.]/g, "")
+
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                          ;
+
+                        });
+
+
+
+                      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+                          return value
+
+                            .replace(/[^0-9-.]/g, "")
+
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                          ;
+
+                        });
+
+                   
+
+                   });
+
+
+
+                    
+
+
+
+                      $('.numbers').val(function(index, value) {
+
+                          return value
+
+                            .replace(/[^0-9-.]/g, "")
+
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                          ;
+
+                        });
+
+
+
+                    $('.number').keyup(function(event) {
+
+
+
+                          // skip for arrow keys
+
+                      if(event.which >= 37 && event.which <= 40) return;
+
+
+
+                      // format number
+
+                      $(this).val(function(index, value) {
+
+                        return value
+
+                          .replace(/[^0-9-.]/g, "")
+
+                        ;
+
+                      });
+
+                    });
+
+                   
+
+                   $('.numbers').keyup(function(event) {
+
+
+
+                          // skip for arrow keys
+
+                      if(event.which >= 37 && event.which <= 40) return;
+
+
+
+                      // format number
+
+                      $(this).val(function(index, value) {
+
+                        return value
+
+                          .replace(/[^0-9-.]/g, "")
+
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                        ;
+
+                      });
+
+                    });
+
+
+
+                   function get_number(id){
+
+                    return $(id).val().replace(/\,/g,'');
+
+                  }
+
+
+
+                }
+
+
+
+            });
+
+
+
+            $(".numbers").val(function(index, value) {
+
+              return value
+                .replace(/[^0-9-.]/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+              ;
+
+            });
+
+
+
+            $( ".add-field" ).dialog( "open" );
+
+        }
+
+    });
+
+</script>
+
+<script type="text/javascript">
+
+function add_click(){
+
+    $('#yes').val("");
+
+    $('.add-field').slideDown(500);
+
+     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
+
+        $('#vat_number').val("");
+
+        $('#payment').val("");
+
+        $('#customer').val("");
+
+        $('#customer').attr('data',"");
+
+        $('#customer').attr('code',false);
+
+        $('#vat_date').val("");
+
+        $('#vat_total').val(0);
+
+        $('#vat_total').attr('data',0);
+
+        $('#vat_sum').val("");
+
+        $('#vat_price').val("");
+
+        $('#vat_price_total').val("");
+
+        $('#vat_percent').val(10);
+
+
+
+        $('#shipment_list').html("");
+
+        $('#shipment_list').multiselect( 'refresh' );
+
+
+
+        $('input[name="chk"]').attr('data',"");
+
+        
+
+        $('.number').focus(function(){
+
+            if ( $(this).val() == '0') {
+
+               $(this).val(""); 
+
+            };
+
+            
+
+        });
+
+        $('.number').blur(function(){
+
+            if ( $(this).val() == "") {
+
+                $(this).val(0);
+
+            };
+
+            
+
+        });
+
+
+
+
+
+   $( ".add-field" ).dialog( "open" );
+
+
+
+}
+
+
+
+$(document).ready(function(){
+
+            // Validate form
+
+            $("#add_vat").validate({
+
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+
+                rules: {
+
+                    
+
+                },
+
+                submitHandler: function(form) {
+
+                
+
+                    if ($('#customer').attr('code') == 'false') {
+
+                        $('#customer').val("");
+
+                        $('#customer').focus();
+
+                        return false;
+
+                    };
+
+
+
+                    var vat_number = $('#vat_number').attr('value');
+
+                    var payment = $('#payment').attr('value');
+
+                    var customer = $('#customer').attr('data');
+
+                    var vat_date = $('#vat_date').attr('value');
+
+                    var shipment_list = $('#shipment_list').val();
+
+                    var vat_percent = $('#vat_percent').val();
+
+
+
+                    var vat_out = [];
+
+
+
+                    var vat_out_comment = [];
+
+                    var vat_out_id = [];
+
+                    var vat_out_unit = [];
+
+                    var vat_out_number = [];
+
+                    var vat_out_price = [];
+
+
+
+                    $('.vat_out_comment').each(function() { 
+
+                        vat_out_comment.push($(this).val());
+
+                        vat_out_id.push($(this).attr('data'));
+
+                    });
+
+
+
+                    $('.vat_out_unit').each(function() { 
+
+                        vat_out_unit.push($(this).val());
+
+                    });
+
+
+
+                    $('.vat_out_number').each(function() { 
+
+                        vat_out_number.push($(this).val());
+
+                    });
+
+                    $('.vat_out_price').each(function() { 
+
+                        vat_out_price.push($(this).val());
+
+                    });
+
+
+
+                    for (var i = 0; i < vat_out_comment.length; i++) {
+
+                        vat_out.push({'vat_out_id':vat_out_id[i],'vat_out_comment':vat_out_comment[i],'vat_out_unit':vat_out_unit[i], 'vat_out_number':vat_out_number[i], 'vat_out_price':vat_out_price[i]});
+
+                        
+
+                        
+
+                    };
+
+                    
+
+                    var yes = $('#yes').attr('value');
+
+                    
+
+                    var action      = "them";
+
+                 
+
+                    $.ajax({
+
+                        type: "POST", // phương thức gởi đi
+
+                        url: "<?php echo BASE_URL ?>/exvat/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+
+                        data: {
+
+                            vat_number: vat_number,
+
+                            payment: payment,
+
+                            customer: customer,
+
+                            vat_date: vat_date,
+
+                            shipment_list: shipment_list,
+
+                            vat_out: vat_out,
+
+                            vat_percent: vat_percent,
+
+                            yes: yes,
+
+                            }, // giá trị post
+
+                        success: function(answer){ // if everything goes well
+
+                            //alert(answer);
+
+                            $('#error').hide();
+
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+                            $('#error').fadeOut(10000);
+
+
+
+                            if (yes != "") {
+
+                                if (answer.trim() != "Thông tin này đã tồn tại" ) {
+
+                                  setTimeout(function() {
+
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+
+                                      }, 200);
+
+                                    $('#export_stock_name_'+yes).text(export_stock_name);
+
+                                    $('#province_name_'+yes).text($('#province option:selected').text());
+
+                                }
+
+                            }
+
+                            else{
+
+                                if (answer.trim() != "Thông tin này đã tồn tại") {
+
+                                  setTimeout(function() {
+
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+
+                                      }, 200);
+
+                                    var lastID = parseInt($('#lasted').html());
+
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+
+                                    $('.table_data > tbody:last')
+
+                                    .append(
+
+                                        '<tr onclick="HighLightTR(this,#4d90fe,cc3333);" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="export_stock_name_'+parseInt(lastID+1)+'">'+export_stock_name+'</td><td class="fix" data="'+province+'" id="province_name_'+parseInt(lastID+1)+'">'+$('#province option:selected').text()+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+
+                                    );
+
+
+
+                                    $('#lasted').html(parseInt(lastID+2));
+
+                                }
+
+                            }
+
+                        }
+
+                    });
+
+                    return false;
+
+                     
+
+                 }
+
+            });
+
+
+
+    $('#customer').keyup(function(){
+
+      
+
+        var keyword = $(this).val();
+
+        $.ajax({
+
+            url: '<?php echo BASE_URL ?>/exvat/getcustomer',
+
+            type: 'POST',
+
+            data: {keyword:keyword},
+
+            success:function(data){
+
+                $('#customer_list_id').slideDown(200);
+
+                $('#customer_list_id').html(data);
+
+            }
+
+        });
+
+        if ($('#customer').val() == "" || $('#customer').attr('data') == "") {
+
+            //$('#loc_from').val("");
+
+            $('#customer').attr('data',"");
+
+            $('#customer').attr('code',false);
+
+        }
+
+      
+
+   });
+
+   $('#customer').on('keydown', function() {
+
+        var key = event.keyCode || event.charCode;
+
+
+
+        if( key == 8 || key == 46 ){
+
+            $('#customer').attr('data',"");
+
+        }
+
+            
+
+      }); 
+
+   $('#vat_percent').keyup(function(){
+    var percent = parseFloat($(this).val())/100;
+
+    var total = 0;
+
+      $('.vat_out_total').each(function() { 
+
+        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+        $('#vat_sum').val(total)
+
+        $('#vat_price').val(Math.round(total*percent));
+
+        $('#vat_price_total').val(total+Math.round(total*percent));
+
+    });
+
+      $('.numbers').val(function(index, value) {
+
+          return value
+            .replace(/[^0-9-.]/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+          return value
+            .replace(/[^0-9-.]/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+   });
+
+   $('.vat_out_number').keyup(function(){
+
+      var row = $(this).parent().parent().parent().parent().parent().parent();
+
+      var rowIndex = row[0].rowIndex;
+
+
+
+      var number = parseFloat($(this).val());
+
+      var price = parseFloat(get_number('.vat_out_price:eq('+rowIndex+')')) || 0;
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(
+
+          Math.round(
+
+          price*number
+
+          )
+
+      );
+
+
+
+      var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
+
+      $('.vat_out_total').each(function() { 
+
+        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+        $('#vat_sum').val(total);
+
+        $('#vat_price').val(Math.round(total*percent));
+
+        $('#vat_price_total').val(total+Math.round(total*percent));
+
+    });
+
+
+
+      /*if (total > parseFloat($('#vat_total').attr('data'))) {
+
+        $(this).val(0);
+
+        $('.vat_out_total:eq('+rowIndex+')').val(0);
+
+        var total = 0;
+
+          $('.vat_out_total').each(function() { 
+
+            total += parseFloat($(this).val().replace(/\,/g, ""));
+
+            $('#vat_sum').val(total);
+
+            $('#vat_price').val(Math.round(total*0.1));
+
+            $('#vat_price_total').val(total+Math.round(total*0.1));
+
+        });
+
+
+
+        $('#error').hide();
+
+        $('#error').slideToggle(100); // hiển thị thẻ div success
+
+        $('#error').html('<div class="successbox">Vượt quá tổng số tiền phải thu của đơn hàng</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+        $('#error').fadeOut(10000);
+
+      }*/
+
+
+
+      $('.numbers').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+    });
+
+   $('.vat_out_price').keyup(function(){
+
+      var row = $(this).parent().parent().parent().parent().parent().parent();
+
+      var rowIndex = row[0].rowIndex;
+
+
+
+      var price = parseFloat($(this).val().replace(/\,/g, ""));
+
+      var number = parseFloat($('.vat_out_number:eq('+rowIndex+')').val()) || 0;
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(
+
+          Math.round(
+
+          price*number
+
+          )
+
+      );
+
+
+
+      var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
+
+      $('.vat_out_total').each(function() { 
+
+        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+        $('#vat_sum').val(total);
+
+        $('#vat_price').val(Math.round(total*percent));
+
+        $('#vat_price_total').val(total+Math.round(total*percent));
+
+    });
+
+
+
+      /*if (total > parseFloat($('#vat_total').attr('data'))) {
+
+        $(this).val(0);
+
+        $('.vat_out_total:eq('+rowIndex+')').val(0);
+
+        var total = 0;
+
+          $('.vat_out_total').each(function() { 
+
+            total += parseFloat($(this).val().replace(/\,/g, ""));
+
+            $('#vat_sum').val(total);
+
+            $('#vat_price').val(Math.round(total*0.1));
+
+            $('#vat_price_total').val(total+Math.round(total*0.1));
+
+        });
+
+
+
+        $('#error').hide();
+
+        $('#error').slideToggle(100); // hiển thị thẻ div success
+
+        $('#error').html('<div class="successbox">Vượt quá tổng số tiền phải thu của đơn hàng</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+        $('#error').fadeOut(10000);
+
+      }*/
+
+
+
+      $('.numbers').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('#vat_sum').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+    });
+
+
+
+    $('.number').keyup(function(event) {
+
+
+
+          // skip for arrow keys
+
+      if(event.which >= 37 && event.which <= 40) return;
+
+
+
+      // format number
+
+      $(this).val(function(index, value) {
+
+        return value
+
+          .replace(/[^0-9-.]/g, "")
+
+        ;
+
+      });
+
+    });
+
+   
+
+   $('.numbers').keyup(function(event) {
+
+
+
+          // skip for arrow keys
+
+      if(event.which >= 37 && event.which <= 40) return;
+
+
+
+      // format number
+
+      $(this).val(function(index, value) {
+
+        return value
+
+          .replace(/[^0-9-.]/g, "")
+
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+        ;
+
+      });
+
+    });
+
+
+
+
+
+});
+
+function get_number(id){
+
+    return $(id).val().replace(/\,/g,'');
+
+}
+
+function set_item_customer(value,name,mst,address) {
+
+    // change input value
+
+    $('#customer').val(name);
+
+    $("#customer").attr("data",value);
+
+    $("#customer").attr("code",'true');
+
+    $('#customer_mst').val(mst);
+
+    $('#customer_address').val(address);
+
+    
+
+    $.ajax({
+
+        url: '<?php echo BASE_URL ?>/exvat/getshipment',
+
+        type: 'POST',
+
+        data: {customer:value},
+
+        success:function(data){
+
+
+
+            $('#shipment_list').html(data);
+
+            $('#shipment_list').multiselect( 'refresh' );
+
+            $("#shipment_list").multiselect({
+
+                click: function(event, ui){
+
+                    var vat_total = parseFloat($('#vat_total').attr('data')) || 0;
+
+                    var new_num = parseFloat(ui.text);
+
+                    if(ui.checked == 1){
+
+                        $('#vat_total').attr('data',vat_total+new_num);
+
+                        $('#vat_total').val(vat_total+new_num);
+
+                    }
+
+                    else{
+
+                        $('#vat_total').attr('data',vat_total-new_num);
+
+                        $('#vat_total').val(vat_total-new_num);
+
+                    }
+
+                    $(".numbers").val(function(index, value) {
+
+                      return value
+                        .replace(/[^0-9-.]/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                      ;
+
+                    }); 
+
+                },
+
+                checkAll: function(){
+
+                    var vat_total = parseFloat($('#vat_total').attr('data')) || 0;
+
+                    var new_num = 0;
+
+                    $("#shipment_list").multiselect("widget").find(":checkbox").each(function(){
+
+                       new_num += parseFloat(this.title);
+
+                    });
+
+
+
+                    $('#vat_total').attr('data',vat_total+new_num);
+
+                    $('#vat_total').val(vat_total+new_num);
+
+
+
+                    $(".numbers").val(function(index, value) {
+
+                      return value
+                        .replace(/[^0-9-.]/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                      ;
+
+                    }); 
+
+                },
+
+                uncheckAll: function(){
+
+                    $('#vat_total').attr('data',0);
+
+                    $('#vat_total').val(0);
+
+                }
+
+              });
+
+        }
+
+    });
+
+
+
+    // hide proposition list
+
+    $('#customer_list_id').hide();
+
+    $('#customer').focus();
+
+     
+
+    $(".numbers").val(function(index, value) {
+
+      return value
+        .replace(/[^0-9-.]/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+      ;
+
+    }); 
+
+}
+
+</script>
+
+<script type="text/javascript">
+
+
+
+$( ".add-field" ).dialog({
+
+    autoOpen: false,
+
+    modal: true,
+
+    width: "auto",
+
+    title: "Xuất hóa đơn",
+
+    hide: 'fold',
+
+    show: 'blind'
+
+});
+
+
+
+</script>
+
+
+
+<script type="text/javascript">
+
+    $(function() {
+
+    var pickerOpts = {
+
+        closeText: "Đóng",
+
+        currentText: "Hiện tại",
+
+        nextText: "Tiếp",
+
+        prevText: "Quay lại",
+
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+
+        "Thứ sáu", "Thứ bảy"],
+
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        //defaultDate: "+1w",
+
+        changeMonth: true,
+
+        changeYear: true,
+
+        dateFormat: 'dd-mm-yy',
+
+        firstDay: 1,
+
+        isRTL: false,
+
+        showButtonPanel: true,
+
+         
+
+    };  
+
+    $("#vat_date").datepicker(pickerOpts);
+
+
+
+    
+
+              
+
+            
+
+    
+
+});
+
+
+
+$("#shipment_list").multiselect({});
+
+
+
+</script>
+
+
+
+
+
+
+
+<style type="text/css">
+
+    #ui-datepicker-div{
+
+        font-size: 13px;
+
+    }
+
+</style>
+
+<script type="text/javascript">
+
+    $(function() {
+
+    var pickerOpts = {
+
+        closeText: "Đóng",
+
+        currentText: "Hiện tại",
+
+        nextText: "Tiếp",
+
+        prevText: "Quay lại",
+
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+
+        "Thứ sáu", "Thứ bảy"],
+
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        //defaultDate: "+1w",
+
+        changeMonth: true,
+
+        changeYear: true,
+
+        dateFormat: 'dd-mm-yy',
+
+        firstDay: 1,
+
+        isRTL: false,
+
+        showButtonPanel: true,
+
+        onClose: function(selectedDate) {
+
+                
+
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+
+
+         },
+
+         
+
+    };  
+
+    $("#batdau").datepicker(pickerOpts);
+
+
+
+    var pickerOpts4 = {
+
+        closeText: "Đóng",
+
+        currentText: "Hiện tại",
+
+        nextText: "Tiếp",
+
+        prevText: "Quay lại",
+
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+
+        "Thứ sáu", "Thứ bảy"],
+
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        //defaultDate: "+1w",
+
+        changeMonth: true,
+
+        changeYear: true,
+
+        dateFormat: 'dd-mm-yy',
+
+        firstDay: 1,
+
+        isRTL: false,
+
+        showButtonPanel: true,
+
+        onClose: function(selectedDate) {
+
+                
+
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+
+                
+
+         },
+
+         
+
+    };  
+
+    $("#ketthuc").datepicker(pickerOpts4);
+
+              
+
+            
+
+    
+
+});
+
+
+
+var ch = "<?php echo $limit ?>";
+
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+
+
+var kh = "<?php echo $kh ?>";
+
+$('#sl_nv option[value='+kh+']').attr('selected','selected');
+
+
+
+var v = "<?php echo $vong ?>";
+
+$('#sl_round option[value='+v+']').attr('selected','selected');
+
+
+
+var tt = "<?php echo $trangthai ?>";
+
+$('#sl_staff option[value='+tt+']').attr('selected','selected');
+
+
+
+</script>
+
+<script type="text/javascript">
+
+    
+
+    $('#sl_round').change(function(){
+
+        var m = $(this).val();
+
+        var y = $('#sl_staff').val();
+
+        var firstDay = new Date(y, m-1, 1);
+
+        var lastDay = new Date(y, m, 0);
+
+
+
+        $('#batdau').datepicker("setDate", firstDay );
+
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+
+
+    });
+
+
+
+    $('#sl_staff').change(function(){
+
+        var y = $(this).val();
+
+        var m = $('#sl_round').val();
+
+        var firstDay = new Date(y, m-1, 1);
+
+        var lastDay = new Date(y, m, 0);
+
+
+
+        $('#batdau').datepicker("setDate", firstDay );
+
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+
+
+    });
+
+
+
+
+
+function addRow(tableID){
+
+    var table=document.getElementById(tableID);
+
+    var rowCount=table.rows.length;
+
+    var row=table.insertRow(rowCount);
+
+    var colCount=table.rows[0].cells.length;
+
+    for(var i=0;i<colCount;i++){
+
+        var newcell=row.insertCell(i);
+
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+
+        switch(newcell.childNodes[0].type){
+
+            case"text":newcell.childNodes[0].value="";
+
+            break;
+
+            case"checkbox":newcell.childNodes[0].checked=false;
+
+            break;
+
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+
+            break;
+
+        }
+
+    }
+
+
+
+    $('.vat_out_comment:last').val("");
+
+    $('.vat_out_number:last').val(0);
+
+    $('.vat_out_unit:last').val("");
+
+    $('.vat_out_price:last').val(0);
+
+    $('.vat_out_total:last').val(0);
+
+    
+
+    $('input[name="chk"]:last').attr('data',"");
+
+    $('input[name="chk"]:last').attr('tabindex',0);
+
+    $('input[name="chk"]:last').attr('title',"");
+
+    $('input[name="chk"]:last').attr('class',"");
+
+    $('input[name="chk"]:last').attr('alt',0);
+
+
+
+    $('.vat_out_number').keyup(function(){
+
+      var row = $(this).parent().parent().parent().parent().parent().parent();
+
+      var rowIndex = row[0].rowIndex;
+
+
+
+      var number = parseFloat($(this).val());
+
+      var price = parseFloat(get_number('.vat_out_price:eq('+rowIndex+')')) || 0;
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(
+
+          Math.round(
+
+          price*number
+
+          )
+
+      );
+
+
+
+      var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
+
+      $('.vat_out_total').each(function() { 
+
+        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+        $('#vat_sum').val(total);
+
+        $('#vat_price').val(Math.round(total*percent));
+
+        $('#vat_price_total').val(total+Math.round(total*percent));
+
+    });
+
+
+
+      /*if (total > parseFloat($('#vat_total').attr('data'))) {
+
+        $(this).val(0);
+
+        $('.vat_out_total:eq('+rowIndex+')').val(0);
+
+        var total = 0;
+
+          $('.vat_out_total').each(function() { 
+
+            total += parseFloat($(this).val().replace(/\,/g, ""));
+
+            $('#vat_sum').val(total);
+
+            $('#vat_price').val(Math.round(total*0.1));
+
+            $('#vat_price_total').val(total+Math.round(total*0.1));
+
+        });
+
+
+
+        $('#error').hide();
+
+        $('#error').slideToggle(100); // hiển thị thẻ div success
+
+        $('#error').html('<div class="successbox">Vượt quá tổng số tiền phải thu của đơn hàng</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+        $('#error').fadeOut(10000);
+
+      }*/
+
+
+
+      $('.numbers').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+    });
+
+   $('.vat_out_price').keyup(function(){
+
+      var row = $(this).parent().parent().parent().parent().parent().parent();
+
+      var rowIndex = row[0].rowIndex;
+
+
+
+      var price = parseFloat($(this).val().replace(/\,/g, ""));
+
+      var number = parseFloat($('.vat_out_number:eq('+rowIndex+')').val()) || 0;
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(
+
+          Math.round(
+
+          price*number
+
+          )
+
+      );
+
+
+
+      var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
+
+      $('.vat_out_total').each(function() { 
+
+        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+        $('#vat_sum').val(total);
+
+        $('#vat_price').val(Math.round(total*percent));
+
+        $('#vat_price_total').val(total+Math.round(total*percent));
+
+    });
+
+
+
+      /*if (total > parseFloat($('#vat_total').attr('data'))) {
+
+        $(this).val(0);
+
+        $('.vat_out_total:eq('+rowIndex+')').val(0);
+
+        var total = 0;
+
+          $('.vat_out_total').each(function() { 
+
+            total += parseFloat($(this).val().replace(/\,/g, ""));
+
+            $('#vat_sum').val(total);
+
+            $('#vat_price').val(Math.round(total*0.1));
+
+            $('#vat_price_total').val(total+Math.round(total*0.1));
+
+        });
+
+
+
+        $('#error').hide();
+
+        $('#error').slideToggle(100); // hiển thị thẻ div success
+
+        $('#error').html('<div class="successbox">Vượt quá tổng số tiền phải thu của đơn hàng</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+
+        $('#error').fadeOut(10000);
+
+      }*/
+
+
+
+      $('.numbers').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('#vat_sum').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+          return value
+
+            .replace(/[^0-9-.]/g, "")
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+    });
+
+
+
+    function get_number(id){
+
+        return $(id).val().replace(/[^0-9\.-]+/g,"");
+
+    }
+
+
+
+    $('.number').keyup(function(event) {
+
+
+
+          // skip for arrow keys
+
+      if(event.which >= 37 && event.which <= 40) return;
+
+
+
+      // format number
+
+      $(this).val(function(index, value) {
+
+        return value
+
+          .replace(/[^0-9-.]/g, "")
+
+        ;
+
+      });
+
+    });
+
+   
+
+   $('.numbers').keyup(function(event) {
+
+
+
+          // skip for arrow keys
+
+      if(event.which >= 37 && event.which <= 40) return;
+
+
+
+      // format number
+
+      $(this).val(function(index, value) {
+
+        return value
+
+          .replace(/[^0-9]/g, "")
+
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+        ;
+
+      });
+
+    });
+
+
+
+   $('.number').focus(function(){
+
+        if ( $(this).val() == '0') {
+
+           $(this).val(""); 
+
+        };
+
+        
+
+    });
+
+    $('.number').blur(function(){
+
+        if ( $(this).val() == "") {
+
+            $(this).val(0);
+
+        };
+
+        
+
+    });
+
+    $('.numbers').focus(function(){
+
+        if ( $(this).val() == '0') {
+
+           $(this).val(""); 
+
+        };
+
+        
+
+    });
+
+    $('.numbers').blur(function(){
+
+        if ( $(this).val() == "") {
+
+            $(this).val(0);
+
+        };
+
+        
+
+    });
+
+
+
+}
+
+function deleteRow(tableID){
+
+    try{
+
+        var table=document.getElementById(tableID);
+
+        var rowCount=table.rows.length;
+
+
+
+        var r = confirm("Bạn có chắc chắn không?");
+
+        if (r == true){
+
+            for(var i=0;i<rowCount;i++){
+
+                var row=table.rows[i];
+
+                var chkbox=row.cells[0].childNodes[0];
+
+                if(null!=chkbox&&true==chkbox.checked){
+
+                  if(rowCount<=1){
+
+                        alert("Cannot delete all the rows.");
+
+                        break;
+
+                    }
+
+                    else if(chkbox.getAttribute("data") > 0){
+
+                        
+
+                            var vat_out = chkbox.getAttribute("data");
+
+                            var vat = chkbox.getAttribute("alt");
+
+                            $.post("<?php echo BASE_URL ?>/exvat/deletevat", {vat: vat, vat_out:vat_out},
+
+                               function(data){
+
+                                //alert(data);
+
+                               }); 
+
+                        
+
+                    }
+
+                    
+
+                    table.deleteRow(i);
+
+                    rowCount--;
+
+                    i--;
+
+                    var total = 0;
+                    var percent = parseFloat($('#vat_percent').val())/100;
+
+                    $('.vat_out_total').each(function() { 
+
+                      total += parseFloat($(this).val().replace(/\,/g, ""));
+
+                      $('#vat_sum').val(total);
+
+                      $('#vat_price').val(Math.round(total*percent));
+
+                      $('#vat_price_total').val(total+Math.round(total*percent));
+
+                  });
+
+                    $('.numbers').val(function(index, value) {
+
+                      return value
+
+                        .replace(/[^0-9-.]/g, "")
+
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+                      ;
+
+                    });
+
+                }
+
+            }
+
+        }
+
+    }
+
+    catch(e){
+
+        alert(e);
+
+    }
+
+}
+
+</script>
+
+<style type="text/css">
+
+.ui-multiselect-menu {
+
+    z-index: 9999999;
+
+}
+
+</style>

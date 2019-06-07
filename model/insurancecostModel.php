@@ -48,6 +48,9 @@ Class insurancecostModel Extends baseModel {
     public function getLastCost(){
         return $this->getLast($this->table);
     }
+    public function checkCost($id){
+        return $this->query('SELECT * FROM insurance_cost WHERE insurance_cost_id != '.$id);
+    }
     public function queryCost($sql){
         return $this->query($sql);
     }

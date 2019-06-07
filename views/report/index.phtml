@@ -1,0 +1,845 @@
+<section class="content-header">
+
+    <h1>BÁO CÁO KẾT QUẢ HOẠT ĐỘNG CỦA ĐỘI XE</h1>
+
+  <ol class="breadcrumb">
+
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+
+    <li class="active"><a href="<?php echo $this->url('report') ?>">Kết quả hoạt động</a></li>
+
+  </ol>
+
+</section>
+
+<div id="content" style="padding:5px;">
+    <form id="report" name="report" action method="post" style="margin:0;">
+    <div>
+        <div class="add-box">
+            <a class="add_button" id="export_excel" href="<?php echo BASE_URL.'/report/exportreport/'.strtotime($batdau).'/'.strtotime($ketthuc).'/'.$xe ?>">Export Excel</a>
+        </div>
+        <div style="clear:both"></div>
+        <div class="add-box">
+            <select name="sl_vehicle" id="sl_vehicle" style="width:120px">
+
+                <option selected="selected" value="0">Xe</option>
+
+                <?php foreach ($vehicle_datas as $sm) { ?>
+
+                <option value="<?php echo $sm->vehicle_id ?>"><?php echo $sm->vehicle_number ?></option>
+
+                <?php } ?>
+
+            </select>
+            <input type="submit" name="submit" id="chon" value="Chọn">  
+        </div>
+        
+        <select id="sl_round" name="sl_round" style="width:90px; margin-left:5px;">
+         <?php 
+            for ($i=1; $i < 13; $i++) { 
+                echo '<option value="'.$i.'">Tháng '.$i.'</option>';
+            }
+         ?>
+        </select>
+        <select id="sl_trangthai" name="sl_trangthai" style="width:100px">
+         <?php 
+            $nam = date('Y');
+            for ($i=($nam-5); $i < ($nam+5); $i++) { 
+                echo '<option value="'.$i.'">Năm '.$i.'</option>';
+            }
+         ?>
+        </select>
+        <input type="submit" name="submit" id="xem" value="Xem">  
+        
+    </div>
+    <div >
+        
+        Từ  <input style="width:100px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+        Đến  <input style="width:100px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+         <input type="submit" name="submit" id="xem" value="Xem">  
+                              
+    </div>
+    
+    </form>  
+</div>
+  
+
+<?php 
+$tongthu = 0;
+$tongchiphi = 0;
+$tongchiphicodinh = 0;
+$tongchiphihd = 0;
+$tongchiphikhd = 0;
+$tongphiduongbo = 0;
+$tongkiemdinh = 0;
+$tongbh = 0;
+$tongluong = 0;
+$tongdiduong = 0;
+$tongnhienlieu = 0;
+$tongcauduong = 0;
+$tongsuachuahd = 0;
+$tongkhachd = 0;
+$tongcongan = 0;
+$tongboiduong = 0;
+$tongcanxe = 0;
+$tongquetcont = 0;
+$tongvecong = 0;
+$tongsuachuakhd = 0;
+$tonghoahong = 0;
+$tongkhackhd = 0;
+
+
+?>
+
+
+<div class="report">
+    <div class="report-left">
+        <table class="table_data">
+            <thead>
+                <tr>
+                    <th class="fix">TT</th>
+                    <th class="fix">Nội dung</th>
+                </tr>
+           </thead>
+           <tbody>
+                
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    <td style="text-align:center;" class="fix">I</td>
+                    <td class="fix">Doanh thu</td>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    <td style="text-align:center;" class="fix">II</td>
+                    <td class="fix">Chi phí</td>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    <td style="text-align:center;" class="fix">A</td>
+                    <td class="fix">Chi phí cố định</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">1.</td>
+                    <td class="fix">Phí sử dụng đường bộ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">2.</td>
+                    <td class="fix">Kiểm định</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">3.</td>
+                    <td class="fix">Bảo hiểm</td>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    <td style="text-align:center;" class="fix">B</td>
+                    <td class="fix">Có hóa đơn chứng từ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">1.</td>
+                    <td class="fix">Lương tài xế</td>
+                </tr>
+                
+                <tr>
+                    <td style="text-align:center;" class="fix">2.</td>
+                    <td class="fix">Chi phí nhiên liệu</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">3.</td>
+                    <td class="fix">Chi phí cầu đường</td>
+                </tr>
+
+                <tr>
+                    <td style="text-align:center;" class="fix">4.</td>
+                    <td class="fix">Sửa chữa, bảo dưỡng</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">5.</td>
+                    <td class="fix">Chi phí khác</td>
+                </tr>
+
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    <td style="text-align:center;" class="fix">C</td>
+                    <td class="fix">Không hóa đơn chứng từ</td>
+                </tr>
+                
+                
+                <tr>
+                    <td style="text-align:center;" class="fix">1.</td>
+                    <td class="fix">Tiền đi đường</td>
+                </tr>
+                
+                
+                <tr>
+                    <td style="text-align:center;" class="fix">2.</td>
+                    <td class="fix">Chi phí công an</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">3.</td>
+                    <td class="fix">Chi phí bồi dưỡng</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">4.</td>
+                    <td class="fix">Cân xe</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">5.</td>
+                    <td class="fix">Quét cont</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">6.</td>
+                    <td class="fix">Vé cổng</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">7.</td>
+                    <td class="fix">Hoa hồng</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">8.</td>
+                    <td class="fix">Sửa chữa</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;" class="fix">9.</td>
+                    <td class="fix">Chi phí khác</td>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    <td style="text-align:center;" class="fix">III</td>
+                    <td class="fix">LN trước thuế</td>
+                </tr>
+                
+           </tbody>
+        </table>
+    </div>
+    <div class="report-right">
+    <div class="report-right report-right-fix" style="float:left">
+        <table class="table_data">
+            <thead>
+                <tr>
+                    <th></th>
+                    <?php foreach ($vehicles as $vehicle): ?>
+                    <th class="fix"><?php echo $vehicle->vehicle_number ?></th>
+                    <?php endforeach; ?>
+                </tr> <!-- Kiểm tra doanh thu của xe  -->
+           </thead>
+           <tbody>
+                
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $dt = isset($doanhthu[$vehicle->vehicle_id])?$doanhthu[$vehicle->vehicle_id]:0;
+                    $tongthu += $dt;
+                    ?>
+                    <td class="fix"><?php echo $lib->formatMoney($dt); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $phidb = isset($road_cost[$vehicle->vehicle_id])?$road_cost[$vehicle->vehicle_id]:0;
+                    $kiemdinh = isset($checking_cost[$vehicle->vehicle_id])?$checking_cost[$vehicle->vehicle_id]:0;
+                    $bh = isset($insurance_cost[$vehicle->vehicle_id])?$insurance_cost[$vehicle->vehicle_id]:0;
+
+                    $lc = isset($luongchuyen[$vehicle->vehicle_id])?$luongchuyen[$vehicle->vehicle_id]:0;
+                    $dm = isset($road['oil_cost'][$vehicle->vehicle_id])?$road['oil_cost'][$vehicle->vehicle_id]:0;
+                    $dl = isset($dauthuclanh[$vehicle->vehicle_id])?$dauthuclanh[$vehicle->vehicle_id]:0;
+                    $sl = $dm-$dl;
+                    $tp = $sl<0?$thuongphat['phat']:($sl>0?$thuongphat['thuong']:0);
+                    $tt = $sl*$tp;
+                    $lanh = $lc+$tt;
+
+                    $dau = (isset($chiphidau[$vehicle->vehicle_id])?$chiphidau[$vehicle->vehicle_id]:0)+(isset($dauvat[$vehicle->vehicle_id])?$dauvat[$vehicle->vehicle_id]:0);
+                    $cauduong = (isset($road['bridge_cost'][$vehicle->vehicle_id])?$road['bridge_cost'][$vehicle->vehicle_id]:0)+(isset($cauduongvat[$vehicle->vehicle_id])?$cauduongvat[$vehicle->vehicle_id]:0);
+                    $suachuahd = (isset($repair[$vehicle->vehicle_id])?$repair[$vehicle->vehicle_id]:0)+(isset($suachuavat[$vehicle->vehicle_id])?$suachuavat[$vehicle->vehicle_id]:0);
+                    $khachd = isset($khacvat[$vehicle->vehicle_id])?$khacvat[$vehicle->vehicle_id]:0;
+
+                    $tiendiduong = (isset($road['road_add'][$vehicle->vehicle_id])?$road['road_add'][$vehicle->vehicle_id]:0)+(isset($diduong[$vehicle->vehicle_id])?$diduong[$vehicle->vehicle_id]:0);
+                    $congan = (isset($road['police_cost'][$vehicle->vehicle_id])?$road['police_cost'][$vehicle->vehicle_id]:0)+(isset($congankvat[$vehicle->vehicle_id])?$congankvat[$vehicle->vehicle_id]:0);
+                    $boiduong = (isset($warehouse['boiduong'][$vehicle->vehicle_id])?$warehouse['boiduong'][$vehicle->vehicle_id]:0)+(isset($boiduongkvat[$vehicle->vehicle_id])?$boiduongkvat[$vehicle->vehicle_id]:0);
+                    $canxe = (isset($warehouse['canxe'][$vehicle->vehicle_id])?$warehouse['canxe'][$vehicle->vehicle_id]:0);
+                    $quetcont = (isset($warehouse['quetcont'][$vehicle->vehicle_id])?$warehouse['quetcont'][$vehicle->vehicle_id]:0);
+                    $vecong = (isset($warehouse['vecong'][$vehicle->vehicle_id])?$warehouse['vecong'][$vehicle->vehicle_id]:0);
+                    $hoahong = (isset($hoahongkvat[$vehicle->vehicle_id])?$hoahongkvat[$vehicle->vehicle_id]:0);
+                    $suachuakhd = (isset($road['tire_cost'][$vehicle->vehicle_id])?$road['tire_cost'][$vehicle->vehicle_id]:0)+(isset($suachuakvat[$vehicle->vehicle_id])?$suachuakvat[$vehicle->vehicle_id]:0);
+                    $khackhd = isset($khackvat[$vehicle->vehicle_id])?$khackvat[$vehicle->vehicle_id]:0;
+
+                    $chiphi = $phidb+$kiemdinh+$bh+$lanh+$dau+$cauduong+$suachuahd+$khachd+$tiendiduong+$congan+$boiduong+$canxe+$quetcont+$vecong+$hoahong+$suachuakhd+$khackhd;
+
+                    $tongchiphi += $chiphi;
+                    ?>
+                    <td class="fix"><?php echo $lib->formatMoney($chiphi); ?></td>
+                    <?php endforeach; ?>
+                </tr> <!-- TỔng chi phí -->
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $phidb = isset($road_cost[$vehicle->vehicle_id])?$road_cost[$vehicle->vehicle_id]:0;
+                    $kiemdinh = isset($checking_cost[$vehicle->vehicle_id])?$checking_cost[$vehicle->vehicle_id]:0;
+                    $bh = isset($insurance_cost[$vehicle->vehicle_id])?$insurance_cost[$vehicle->vehicle_id]:0;
+                    $tongchiphicodinh += $phidb+$kiemdinh+$bh;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($phidb+$kiemdinh+$bh); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $phidb = isset($road_cost[$vehicle->vehicle_id])?$road_cost[$vehicle->vehicle_id]:0;
+                    $tongphiduongbo += $phidb;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($phidb); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $kiemdinh = isset($checking_cost[$vehicle->vehicle_id])?$checking_cost[$vehicle->vehicle_id]:0;
+                    $tongkiemdinh += $kiemdinh;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($kiemdinh); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $bh = isset($insurance_cost[$vehicle->vehicle_id])?$insurance_cost[$vehicle->vehicle_id]:0;
+                    $tongbh += $bh;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($bh); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $lc = isset($luongchuyen[$vehicle->vehicle_id])?$luongchuyen[$vehicle->vehicle_id]:0;
+                    $dm = isset($road['oil_cost'][$vehicle->vehicle_id])?$road['oil_cost'][$vehicle->vehicle_id]:0;
+                    $dl = isset($dauthuclanh[$vehicle->vehicle_id])?$dauthuclanh[$vehicle->vehicle_id]:0;
+                    $sl = $dm-$dl;
+                    $tp = $sl<0?$thuongphat['phat']:($sl>0?$thuongphat['thuong']:0);
+                    $tt = $sl*$tp;
+                    $lanh = $lc+$tt;
+
+                    $dau = (isset($chiphidau[$vehicle->vehicle_id])?$chiphidau[$vehicle->vehicle_id]:0)+(isset($dauvat[$vehicle->vehicle_id])?$dauvat[$vehicle->vehicle_id]:0);
+                    $cauduong = (isset($road['bridge_cost'][$vehicle->vehicle_id])?$road['bridge_cost'][$vehicle->vehicle_id]:0)+(isset($cauduongvat[$vehicle->vehicle_id])?$cauduongvat[$vehicle->vehicle_id]:0);
+                    $suachuahd = (isset($repair[$vehicle->vehicle_id])?$repair[$vehicle->vehicle_id]:0)+(isset($suachuavat[$vehicle->vehicle_id])?$suachuavat[$vehicle->vehicle_id]:0);
+                    $khachd = isset($khacvat[$vehicle->vehicle_id])?$khacvat[$vehicle->vehicle_id]:0;
+
+                    $tongchiphihd += $lanh+$dau+$cauduong+$suachuahd+$khachd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($lanh+$dau+$cauduong+$suachuahd+$khachd) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $lc = isset($luongchuyen[$vehicle->vehicle_id])?$luongchuyen[$vehicle->vehicle_id]:0;
+                    $dm = isset($road['oil_cost'][$vehicle->vehicle_id])?$road['oil_cost'][$vehicle->vehicle_id]:0;
+                    $dl = isset($dauthuclanh[$vehicle->vehicle_id])?$dauthuclanh[$vehicle->vehicle_id]:0;
+                    $sl = $dm-$dl;
+                    $tp = $sl<0?$thuongphat['phat']:($sl>0?$thuongphat['thuong']:0);
+                    $tt = $sl*$tp;
+                    $lanh = $lc+$tt;
+
+                    $tongluong += $lanh;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($lanh) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $dau = (isset($chiphidau[$vehicle->vehicle_id])?$chiphidau[$vehicle->vehicle_id]:0)+(isset($dauvat[$vehicle->vehicle_id])?$dauvat[$vehicle->vehicle_id]:0);
+                    $tongnhienlieu += $dau;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($dau) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $cauduong = (isset($road['bridge_cost'][$vehicle->vehicle_id])?$road['bridge_cost'][$vehicle->vehicle_id]:0)+(isset($cauduongvat[$vehicle->vehicle_id])?$cauduongvat[$vehicle->vehicle_id]:0);
+                    $tongcauduong += $cauduong;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($cauduong) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $suachuahd = (isset($repair[$vehicle->vehicle_id])?$repair[$vehicle->vehicle_id]:0)+(isset($suachuavat[$vehicle->vehicle_id])?$suachuavat[$vehicle->vehicle_id]:0);
+                    $tongsuachuahd += $suachuahd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($suachuahd) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $khachd = isset($khacvat[$vehicle->vehicle_id])?$khacvat[$vehicle->vehicle_id]:0;
+                    $tongkhachd += $khachd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($khachd) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $tiendiduong = (isset($road['road_add'][$vehicle->vehicle_id])?$road['road_add'][$vehicle->vehicle_id]:0)+(isset($diduong[$vehicle->vehicle_id])?$diduong[$vehicle->vehicle_id]:0);
+                    $congan = (isset($road['police_cost'][$vehicle->vehicle_id])?$road['police_cost'][$vehicle->vehicle_id]:0)+(isset($congankvat[$vehicle->vehicle_id])?$congankvat[$vehicle->vehicle_id]:0);
+                    $boiduong = (isset($warehouse['boiduong'][$vehicle->vehicle_id])?$warehouse['boiduong'][$vehicle->vehicle_id]:0)+(isset($boiduongkvat[$vehicle->vehicle_id])?$boiduongkvat[$vehicle->vehicle_id]:0);
+                    $canxe = (isset($warehouse['canxe'][$vehicle->vehicle_id])?$warehouse['canxe'][$vehicle->vehicle_id]:0);
+                    $quetcont = (isset($warehouse['quetcont'][$vehicle->vehicle_id])?$warehouse['quetcont'][$vehicle->vehicle_id]:0);
+                    $vecong = (isset($warehouse['vecong'][$vehicle->vehicle_id])?$warehouse['vecong'][$vehicle->vehicle_id]:0);
+                    $hoahong = (isset($hoahongkvat[$vehicle->vehicle_id])?$hoahongkvat[$vehicle->vehicle_id]:0);
+                    $suachuakhd = (isset($road['tire_cost'][$vehicle->vehicle_id])?$road['tire_cost'][$vehicle->vehicle_id]:0)+(isset($suachuakvat[$vehicle->vehicle_id])?$suachuakvat[$vehicle->vehicle_id]:0);
+                    $khackhd = isset($khackvat[$vehicle->vehicle_id])?$khackvat[$vehicle->vehicle_id]:0;
+
+                    $tongchiphikhd += $tiendiduong+$congan+$boiduong+$canxe+$quetcont+$vecong+$hoahong+$suachuakhd+$khackhd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($tiendiduong+$congan+$boiduong+$canxe+$quetcont+$vecong+$hoahong+$suachuakhd+$khackhd) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                
+                <tr >
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $tiendiduong = (isset($road['road_add'][$vehicle->vehicle_id])?$road['road_add'][$vehicle->vehicle_id]:0)+(isset($diduong[$vehicle->vehicle_id])?$diduong[$vehicle->vehicle_id]:0);
+                    $tongdiduong += $tiendiduong;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($tiendiduong) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $congan = (isset($road['police_cost'][$vehicle->vehicle_id])?$road['police_cost'][$vehicle->vehicle_id]:0)+(isset($congankvat[$vehicle->vehicle_id])?$congankvat[$vehicle->vehicle_id]:0);
+                    $tongcongan += $congan;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($congan) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $boiduong = (isset($warehouse['boiduong'][$vehicle->vehicle_id])?$warehouse['boiduong'][$vehicle->vehicle_id]:0)+(isset($boiduongkvat[$vehicle->vehicle_id])?$boiduongkvat[$vehicle->vehicle_id]:0);
+                    $tongboiduong += $boiduong;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($boiduong) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $canxe = (isset($warehouse['canxe'][$vehicle->vehicle_id])?$warehouse['canxe'][$vehicle->vehicle_id]:0);
+                    $tongcanxe += $canxe;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($canxe) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $quetcont = (isset($warehouse['quetcont'][$vehicle->vehicle_id])?$warehouse['quetcont'][$vehicle->vehicle_id]:0);
+                    $tongquetcont += $quetcont;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($quetcont) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $vecong = (isset($warehouse['vecong'][$vehicle->vehicle_id])?$warehouse['vecong'][$vehicle->vehicle_id]:0);
+                    $tongvecong += $vecong;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($vecong) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $hoahong = (isset($hoahongkvat[$vehicle->vehicle_id])?$hoahongkvat[$vehicle->vehicle_id]:0);
+                    $tonghoahong += $hoahong;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($hoahong) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $suachuakhd = (isset($road['tire_cost'][$vehicle->vehicle_id])?$road['tire_cost'][$vehicle->vehicle_id]:0)+(isset($suachuakvat[$vehicle->vehicle_id])?$suachuakvat[$vehicle->vehicle_id]:0);
+                    $tongsuachuakhd += $suachuakhd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($suachuakhd) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle): 
+                    $khackhd = isset($khackvat[$vehicle->vehicle_id])?$khackvat[$vehicle->vehicle_id]:0;
+                    $tongkhackhd += $khackhd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($khackhd) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+
+
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    <td></td>
+                    <?php foreach ($vehicles as $vehicle):  
+                    $dt = isset($doanhthu[$vehicle->vehicle_id])?$doanhthu[$vehicle->vehicle_id]:0;
+
+                    $phidb = isset($road_cost[$vehicle->vehicle_id])?$road_cost[$vehicle->vehicle_id]:0;
+                    $kiemdinh = isset($checking_cost[$vehicle->vehicle_id])?$checking_cost[$vehicle->vehicle_id]:0;
+                    $bh = isset($insurance_cost[$vehicle->vehicle_id])?$insurance_cost[$vehicle->vehicle_id]:0;
+
+                    $lc = isset($luongchuyen[$vehicle->vehicle_id])?$luongchuyen[$vehicle->vehicle_id]:0;
+                    $dm = isset($road['oil_cost'][$vehicle->vehicle_id])?$road['oil_cost'][$vehicle->vehicle_id]:0;
+                    $dl = isset($dauthuclanh[$vehicle->vehicle_id])?$dauthuclanh[$vehicle->vehicle_id]:0;
+                    $sl = $dm-$dl;
+                    $tp = $sl<0?$thuongphat['phat']:($sl>0?$thuongphat['thuong']:0);
+                    $tt = $sl*$tp;
+                    $lanh = $lc+$tt;
+
+                    $dau = (isset($chiphidau[$vehicle->vehicle_id])?$chiphidau[$vehicle->vehicle_id]:0)+(isset($dauvat[$vehicle->vehicle_id])?$dauvat[$vehicle->vehicle_id]:0);
+                    $cauduong = (isset($road['bridge_cost'][$vehicle->vehicle_id])?$road['bridge_cost'][$vehicle->vehicle_id]:0)+(isset($cauduongvat[$vehicle->vehicle_id])?$cauduongvat[$vehicle->vehicle_id]:0);
+                    $suachuahd = (isset($repair[$vehicle->vehicle_id])?$repair[$vehicle->vehicle_id]:0)+(isset($suachuavat[$vehicle->vehicle_id])?$suachuavat[$vehicle->vehicle_id]:0);
+                    $khachd = isset($khacvat[$vehicle->vehicle_id])?$khacvat[$vehicle->vehicle_id]:0;
+
+                    $tiendiduong = (isset($road['road_add'][$vehicle->vehicle_id])?$road['road_add'][$vehicle->vehicle_id]:0)+(isset($diduong[$vehicle->vehicle_id])?$diduong[$vehicle->vehicle_id]:0);
+                    $congan = (isset($road['police_cost'][$vehicle->vehicle_id])?$road['police_cost'][$vehicle->vehicle_id]:0)+(isset($congankvat[$vehicle->vehicle_id])?$congankvat[$vehicle->vehicle_id]:0);
+                    $boiduong = (isset($warehouse['boiduong'][$vehicle->vehicle_id])?$warehouse['boiduong'][$vehicle->vehicle_id]:0)+(isset($boiduongkvat[$vehicle->vehicle_id])?$boiduongkvat[$vehicle->vehicle_id]:0);
+                    $canxe = (isset($warehouse['canxe'][$vehicle->vehicle_id])?$warehouse['canxe'][$vehicle->vehicle_id]:0);
+                    $quetcont = (isset($warehouse['quetcont'][$vehicle->vehicle_id])?$warehouse['quetcont'][$vehicle->vehicle_id]:0);
+                    $vecong = (isset($warehouse['vecong'][$vehicle->vehicle_id])?$warehouse['vecong'][$vehicle->vehicle_id]:0);
+                    $hoahong = (isset($hoahongkvat[$vehicle->vehicle_id])?$hoahongkvat[$vehicle->vehicle_id]:0);
+                    $suachuakhd = (isset($road['tire_cost'][$vehicle->vehicle_id])?$road['tire_cost'][$vehicle->vehicle_id]:0)+(isset($suachuakvat[$vehicle->vehicle_id])?$suachuakvat[$vehicle->vehicle_id]:0);
+                    $khackhd = isset($khackvat[$vehicle->vehicle_id])?$khackvat[$vehicle->vehicle_id]:0;
+
+                    $chiphi = $phidb+$kiemdinh+$bh+$lanh+$dau+$cauduong+$suachuahd+$khachd+$tiendiduong+$congan+$boiduong+$canxe+$quetcont+$vecong+$hoahong+$suachuakhd+$khackhd;
+                    ?>
+                    <td class="fix masterTooltip"><?php echo $lib->formatMoney($dt-$chiphi) ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                
+                
+           </tbody>
+        </table>
+    </div>
+
+    <div style="width:150px; float:right; ">
+        <table class="table_data">
+            <thead>
+                <tr>
+                    
+                    <th class="fix">Cộng</th>
+                </tr>
+           </thead>
+           <tbody>
+                
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    
+                    <td class="fix"><?php echo $lib->formatMoney($tongthu) ?></td>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongchiphi)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongchiphi) ?></td>
+                </tr>
+
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongchiphicodinh)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongchiphicodinh) ?></td>
+                </tr>
+                <tr>
+                    <td title="<?php echo ($tongthu>0?(round((($tongphiduongbo)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongphiduongbo) ?></td>
+                </tr>
+                <tr>
+                    <td title="<?php echo ($tongthu>0?(round((($tongkiemdinh)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongkiemdinh) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongbh)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongbh) ?></td>
+                </tr>
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongchiphihd)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongchiphihd) ?></td>
+                </tr>
+                <tr>
+                    <td title="<?php echo ($tongthu>0?(round((($tongluong)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongluong) ?></td>
+                </tr>
+                <tr>
+                    <td title="<?php echo ($tongthu>0?(round((($tongnhienlieu)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongnhienlieu) ?></td>
+                </tr>
+                
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongcauduong)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongcauduong) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongsuachuahd)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongsuachuahd) ?></td>
+                </tr>
+                <tr>
+                    
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongkhachd)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongkhachd) ?></td>
+                </tr>
+
+                <tr style=" color:rgb(0, 32, 96); font-style: italic; font-weight:bold;">
+                    
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongchiphikhd)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongchiphikhd) ?></td>
+                </tr>
+                
+                
+                <tr >
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongdiduong)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongdiduong) ?></td>
+                </tr>
+                
+                
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongcongan)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongcongan) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongboiduong)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongboiduong) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongcanxe)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongcanxe) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongquetcont)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongquetcont) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongvecong)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongvecong) ?></td>
+                </tr>
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tonghoahong)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tonghoahong) ?></td>
+                </tr>
+
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongsuachuakhd)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongsuachuakhd) ?></td>
+                </tr>
+
+                <tr>
+                    
+                    <td title="<?php echo ($tongthu>0?(round((($tongkhackhd)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney($tongkhackhd) ?></td>
+                </tr>
+                
+                <tr style=" color:rgb(0, 32, 96); font-weight:bold;">
+                    
+                    <?php $tonglntruoc = $tongthu-$tongchiphi ; ?>
+                    <td title="<?php echo ($tongthu>0?(round((($tonglntruoc)*100)/$tongthu,2)):0)."%" ?>" class="fix masterTooltip"><?php echo $lib->formatMoney(round($tonglntruoc)) ?></td>
+                </tr>
+                
+           </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+
+        var w = $(".report").width();
+
+      $(".report-right-fix").width(w-380);
+
+
+    var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+         
+    };  
+    $("#batdau").datepicker(pickerOpts);
+
+    var pickerOpts4 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+                
+         },
+         
+    };  
+    $("#ketthuc").datepicker(pickerOpts4);
+              
+            
+    
+});
+
+
+
+</script>
+<style type="text/css">
+    #ui-datepicker-div{
+        font-size: 13px;
+    }
+    .table_data tbody tr td.fix{
+        min-width: 180px;
+    }
+.table_data tbody tr td.fix:nth-child(1){
+        min-width: 30px;
+    }
+.report{
+    width: 100%;
+    margin: -5px auto;
+}
+.report-left{
+    float: left;
+    width: 200px;
+    margin-right:15px;
+}
+.report-right{
+    
+    overflow: auto;
+}
+.showtooltip {
+        display:none;
+        position:absolute;
+        border:1px solid #333;
+        background-color:#161616;
+        border-radius:5px;
+        padding:10px;
+        color:#fff;
+        font-size:12px Arial;
+    }
+.table_data td {
+    padding: 1px 4px 1px 4px;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+// Tooltip only Text
+$('.masterTooltip').hover(function(){
+        // Hover over code
+        var title = $(this).attr('title');
+        $(this).data('tipText', title).removeAttr('title');
+        $('<p class="showtooltip"></p>')
+        .text(title)
+        .appendTo('body')
+        .fadeIn('slow');
+}, function() {
+        // Hover out code
+        $(this).attr('title', $(this).data('tipText'));
+        $('.showtooltip').remove();
+}).mousemove(function(e) {
+        var mousex = e.pageX + 20; //Get X coordinates
+        var mousey = e.pageY - 10; //Get Y coordinates
+        $('.showtooltip')
+        .css({ top: mousey, left: mousex })
+});
+
+
+});
+
+var w = $("#container").width();
+
+      $(".container").width(w);
+      $(".navbar-inner").width(w);
+      $(".navbar").width(w);
+
+$(document).ready(function() {
+    function fixDiv() {
+      
+      var $cache = $('.navbar-fixed-top'); 
+      if ($(window).scrollTop() > 42) {
+        $cache.css({'position': 'fixed', 'top': '0'}); 
+        $(".navbar-inner").css({'width':'100%'});
+        $(".navbar").css({'width':'100%'});
+      }
+      else{
+        var w = $("#container").width();
+        $cache.css({'position': 'relative', 'top': 'auto'});
+        $(".navbar-inner").width(w);
+        $(".navbar").width(w);
+      }
+      
+    }
+  $(window).scroll(fixDiv);
+  fixDiv();
+});
+
+var v = "<?php echo $vong ?>";
+$('#sl_round option[value='+v+']').attr('selected','selected');
+
+var tt = "<?php echo $trangthai ?>";
+$('#sl_trangthai option[value='+tt+']').attr('selected','selected');
+
+var x = "<?php echo $xe ?>";
+
+$('#sl_vehicle option[value='+x+']').attr('selected','selected');
+</script>
+<script type="text/javascript">
+    
+    $('#sl_round').change(function(){
+        var m = $(this).val();
+        var y = $('#sl_trangthai').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
+    $('#sl_trangthai').change(function(){
+        var y = $(this).val();
+        var m = $('#sl_round').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
+</script>

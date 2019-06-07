@@ -1,0 +1,20 @@
+<form id="update" role="form" method="post" action="" enctype="multipart/form-data">
+<div class="row">
+  <div class="col-sm-6">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Cập nhật phần mềm</h3>
+        <span class="label label-primary pull-right"><i class="fa fa-database"></i></span>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <p>Tải lên bản cập nhật phần mềm mới nhất (.zip).</p>
+        <p style="color:#DB2E66;"><i class="fa fa-exclamation-triangle"></i> Chỉ tải lên file được nhà phát triển cung cấp hoặc người có thẩm quyền khi có yêu cầu!</p>
+
+        <input type="file" name="zip_file" id="zip_file" required="required">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Tải lên</button>
+      </div><!-- /.box-body -->
+      <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+</div>
+</form>

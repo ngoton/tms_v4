@@ -61,6 +61,9 @@ Class placeModel Extends baseModel {
     public function queryPlace($sql){
         return $this->query($sql);
     }
+    public function checkPlace($id,$name){
+        return $this->query('SELECT * FROM place WHERE place_id != '.$id.' AND place_name = "'.$name.'"');
+    }
     public function getLastPlace(){
         return $this->getLast($this->table);
     }

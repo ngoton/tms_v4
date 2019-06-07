@@ -48,6 +48,9 @@ Class exportstockModel Extends baseModel {
     public function getLastStock(){
         return $this->getLast($this->table);
     }
+    public function checkStock($id,$seri){
+        return $this->query('SELECT * FROM export_stock WHERE export_stock_id != '.$id.' AND export_stock_code = "'.$seri.'"');
+    }
     public function queryStock($sql){
         return $this->query($sql);
     }

@@ -1,0 +1,308 @@
+
+<?php
+    $i = 1;
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>MẶT HÀNG - KHÁCH HÀNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('customership') ?>">Khách hàng</a></li>
+  </ol>
+</section>
+<div id="content" style="padding:5px;">
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+        <div class="add-box">
+            <select id="sl_round" name="sl_round" style="width:90px">
+             <?php 
+                for ($k=1; $k < 13; $k++) { 
+                    echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+                }
+             ?>
+            </select>
+            <select id="sl_staff" name="sl_staff" style="width:100px">
+             <?php 
+                $nam = date('Y');
+                for ($k=($nam-5); $k < ($nam+5); $k++) { 
+                    echo '<option value="'.$k.'">Năm '.$k.'</option>';
+                }
+             ?>
+            </select>
+
+            <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+            
+        </div>
+    </div>
+    <div class="tablenav top">
+        <div style="clear:both"></div>
+        <div class="add-box">
+                  
+            Từ  <input style="width:80px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+            Đến  <input style="width:80px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+             <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+            
+        </div>
+        <div style="clear:both"></div>
+        
+        <div class="add-box">
+            <input type="button" name="chon" id="chon" value="Chọn" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+        </div>
+        <div class="add-box" style="margin-right: 5px">
+            <select style="width:120px" name="sl_vehicle" id="sl_vehicle">
+                <option selected="selected" value="0">Xe</option>
+                <?php foreach ($vehicles as $sm) { ?>
+                <option value="<?php echo $sm->vehicle_id ?>"><?php echo $sm->vehicle_number ?></option>
+                <?php } ?>
+            </select>
+            <select style="width:120px" name="sl_nv" id="sl_nv">
+                <option value="0">Khách hàng</option>
+                <?php foreach ($customer_lists as $sm) { ?>
+                <option value="<?php echo $sm->customer_id ?>"><?php echo $sm->customer_name ?></option>
+                <?php } ?>
+            </select>
+            
+            
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
+<thead>
+    <tr>
+        <th rowspan="2" class="fix">
+            <a>STT </a>
+        </th>
+        
+        <th rowspan="2" class="fix">
+            <a >Khách hàng</a>
+        </th>
+        <th rowspan="2" class="fix">
+            <a >Mặt hàng </a>
+        </th>
+        <th rowspan="2" class="fix">
+            <a >Số chuyến </a>
+        </th>
+        <th colspan="<?php echo count($cont_units) ?>" class="fix">
+            <a >Sản lượng nhận </a>
+        </th>
+        <th colspan="<?php echo count($cont_units) ?>" class="fix">
+            <a >Sản lượng giao </a>
+        </th>
+        <th rowspan="2" class="fix">
+            <a >Chênh lệch </a>
+        </th>
+        
+    </tr>
+    <tr>
+        <?php foreach ($cont_units as $cont) { ?>
+        <th class="fix">
+            <a ><?php echo $cont->cont_unit_name ?> </a>
+        </th>
+        <?php } ?>
+        <?php foreach ($cont_units as $cont) { ?>
+        <th class="fix">
+            <a ><?php echo $cont->cont_unit_name ?> </a>
+        </th>
+        <?php } ?>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php foreach ($customers as $customer) : ?>
+    <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $customer->customer_id ?>" class="edit_tr">
+        <td rowspan="<?php echo count($data_sub[$customer->customer_id]['id'])+1 ?>" class="fix"><?php echo $i++; ?></td>
+        <td rowspan="<?php echo count($data_sub[$customer->customer_id]['id'])+1 ?>" class="fix" id="customer_name_<?php echo $customer->customer_id; ?>"><a target="_blank" href="<?php echo $this->url('customer/index/'.$customer->customer_id) ?>" ><?php echo $customer->customer_name ?></a></td>
+    </tr>
+    <?php foreach ($data_sub[$customer->customer_id]['id'] as $sub) { 
+        $nhan = null; $giao = null;
+    ?>
+    <tr class="edit_tr">
+        <td class="fix"><?php echo isset($customer_subs[$sub])?$customer_subs[$sub]:null; ?></td>
+        <td class="fix"><?php echo isset($datas[$customer->customer_id][$sub]['total'])?$datas[$customer->customer_id][$sub]['total']:null; ?></td>
+        <?php foreach ($cont_units as $cont) { 
+            $nhan += isset($datas[$customer->customer_id][$sub][$cont->cont_unit_id]['receive'])?$datas[$customer->customer_id][$sub][$cont->cont_unit_id]['receive']:null;
+        ?>
+            <td class="fix"><?php echo isset($datas[$customer->customer_id][$sub][$cont->cont_unit_id]['receive'])?$datas[$customer->customer_id][$sub][$cont->cont_unit_id]['receive']:null ?></td>
+        <?php } ?>
+        <?php foreach ($cont_units as $cont) { 
+            $giao += isset($datas[$customer->customer_id][$sub][$cont->cont_unit_id]['delivery'])?$datas[$customer->customer_id][$sub][$cont->cont_unit_id]['delivery']:null;
+        ?>
+            <td class="fix"><?php echo isset($datas[$customer->customer_id][$sub][$cont->cont_unit_id]['delivery'])?$datas[$customer->customer_id][$sub][$cont->cont_unit_id]['delivery']:null ?></td>
+        <?php } ?>
+        <td class="fix"><?php echo $giao-$nhan; ?></td>
+    </tr>
+    <?php } ?>
+     
+    <?php endforeach; ?>
+   </tbody>
+</table>
+
+<style type="text/css">
+.table_data td {
+    vertical-align: middle;
+    text-align: center;
+}
+</style>
+
+
+<style type="text/css">
+    .ui-dialog .ui-dialog-content{
+        padding: 3px;
+    }
+
+    .showtooltip {
+        display:none;
+        position:absolute;
+        border:1px solid #333;
+        background-color:#161616;
+        border-radius:5px;
+        padding:10px;
+        color:#fff;
+        font-size:12px Arial;
+    }
+    
+    .ok{
+        color: green;
+        float: right;
+    }
+    .no{
+        color: red;
+    }
+
+
+.table_data td {
+    font-size: 13px;
+}
+.ui-front {
+  z-index: 1031;
+}
+
+</style>
+
+
+
+<style type="text/css">
+    #ui-datepicker-div{
+        font-size: 13px;
+    }
+</style>
+<script type="text/javascript">
+    $(function() {
+    var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+         
+    };  
+    $("#batdau").datepicker(pickerOpts);
+
+    var pickerOpts4 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+                
+         },
+         
+    };  
+    $("#ketthuc").datepicker(pickerOpts4);
+              
+            
+    
+});
+
+var x = "<?php echo $xe ?>";
+$('#sl_vehicle option[value='+x+']').attr('selected','selected');
+
+var tt = "<?php echo $kh ?>";
+$('#sl_nv option[value='+tt+']').attr('selected','selected');
+
+var v = "<?php echo $vong ?>";
+$('#sl_round option[value='+v+']').attr('selected','selected');
+
+var tt = "<?php echo $trangthai ?>";
+$('#sl_staff option[value='+tt+']').attr('selected','selected');
+</script>
+<script type="text/javascript">
+    
+    $('#sl_round').change(function(){
+        var m = $(this).val();
+        var y = $('#sl_staff').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
+    $('#sl_staff').change(function(){
+        var y = $(this).val();
+        var m = $('#sl_round').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
+</script>

@@ -1,720 +1,952 @@
 <?php
-
 Class repairController Extends baseController {
-
     public function index() {
-
         $this->view->setLayout('admin');
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        if (!isset(json_decode($_SESSION['user_permission_action'])->repair) || json_decode($_SESSION['user_permission_action'])->repair != "repair") {
+            $this->view->data['disable_control'] = 1;
+        }
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Phiếu sửa chữa bảo dưỡng';
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $order_by = isset($_POST['order_by']) ? $_POST['order_by'] : null;
+            $order = isset($_POST['order']) ? $_POST['order'] : null;
+            $page = isset($_POST['page']) ? $_POST['page'] : null;
+            $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : null;
+            $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
+            $batdau = isset($_POST['batdau']) ? $_POST['batdau'] : null;
+
+            $ketthuc = isset($_POST['ketthuc']) ? $_POST['ketthuc'] : null;
+            $vong = isset($_POST['vong']) ? $_POST['vong'] : null;
+
+            $trangthai = isset($_POST['staff']) ? $_POST['staff'] : null;
+            $xe = isset($_POST['xe']) ? $_POST['xe'] : null;
+            $mooc = isset($_POST['nv']) ? $_POST['nv'] : null;
+        }
+        else{
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'repair_date';
+            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'DESC';
+            $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
+            $keyword = "";
+            $limit = 50;
+            $batdau = '01-'.date('m-Y');
+
+            $ketthuc = date('t-m-Y');
+
+            $vong = (int)date('m',strtotime($batdau));
+
+            $trangthai = date('Y',strtotime($batdau));
+            $xe = 0;
+            $mooc = 0;
+        }
+
+        $ngayketthuc = date('d-m-Y', strtotime($ketthuc. ' + 1 days'));
+
+        $vong = (int)date('m',strtotime($batdau));
+
+        $trangthai = date('Y',strtotime($batdau));
+
+        $id = $this->registry->router->param_id;
+        
+        $vehicle_model = $this->model->get('vehicleModel');
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+        $this->view->data['vehicles'] = $vehicles;
+
+        $vehicle_data = array();
+        foreach ($vehicles as $vehicle) {
+            $vehicle_data['id'][$vehicle->vehicle_id] = $vehicle->vehicle_id;
+            $vehicle_data['name'][$vehicle->vehicle_id] = $vehicle->vehicle_number;
+        }
+        $this->view->data['vehicle_data'] = $vehicle_data;
+
+        $romooc_model = $this->model->get('romoocModel');
+        $romoocs = $romooc_model->getAllVehicle(array('order_by'=>'romooc_number','order'=>'ASC'));
+        $this->view->data['romoocs'] = $romoocs;
+
+        $romooc_data = array();
+        foreach ($romoocs as $romooc) {
+            $romooc_data['id'][$romooc->romooc_id] = $romooc->romooc_id;
+            $romooc_data['name'][$romooc->romooc_id] = $romooc->romooc_number;
+        }
+        $this->view->data['romooc_data'] = $romooc_data;
+
+        $repair_model = $this->model->get('repairModel');
+        $sonews = $limit;
+        $x = ($page-1) * $sonews;
+        $pagination_stages = 2;
+
+        $join = array('table'=>'staff','where'=>'staff=staff_id');
+
+        $data = array(
+            'where' => 'repair_date >= '.strtotime($batdau).' AND repair_date < '.strtotime($ngayketthuc),
+        );
+
+        if (isset($id) && $id > 0) {
+            $data['where'] = 'repair_id = '.$id;
+        }
+
+        if($xe > 0){
+            $data['where'] = $data['where'].' AND vehicle = '.$xe;
+        }
+
+        if($mooc > 0){
+            $data['where'] = $data['where'].' AND romooc = '.$mooc;
+        }
+
+        $tongsodong = count($repair_model->getAllRepair($data,$join));
+        $tongsotrang = ceil($tongsodong / $sonews);
+        
+
+        $this->view->data['page'] = $page;
+        $this->view->data['order_by'] = $order_by;
+        $this->view->data['order'] = $order;
+        $this->view->data['keyword'] = $keyword;
+        $this->view->data['pagination_stages'] = $pagination_stages;
+        $this->view->data['tongsotrang'] = $tongsotrang;
+        $this->view->data['sonews'] = $sonews;
+        $this->view->data['limit'] = $limit;
+        $this->view->data['batdau'] = $batdau;
+
+        $this->view->data['ketthuc'] = $ketthuc;
+
+        $this->view->data['vong'] = $vong;
+
+        $this->view->data['trangthai'] = $trangthai;
+        $this->view->data['xe'] = $xe;
+        $this->view->data['mooc'] = $mooc;
+
+        $data = array(
+            'order_by'=>$order_by,
+            'order'=>$order,
+            'limit'=>$x.','.$sonews,
+            'where' => 'repair_date >= '.strtotime($batdau).' AND repair_date < '.strtotime($ngayketthuc),
+            );
+
+       if (isset($id) && $id > 0) {
+            $data['where'] = 'repair_id = '.$id;
+        }
+
+        if($xe > 0){
+            $data['where'] = $data['where'].' AND vehicle = '.$xe;
+        }
+
+        if($mooc > 0){
+            $data['where'] = $data['where'].' AND romooc = '.$mooc;
+        }
+        
+        if ($keyword != '') {
+            $search = ' AND ( repair_code LIKE "%'.$keyword.'%" 
+                        OR staff_name LIKE "%'.$keyword.'%" )';
+            $data['where'] .= $search;
+        }
+        
+        $this->view->data['repairs'] = $repair_model->getAllRepair($data,$join);
+
+        $this->view->data['lastID'] = isset($repair_model->getLastRepair()->repair_id)?$repair_model->getLastRepair()->repair_id:0;
+        
+        $this->view->show('repair/index');
+    }
+
+    public function getstaff(){
 
         if (!isset($_SESSION['userid_logined'])) {
 
             return $this->view->redirect('user/login');
 
         }
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            return $this->view->redirect('admin');
-
-        }
-
-
-        $this->view->data['lib'] = $this->lib;
-
-        $this->view->data['title'] = 'Quản lý phiếu sửa chữa, bảo dưỡng';
-
 
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $order_by = isset($_POST['order_by']) ? $_POST['order_by'] : null;
+            $staff_model = $this->model->get('staffModel');
 
-            $order = isset($_POST['order']) ? $_POST['order'] : null;
-
-            $page = isset($_POST['page']) ? $_POST['page'] : null;
-
-            $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : null;
-
-            $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
-
-            $batdau = isset($_POST['batdau']) ? $_POST['batdau'] : null;
-            $ketthuc = isset($_POST['ketthuc']) ? $_POST['ketthuc'] : null;
-            $nv = isset($_POST['nv']) ? $_POST['nv'] : null;
-            $tha = isset($_POST['tha']) ? $_POST['tha'] : null;
-            $na = isset($_POST['na']) ? $_POST['na'] : null;
-
-        }
-
-        else{
-
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'repair_date';
-
-            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
-
-            $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
-
-            $keyword = "";
-
-            $limit = 100;
-
-            $batdau = '01/'.date('m/Y');
-            $ketthuc = date('t/m/Y');
-            $nv = 1;
-            $tha = date('m');
-            $na = date('Y');
-
-        }
-
-        $ngaybatdau = strtotime(str_replace('/', '-', $batdau));
-        $ngayketthuc = strtotime(str_replace('/', '-', $ketthuc). ' + 1 days');
-        $tha = (int)date('m',$ngaybatdau);
-        $na = (int)date('Y',$ngaybatdau);
-        $nv = ceil($tha/3);
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $vehicles = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-        $vehicle_data = array();
-        foreach ($vehicles as $vehicle) {
-            $vehicle_data[$vehicle->vehicle_id] = $vehicle->vehicle_number;
-        }
-        $this->view->data['vehicle_data'] = $vehicle_data;
-
-        $romooc = $this->model->get('romoocModel');
-
-        $romoocs = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
-        $romooc_data = array();
-        foreach ($romoocs as $romooc) {
-            $romooc_data[$romooc->romooc_id] = $romooc->romooc_number;
-        }
-        $this->view->data['romooc_data'] = $romooc_data;
-
-        $repair_model = $this->model->get('repairModel');
-
-        $sonews = $limit;
-
-        $x = ($page-1) * $sonews;
-
-        $pagination_stages = 2;
-
-        $data = array(
-            'where'=>'1=1',
-        );
-
-        if ($batdau!="") {
-            $data['where'] .= ' AND repair_date >= '.$ngaybatdau;
-        }
-        if ($ketthuc!="") {
-            $data['where'] .= ' AND repair_date < '.$ngayketthuc;
-        }
-
-        $join = array('table'=>'repair_code','where'=>'repair_code=repair_code_id LEFT JOIN staff ON repair_staff=staff_id','join'=>'LEFT JOIN');
-
-        if (isset($_POST['filter'])) {
-            if (isset($_POST['repair_code'])) {
-                $data['where'] .= ' AND repair_code IN ('.implode(',',$_POST['repair_code']).')';
-            }
-            if (isset($_POST['repair_staff'])) {
-                $data['where'] .= ' AND repair_staff IN ('.implode(',',$_POST['repair_staff']).')';
-            }
-            if (isset($_POST['repair_vehicle'])) {
-                $data['where'] .= ' AND repair_vehicle IN ('.implode(',',$_POST['repair_vehicle']).')';
-            }
-            if (isset($_POST['repair_romooc'])) {
-                $data['where'] .= ' AND repair_romooc IN ('.implode(',',$_POST['repair_romooc']).')';
-            }
-            $this->view->data['filter'] = 1;
-        }
-
-        $tongsodong = count($repair_model->getAllRepair($data,$join));
-
-        $tongsotrang = ceil($tongsodong / $sonews);
-
-        
-
-
-
-        $this->view->data['page'] = $page;
-
-        $this->view->data['order_by'] = $order_by;
-
-        $this->view->data['order'] = $order;
-
-        $this->view->data['keyword'] = $keyword;
-
-        $this->view->data['limit'] = $limit;
-
-        $this->view->data['pagination_stages'] = $pagination_stages;
-
-        $this->view->data['tongsotrang'] = $tongsotrang;
-
-        $this->view->data['sonews'] = $sonews;
-
-        $this->view->data['batdau'] = $batdau;
-        $this->view->data['ketthuc'] = $ketthuc;
-        $this->view->data['nv'] = $nv;
-        $this->view->data['tha'] = $tha;
-        $this->view->data['na'] = $na;
-
-
-
-        $data = array(
-            'where'=>'1=1',
-
-            'order_by'=>$order_by,
-
-            'order'=>$order,
-
-            'limit'=>$x.','.$sonews,
-
-            );
-
-        if ($batdau!="") {
-            $data['where'] .= ' AND repair_date >= '.$ngaybatdau;
-        }
-        if ($ketthuc!="") {
-            $data['where'] .= ' AND repair_date < '.$ngayketthuc;
-        }
-
-        if (isset($_POST['filter'])) {
-            if (isset($_POST['repair_code'])) {
-                $data['where'] .= ' AND repair_code IN ('.implode(',',$_POST['repair_code']).')';
-            }
-            if (isset($_POST['repair_staff'])) {
-                $data['where'] .= ' AND repair_staff IN ('.implode(',',$_POST['repair_staff']).')';
-            }
-            if (isset($_POST['repair_vehicle'])) {
-                $data['where'] .= ' AND repair_vehicle IN ('.implode(',',$_POST['repair_vehicle']).')';
-            }
-            if (isset($_POST['repair_romooc'])) {
-                $data['where'] .= ' AND repair_romooc IN ('.implode(',',$_POST['repair_romooc']).')';
-            }
-        }
-
-        if ($keyword != '') {
-
-            $search = '(repair_number LIKE "%'.$keyword.'%" OR repair_code_name LIKE "%'.$keyword.'%" OR staff_name  LIKE "%'.$keyword.'%" )';
-
-            $data['where'] = $search;
-
-        }
-
-        $repairs = $repair_model->getAllRepair($data,$join);;
-
-        $this->view->data['repairs'] = $repairs;
-
-
-        return $this->view->show('repair/index');
-
-    }
-
-
-    public function addrepair(){
-        $repair_model = $this->model->get('repairModel');
-
-        if (isset($_POST['repair_code'])) {
-            if($repair_model->getRepairByWhere(array('repair_number'=>trim($_POST['repair_number'])))){
-                echo 'Số phiếu đã tồn tại';
-                return false;
-            }
             
 
-            $data = array(
-                'repair_date' => strtotime(str_replace('/', '-', $_POST['repair_date'])),
-                'repair_code' => trim($_POST['repair_code']),
-                'repair_number' => trim($_POST['repair_number']),
-                'repair_vehicle' => trim($_POST['repair_vehicle']),
-                'repair_romooc' => trim($_POST['repair_romooc']),
-                'repair_price' => str_replace(',', '', $_POST['repair_price']),
-                'repair_staff' => trim($_POST['repair_staff']),
-                'repair_create_user' => $_SESSION['userid_logined'],
-            );
-            $repair_model->createRepair($data);
+            if ($_POST['keyword'] == "*") {
 
-            $id_repair = $repair_model->getLastRepair()->repair_id;
 
-            $repair_list_model = $this->model->get('repairlistModel');
 
-            $repair_list_data = json_decode($_POST['repair_list_data']);
-
-            if (isset($id_repair)) {
-                foreach ($repair_list_data as $v) {
-                    $data_repair_list = array(
-                        'repair' => $id_repair,
-                        'repair_list_comment' => trim($v->repair_list_comment),
-                        'repair_list_price' => str_replace(',', '', $v->repair_list_price),
-                        'repair_list_end_date' => strtotime(str_replace('/', '-', $v->repair_list_end_date)),
-                        'repair_list_date' => $data['repair_date'],
-                        'repair_list_vehicle' => $data['repair_vehicle'],
-                        'repair_list_romooc' => $data['repair_romooc'],
-                    );
-
-                    if ($v->id_repair_list>0) {
-                        $repair_list_model->updateRepair($data_repair_list,array('repair_list_id'=>$v->id_repair_list));
-                    }
-                    else{
-                        if ($data_repair_list['repair_list_price']!="") {
-                            $repair_list_model->createRepair($data_repair_list);
-                        }
-                        
-                    }
-                }
-
-            }
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$id_repair."|repair|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'repair',
-                'user_log_table_name' => 'Phiếu sửa chữa',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Thêm thành công";
-        }
-
-    }
-
-    public function add(){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->repair) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        $this->view->data['title'] = 'Thêm mới phiếu sửa chữa';
-
-        $repair_model = $this->model->get('repairModel');
-        $lastID = isset($repair_model->getLastRepair()->repair_number)?$repair_model->getLastRepair()->repair_number:'SC00';
-        $lastID++;
-        $this->view->data['lastID'] = $lastID;
-
-        $repair_code = $this->model->get('repaircodeModel');
-
-        $this->view->data['codes'] = $repair_code->getAllRepair(array('order_by'=>'repair_code_name','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $romooc = $this->model->get('romoocModel');
-
-        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
-
-        return $this->view->show('repair/add');
-    }
-
-    public function editrepair(){
-        $repair_model = $this->model->get('repairModel');
-
-        if (isset($_POST['repair_id'])) {
-            $id = $_POST['repair_id'];
-            if($repair_model->getAllRepairByWhere($id.' AND repair_number = '.trim($_POST['repair_number']))){
-                echo 'Số phiếu đã tồn tại';
-                return false;
-            }
-
-            $data = array(
-                'repair_date' => strtotime(str_replace('/', '-', $_POST['repair_date'])),
-                'repair_code' => trim($_POST['repair_code']),
-                'repair_number' => trim($_POST['repair_number']),
-                'repair_vehicle' => trim($_POST['repair_vehicle']),
-                'repair_romooc' => trim($_POST['repair_romooc']),
-                'repair_price' => str_replace(',', '', $_POST['repair_price']),
-                'repair_staff' => trim($_POST['repair_staff']),
-                'repair_update_user' => $_SESSION['userid_logined'],
-            );
-            $repair_model->updateRepair($data,array('repair_id'=>$id));
-
-            $id_repair = $id;
-
-            $repair_list_model = $this->model->get('repairlistModel');
-
-            $repair_list_data = json_decode($_POST['repair_list_data']);
-
-            if (isset($id_repair)) {
-                foreach ($repair_list_data as $v) {
-                    $data_repair_list = array(
-                        'repair' => $id_repair,
-                        'repair_list_comment' => trim($v->repair_list_comment),
-                        'repair_list_price' => str_replace(',', '', $v->repair_list_price),
-                        'repair_list_end_date' => strtotime(str_replace('/', '-', $v->repair_list_end_date)),
-                        'repair_list_date' => $data['repair_date'],
-                        'repair_list_vehicle' => $data['repair_vehicle'],
-                        'repair_list_romooc' => $data['repair_romooc'],
-                    );
-
-                    if ($v->id_repair_list>0) {
-                        $repair_list_model->updateRepair($data_repair_list,array('repair_list_id'=>$v->id_repair_list));
-                    }
-                    else{
-                        if ($data_repair_list['repair_list_price']!="") {
-                            $repair_list_model->createRepair($data_repair_list);
-                        }
-                        
-                    }
-                }
-
-            }
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|repair|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'repair',
-                'user_log_table_name' => 'Phiếu sửa chữa',
-                'user_log_action' => 'Cập nhật',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Cập nhật thành công";
-        }
-    }
-
-    public function edit($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->repair) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('repair');
-
-        }
-
-        $this->view->data['title'] = 'Cập nhật phiếu sửa chữa';
-        $this->view->data['lib'] = $this->lib;
-
-        $repair_model = $this->model->get('repairModel');
-
-        $repair_data = $repair_model->getRepair($id);
-
-        $this->view->data['repair_data'] = $repair_data;
-
-        if (!$repair_data) {
-
-            $this->view->redirect('repair');
-
-        }
-
-        $repair_list_model = $this->model->get('repairlistModel');
-
-        $repair_lists = $repair_list_model->getAllRepair(array('where'=>'repair='.$id));
-        $this->view->data['repair_lists'] = $repair_lists;
-
-        $repair_code = $this->model->get('repaircodeModel');
-
-        $this->view->data['codes'] = $repair_code->getAllRepair(array('order_by'=>'repair_code_name','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $romooc = $this->model->get('romoocModel');
-
-        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
-
-        return $this->view->show('repair/edit');
-
-    }
-
-    public function view($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('repair');
-
-        }
-
-        $this->view->data['title'] = 'Cập nhật phiếu sửa chữa';
-        $this->view->data['lib'] = $this->lib;
-
-        $repair_model = $this->model->get('repairModel');
-
-        $repair_data = $repair_model->getRepair($id);
-
-        $this->view->data['repair_data'] = $repair_data;
-
-        if (!$repair_data) {
-
-            $this->view->redirect('repair');
-
-        }
-
-        $repair_list_model = $this->model->get('repairlistModel');
-
-        $repair_lists = $repair_list_model->getAllRepair(array('where'=>'repair='.$id));
-        $this->view->data['repair_lists'] = $repair_lists;
-
-        $repair_code = $this->model->get('repaircodeModel');
-
-        $this->view->data['codes'] = $repair_code->getAllRepair(array('order_by'=>'repair_code_name','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $romooc = $this->model->get('romoocModel');
-
-        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
-
-        return $this->view->show('repair/view');
-
-    }
-
-    public function filter(){
-        $this->view->disableLayout();
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Lọc dữ liệu';
-
-        $repair_code = $this->model->get('repaircodeModel');
-
-        $this->view->data['codes'] = $repair_code->getAllRepair(array('order_by'=>'repair_code_name','order'=>'ASC'));
-
-        $staff = $this->model->get('staffModel');
-
-        $this->view->data['staffs'] = $staff->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $romooc = $this->model->get('romoocModel');
-
-        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
-
-        $this->view->data['page'] = $_GET['page'];
-        $this->view->data['order_by'] = $_GET['order_by'];
-        $this->view->data['order'] = $_GET['order'];
-        $this->view->data['limit'] = $_GET['limit'];
-        $this->view->data['keyword'] = $_GET['keyword'];
-
-        return $this->view->show('repair/filter');
-    }
-
-    public function getrepair(){
-        $repair_model = $this->model->get('repairModel');
-
-        $repairs = $repair_model->getAllRepair(array('order_by'=>'repair_number','order'=>'ASC'));
-        $result = array();
-        $i = 0;
-        foreach ($repairs as $repair) {
-            $result[$i]['id'] = $repair->repair_id;
-            $result[$i]['text'] = $repair->repair_number;
-            $i++;
-        }
-        echo json_encode($result);
-    }
-
-    public function deleterepairdetail(){
-        if (isset($_POST['data'])) {
-            $repair_list_model = $this->model->get('repairlistModel');
-            $user_log_model = $this->model->get('userlogModel');
-
-            $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair_list_id='.$_POST['data'].' AND repair='.$_POST['repair']);
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|repair_list|"."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'repair_list',
-                'user_log_table_name' => 'Chi tiết phiếu sửa chữa',
-                'user_log_action' => 'Xóa',
-                'user_log_data' => json_encode($_POST['data']),
-            );
-            $user_log_model->createUser($data_log);
-        }
-    }
-
-    public function delete(){
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->repair) || json_decode($_SESSION['user_permission_action'])->repair != "repair") && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $repair_model = $this->model->get('repairModel');
-            $repair_list_model = $this->model->get('repairlistModel');
-            $user_log_model = $this->model->get('userlogModel');
-
-            if (isset($_POST['xoa'])) {
-
-                $datas = explode(',', $_POST['xoa']);
-
-                foreach ($datas as $data) {
-
-                    $repair_model->deleteRepair($data);
-
-                    $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair='.$data);
-
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|repair|"."\n"."\r\n";
-
-                        $this->lib->ghi_file("action_logs.txt",$text);
-
-
-
-                }
-
-
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'repair',
-                    'user_log_table_name' => 'Phiếu sửa chữa',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($datas),
-                );
-                $user_log_model->createUser($data_log);
-
-
-                echo "Xóa thành công";
-                return true;
+                $list = $staff_model->getAllStaff();
 
             }
 
             else{
 
-                $repair_model->deleteRepair($_POST['data']);
+                $data = array(
 
-                $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair='.$_POST['data']);
+                'where'=>'( staff_name LIKE "%'.$_POST['keyword'].'%" )',
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|repair|"."\n"."\r\n";
-
-                $this->lib->ghi_file("action_logs.txt",$text);
-
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'repair',
-                    'user_log_table_name' => 'Phiếu sửa chữa',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($_POST['data']),
                 );
-                $user_log_model->createUser($data_log);
 
-                echo "Xóa thành công";
-                return true;
+                $list = $staff_model->getAllStaff($data);
 
             }
 
             
 
-        }
+            foreach ($list as $rs) {
 
-    }
+                // put in bold the written text
 
-    public function importrepair(){
-        if (isset($_FILES['import']['name'])) {
-            $total = count($_FILES['import']['name']);
-            for( $i=0 ; $i < $total ; $i++ ) {
-              $tmpFilePath = $_FILES['import']['name'][$i];
-              echo $tmpFilePath;
+                $staff_name = $rs->staff_name;
+
+                if ($_POST['keyword'] != "*") {
+
+                    $staff_name = str_replace($_POST['keyword'], '<b>'.$_POST['keyword'].'</b>', $rs->staff_name);
+
+                }
+
+                
+
+                // add new option
+
+                echo '<li onclick="set_item_staff(\''.$rs->staff_id.'\',\''.$rs->staff_name.'\')">'.$staff_name.'</li>';
+
             }
+
+        }
+
+    }
+
+    public function add(){
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        if (!isset(json_decode($_SESSION['user_permission_action'])->repair) || json_decode($_SESSION['user_permission_action'])->repair != "repair") {
+            return $this->view->redirect('user/login');
+        }
+        if (isset($_POST['yes'])) {
+            $repair_model = $this->model->get('repairModel');
+            $repair_list_model = $this->model->get('repairlistModel');
+
+            $debit = $this->model->get('debitModel');
+
+            $data = array(
+                        
+                        'repair_code' => trim($_POST['repair_code']),
+                        'repair_date' => strtotime($_POST['repair_date']),
+                        'staff' => trim($_POST['staff']),
+                        'vehicle' => trim($_POST['vehicle']),
+                        'romooc' => trim($_POST['romooc']),
+                        'repair_comment' => trim($_POST['repair_comment']),
+                        );
+
+
+            if ($_POST['yes'] != "") {
+                if ($repair_model->checkRepair($_POST['yes'],trim($_POST['repair_code']))) {
+                    echo "Thông tin này đã tồn tại";
+                    return false;
+                }
+                else{
+                    $repair = $repair_model->getRepair($_POST['yes']);
+
+                    $repair_model->updateRepair($data,array('repair_id' => $_POST['yes']));
+                    $id_repair = $_POST['yes'];
+                    /*Log*/
+                    /**/
+                    $data_debit = array(
+                            'debit_date'=>$data['repair_date'],
+                            'staff'=>$data['staff'],
+                            'money'=>0,
+                            'money_vat'=>0,
+                            'comment'=>$data['repair_comment'],
+                            'check_debit'=>2,
+                            'repair'=>$id_repair,
+                        );
+                        $debit->updateDebit($data_debit,array('repair'=>$id_repair));
+
+                    echo "Cập nhật thành công";
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|repair|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                    }
+                
+                
+            }
+            else{
+
+                if ($repair_model->getRepairByWhere(array('repair_code'=>$data['repair_code']))) {
+                    echo "Thông tin này đã tồn tại";
+                    return false;
+                }
+                else{
+                    $repair_model->createRepair($data);
+                    $id_repair = $repair_model->getLastRepair()->repair_id;
+                    /*Log*/
+                    /**/
+
+                    
+                        $data_debit = array(
+                            'debit_date'=>$data['repair_date'],
+                            'staff'=>$data['staff'],
+                            'money'=>0,
+                            'money_vat'=>0,
+                            'comment'=>$data['repair_comment'],
+                            'check_debit'=>2,
+                            'repair'=>$id_repair,
+                        );
+                            $debit->createDebit($data_debit);
+                    
+
+                    echo "Thêm thành công";
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$repair_model->getLastRepair()->repair_id."|repair|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                    }
+                
+                
+            }
+
+            $total_number = 0;
+            $total_price = 0;
+
+            $repair_list = $_POST['repair_list'];
+
+            foreach ($repair_list as $v) {
+
+                $id_repair_list = 0;
+
+                    if (isset($v['repair_list_id']) && $v['repair_list_id'] != "") {
+
+                        $id_repair_list = $v['repair_list_id'];
+
+                    }
+
+
+                    $data_repair = array(
+
+                        'repair' => $id_repair,
+
+                        'repair_list_price' => trim(str_replace(',','',$v['repair_list_price'])),
+
+                        'repair_list_comment' => trim($v['repair_list_comment']),
+                        
+
+                    );
+
+                    if (!$repair_list_model->getRepairByWhere(array('repair_list_id'=>$id_repair_list))) {
+                        $repair_list_model->createRepair($data_repair);
+                    }
+                    else{
+                        $repair_list_model->updateRepair($data_repair,array('repair_list_id'=>$id_repair_list));
+                    }
+
+                    $total_price += $data_repair['repair_list_price'];
+                }
+
+                $repair_model->updateRepair(array('repair_price'=>$total_price),array('repair_id'=>$id_repair));
+
+                $data_debit = array(
+                    'money'=>$total_price,
+                );
+                $debit->updateDebit($data_debit,array('repair'=>$id_repair));
+                    
         }
     }
-    public function import(){
+    public function delete(){
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        if (!isset(json_decode($_SESSION['user_permission_action'])->repair) || json_decode($_SESSION['user_permission_action'])->repair != "repair") {
+            return $this->view->redirect('user/login');
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $repair_model = $this->model->get('repairModel');
+            $repair_list_model = $this->model->get('repairlistModel');
+            $debit = $this->model->get('debitModel');
+            if (isset($_POST['xoa'])) {
+                $data = explode(',', $_POST['xoa']);
+                foreach ($data as $data) {
+                    $repair_model->deleteRepair($data);
+                    $repair_list_model->query('DELETE FROM repair_list WHERE repair = '.$data);
+                    $debit->queryDebit('DELETE FROM debit WHERE repair = '.$data);
+                    
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|repair|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                }
+
+                /*Log*/
+                    /**/
+
+                return true;
+            }
+            else{
+                $repair_list_model->query('DELETE FROM repair_list WHERE repair = '.$_POST['data']);
+                $debit->queryDebit('DELETE FROM debit WHERE repair = '.$_POST['data']);
+                /*Log*/
+                    /**/
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|repair|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+
+                return $repair_model->deleteRepair($_POST['data']);
+            }
+            
+        }
+    }
+
+    
+    public function deletelist(){
+
+        if (isset($_POST['repair_list'])) {
+
+            $repair_list_model = $this->model->get('repairlistModel');
+
+
+
+            $repair_list_model->queryRepair('DELETE FROM repair_list WHERE repair_list_id = '.$_POST['repair_list']);
+
+            echo 'Đã xóa thành công';
+
+        }
+
+    }
+    public function repairlist(){
+
+        if(isset($_POST['repair'])){
+
+            
+
+            $repair_list_model = $this->model->get('repairlistModel');
+
+
+
+            $data = array(
+
+                'where' => 'repair = '.$_POST['repair'],
+
+            );
+
+            $repairs = $repair_list_model->getAllRepair($data);
+
+
+
+            $str = "";
+
+            if (!$repairs) {
+
+                $str .= '<tr class="'.$_POST['repair'].'">';
+
+                $str .= '<td><input type="checkbox"  name="chk"></td>';
+
+                $str .= '<td><table style="width: 100%">';
+
+                $str .= '<tr class="'.$_POST['repair'] .'">';
+
+                $str .= '<td>Nội dung</td>';
+
+                $str .= '<td><input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="9" ></td>';
+
+                $str .= '<td>Đơn giá</td>';
+
+                $str .= '<td><input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="10" ></td>';
+
+                $str .= '</tr></table></td></tr>';
+
+            }
+
+            else{
+
+                foreach ($repairs as $v) {
+
+
+                    $str .= '<tr class="'.$_POST['repair'].'">';
+
+                    $str .= '<td><input type="checkbox"  name="chk" data="'.$v->repair_list_id.'" ></td>';
+
+                    $str .= '<td><table style="width: 100%">';
+
+                    $str .= '<tr class="'.$_POST['repair'] .'">';
+
+                    $str .= '<td>Nội dung</td>';
+
+                    $str .= '<td><input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="9" data="'.$v->repair_list_id.'" value="'.$v->repair_list_comment.'"></td>';
+
+                    $str .= '<td>Đơn giá</td>';
+
+                    $str .= '<td><input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="10" value="'.$this->lib->formatMoney($v->repair_list_price).'"></td>';
+
+                    $str .= '</tr></table></td></tr>';
+
+                }
+
+            }
+
+
+
+            echo $str;
+
+        }
+
+    }
+
+    function export(){
 
         $this->view->disableLayout();
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+            return $this->view->redirect('user/login');
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->repair) && $_SESSION['user_permission_action'] != '["all"]') {
 
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
+
+        $batdau = $this->registry->router->param_id;
+
+        $ketthuc = $this->registry->router->page;
+
+        $xe = $this->registry->router->order_by;
+
+        $mooc = $this->registry->router->order;
+
+        $ngayketthuc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ketthuc). ' + 1 days')));
+
+        $info_model = $this->model->get('infoModel');
+        $infos = $info_model->getLastInfo();
+
+        $vehicle_model = $this->model->get('vehicleModel');
+        $vehicles = $vehicle_model->getAllVehicle();
+
+        $vehicle_data = array();
+        foreach ($vehicles as $vehicle) {
+            $vehicle_data['id'][$vehicle->vehicle_id] = $vehicle->vehicle_id;
+            $vehicle_data['name'][$vehicle->vehicle_id] = $vehicle->vehicle_number;
+        }
+
+        $romooc_model = $this->model->get('romoocModel');
+        $romoocs = $romooc_model->getAllVehicle();
+
+        $romooc_data = array();
+        foreach ($romoocs as $romooc) {
+            $romooc_data['id'][$romooc->romooc_id] = $romooc->romooc_id;
+            $romooc_data['name'][$romooc->romooc_id] = $romooc->romooc_number;
+        }
+
+        $repair_list_model = $this->model->get('repairlistModel');
+
+
+        $shipment_model = $this->model->get('shipmentModel');
+
+        $join = array('table'=>'repair, staff','where'=>'staff = staff_id AND repair = repair_id');
+
+
+
+        $data = array(
+
+            'where' => "1=1",
+
+            );
+
+        if($batdau != "" && $ketthuc != "" ){
+
+            $data['where'] = $data['where'].' AND repair_date >= '.$batdau.' AND repair_date < '.$ngayketthuc;
 
         }
 
-        $this->view->data['title'] = 'Nhập dữ liệu';
+        if($xe > 0){
 
-       
-        return $this->view->show('repair/import');
+            $data['where'] = $data['where'].' AND vehicle = '.$xe;
+
+        }
+
+        if($mooc > 0){
+
+            $data['where'] = $data['where'].' AND romooc = '.$mooc;
+
+        }
+
+        
+
+
+
+        /*if ($_SESSION['role_logined'] == 3) {
+
+            $data['where'] = $data['where'].' AND shipment_create_user = '.$_SESSION['userid_logined'];
+
+            
+
+        }*/
+
+
+
+        
+
+
+
+
+
+        $data['order_by'] = 'repair_date';
+
+        $data['order'] = 'ASC';
+
+
+
+        $repair_lists = $repair_list_model->getAllRepair($data,$join);
+
+        
+
+
+            require("lib/Classes/PHPExcel/IOFactory.php");
+
+            require("lib/Classes/PHPExcel.php");
+
+
+
+            $objPHPExcel = new PHPExcel();
+
+
+
+            
+
+
+
+            $index_worksheet = 0; //(worksheet mặc định là 0, nếu tạo nhiều worksheet $index_worksheet += 1)
+
+            $objPHPExcel->setActiveSheetIndex($index_worksheet)
+
+                ->setCellValue('A1', mb_strtoupper($infos->info_company, "UTF-8"))
+
+                ->setCellValue('A2', 'PHÒNG VẬT TƯ KỸ THUẬT')
+
+                ->setCellValue('F1', 'CỘNG HÒA XÃ CHỦ NGHĨA VIỆT NAM')
+
+                ->setCellValue('F2', 'Độc lập - Tự do - Hạnh phúc')
+
+                ->setCellValue('A4', 'BẢNG KÊ CHI PHÍ SỬA CHỮA BẢO DƯỠNG')
+
+                ->setCellValue('A6', 'STT')
+
+               ->setCellValue('B6', 'Phiếu sửa chữa')
+
+               ->setCellValue('C6', 'Ngày')
+
+               ->setCellValue('D6', 'Xe')
+
+               ->setCellValue('E6', 'Ro-mooc')
+
+               ->setCellValue('F6', 'Nội dung')
+
+               ->setCellValue('G6', 'Chi phí')
+
+               ->setCellValue('H6', 'Nhân viên');
+
+               
+
+
+
+
+            if ($repair_lists) {
+
+
+
+                $hang = 7;
+
+                $i=1;
+
+
+
+                $k=0;
+                foreach ($repair_lists as $row) {
+
+                    
+
+
+                        //$objPHPExcel->setActiveSheetIndex(0)->getStyle('B'.$hang)->getNumberFormat()->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
+
+                         $objPHPExcel->setActiveSheetIndex(0)
+
+                            ->setCellValue('A' . $hang, $i++)
+
+                            ->setCellValueExplicit('B' . $hang, $row->repair_code)
+
+                            ->setCellValue('C' . $hang, $this->lib->hien_thi_ngay_thang($row->repair_date))
+
+                            ->setCellValue('D' . $hang, isset($vehicle_data['id'][$row->vehicle])?$vehicle_data['name'][$row->vehicle]:null)
+
+                            ->setCellValue('E' . $hang, isset($romooc_data['id'][$row->romooc])?$romooc_data['name'][$row->romooc]:null)
+
+                            ->setCellValue('F' . $hang, $row->repair_list_comment)
+
+                            ->setCellValue('G' . $hang, $row->repair_list_price)
+
+                            ->setCellValue('H' . $hang, $row->staff_name);
+
+                         $hang++;
+
+
+
+                      
+
+                }
+
+            }
+
+
+
+
+
+            $objPHPExcel->setActiveSheetIndex($index_worksheet)
+
+                ->setCellValue('A'.$hang, 'TỔNG')
+
+
+               ->setCellValue('G'.$hang, '=SUM(G7:G'.($hang-1).')');
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A6:H'.$hang)->applyFromArray(
+
+                array(
+
+                    
+
+                    'borders' => array(
+
+                        'allborders' => array(
+
+                          'style' => PHPExcel_Style_Border::BORDER_THIN
+
+                        )
+
+                    )
+
+                )
+
+            );
+
+
+
+
+
+            $cell = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(6, $hang)->getCalculatedValue();
+
+            $objPHPExcel->setActiveSheetIndex($index_worksheet)
+
+                ->setCellValue('A'.($hang+1), 'Bằng chữ: '.$this->lib->convert_number_to_words(round($cell)).' đồng');
+
+
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.$hang.':F'.$hang);
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.($hang+1).':H'.($hang+1));
+
+
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$hang)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$hang)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+
+
+
+
+            $objPHPExcel->setActiveSheetIndex($index_worksheet)
+
+                ->setCellValue('A'.($hang+3), 'NGƯỜI LẬP BIỂU')
+
+                ->setCellValue('F'.($hang+3), mb_strtoupper($infos->info_company, "UTF-8"));
+
+
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.($hang+3).':C'.($hang+3));
+
+            $objPHPExcel->getActiveSheet()->mergeCells('F'.($hang+3).':H'.($hang+3));
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.($hang+3).':H'.($hang+3))->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.($hang+3).':H'.($hang+3))->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$hang.':H'.($hang+3))->applyFromArray(
+
+                array(
+
+                    
+
+                    'font' => array(
+
+                        'bold'  => true,
+
+                        'color' => array('rgb' => '000000')
+
+                    )
+
+                )
+
+            );
+
+
+
+
+
+            $highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
+
+
+
+            $highestRow ++;
+
+
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:C1');
+
+            $objPHPExcel->getActiveSheet()->mergeCells('F1:H1');
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
+
+            $objPHPExcel->getActiveSheet()->mergeCells('F2:H2');
+
+
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A4:H4');
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H4')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle("A4")->getFont()->setSize(16);
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H4')->applyFromArray(
+
+                array(
+
+                    
+
+                    'font' => array(
+
+                        'bold'  => true,
+
+                        'color' => array('rgb' => '000000')
+
+                    )
+
+                )
+
+            );
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A2:H2')->applyFromArray(
+
+                array(
+
+                    
+
+                    'font' => array(
+
+                        'underline' => PHPExcel_Style_Font::UNDERLINE_SINGLE,
+
+                    )
+
+                )
+
+            );
+
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('G7:G'.$highestRow)->getNumberFormat()->setFormatCode("#,##0_);[Black](#,##0)");
+
+            $objPHPExcel->getActiveSheet()->getStyle('A6:H6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A6:H6')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A6:H6')->getFont()->setBold(true);
+
+            $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(26);
+
+            $objPHPExcel->getActiveSheet()->getDefaultColumnDimension()->setWidth(14);
+
+            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
+
+            //$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+
+
+
+            // Set properties
+
+            $objPHPExcel->getProperties()->setCreator("TCMT")
+
+                            ->setLastModifiedBy($_SESSION['user_logined'])
+
+                            ->setTitle("Sale Report")
+
+                            ->setSubject("Sale Report")
+
+                            ->setDescription("Sale Report.")
+
+                            ->setKeywords("Sale Report")
+
+                            ->setCategory("Sale Report");
+
+            $objPHPExcel->getActiveSheet()->setTitle("Chi phi sua chua bao duong");
+
+
+
+            $objPHPExcel->getActiveSheet()->freezePane('A7');
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+
+
+
+
+
+
+            
+
+
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+
+
+
+            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+            header("Content-Disposition: attachment; filename= BẢNG KÊ CHI PHÍ SỬA CHỮA BẢO DƯỠNG.xlsx");
+
+            header("Cache-Control: max-age=0");
+
+            ob_clean();
+
+            $objWriter->save("php://output");
+
+        
 
     }
 
 
 }
-
 ?>

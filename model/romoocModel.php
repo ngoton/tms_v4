@@ -3,66 +3,56 @@
 Class romoocModel Extends baseModel {
 	protected $table = "romooc";
 
-	public function getAllRomooc($data = null,$join = null) 
+	public function getAllVehicle($data = null,$join = null) 
     {
         return $this->fetchAll($this->table,$data,$join);
     }
 
-    public function createRomooc($data) 
+    public function createVehicle($data) 
     {    
         /*$data = array(
-        	'staff_id' => $data['staff_id'],
-        	'staff_name' => $data['staff_name'],
-        	'staff_birth' => $data['staff_birth'],
-        	'staff_gender' => $data['staff_gender'],
-            'staff_address' => $data['staff_address'],
-            'staff_phone' => $data['staff_phone'],
-            'staff_email' => $data['staff_email'],
-            'cmnd' => $data['cmnd'],
-            'bank' => $data['bank'],
-            'account' => $data['account'],
+        	'Vehiclename' => $data['Vehiclename'],
+        	'password' => $data['password'],
+        	'create_time' => $data['create_time'],
+        	'role' => $data['role'],
         	);*/
-
         return $this->insert($this->table,$data);
     }
-    public function updateRomooc($data,$where) 
+    public function updateVehicle($data,$id) 
     {    
-        if ($this->getRomoocByWhere($where)) {
+        if ($this->getVehicleByWhere($id)) {
         	/*$data = array(
-            'staff_id' => $data['staff_id'],
-            'staff_name' => $data['staff_name'],
-            'staff_birth' => $data['staff_birth'],
-            'staff_gender' => $data['staff_gender'],
-            'staff_address' => $data['staff_address'],
-            'staff_phone' => $data['staff_phone'],
-            'staff_email' => $data['staff_email'],
-            'cmnd' => $data['cmnd'],
-            'bank' => $data['bank'],
-            'account' => $data['account'],
-            );*/
-	        return $this->update($this->table,$data,$where);
+	        	'Vehiclename' => $data['Vehiclename'],
+	        	'password' => $data['password'],
+	        	'create_time' => $data['create_time'],
+	        	'role' => $data['role'],
+	        	);*/
+	        return $this->update($this->table,$data,$id);
         }
         
     }
-    public function deleteRomooc($id){
-    	if ($this->getRomooc($id)) {
+    public function deleteVehicle($id){
+    	if ($this->getVehicle($id)) {
     		return $this->delete($this->table,array('romooc_id'=>$id));
     	}
     }
-    public function getRomooc($id){
-        return $this->getByID($this->table,$id);
+    public function getVehicle($id){
+    	return $this->getByID($this->table,$id);
     }
-    public function getRomoocByWhere($where){
-    	return $this->getByWhere($this->table,$where);
+    public function getVehicleByWhere($where){
+        return $this->getByWhere($this->table,$where);
     }
-    public function getAllRomoocByWhere($id){
+    public function getAllVehicleByWhere($id){
         return $this->query('SELECT * FROM romooc WHERE romooc_id != '.$id);
     }
-    public function queryRomooc($sql){
-        return $this->query($sql);
-    }
-    public function getLastRomooc(){
+    public function getLastVehicle(){
         return $this->getLast($this->table);
+    }
+    public function checkVehicle($id,$vehicle_number){
+        return $this->query('SELECT * FROM romooc WHERE romooc_id != '.$id.' AND romooc_number = "'.$vehicle_number.'"');
+    }
+    public function queryVehicle($sql){
+        return $this->query($sql);
     }
 }
 ?>

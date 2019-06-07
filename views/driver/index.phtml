@@ -1,161 +1,131 @@
 
 <?php
-$url_order = 'DESC';
+$url_order = 'ASC';
 if ($order_by == 'driver_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
 elseif ($order_by == 'vehicle_number')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'staff_name')
+elseif ($order_by == 'steersman_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'driver_start_date')
+elseif ($order_by == 'steersman_phone')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'driver_end_date')
+elseif ($order_by == 'start_work')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-$i = $sonews*$page-($sonews-1);
+elseif ($order_by == 'end_work')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+
+    $i = $sonews*$page-($sonews-1);
 
 ?>
 
 <div id="loading"></div>
 <div id="winpopup"></div>
-<div class="tools action-buttons pull-right">
-    <?php
-    if (isset($filter)) {
-        echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
-    }
-    ?>
-    <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
-        <option value="18446744073709">All</option>
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-        <option value="500">500</option>
-    </select>
-    <a class="purpose" data-original-title="Thêm mới">
-        <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("driver/add") ?>','Thêm bàn giao xe mới')"></i>
-    </a> 
-    <div class="pull-right pos-rel dropdown-hover">
-        <button class="btn btn-minier bigger" style="line-height: 26px">
-            <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
-        </button>
-
-        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-            <li>
-                <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
-                    <span class="orange">
-                        <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
-                    <span class="green">
-                        <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("driver/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
-                    <span class="red">
-                        <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
-                    <span class="purple">
-                        <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("driver/import") ?>','Nhập dữ liệu từ file Excel')"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                
-                <div class="text-center pos-rel dropdown-hover">
-                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
-                        <span class="blue">
-                            <i class="ace-icon fa fa-cloud-download bigger-150"></i>
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                        <li>
-                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
-                                <span class="green">
-                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
-                                <span class="red">
-                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
-                                <span class="blue">
-                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            
-        </ul>
-    </div>                        
-</div>
-<div class="clearfix"></div>
+<section class="content-header">
+    <h1>BÀN GIAO XE</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('driver') ?>">Bàn giao</a></li>
+  </ol>
+</section>
 <div id="content" style="padding:5px;">
-   
-<table class="table_data" id="tblExport" >
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+          <option  value="18446744073709">Hiển thị tất cả</option>
+          <option value="50">Hiển thị 50 giá trị</option>
+                <option value="100">Hiển thị 100 giá trị</option>
+                <option value="150">Hiển thị 150 giá trị</option>
+                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
 <thead>
     <tr>
-    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','driver_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'driver_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+    	<th  class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','driver_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'driver_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
         
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','steersman_code','<?php echo $url_order ?>')">Mã NV <?php if ($order_by == 'steersman_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_name','<?php echo $url_order ?>')">Tài xế <?php if ($order_by == 'staff_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th nowrap class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','steersman_name','<?php echo $url_order ?>')">Tên tài xế <?php if ($order_by == 'steersman_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','driver_start_date','<?php echo $url_order ?>')">Ngày nhận xe <?php if ($order_by == 'driver_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','steersman_phone','<?php echo $url_order ?>')">SĐT <?php if ($order_by == 'steersman_phone'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','driver_end_date','<?php echo $url_order ?>')">Ngày trả xe <?php if ($order_by == 'driver_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle_number','<?php echo $url_order ?>')">Số xe <?php if ($order_by == 'vehicle_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','start_work','<?php echo $url_order ?>')">Ngày nhận xe <?php if ($order_by == 'start_work'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','end_work','<?php echo $url_order ?>')">Ngày trả xe <?php if ($order_by == 'end_work'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        <?php if(!isset($disable_control)){ ?>
            
-        <th>
-            
-        </th>
+        <th  class="fix">&nbsp;</th>
+        <?php } ?>
     </tr>
+    
    </thead>
    <tbody>
-    <?php foreach ($vehicles as $vehicle) : ?>
-        <tr id="<?php echo $vehicle->driver_id ?>" class="edit_tr" <?php echo ($vehicle->driver_end_date=="" || $vehicle->driver_end_date==0 || $vehicle->driver_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
-        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $vehicle->driver_id ?>"><span class="lbl"></span></td>
-            <td class="text-center"><?php echo $i++; ?></td>
-            <td><a onclick="view_click('<?php echo $this->url("vehicle/view/") ?>','Thông tin xe',<?php echo $vehicle->driver_vehicle ?>,'none')"><?php echo $vehicle->vehicle_number; ?></a></td>
-            <td><a onclick="view_click('<?php echo $this->url("staff/view/") ?>','Thông tin tài xế',<?php echo $vehicle->driver_staff ?>,'none')"><?php echo $vehicle->staff_name; ?></a></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($vehicle->driver_start_date); ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($vehicle->driver_end_date); ?></td>
+    <?php foreach ($drivers as $driver) : ?>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $driver->driver_id ?>" class="edit_tr">
+        	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $driver->driver_id ?>"></td>
+            <td class="fix"><?php echo $i++; ?></td>
             
-            <td class="text-right">
-                <div class="tools action-buttons">
-                    <a class="blue"  onclick="view_click('<?php echo $this->url("driver/view/") ?>','Thông tin bàn giao xe',<?php echo $vehicle->driver_id ?>)">
-                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
-                    </a>
-                    <a class="green"  onclick="edit_click('<?php echo $this->url("driver/edit/") ?>','Cập nhật bàn giao xe',<?php echo $vehicle->driver_id ?>)">
-                        <i class="ace-icon fa fa-pencil bigger-130"></i>
-                    </a>
-
-                    <a class="red" >
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $vehicle->driver_id ?>)"></i>
-                    </a>
-                </div>
+            <td class="fix" id="steersman_code_<?php echo $driver->driver_id; ?>"><a target="_blank" href="<?php echo $this->url('steersman/index/'.$driver->steersman) ?>" ><?php echo $driver->steersman_code; ?></a></td>
+            <td class="fix" id="steersman_name_<?php echo $driver->driver_id; ?>"><?php echo $driver->steersman_name; ?></td>
+            <td class="fix" id="steersman_phone_<?php echo $driver->driver_id; ?>"><?php echo $driver->steersman_phone; ?></td>
+            <td class="fix" data="<?php echo $driver->vehicle ?>" id="vehicle_number_<?php echo $driver->driver_id; ?>"><a target="_blank" href="<?php echo $this->url('vehicle/index/'.$driver->vehicle) ?>" ><?php echo $driver->vehicle_number; ?></a></td>
+            <td class="fix" id="start_work_<?php echo $driver->driver_id; ?>"><?php echo $lib->hien_thi_ngay_thang($driver->start_work); ?></td>
+            <td class="fix" id="end_work_<?php echo $driver->driver_id; ?>"><?php echo $lib->hien_thi_ngay_thang($driver->end_work); ?></td>
+            <td style="display:none" class="fix" id="steersman_birth_<?php echo $driver->driver_id; ?>"><?php echo $lib->hien_thi_ngay_thang($driver->steersman_birth); ?></td>
+            <td style="display:none" class="fix" id="steersman_cmnd_<?php echo $driver->driver_id; ?>"><?php echo $driver->steersman_cmnd; ?></td>
+            
+            <td style="display:none" class="fix" id="steersman_bank_<?php echo $driver->driver_id; ?>"><?php echo $driver->steersman_bank; ?></td>
+            
+            <td style="display:none" class="fix" id="steersman_<?php echo $driver->driver_id; ?>"><?php echo $driver->steersman; ?></td>
+            <?php if(!isset($disable_control)){ ?>
+            <td class="pull-right">
+                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $driver->driver_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
             </td>
+            <?php } ?>
         </tr>
     <?php endforeach; ?>
    </tbody>
@@ -163,8 +133,452 @@ $i = $sonews*$page-($sonews-1);
 <?php
 $this->helper('slidePaginator');
 ?>
+
+<div class="add-field">
+    <section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="add_driver" role="form" method="post" action="" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="steersman_name">Tên tài xế <a target="_blank" title="Thêm tài xế" href="<?php echo $this->url('steersman') ?>"><i class="fa fa-plus"></i></a></label>
+                      <input type="text" autofocus autocomplete="off"   id="steersman_name" name="steersman_name" tabindex="1" required="required" placeholder="Nhập tên hoặc * để chọn" >
+                        <ul id="vehicle_list_id"></ul>
+                    </div>
+                    <div class="form-group">
+                      <label for="steersman_code">Mã NV</label>
+                      <input disabled type="text" id="steersman_code"  name="steersman_code" tabindex="2" required="required" >
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="steersman_cmnd">CMND</label>
+                      <input disabled type="text" id="steersman_cmnd"  name="steersman_cmnd" tabindex="3" required="required" >
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="steersman_birth">Ngày sinh</label>
+                      <input disabled class="ngay" type="text"   id="steersman_birth" name="steersman_birth" tabindex="4"  >
+                    </div>
+                    <div class="form-group">
+                      <label for="steersman_phone">SĐT</label>
+                      <input disabled type="text" class="numbers" id="steersman_phone" name="steersman_phone" tabindex="5" >
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="steersman_bank">Số TK</label>
+                      <input disabled type="text" id="steersman_bank"  name="steersman_bank" tabindex="6"  >
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="vehicle">Số xe</label>
+                      <select style="width:120px" id="vehicle" name="vehicle" tabindex="7" required="required" >
+                        <?php foreach ($vehicles as $vehicle) { ?>
+                        <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                        <?php } ?>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="start_work">Ngày nhận xe</label>
+                      <input class="ngay" type="text"   id="start_work" name="start_work" tabindex="8" required="required" >
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="end_work">Ngày trả xe</label>
+                      <input class="ngay" type="text"   id="end_work" name="end_work" tabindex="9" required="required" >
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+
+                </div>
+
+              </div>
+              <?php if(!isset($disable_control)){ ?>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+                    <button type="submit" class="btn btn-primary" tabindex="10">Hoàn thành</button>
+                    <button type="reset" class="btn" tabindex="11">Nhập lại</button>
+                  </div>
+                  <div class="box-footer">
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </form>
+          </div>
+          <!-- /.box -->
+
+        </div>
+        <!--/.col (left) -->
+        
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+       
 </div>
+
 <script type="text/javascript">
-    var ch = "<?php echo $limit ?>";
-$('#chonloc option[value='+ch+']').attr('selected','selected');
+$('html').click(function(e) {
+   $('#vehicle_list_id').slideUp(200);
+});
+    $('.edit_tr').click(function(e){
+      if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
+        if(!$('.checkbox').is(':checked')){
+            $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+        }
+        
+        var steersman_name = $(this).find("#steersman_name_"+$(this).attr('id')).text();
+        var steersman_birth = $(this).find("#steersman_birth_"+$(this).attr('id')).text();
+        var steersman_code = $(this).find("#steersman_code_"+$(this).attr('id')).text();
+        var steersman_cmnd = $(this).find("#steersman_cmnd_"+$(this).attr('id')).text();
+        var steersman_bank = $(this).find("#steersman_bank_"+$(this).attr('id')).text();
+        var steersman_phone = $(this).find("#steersman_phone_"+$(this).attr('id')).text();
+        var vehicle_number = $(this).find("#vehicle_number_"+$(this).attr('id')).text();
+        var start_work = $(this).find("#start_work_"+$(this).attr('id')).text();
+        var end_work = $(this).find("#end_work_"+$(this).attr('id')).text();
+        var steersman = $(this).find("#steersman_"+$(this).attr('id')).text();
+        //alert(driver_from);
+        $('#yes').val($(this).attr('id'));
+        
+        $('#steersman_birth').val(steersman_birth.replace(/\//g,"-"));
+        $('#steersman_name').val(steersman_name);
+        $('#steersman_name').attr('data', steersman);
+        $('#steersman_name').attr('code', 'true');
+        $('#steersman_bank').val(steersman_bank);
+        $('#steersman_cmnd').val(steersman_cmnd);
+        $('#steersman_code').val(steersman_code);
+        $('#steersman_phone').val(steersman_phone);
+        $('#vehicle_number').val(vehicle_number);
+        $("#vehicle option:contains(" + vehicle_number + ")").attr('selected', 'selected');
+        $("#vehicle").prop('disabled', true);
+        
+        $('#start_work').val(start_work.replace(/\//g,"-"));
+        $('#end_work').val(end_work.replace(/\//g,"-"));
+        
+        $( ".add-field" ).dialog( "open" );
+      }
+    });
+
+
 </script>
+<script type="text/javascript">
+
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+    $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+
+        $('#steersman_name').focus();
+        $('#steersman_name').val("");
+        $('#steersman_phone').val(0);
+        $('#steersman_code').val("");
+        $('#steersman_bank').val("");
+        $('#steersman_birth').val("");
+        $('#steersman_cmnd').val("");
+        $('#steersman_name').attr('data', "");
+        $('#steersman_name').attr('code', 'false');
+        $("#vehicle").prop('disabled', false);
+
+        $('.number').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.number').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+        $( ".add-field" ).dialog( "open" );
+}
+
+
+$(document).ready(function(){
+            // Validate form
+            $("#add_driver").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+                
+                    if ($('#steersman_name').attr('code') == 'false') {
+                        $('#steersman_name').val("");
+                        $('#steersman_name').focus();
+                        return false;
+                    };
+                
+                    var steersman_name = $('#steersman_name').attr('value');
+                    var steersman_phone = $('#steersman_phone').attr('value');
+                    var vehicle = $('#vehicle').attr('value');
+                    var start_work = $('#start_work').attr('value');
+                    var end_work = $('#end_work').attr('value');
+                    var steersman_code = $('#steersman_code').attr('value');
+                    var steersman_bank = $('#steersman_bank').attr('value');
+                    var steersman_birth = $('#steersman_birth').attr('value');
+                    var steersman_cmnd = $('#steersman_cmnd').attr('value');
+                    var steersman = $('#steersman_name').attr('data');
+                    
+                    var yes = $('#yes').attr('value');
+                    
+                    var action      = "them";
+                 
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/driver/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            steersman_name: steersman_name,
+                            steersman_phone: steersman_phone,
+                            vehicle: vehicle,
+                            start_work: start_work,
+                            end_work: end_work,
+                            steersman_code: steersman_code,
+                            steersman_bank: steersman_bank,
+                            steersman_birth: steersman_birth,
+                            steersman_cmnd: steersman_cmnd,
+                            steersman: steersman,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            $('#error').hide();
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error').fadeOut(10000);
+
+                            if (yes != "") {
+                                if (answer.trim() != "Thông tin này đã tồn tại") {
+                                    setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    $('#steersman_name_'+yes).text(steersman_name);
+                                    $('#steersman_phone_'+yes).text(steersman_phone);
+                                    $('#vehicle_number_'+yes).text($("#vehicle :selected").text());
+                                    $('#start_work_'+yes).text(start_work);
+                                    $('#end_work_'+yes).text(end_work);
+                                }
+                                
+                            }
+                            else{
+                                if (answer.trim() != "Thông tin này đã tồn tại") {
+                                    setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    var lastID = parseInt($('#lasted').html());
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+                                    $('.table_data > tbody:last')
+                                    .append(
+                                        '<tr onclick="HighLightTR(this,"#4d90fe","cc3333");" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="steersman_name_'+parseInt(lastID+1)+'">'+steersman_name+'</td><td class="fix" id="steersman_phone_'+parseInt(lastID+1)+'">'+steersman_phone+'</td><td class="fix" id="vehicle_number_'+parseInt(lastID+1)+'">'+$("#vehicle :selected").text()+'</td><td class="fix" id="start_work_'+parseInt(lastID+1)+'">'+start_work+'</td><td class="fix" id="end_work_'+parseInt(lastID+1)+'">'+end_work+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+                                    );
+
+                                    $('#lasted').html(parseInt(lastID+2));
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+   
+   
+     $('#steersman_name').keyup(function(){
+      
+        var keyword = $(this).val();
+        $.ajax({
+            url: '<?php echo BASE_URL ?>/driver/getdriver',
+            type: 'POST',
+            data: {keyword:keyword},
+            success:function(data){
+                $('#vehicle_list_id').slideDown(200);
+                $('#vehicle_list_id').html(data);
+            }
+        });
+        if ($('#steersman_name').val() == "" || $('#steersman_name').attr('data') == "") {
+            //$('#loc_from').val("");
+            $('#steersman_name').attr('data',"");
+            $('#steersman_name').attr('code',false);
+        }
+      
+   }); 
+
+   
+   $('.number').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-]/g, "")
+        ;
+      });
+    });
+   $('.numbers').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9]/g, "")
+          .replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")
+        ;
+      });
+    });
+    
+
+});
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+
+function set_item_driver(value,name,code,cmnd,birth,phone,bank) {
+    // change input value
+    $('#steersman_name').val(name);
+    $("#steersman_name").attr("data",value);
+    $("#steersman_name").attr("code",'true');
+    $('#steersman_code').val(code);
+    $('#steersman_cmnd').val(cmnd);
+    $('#steersman_birth').val(birth);
+    $('#steersman_phone').val(phone);
+    $('#steersman_bank').val(bank);
+    
+    // hide proposition list
+    $('#vehicle_list_id').hide();
+    $('#steersman_name').focus();
+     
+     
+}
+</script>
+
+
+<div style="display:none" id="lasted"></div>
+<script type="text/javascript">
+    var count = parseInt(<?php echo $lastID ?>);
+    $('#lasted').html(count);
+
+    $("#import_excel").click(function(){
+        $("#winpopup").dialog({
+            draggable:true,
+            modal: true,
+            autoOpen: false,
+            height:200,
+            width:500,
+            resizable: false,
+            title:'Import Excel',
+            
+        });
+        $("#winpopup").load($(this).attr('href'));
+        $("#winpopup").dialog("open");
+         
+        return false;
+    });
+
+var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+5",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onSelect: function(dateStr) {
+          if ($('#end_work').val()=="") {
+            var d = $.datepicker.parseDate('dd-mm-yy', dateStr);
+            //var years = parseInt(10, 10);
+
+            //d.setFullYear(d.getFullYear() + years);
+
+            $('#end_work').datepicker('setDate', d);
+          }
+            
+        },
+        onClose: function(selectedDate) {
+                
+                $( "#end_work" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+    }; 
+    $("#start_work").datepicker(pickerOpts);
+
+    var pickerOpts2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+5",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#start_work" ).datepicker( "option", "maxDate", selectedDate );
+
+         },
+    }; 
+    $("#end_work").datepicker(pickerOpts2);
+
+
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "auto",
+    title: "Bàn giao xe",
+    hide: 'fold',
+    show: 'blind'
+});
+</script>
+</div>
+<style type="text/css">
+    #ui-datepicker-div{
+        font-size: 13px;
+    }
+</style>

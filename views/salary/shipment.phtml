@@ -1,0 +1,108 @@
+
+<?php
+
+
+    $i = 1;
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<div id="content" style="padding:5px;">
+
+ 
+<table class="table_data">
+<thead>
+    
+    <tr>
+        <th  class="fix">
+            <a >STT</a>
+        </th>
+        <th  class="fix">
+            <a >Ngày </a>
+        </th>
+        <th  class="fix">
+            <a >Số DO  </a>
+        </th>
+        <th  class="fix">
+            <a >Kho đi  </a>
+        </th>
+        <th  class="fix">
+            <a >Kho đến </a>
+        </th>
+        <th  class="fix">
+            <a >Sản lượng </a>
+        </th>
+        <th  class="fix">
+            <a >ĐVT </a>
+        </th>
+        <th  class="fix">
+            <a >Định mức dầu </a>
+        </th>
+        <th  class="fix">
+            <a >Dầu thực lãnh  </a>
+        </th>
+        <th  class="fix">
+            <a >Lương chuyến </a>
+        </th>
+           
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php $tongdaudinhmuc = 0; $tongdaulanh=0; $tongluong=0; 
+    ?>
+    <?php foreach ($shipments as $ship) : ?>
+
+        <?php 
+        
+        
+        $daudinhmuc = isset($road['road_oil'][$ship->shipment_id])?$road['road_oil'][$ship->shipment_id]:0;
+        $daudinhmuc += $ship->shipment_road_oil_add;
+
+        $daulanh = $ship->shipment_oil;
+        
+        $luong = $ship->shipment_salary;
+
+        $tongdaudinhmuc += $daudinhmuc;
+        $tongdaulanh += $daulanh;
+        $tongluong += $luong;
+
+        
+        ?>
+
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $ship->driver_id ?>" class="edit_tr"  >
+            <td class="fix"><?php echo $i++; ?></td>
+            <td class="fix" ><?php echo $lib->hien_thi_ngay_thang($ship->shipment_date); ?></td>
+            <td class="fix" ><a target="_blank" href="<?php echo $this->url('shipment/index/'.$ship->shipment_id) ?>"><?php echo $ship->bill_number ?></a></td>
+            <td class="fix" ><?php echo $place['place_name'][$ship->shipment_from]; ?></td>
+            <td class="fix" ><?php echo $place['place_name'][$ship->shipment_to]; ?></td>
+            <td class="fix" ><?php echo $ship->shipment_ton ?></td>
+            <td class="fix" ><?php echo $ship->cont_unit_name ?></td>
+            <td class="fix" ><?php echo $daudinhmuc ?></td>
+            <td class="fix" ><?php echo $daulanh ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($luong) ?></td>
+        </tr>
+
+    <?php endforeach; ?>
+   
+        
+        <tr  style="font-weight: bold; color: rgb(23, 119, 226);" >
+            
+            <th colspan="7" style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align: right;" >
+                Tổng cộng
+            </th>
+            <td class="fix " ><?php echo $tongdaudinhmuc ?></td>
+            <td class="fix " ><?php echo $tongdaulanh ?></td>
+            <td class="fix " ><?php echo $lib->formatMoney($tongluong) ?></td>
+            
+            
+        </tr>
+
+   </tbody>
+</table>
+
+
+
+</div>
+

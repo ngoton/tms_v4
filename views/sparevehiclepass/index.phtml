@@ -1,4 +1,13 @@
 
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>CHUYỂN PHỤ TÙNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('sparevehiclepass') ?>">Chuyển phụ tùng</a></li>
+  </ol>
+</section>
 <div>
   <div class="error">
     *Lưu ý: Mỗi lần thực hiện chỉ chuyển được 1 đầu xe hoặc rơmooc. <br>
@@ -9,8 +18,10 @@
         <div class="alignleft actions">
           <div class="form-group">
             <label for="ngay">Ngày thực hiện</label>
-            <input style="width:100px" type="text"  class="input-mask-date" id="ngay" name="ngay" value="<?php echo date('d/m/Y') ?>" required="required">
+            <input style="width:70px" type="text"  class="ngay" id="ngay" name="ngay" value="<?php echo date('d-m-Y') ?>" required="required">
+            <?php if(!isset($disable_control)){ ?>
             <input type="submit" value="Hoàn thành" id="update">
+            <?php } ?>
           </div>
         </div>
 
@@ -19,18 +30,41 @@
   </div>
 </div>
 <div class="clearfix"></div>
-<div id="show"></div>
+<div id="dropZone">
+    <div class="stack">
+        <div class="stackHdr">
+            Đầu nhận
+        </div>
+        <select id="vehicle_in" name="vehicle_in" >
+          <option value="0">Xe</option>
+          <?php foreach ($vehicles as $vehicle) { ?>
+            <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+          <?php } ?>
+        </select>
+    </div>
+    
+    <div class="stack">
+        <div class="stackHdr">
+            Mooc nhận
+        </div>
+        <select id="romooc_in" name="romooc_in" >
+          <option value="0">Mooc</option>
+          <?php foreach ($romoocs as $romooc) { ?>
+            <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+          <?php } ?>
+        </select>
+    </div>
+</div>
 <form id="spare_form" action="" method="post">
 
 <div id="launchPad">  
-  <div class="stackHdr">Đầu thay</div>
-  <select id="vehicle" name="vehicle" class="select2" >
+  <div>Đầu thay</div>
+  <select id="vehicle" name="vehicle" >
     <option value="0">Xe</option>
     <?php foreach ($vehicles as $vehicle) { ?>
       <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
     <?php } ?>
   </select>
-  <div class="clearfix"></div>
   <?php foreach ($spare_vehicles as $m) { ?>
   <?php 
   $con = $m->total-(isset($spare_vehicle_outs[$m->vehicle][$m->spare_part])?$spare_vehicle_outs[$m->vehicle][$m->spare_part]:0);
@@ -43,14 +77,13 @@
   <?php }} ?>
 </div>
 <div id="launchPad2">  
-  <div class="stackHdr">Mooc thay</div>
-  <select id="romooc" name="romooc" class="select2" >
+  <div>Mooc thay</div>
+  <select id="romooc" name="romooc" >
     <option value="0">Mooc</option>
     <?php foreach ($romoocs as $romooc) { ?>
       <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
     <?php } ?>
   </select>
-  <div class="clearfix"></div>
   <?php foreach ($spare_romoocs as $m) { ?>
   <?php
   $con = $m->total-(isset($spare_romooc_outs[$m->romooc][$m->spare_part])?$spare_romooc_outs[$m->romooc][$m->spare_part]:0);
@@ -64,43 +97,12 @@
   
 </div>
 </form>
-<div id="dropZone">
-    <div class="stack">
-        <div class="stackHdr">
-            Đầu nhận
-        </div>
-        <select id="vehicle_in" name="vehicle_in" class="select2" >
-          <option value="0">Xe</option>
-          <?php foreach ($vehicles as $vehicle) { ?>
-            <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
-          <?php } ?>
-        </select>
-    </div>
-    
-    <div class="stack">
-        <div class="stackHdr">
-            Mooc nhận
-        </div>
-        <select id="romooc_in" name="romooc_in" class="select2" >
-          <option value="0">Mooc</option>
-          <?php foreach ($romoocs as $romooc) { ?>
-            <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
-          <?php } ?>
-        </select>
-    </div>
-</div>
 <div class="clearfix"></div>
 
 <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
 
 <style type="text/css">
-#show{
-  width: 760px;
-  height: 100px;
-  background-size: cover;
-  background: url("/public/images/truck_outline_res.png") center center no-repeat;
-}
 #launchPad, #launchPad2 {
     float:left;
     border: 1px solid #eaeaea;
@@ -110,8 +112,6 @@
 #dropZone {
     float:right;
     border: 1px solid #eaeaea;
-    background-size: cover;
-    background: url("/public/images/truck_outline_res.png") center center no-repeat;
 }
 .card, .card2 { 
     width: 70px; 
@@ -123,7 +123,6 @@
 .stack {
     float: left;
     width: 100px;
-    height: 100px;
     margin: 20px;
 }
 .stackHdr {
@@ -149,15 +148,32 @@
 }
 </style>
 <script type="text/javascript">
-$(document).ready(function(){
-  $( ".select2" ).select2({dropdownAutoWidth : true});
-});
+var pickerOpay2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true
+    }; 
+    $(".ngay").datepicker(pickerOpay2);
+
 
 $('#update').click(function(){
-  var vehicle_out = $('#vehicle').val();
-  var romooc_out = $('#romooc').val();
-  var vehicle_in = $('#vehicle_in').val();
-  var romooc_in = $('#romooc_in').val();
+  var vehicle_out = $('#vehicle').attr('value');
+  var romooc_out = $('#romooc').attr('value');
+  var vehicle_in = $('#vehicle_in').attr('value');
+  var romooc_in = $('#romooc_in').attr('value');
 
   var start_time = $('#ngay').val();
   if (start_time == "") {
@@ -202,7 +218,7 @@ $('#update').click(function(){
 
         setTimeout(function() {
           location.reload(true);
-        }, 500);
+        }, 200);
     }
 });
 });

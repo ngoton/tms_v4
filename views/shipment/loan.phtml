@@ -1,0 +1,299 @@
+<?php $l=1; ?>
+<div>
+  <div class="add-box"><a class="add_button" onclick="add_click_2();">Thêm</a></div>
+</div>
+
+<table class="table_data" id="or">
+<thead>
+    <tr>
+        <th class="fix">
+            <a class="sort">STT</a>
+        </th>
+        <th class="fix">
+            <a class="sort ">Chi hộ </a>
+        </th>
+        <th class="fix">
+            <a class="sort ">Số tiền </a>
+        </th>
+        <th class="fix">
+            <a class="sort ">Nội dung </a>
+        </th>
+        <th class="fix">&nbsp;</th>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php $tong=0; $ids="";
+    foreach ($loan_shipments as $loan) { 
+        $tong += $loan->loan_cost;
+        $ids = $loan->loan_shipment_id.','.$ids;
+        ?>
+        <tr onclick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $loan->loan_shipment_id ?>" class="edit_tr edit_loan" data="">
+            <td class="fix"><?php echo $l++ ?></td>
+            <td class="fix" id="loan_unit_name_<?php echo $loan->loan_shipment_id ?>"><?php echo $loan->loan_unit_name ?></td>
+            <td class="fix" id="loan_cost_<?php echo $loan->loan_shipment_id ?>"><?php echo $lib->formatMoney($loan->loan_cost) ?></td>
+            <td class="fix" id="loan_comment_<?php echo $loan->loan_shipment_id ?>"><?php echo $loan->loan_comment ?></td>
+            
+            <td>
+                <button class="del_list" value="<?php echo $loan->loan_cost ?>" data="<?php echo $loan->loan_shipment_id ?>" style="display:block">Xóa</button>
+            </td>
+        </tr>
+    <?php } ?> 
+        <tr style="text-align:center; font-weight: bold; color: red;">
+        <td class="fix" colspan="2">Tổng cộng</td>
+        <td class="fix"><?php echo $lib->formatMoney($tong) ?></td>
+        <td class="fix" colspan="2"></td>
+    </tr>
+   </tbody>
+</table>
+
+<div id="error2" class="error"></div>
+
+<div class="add-field add-field-loan">
+        <fieldset class="groupbox">
+            <legend>
+                <span><h3>Chi hộ </h3></span>
+            </legend>
+            <div class="login_body">
+                  <form id="add_loan" method="post" action="" novalidate="novalidate">
+                      <table style="margin:0 auto;width:100%">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <span class="add-on"><i class="icon-money"></i></span>
+                              <span>Số tiền: </span>
+                            </td>
+                            <td><input type="text" id="loan_cost" name="loan_cost" value="" class="numbers" required="required"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span class="add-on"><i class="icon-th-list"></i></span>
+                              <span>Chi hộ: </span>
+                            </td>
+                            <td>
+                                <select id="loan_unit" name="loan_unit">
+                                    <?php foreach ($loan_units as $loan) { ?>
+                                        <option value="<?php echo $loan->loan_unit_id ?>"><?php echo $loan->loan_unit_name ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span class="add-on"><i class="icon-money"></i></span>
+                              <span>Nội dung: </span>
+                            </td>
+                            <td><textarea id="loan_comment" id="loan_comment"></textarea></td>
+                          </tr>
+                        
+                        <tr>
+                            <td>
+                              <input type="hidden" readonly="" id="yes_loan" name="yes_loan" required="required" value="">
+                              <input type="hidden" readonly="" id="shipment" name="shipment" required="required" value="<?php echo $shipment ?>">
+                            </td>
+                        </tr>
+                        
+                        
+                         <tr>
+                            <td><input type="submit" name="submit" id="submit_list" value="Hoàn tất" tabindex="1"></td>
+                            <td><input type="reset" name="reset" id="reset_list" value="Nhập lại" tabindex="2"></td>
+                             
+                        </tr>
+                    </tbody></table> 
+                </form>
+            </div>
+        </fieldset>
+    </div>
+
+<script type="text/javascript">
+$('#shipment_loan').attr('data',"<?php echo $ids ?>");
+$('#shipment_loan').val("<?php echo $tong ?>");
+$("#shipment_loan").val(function(index, value) {
+  return value
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  ;
+});
+
+$('#shipment_loan_sub').attr('data',"<?php echo $ids ?>");
+$('#shipment_loan_sub').val("<?php echo $tong ?>");
+$("#shipment_loan_sub").val(function(index, value) {
+  return value
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  ;
+});
+
+var ol = 0;
+
+$('.edit_loan').click(function(e){
+    if(e.target != '[object HTMLButtonElement]' && !$('.checkbox').is(':focus') ){
+        
+
+        var loan_cost = $(this).find("#loan_cost_"+$(this).attr('id')).text();
+        var loan_unit = $(this).find("#loan_unit_name_"+$(this).attr('id')).text();
+        var loan_comment = $(this).find("#loan_comment_"+$(this).attr('id')).text();
+
+        $('#yes_loan').val($(this).attr('id'));
+
+        $('#loan_cost').val(loan_cost);
+        $('#loan_comment').val(loan_comment);
+        $('#loan_unit option:contains('+loan_unit+')').attr('selected','selected');
+
+        ol = parseInt(get_number('#loan_cost'));
+    }
+});
+function add_click_2(){
+    $('#yes_loan').val("");
+
+    $('.add-field-loan').slideDown(500);
+
+    $('#loan_cost').val("");
+    $('#loan_comment').val("");
+
+    $('.numbers').focus(function(){
+        if ( $(this).val() == '0') {
+           $(this).val(""); 
+        };
+        
+    });
+    $('.numbers').blur(function(){
+        if ( $(this).val() == "") {
+            $(this).val(0);
+        };
+        
+    });
+
+    ol = 0;
+}
+
+$(document).ready(function(){
+    // Validate form
+            $("#add_loan").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+                
+                    var loan_cost = $('#loan_cost').attr('value');
+                    var loan_unit = $('#loan_unit').attr('value');
+                    var loan_comment = $('#loan_comment').attr('value');
+                    var shipment = $('#shipment').attr('value');
+                    
+                    var yes = $('#yes_loan').attr('value');
+                    
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/shipment/addloan", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            loan_cost: loan_cost,
+                            loan_unit: loan_unit,
+                            loan_comment: loan_comment,
+                            shipment: shipment,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            //alert(answer);
+                            var data = jQuery.parseJSON(answer);
+                            
+                            $('#error2').hide();
+                            $('#error2').slideToggle(100); // hiển thị thẻ div success
+                            $('#error2').html('<div class="successbox">'+data.ms+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error2').fadeOut(10000);
+
+                            $('#loan_cost_'+yes).text(loan_cost);
+                            $('#loan_unit_name_'+yes).text($('#loan_unit option:selected').text());
+                            $('#loan_comment_'+yes).text(loan_comment);
+
+                            var num = parseInt(get_number('#shipment_loan'));
+                            var ne = parseInt(get_number('#loan_cost'));
+                            var total = num+ne;
+                            if (yes != "") {
+                                var total = num-ol+ne;
+                            }
+                            $('#shipment_loan').attr('data',data.id+","+$('#shipment_loan').attr('data'));
+                            $('#shipment_loan').val(total);
+                            $("#shipment_loan").val(function(index, value) {
+                              return value
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              ;
+                            });
+
+                            var num = parseInt(get_number('#shipment_loan_sub'));
+                            var ne = parseInt(get_number('#loan_cost'));
+                            var total = num+ne;
+                            if (yes != "") {
+                                var total = num-ol+ne;
+                            }
+                            $('#shipment_loan_sub').attr('data',data.id+","+$('#shipment_loan_sub').attr('data'));
+                            $('#shipment_loan_sub').val(total);
+                            $("#shipment_loan_sub").val(function(index, value) {
+                              return value
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              ;
+                            });
+
+                            ol = ne;
+                            
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+   
+
+   
+   $('.numbers').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+
+   
+});
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+
+$('.del_list').click(function()
+{
+  var val = parseInt($(this).attr('value'));
+  var id = $(this).attr('data');
+  var r = confirm("Bạn có chắc chắn muốn xóa không?");
+  if (r == true){
+    
+    $.post("<?php echo $this->url('shipment/deleteloan') ?>", {data: id},
+       function(data){
+        //alert(data);
+          $('tr#'+id).remove(); 
+
+            $('#shipment_loan').attr('data',$('#shipment_loan').attr('data').replace(id+',',""));
+            $('#shipment_loan').val(parseInt(get_number('#shipment_loan'))-val);
+            $("#shipment_loan").val(function(index, value) {
+              return value
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              ;
+            });
+
+            $('#shipment_loan_sub').attr('data',$('#shipment_loan_sub').attr('data').replace(id+',',""));
+            $('#shipment_loan_sub').val(parseInt(get_number('#shipment_loan_sub'))-val);
+            $("#shipment_loan_sub").val(function(index, value) {
+              return value
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              ;
+            });
+
+            ol = 0;
+       
+       }); 
+  }
+});
+</script>

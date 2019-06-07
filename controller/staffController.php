@@ -1,573 +1,293 @@
 <?php
-
 Class staffController Extends baseController {
-
     public function index() {
-
         $this->view->setLayout('admin');
-
         if (!isset($_SESSION['userid_logined'])) {
-
             return $this->view->redirect('user/login');
-
         }
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            return $this->view->redirect('admin');
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->staff) || json_decode($_SESSION['user_permission_action'])->staff != "staff") {
+            $this->view->data['disable_control'] = 1;
         }
-
-
         $this->view->data['lib'] = $this->lib;
-
-        $this->view->data['title'] = 'Quản lý nhân viên';
-
-
+        $this->view->data['title'] = 'Quản lý thông tin nhân viên';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $order_by = isset($_POST['order_by']) ? $_POST['order_by'] : null;
-
             $order = isset($_POST['order']) ? $_POST['order'] : null;
-
             $page = isset($_POST['page']) ? $_POST['page'] : null;
-
             $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : null;
-
             $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
-
         }
-
         else{
-
             $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'staff_code';
-
-            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
-
+            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
-
             $keyword = "";
-
-            $limit = 100;
-
+            $limit = 50;
         }
 
+        $id = $this->registry->router->param_id;
 
-
+        $department_model = $this->model->get('departmentModel');
+        $departments = $department_model->getAllDepartment();
+        
+        $this->view->data['departments'] = $departments;
 
         $staff_model = $this->model->get('staffModel');
-
         $sonews = $limit;
-
         $x = ($page-1) * $sonews;
-
         $pagination_stages = 2;
 
-        $join = array('table'=>'department','where'=>'staff_department=department_id LEFT JOIN position ON staff_position=position_id','join'=>'LEFT JOIN');
-
         $data = array(
-            'where'=>'1=1',
+            'where' => '1=1',
         );
 
-        if (isset($_POST['filter'])) {
-            if (isset($_POST['staff_gender'])) {
-                $data['where'] .= ' AND staff_gender IN ('.implode(',',$_POST['staff_gender']).')';
-            }
-            if (isset($_POST['staff_position'])) {
-                $data['where'] .= ' AND staff_position IN ('.implode(',',$_POST['staff_position']).')';
-            }
-            if (isset($_POST['staff_department'])) {
-                $data['where'] .= ' AND staff_department IN ('.implode(',',$_POST['staff_department']).')';
-            }
-            $this->view->data['filter'] = 1;
+        $join = array('table'=>'department','where'=>'department = department_id');
+
+        if (isset($id) && $id > 0) {
+            $data['where'] .= ' AND staff_id = '.$id;
         }
-
+        
         $tongsodong = count($staff_model->getAllStaff($data,$join));
-
         $tongsotrang = ceil($tongsodong / $sonews);
-
         
 
-
-
         $this->view->data['page'] = $page;
-
         $this->view->data['order_by'] = $order_by;
-
         $this->view->data['order'] = $order;
-
         $this->view->data['keyword'] = $keyword;
-
+        $this->view->data['pagination_stages'] = $pagination_stages;
+        $this->view->data['tongsotrang'] = $tongsotrang;
+        $this->view->data['sonews'] = $sonews;
         $this->view->data['limit'] = $limit;
 
-        $this->view->data['pagination_stages'] = $pagination_stages;
-
-        $this->view->data['tongsotrang'] = $tongsotrang;
-
-        $this->view->data['sonews'] = $sonews;
-
-
-
         $data = array(
-            'where'=>'1=1',
-            
             'order_by'=>$order_by,
-
             'order'=>$order,
-
             'limit'=>$x.','.$sonews,
-
+            'where' => '1=1',
             );
 
-        if (isset($_POST['filter'])) {
-            if (isset($_POST['staff_gender'])) {
-                $data['where'] .= ' AND staff_gender IN ('.implode(',',$_POST['staff_gender']).')';
-            }
-            if (isset($_POST['staff_position'])) {
-                $data['where'] .= ' AND staff_position IN ('.implode(',',$_POST['staff_position']).')';
-            }
-            if (isset($_POST['staff_department'])) {
-                $data['where'] .= ' AND staff_department IN ('.implode(',',$_POST['staff_department']).')';
-            }
+        if (isset($id) && $id > 0) {
+            $data['where'] .= ' AND staff_id = '.$id;
         }
-
+        
         if ($keyword != '') {
-
-            $search = '( staff_code LIKE "%'.$keyword.'%" 
-                OR staff_name LIKE "%'.$keyword.'%" 
-                OR staff_cmnd LIKE "%'.$keyword.'%" 
-                OR staff_gplx LIKE "%'.$keyword.'%" 
-                OR staff_email LIKE "%'.$keyword.'%" 
-                OR REPLACE(staff_phone, " ", "") LIKE "%'.str_replace(' ', '', $keyword).'%" 
-            )';
-
-            $data['where'] = $search;
-
+            $search = ' AND ( staff_name LIKE "%'.$keyword.'%" 
+                        OR staff_code LIKE "%'.$keyword.'%"
+                        OR staff_birth LIKE "%'.$keyword.'%"
+                        OR staff_address LIKE "%'.$keyword.'%"
+                        OR staff_phone LIKE "%'.$keyword.'%"
+                        OR staff_email LIKE "%'.$keyword.'%"
+                        OR cmnd LIKE "%'.$keyword.'%"
+                        OR bank LIKE "%'.$keyword.'%"
+                        OR department_name LIKE "%'.$keyword.'%"
+                        OR account in ( SELECT user_id FROM user WHERE username LIKE "%'.$keyword.'%") )';
+            $data['where'] .= $search;
         }
+        
+        $user_model = $this->model->get('userModel');
+        $user = $user_model->getAllUser();
+        
+        $this->view->data['users'] = $user;
 
-
-
-        $this->view->data['staffs'] = $staff_model->getAllstaff($data,$join);
-
-
-
-        return $this->view->show('staff/index');
-
-    }
-
-
-    public function addstaff(){
-        $staff_model = $this->model->get('staffModel');
-
-        if (isset($_POST['staff_code'])) {
-            if($staff_model->getStaffByWhere(array('staff_code'=>trim($_POST['staff_code'])))){
-                echo 'Mã nhân viên đã tồn tại';
-                return false;
-            }
-            if($staff_model->getStaffByWhere(array('staff_cmnd'=>trim($_POST['staff_cmnd'])))){
-                echo 'Nhân viên đã tồn tại';
-                return false;
-            }
-
-            $data = array(
-                'staff_code' => trim($_POST['staff_code']),
-                'staff_name' => trim($_POST['staff_name']),
-                'staff_address' => trim($_POST['staff_address']),
-                'staff_cmnd' => trim($_POST['staff_cmnd']),
-                'staff_birthday' => strtotime(str_replace('/', '-', $_POST['staff_birthday'])),
-                'staff_phone' => trim(str_replace('_', '', $_POST['staff_phone'])),
-                'staff_email' => trim($_POST['staff_email']),
-                'staff_bank_account' => trim($_POST['staff_bank_account']),
-                'staff_bank' => trim($_POST['staff_bank']),
-                'staff_gender' => trim($_POST['staff_gender']),
-                'staff_position' => trim($_POST['staff_position']),
-                'staff_department' => trim($_POST['staff_department']),
-                'staff_start_date' => strtotime(str_replace('/', '-', $_POST['staff_start_date'])),
-                'staff_end_date' => $_POST['staff_end_date']!=""?strtotime(str_replace('/', '-', $_POST['staff_end_date'])):null,
-                'staff_account' => trim($_POST['staff_account']),
-                'staff_gplx' => trim($_POST['staff_gplx']),
-            );
-            $staff_model->createStaff($data);
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$staff_model->getLastStaff()->staff_id."|staff|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
-
-
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'staff',
-                'user_log_table_name' => 'Nhân viên',
-                'user_log_action' => 'Thêm mới',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
-
-
-            echo "Thêm thành công";
+        $user_data = array();
+        foreach ($user as $user) {
+            $user_data['user_id'][$user->user_id] = $user->user_id;
+            $user_data['username'][$user->user_id] = $user->username;
         }
+        
+        $this->view->data['user'] = $user_data;
+        
+        
+        $this->view->data['staffs'] = $staff_model->getAllStaff($data,$join);
 
+        $this->view->data['lastID'] = isset($staff_model->getLastStaff()->staff_id)?$staff_model->getLastStaff()->staff_id:0;
+        
+        $this->view->show('staff/index');
     }
 
     public function add(){
-
-        $this->view->disableLayout();
-
         if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+            return $this->view->redirect('user/login');
         }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->staff) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->staff) || json_decode($_SESSION['user_permission_action'])->staff != "staff") {
+            return $this->view->redirect('user/login');
         }
-
-        $this->view->data['title'] = 'Thêm mới nhân viên';
-
-        $staff_model = $this->model->get('staffModel');
-        $lastID = isset($staff_model->getLastStaff()->staff_code)?$staff_model->getLastStaff()->staff_code:'NV00';
-        $lastID++;
-        $this->view->data['lastID'] = $lastID;
-
-        $position_model = $this->model->get('positionModel');
-        $department_model = $this->model->get('departmentModel');
-        $user_model = $this->model->get('userModel');
-
-        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
-        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
-        $accounts = $user_model->getAllUser(array('order_by'=>'username','order'=>'ASC'));
-
-        $this->view->data['positions'] = $positions;
-        $this->view->data['departments'] = $departments;
-        $this->view->data['accounts'] = $accounts;
-
-        return $this->view->show('staff/add');
-    }
-
-    public function editstaff(){
-        $staff_model = $this->model->get('staffModel');
-
-        if (isset($_POST['staff_id'])) {
-            $id = $_POST['staff_id'];
-            if($staff_model->getAllStaffByWhere($id.' AND staff_code = "'.trim($_POST['staff_code']).'"')){
-                echo 'Mã nhân viên đã tồn tại';
-                return false;
-            }
-            if($staff_model->getAllStaffByWhere($id.' AND staff_cmnd = "'.trim($_POST['staff_cmnd']).'"')){
-                echo 'Nhân viên đã tồn tại';
-                return false;
-            }
-
+        if (isset($_POST['yes'])) {
+            $staff = $this->model->get('staffModel');
+            $staff_temp = $this->model->get('stafftempModel');
             $data = array(
-                'staff_code' => trim($_POST['staff_code']),
-                'staff_name' => trim($_POST['staff_name']),
-                'staff_address' => trim($_POST['staff_address']),
-                'staff_cmnd' => trim($_POST['staff_cmnd']),
-                'staff_birthday' => strtotime(str_replace('/', '-', $_POST['staff_birthday'])),
-                'staff_phone' => trim(str_replace('_', '', $_POST['staff_phone'])),
-                'staff_email' => trim($_POST['staff_email']),
-                'staff_bank_account' => trim($_POST['staff_bank_account']),
-                'staff_bank' => trim($_POST['staff_bank']),
-                'staff_gender' => trim($_POST['staff_gender']),
-                'staff_position' => trim($_POST['staff_position']),
-                'staff_department' => trim($_POST['staff_department']),
-                'staff_start_date' => strtotime(str_replace('/', '-', $_POST['staff_start_date'])),
-                'staff_end_date' => $_POST['staff_end_date']!=""?strtotime(str_replace('/', '-', $_POST['staff_end_date'])):null,
-                'staff_account' => trim($_POST['staff_account']),
-                'staff_gplx' => trim($_POST['staff_gplx']),
-            );
-            $staff_model->updateStaff($data,array('staff_id'=>$id));
-
-            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|staff|".implode("-",$data)."\n"."\r\n";
-            $this->lib->ghi_file("action_logs.txt",$text);
+                        
+                        'staff_code' => trim($_POST['staff_code']),
+                        'staff_name' => trim($_POST['staff_name']),
+                        'staff_birth' => trim($_POST['staff_birth']),
+                        'staff_gender' => trim($_POST['staff_gender']),
+                        'staff_address' => trim($_POST['staff_address']),
+                        'staff_phone' => trim($_POST['staff_phone']),
+                        'staff_email' => trim($_POST['staff_email']),
+                        'cmnd' => trim($_POST['cmnd']),
+                        'bank' => trim($_POST['bank']),
+                        'account' => trim($_POST['account']),
+                        'status' => trim($_POST['status']),
+                        'position' => trim($_POST['position']),
+                        'priority' => trim($_POST['priority']),
+                        'start_date' => strtotime($_POST['start_date']),
+                        'end_date' => strtotime($_POST['end_date']),
+                        'department' => trim($_POST['department']),
+                        );
 
 
-            $user_log_model = $this->model->get('userlogModel');
-            $data_log = array(
-                'user_log' => $_SESSION['userid_logined'],
-                'user_log_date' => time(),
-                'user_log_table' => 'staff',
-                'user_log_table_name' => 'Nhân viên',
-                'user_log_action' => 'Cập nhật',
-                'user_log_data' => json_encode($data),
-            );
-            $user_log_model->createUser($data_log);
+            if ($_POST['check'] == "true") {
+                $data['staff_update_user'] = $_SESSION['userid_logined'];
+                $data['staff_update_time'] = time();
+                //var_dump($data);
+                if ($staff->getAllStaffByWhere($_POST['yes'].' AND staff_code = "'.trim($_POST['staff_code']).'"')) {
+                    echo "Mã nhân viên đã được sử dụng";
+                    return false;
+                }
+                
+                
+                else{
+                    if (trim($_POST['account']) > 0) {
+                        if ($staff->getAllStaffByWhere($_POST['yes'].' AND account = '.trim($_POST['account']))) {
+                            echo "Tên truy cập đã được sử dụng";
+                            return false;
+                        }
+                    }
+                    $staff->updateStaff($data,array('staff_id' => $_POST['yes']));
 
+                    $data2 = array('staff_id'=>$_POST['yes'],'staff_temp_date'=>strtotime(date('d-m-Y')),'staff_temp_action'=>2,'staff_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS nhân viên');
+                    $data_temp = array_merge($data, $data2);
+                    $staff_temp->createStaff($data_temp);
 
-            echo "Cập nhật thành công";
+                    /*Log*/
+                    /**/
+                    echo "Cập nhật thành công";
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|staff|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                }
+                
+            }
+            else{
+                $data['staff_create_user'] = $_SESSION['userid_logined'];
+                $data['staff_create_time'] = date('m/Y');
+                //$data['staff'] = $_POST['staff'];
+                //var_dump($data);
+                if ($staff->getStaffByWhere(array('staff_code'=>trim($_POST['staff_code'])))) {
+                    echo "Mã nhân viên đã được sử dụng";
+                    return false;
+                }
+                if ($staff->getStaffByWhere(array('staff_code'=>trim($_POST['staff_code']),'staff_name' => trim($_POST['staff_name'])))) {
+                    echo "Nhân viên này đã tồn tại";
+                    return false;
+                }
+                
+                else{
+                    if (trim($_POST['account']) > 0) {
+                        if ($staff->getStaffByWhere(array('account'=>$_POST['account']))) {
+                            echo "Tên truy cập đã được sử dụng";
+                            return false;
+                        }
+                    }
+
+                    $staff->createStaff($data);
+
+                    $data2 = array('staff_id'=>$staff->getLastStaff()->staff_id,'staff_temp_date'=>strtotime(date('d-m-Y')),'staff_temp_action'=>1,'staff_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS nhân viên');
+                    $data_temp = array_merge($data, $data2);
+                    $staff_temp->createStaff($data_temp);
+
+                    /*Log*/
+                    /**/
+
+                    echo "Thêm thành công";
+
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$staff->getLastStaff()->staff_id."|staff|".implode("-",$data)."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+                }
+                
+            }
+                    
         }
     }
-
-    public function edit($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->staff) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('staff');
-
-        }
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Cập nhật nhân viên';
-
-        $staff_model = $this->model->get('staffModel');
-
-        $staff_data = $staff_model->getStaff($id);
-
-        $this->view->data['staff_data'] = $staff_data;
-
-        if (!$staff_data) {
-
-            $this->view->redirect('staff');
-
-        }
-
-        $position_model = $this->model->get('positionModel');
-        $department_model = $this->model->get('departmentModel');
-        $user_model = $this->model->get('userModel');
-
-        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
-        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
-        $accounts = $user_model->getAllUser(array('order_by'=>'username','order'=>'ASC'));
-
-        $this->view->data['positions'] = $positions;
-        $this->view->data['departments'] = $departments;
-        $this->view->data['accounts'] = $accounts;
-
-        return $this->view->show('staff/edit');
-
-    }
-    public function view($id){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-        if (!$id) {
-
-            $this->view->redirect('staff');
-
-        }
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Thông tin nhân viên';
-
-        $staff_model = $this->model->get('staffModel');
-
-        $staff_data = $staff_model->getStaff($id);
-
-        $this->view->data['staff_data'] = $staff_data;
-
-        if (!$staff_data) {
-
-            $this->view->redirect('staff');
-
-        }
-
-        $position_model = $this->model->get('positionModel');
-        $department_model = $this->model->get('departmentModel');
-        $user_model = $this->model->get('userModel');
-
-        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
-        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
-        $accounts = $user_model->getAllUser(array('order_by'=>'username','order'=>'ASC'));
-
-        $this->view->data['positions'] = $positions;
-        $this->view->data['departments'] = $departments;
-        $this->view->data['accounts'] = $accounts;
-
-        return $this->view->show('staff/view');
-
-    }
-    public function filter(){
-        $this->view->disableLayout();
-
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Lọc dữ liệu';
-
-        $position_model = $this->model->get('positionModel');
-        $department_model = $this->model->get('departmentModel');
-
-        $positions = $position_model->getAllPosition(array('order_by'=>'position_code','order'=>'ASC'));
-        $departments = $department_model->getAllDepartment(array('order_by'=>'department_code','order'=>'ASC'));
-
-        $this->view->data['positions'] = $positions;
-        $this->view->data['departments'] = $departments;
-
-        $this->view->data['page'] = $_GET['page'];
-        $this->view->data['order_by'] = $_GET['order_by'];
-        $this->view->data['order'] = $_GET['order'];
-        $this->view->data['limit'] = $_GET['limit'];
-        $this->view->data['keyword'] = $_GET['keyword'];
-
-        return $this->view->show('staff/filter');
-    }
-
-    public function getstaff(){
-        $staff_model = $this->model->get('staffModel');
-
-        $staffs = $staff_model->getAllStaff(array('order_by'=>'staff_name','order'=>'ASC'));
-        $result = array();
-        $i = 0;
-        foreach ($staffs as $staff) {
-            $result[$i]['id'] = $staff->staff_id;
-            $result[$i]['text'] = $staff->staff_name;
-            $i++;
-        }
-        echo json_encode($result);
-    }
-
-
     public function delete(){
-
         if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+            return $this->view->redirect('user/login');
         }
-
-        if ((!isset(json_decode($_SESSION['user_permission_action'])->staff) || json_decode($_SESSION['user_permission_action'])->staff != "staff") && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->staff) || json_decode($_SESSION['user_permission_action'])->staff != "staff") {
+            return $this->view->redirect('user/login');
         }
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $staff_model = $this->model->get('staffModel');
-            $user_log_model = $this->model->get('userlogModel');
-
+            $staff = $this->model->get('staffModel');
+            $staff_temp = $this->model->get('stafftempModel');
             if (isset($_POST['xoa'])) {
+                $data = explode(',', $_POST['xoa']);
+                foreach ($data as $data) {
 
-                $datas = explode(',', $_POST['xoa']);
+                    $staff_data = (array)$staff->getStaff($data);
 
-                foreach ($datas as $data) {
+                    $staff->deleteStaff($data);
 
-                    $staff_model->deleteStaff($data);
+                    $data2 = array('staff_id'=>$data,'staff_temp_date'=>strtotime(date('d-m-Y')),'staff_temp_action'=>3,'staff_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS nhân viên');
+                    $data_temp = array_merge($staff_data, $data2);
+                    $staff_temp->createStaff($data_temp);
 
-
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|staff|"."\n"."\r\n";
-
-                        $this->lib->ghi_file("action_logs.txt",$text);
-
-
-
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
                 }
 
+                /*Log*/
+                    /**/
 
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'staff',
-                    'user_log_table_name' => 'Nhân viên',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($datas),
-                );
-                $user_log_model->createUser($data_log);
-
-
-                echo "Xóa thành công";
                 return true;
-
             }
-
             else{
+                /*Log*/
+                    /**/
+                    $staff_data = (array)$staff->getStaff($_POST['data']);
 
-                $staff_model->deleteStaff($_POST['data']);
+                    $data2 = array('staff_id'=>$_POST['data'],'staff_temp_date'=>strtotime(date('d-m-Y')),'staff_temp_action'=>3,'staff_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS nhân viên');
+                    $data_temp = array_merge($staff_data, $data2);
+                    $staff_temp->createStaff($data_temp);
 
-                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|staff|"."\n"."\r\n";
+                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|staff|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
 
-                $this->lib->ghi_file("action_logs.txt",$text);
-
-                $data_log = array(
-                    'user_log' => $_SESSION['userid_logined'],
-                    'user_log_date' => time(),
-                    'user_log_table' => 'staff',
-                    'user_log_table_name' => 'Nhân viên',
-                    'user_log_action' => 'Xóa',
-                    'user_log_data' => json_encode($_POST['data']),
-                );
-                $user_log_model->createUser($data_log);
-
-                echo "Xóa thành công";
-                return true;
-
+                return $staff->deleteStaff($_POST['data']);
             }
-
             
-
-        }
-
-    }
-
-    public function importstaff(){
-        if (isset($_FILES['import']['name'])) {
-            $total = count($_FILES['import']['name']);
-            for( $i=0 ; $i < $total ; $i++ ) {
-              $tmpFilePath = $_FILES['import']['name'][$i];
-              echo $tmpFilePath;
-            }
         }
     }
-    public function import(){
 
-        $this->view->disableLayout();
+    public function getStaff($id){
+        return $this->getByID($this->table,$id);
+    }
 
-        if (!isset($_SESSION['userid_logined'])) {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->staff) && $_SESSION['user_permission_action'] != '["all"]') {
-
-            echo "Bạn không có quyền thực hiện thao tác này";
-            return false;
-
-        }
-
-        $this->view->data['title'] = 'Nhập dữ liệu';
-
-       
-        return $this->view->show('staff/import');
+    private function getUrl(){
 
     }
 
 
 }
-
 ?>

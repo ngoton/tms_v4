@@ -48,6 +48,9 @@ Class sparepartcodeModel Extends baseModel {
     public function getLastStock(){
         return $this->getLast($this->table);
     }
+    public function checkStock($id,$code){
+        return $this->query('SELECT * FROM spare_part_code WHERE spare_part_code_id != '.$id.' AND code = "'.$code.'"');
+    }
     public function queryStock($sql){
         return $this->query($sql);
     }

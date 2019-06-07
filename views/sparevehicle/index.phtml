@@ -1,6 +1,18 @@
 
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>THAY THẾ PHỤ TÙNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('sparevehicle') ?>">Thay thế phụ tùng</a></li>
+  </ol>
+</section>
 <div>
-  
+  <div class="error">
+  *Lưu ý: Số đầu và số mooc hiển thị không hẳn là đang ghép nối với nhau. <br>
+  [ Để thực hiện việc lắp ráp phụ tùng cần có phiếu xuất kho. Khi phụ tùng thay ra sẽ ở trạng thái hư hỏng ]
+</div>
 
   <div id="content" style="padding:5px;">
 
@@ -9,8 +21,8 @@
         <div class="alignleft actions">
           <form id="spare_form" action="" method="post">
           <div class="form-group">
-            <label for="vehicle">Xe</label>
-            <select id="vehicle" name="vehicle" style="width:100px" class="select2">
+            <label for="vehicle">Đầu</label>
+            <select id="vehicle" name="vehicle" style="width:100px">
               <?php foreach ($vehicles as $ve) { ?>
                 <option value="<?php echo $ve->vehicle_id ?>"><?php echo $ve->vehicle_number ?></option>
               <?php } ?>
@@ -22,7 +34,7 @@
           <div class="form-group">
             <label for="romooc">Mooc</label>
             
-            <select id="romooc" name="romooc" style="width:100px" class="select2">
+            <select id="romooc" name="romooc" style="width:100px">
               <?php foreach ($romoocs as $ro) { ?>
                 <option value="<?php echo $ro->romooc_id ?>"><?php echo $ro->romooc_number ?></option>
               <?php } ?>
@@ -37,8 +49,10 @@
         <div class="alignleft actions">
           <div class="form-group">
             <label for="ngay">Ngày thực hiện</label>
-            <input style="width:100px" type="text"  class="input-mask-date" id="ngay" name="ngay" value="<?php echo date('d/m/Y') ?>" required="required">
+            <input style="width:70px" type="text"  class="ngay" id="ngay" name="ngay" value="<?php echo date('d-m-Y') ?>" required="required">
+            <?php if(!isset($disable_control)){ ?>
             <input type="submit" value="Hoàn thành" id="update">
+            <?php } ?>
           </div>
         </div>
 
@@ -49,24 +63,13 @@
 
 <div class="clearfix"></div>
 
-<div class="tabbable">
-  <ul class="nav nav-tabs padding-18">
-    <li <?php echo $tab_active==1?'class="active"':null ?>>
-      <a data-toggle="tab" href="#tab1">
-        <i class="green ace-icon fa fa-wrench bigger-120"></i>
-        LẮP VÀO
-      </a>
-    </li>
-
-    <li <?php echo $tab_active==2?'class="active"':null ?>>
-      <a data-toggle="tab" href="#tab2">
-        <i class="red ace-icon fa fa-plug bigger-120"></i>
-        THAY RA
-      </a>
-    </li>
+<div class="tabs">
+  <ul class="tab-links">
+    <li <?php echo $tab_active==1?'class="active"':null ?>  ><a href="#tab1"><i class="fa fa-wrench"></i> LẮP VÀO</a></li>
+    <li <?php echo $tab_active==2?'class="active"':null ?>  ><a href="#tab2"><i class="fa fa-plug"></i> THAY RA</a></li>
   </ul>
-  <div class="tab-content no-border ">
-    <div id="tab1" class="tab-pane in <?php echo $tab_active==1?'active':null ?>">
+  <div class="tab-content">
+    <div class="tab <?php echo $tab_active==1?'active':null ?>" id="tab1" >
       <div class="add-box">
         <form id="house_form_x" action="" method="post">
           <input type="hidden" value="<?php echo $tab_active ?>" class="tab_active" name="tab_active" >
@@ -84,27 +87,19 @@
             <?php } ?>
           </select>
           Phiếu xuất kho
-          <select style="width:200px" id="export_stock" name="export_stock" class="select2">
+          <select style="width:200px" id="export_stock" name="export_stock">
             <?php foreach ($export_stocks as $ex) { ?>
               <option value="<?php echo $ex->export_stock_id ?>" ><?php echo $ex->export_stock_code ?></option>
             <?php } ?>
           </select>
-          <a title="Thêm phiếu xuất kho" onclick="add_click('<?php echo $this->url('exportstock/add') ?>','Thêm phiếu xuất kho mới')" ><i class="fa fa-plus"></i></a>
+          <a title="Thêm phiếu xuất kho" href="<?php echo $this->url('exportstock') ?>"><i class="fa fa-plus"></i></a>
           <input type="hidden" value="<?php echo $tab_active ?>" class="tab_active" name="tab_active" >
           <input type="hidden" value="<?php echo $vehicle ?>" name="vehicle" >
           <input type="hidden" value="<?php echo $romooc ?>" name="romooc" >
         </form>
       </div>
       <div class="clearfix"></div>
-      <div id="launchPad">  
-        <div>Phụ tùng thiết bị lắp vào</div>
-        <?php foreach ($spare_parts as $m) { ?>
-          <div class="card col-md-4 col-xs-4" id="<?php echo $m->spare_part_id ?>">
-              <?php echo '['.$m->spare_part_code.'-'.$m->spare_part_name.']-'.$m->spare_part_seri ?><input type="number" style="width:40px" min="1" max="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" value="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" class="num">
-          </div> 
-        <?php }  ?>
-          
-      </div>
+
       <div id="dropZone">
           <div class="stack">
               <div class="stackHdr">
@@ -124,11 +119,19 @@
               </div>
           </div>
       </div>
-      
+      <div id="launchPad">  
+        <div>Phụ tùng thiết bị lắp vào</div>
+        <?php foreach ($spare_parts as $m) { ?>
+          <div class="card col-md-4 col-xs-4" id="<?php echo $m->spare_part_id ?>">
+              <?php echo '['.$m->spare_part_code.'-'.$m->spare_part_name.']-'.$m->spare_part_seri ?><input type="number" style="width:40px" min="1" max="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" value="<?php echo $m->spare_stock_number-(isset($arr_stock[$m->export_stock][$m->spare_part_id])?$arr_stock[$m->export_stock][$m->spare_part_id]:0) ?>" class="num">
+          </div> 
+        <?php }  ?>
+          
+      </div>
 
       <div class="clearfix"></div>
     </div>
-    <div id="tab2" class="tab-pane <?php echo $tab_active==2?'active':null ?>">
+    <div class="tab <?php echo $tab_active==2?'active':null ?>" id="tab2" >
       <div id="spare-dropZone">
           <div class="spare-stack">
               <div class="spare-stackHdr">
@@ -177,10 +180,7 @@
 
 <div class="clearfix"></div>
 
-<div class="error">
-  *Lưu ý: Số đầu và số mooc hiển thị không hẳn là đang ghép nối với nhau. <br>
-  [ Để thực hiện việc lắp ráp phụ tùng cần có phiếu xuất kho. Khi phụ tùng thay ra sẽ ở trạng thái hư hỏng ]
-</div>
+
 
 <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
 
@@ -265,122 +265,139 @@
 }
 </style>
 <script type="text/javascript">
+var pickerOpay2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true
+    }; 
+    $(".ngay").datepicker(pickerOpay2);
 
-$(document).ready(function(){
-  $( ".select2" ).select2({dropdownAutoWidth : true});
 
-  $( ".draggable" ).draggable({
+  $( function() {
+    $( ".draggable" ).draggable({
     });
+  } );
 
-  $(".card").draggable({
+
+
+$(".card").draggable({
     containment: "body",
     scroll: true,
     cursor: "move",
     helper: 'clone',
     revert: "invalid"
-  });
-  $(".card2").draggable({
-      containment: "body",
-      scroll: true,
-      cursor: "move",
-      helper: 'clone',
-      revert: "invalid"
-  });
+});
+$(".card2").draggable({
+    containment: "body",
+    scroll: true,
+    cursor: "move",
+    helper: 'clone',
+    revert: "invalid"
+});
 
-  $("#launchPad").droppable({
-      tolerance: "intersect",
-      accept: ".card",
-      activeClass: "ui-state-default",
-      hoverClass: "ui-state-hover",
-      drop: function(event, ui) {
-          $("#launchPad").append($(ui.draggable));
-      }
-  });
+$("#launchPad").droppable({
+    tolerance: "intersect",
+    accept: ".card",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {
+        $("#launchPad").append($(ui.draggable));
+    }
+});
 
-  $(".stackDrop1").droppable({
-      tolerance: "intersect",
-      accept: ".card",
-      activeClass: "ui-state-default",
-      hoverClass: "ui-state-hover",
-      drop: function(event, ui) {  
-            
-          $(this).append($(ui.draggable));
-          console.log(ui.draggable[0].id);
-        
-      }
-  });
+$(".stackDrop1").droppable({
+    tolerance: "intersect",
+    accept: ".card",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {  
+          
+        $(this).append($(ui.draggable));
+        console.log(ui.draggable[0].id);
+      
+    }
+});
 
-  $(".stackDrop2").droppable({
-      tolerance: "intersect",
-      accept: ".card",
-      activeClass: "ui-state-default",
-      hoverClass: "ui-state-hover",
-      drop: function(event, ui) {    
-        
-          $(this).append($(ui.draggable));
-          console.log(ui.draggable[0].id);
-        
-      }
-  });
-
-
-
-
-  $(".spare-card").draggable({
-      containment: "body",
-      scroll: true,
-      cursor: "move",
-      helper: 'clone',
-      revert: "invalid"
-  });
-  $(".spare-card2").draggable({
-      containment: "body",
-      scroll: true,
-      cursor: "move",
-      helper: 'clone',
-      revert: "invalid"
-  });
-
-  $("#spare-launchPad").droppable({
-      tolerance: "intersect",
-      accept: ".spare-card",
-      activeClass: "ui-state-default",
-      hoverClass: "ui-state-hover",
-      drop: function(event, ui) {
-          $("#spare-launchPad").append($(ui.draggable));
-      }
-  });
-
-
-  $(".spare-stackDrop1").droppable({
-      tolerance: "intersect",
-      accept: ".card-vehicle",
-      activeClass: "ui-state-default",
-      hoverClass: "ui-state-hover",
-      drop: function(event, ui) {  
-            
-          $(this).append($(ui.draggable));
-          console.log(ui.draggable[0].id);
-        
-      }
-  });
-
-  $(".spare-stackDrop2").droppable({
-      tolerance: "intersect",
-      accept: ".card-romooc",
-      activeClass: "ui-state-default",
-      hoverClass: "ui-state-hover",
-      drop: function(event, ui) {    
-        
-          $(this).append($(ui.draggable));
-          console.log(ui.draggable[0].id);
-        
-      }
-  });
+$(".stackDrop2").droppable({
+    tolerance: "intersect",
+    accept: ".card",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {    
+      
+        $(this).append($(ui.draggable));
+        console.log(ui.draggable[0].id);
+      
+    }
 });
 
 
 
+
+$(".spare-card").draggable({
+    containment: "body",
+    scroll: true,
+    cursor: "move",
+    helper: 'clone',
+    revert: "invalid"
+});
+$(".spare-card2").draggable({
+    containment: "body",
+    scroll: true,
+    cursor: "move",
+    helper: 'clone',
+    revert: "invalid"
+});
+
+$("#spare-launchPad").droppable({
+    tolerance: "intersect",
+    accept: ".spare-card",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {
+        $("#spare-launchPad").append($(ui.draggable));
+    }
+});
+
+
+$(".spare-stackDrop1").droppable({
+    tolerance: "intersect",
+    accept: ".card-vehicle",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {  
+          
+        $(this).append($(ui.draggable));
+        console.log(ui.draggable[0].id);
+      
+    }
+});
+
+$(".spare-stackDrop2").droppable({
+    tolerance: "intersect",
+    accept: ".card-romooc",
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    drop: function(event, ui) {    
+      
+        $(this).append($(ui.draggable));
+        console.log(ui.draggable[0].id);
+      
+    }
+});
 
 var v = "<?php echo $vehicle ?>";
 $('#vehicle option[value='+v+']').attr('selected','selected');
@@ -406,7 +423,36 @@ $('#house').change(function(){
   $('#house_form_x').submit();
 });
 
+jQuery(document).ready(function() {
+    jQuery('.tabs .tab-links a').on('click', function(e)  {
+        var currentAttrValue = jQuery(this).attr('href');
 
+        var id = currentAttrValue.replace('#tab','');
+        $('.tab_active').val(id);
+        // Show/Hide Tabs
+        jQuery('.tabs ' + currentAttrValue).addClass('active').siblings().removeClass('active');
+        jQuery('.tabs ' + currentAttrValue).slideDown(300).siblings().slideUp(300);
+
+ 
+        // Change/remove current tab to active
+        jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+ 
+        e.preventDefault();
+    });
+
+    jQuery('.tabs .tab-left a').on('click', function(e)  {
+        var currentAttrValue = jQuery(this).attr('href');
+ 
+        // Show/Hide Tabs
+        jQuery('.tabs ' + currentAttrValue).addClass('active').siblings().removeClass('active');
+        jQuery('.tabs ' + currentAttrValue).slideDown(300).siblings().slideUp(300);
+ 
+        // Change/remove current tab to active
+        jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+ 
+        e.preventDefault();
+    });
+});
 
 $('#update').click(function(){
   var vehicle = $('#vehicle').val();
@@ -498,10 +544,10 @@ $('#update').click(function(){
 
         setTimeout(function() {
           location.reload(true);
-        }, 500);
+        }, 200);
     }
   });
 });
 
-
+$("#export_stock").chosen();
 </script>

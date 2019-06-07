@@ -11,36 +11,23 @@ Class shipmentcostModel Extends baseModel {
     public function createShipment($data) 
     {    
         /*$data = array(
-        	'Shipment_id' => $data['Shipment_id'],
-        	'Shipment_name' => $data['Shipment_name'],
-        	'Shipment_birth' => $data['Shipment_birth'],
-        	'Shipment_gender' => $data['Shipment_gender'],
-            'Shipment_address' => $data['Shipment_address'],
-            'Shipment_phone' => $data['Shipment_phone'],
-            'Shipment_email' => $data['Shipment_email'],
-            'cmnd' => $data['cmnd'],
-            'bank' => $data['bank'],
-            'account' => $data['account'],
+        	'Shipmentname' => $data['Shipmentname'],
+        	'password' => $data['password'],
+        	'create_time' => $data['create_time'],
+        	'role' => $data['role'],
         	);*/
-
         return $this->insert($this->table,$data);
     }
-    public function updateShipment($data,$where) 
+    public function updateShipment($data,$id) 
     {    
-        if ($this->getShipmentByWhere($where)) {
+        if ($this->getShipmentByWhere($id)) {
         	/*$data = array(
-            'Shipment_id' => $data['Shipment_id'],
-            'Shipment_name' => $data['Shipment_name'],
-            'Shipment_birth' => $data['Shipment_birth'],
-            'Shipment_gender' => $data['Shipment_gender'],
-            'Shipment_address' => $data['Shipment_address'],
-            'Shipment_phone' => $data['Shipment_phone'],
-            'Shipment_email' => $data['Shipment_email'],
-            'cmnd' => $data['cmnd'],
-            'bank' => $data['bank'],
-            'account' => $data['account'],
-            );*/
-	        return $this->update($this->table,$data,$where);
+	        	'Shipmentname' => $data['Shipmentname'],
+	        	'password' => $data['password'],
+	        	'create_time' => $data['create_time'],
+	        	'role' => $data['role'],
+	        	);*/
+	        return $this->update($this->table,$data,$id);
         }
         
     }
@@ -50,10 +37,10 @@ Class shipmentcostModel Extends baseModel {
     	}
     }
     public function getShipment($id){
-        return $this->getByID($this->table,$id);
+    	return $this->getByID($this->table,$id);
     }
     public function getShipmentByWhere($where){
-    	return $this->getByWhere($this->table,$where);
+        return $this->getByWhere($this->table,$where);
     }
     public function getAllShipmentByWhere($id){
         return $this->query('SELECT * FROM shipment_cost WHERE shipment_cost_id != '.$id);

@@ -86,7 +86,6 @@ function show($view) {
     if (file_exists($path_view) == false)
     {
         //throw new Exception('Template not found in '. $path_view);
-        $this->disableLayout();
         $path_view = __SITE_PATH . '/views/error404.php';
         
     }

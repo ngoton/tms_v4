@@ -1,719 +1,271 @@
-
-<div id="error_shipment" class="error"><?php echo isset($error) ? $error : null; ?></div>     
-<div class="tabbable">
-  <form id="edit_shipment" method="post" action="" autocomplete="off">
-    <ul class="nav nav-tabs padding-18">
-      <li class="active">
-        <a data-toggle="tab" href="#homeshipment">
-          <i class="green ace-icon fa fa-file-text-o bigger-120"></i>
-          Thông tin
-        </a>
-      </li>
-      <li>
-        <a data-toggle="tab" href="#roadshipment">
-          <i class="blue ace-icon fa fa-road bigger-120"></i>
-          Lộ trình
-        </a>
-      </li>
-      <li>
-        <a data-toggle="tab" href="#costshipment">
-          <i class="orange ace-icon fa fa-money bigger-120"></i>
-          Chi phí
-        </a>
-      </li>
-    </ul>
-    <div class="tab-content no-border ">
-      <div id="homeshipment" class="tab-pane in active">
-        <div>
-          <label>
-            <input name="shipment_sub" type="radio" class="ace" value="0" <?php echo $shipment_data->shipment_sub!=1?'checked=""':null ?> >
-            <span class="lbl blue"> Lô hàng chính</span>
-          </label>
-          <label>
-            <input name="shipment_sub" type="radio" class="ace" value="1" <?php echo $shipment_data->shipment_sub==1?'checked=""':null ?> >
-            <span class="lbl blue"> Lô hàng phụ</span>
-          </label>
-        </div>
-        <div class="col-md-2 col-xs-6">
-          <label for="dispatch_code">Lệnh điều xe</label>
-          <div class="input-group">
-            <select class="form-control select2" id="shipment_dispatch" name="shipment_dispatch" tabindex="1" required="required">
-                <option value="">Chọn</option>
-              <?php foreach ($dispatchs as $dispatch) { ?>
-                <option <?php echo $shipment_data->shipment_dispatch==$dispatch->dispatch_id?'selected="selected"':null ?> value="<?php echo $dispatch->dispatch_id ?>"><?php echo $dispatch->dispatch_code ?></option>
-              <?php } ?>
-            </select>
-          </div>
-          <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_do">Số DO</label>
-          <div class="input-group">
-            <input class="form-control" type="text" id="shipment_do" name="shipment_do" tabindex="7" value="<?php echo $shipment_data->shipment_do ?>" >
-          </div>
-          <label for="shipment_customer">Khách hàng </label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_customer" name="shipment_customer" tabindex="14" readonly="">
-              <option value="<?php echo $customers->customer_id ?>"><?php echo $customers->customer_name ?></option>
-            </select>
-          </div>  
-          
-            
-        </div>
-        <div class="col-md-2 col-xs-6">
-          <label for="shipment_date">Ngày</label>
-          <div class="input-group">
-            <input class="form-control input-mask-date" type="text" id="shipment_date" name="shipment_date" tabindex="2" required="required" value="<?php echo $lib->hien_thi_ngay_thang($shipment_data->shipment_date) ?>">
-          </div>
-          <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_booking_detail">Số container</label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_booking_detail" name="shipment_booking_detail" tabindex="8" required="required">
-              <option value="<?php echo $booking_details->booking_detail_id ?>"><?php echo $booking_details->booking_detail_container ?></option>
-            </select>
-          </div>
-          <label for="shipment_type">Loại hàng</label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_type" name="shipment_type" tabindex="15" readonly="">
-              <option value="">Chọn</option>
-              <option <?php echo $shipment_data->shipment_type==1?'selected="selected"':null ?> value="1">Hàng nhập</option>
-              <option <?php echo $shipment_data->shipment_type==2?'selected="selected"':null ?> value="2">Hàng xuất</option>
-              <option <?php echo $shipment_data->shipment_type==3?'selected="selected"':null ?> value="3">Khác</option>
-            </select>
-          </div>
-          
-           
-        </div>
-        <div class="col-md-2 col-xs-6">
-          <label for="shipment_vehicle">Xe <a title="Thêm xe mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("vehicle/add") ?>','Thêm xe mới','shipment_vehicle','<?php echo $this->url("vehicle/getvehicle") ?>','add_vehicle')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="shipment_vehicle" name="shipment_vehicle" required="required" tabindex="3">
-              <option value="">Chọn</option>
-              <?php foreach ($vehicles as $vehicle) { ?>
-                <option <?php echo $shipment_data->shipment_vehicle==$vehicle->vehicle_id?'selected="selected"':null ?> value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
-              <?php } ?>
-            </select>
-          </div>  
-          <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_ton_receive">Sản lượng nhận</label>
-          <div class="input-group">
-            <input class="form-control numbers" type="text" id="shipment_ton_receive" name="shipment_ton_receive" tabindex="9" value="<?php echo $shipment_data->shipment_ton_receive ?>" >
-          </div>
-          <label for="shipment_booking">Số BK/BL </label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_booking" name="shipment_booking" tabindex="16" readonly="">
-              <option value="<?php echo $bookings->booking_id ?>"><?php echo $bookings->booking_number ?></option>
-            </select>
-          </div> 
-          
-          
-       </div>
-       <div class="col-md-2 col-xs-6">
-          <label for="shipment_romooc">Mooc <a title="Thay lắp mooc" id="vehicle_romooc"><i class="ace-icon fa fa-exchange blue"></i></a></label>
-          <div class="input-group">
-            <input class="form-control" type="text" id="shipment_romooc" name="shipment_romooc" tabindex="4" readonly="" data="<?php echo $romoocs->romooc_id ?>" value="<?php echo $romoocs->romooc_number ?>" >
-          </div>
-          <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_ton">Sản lượng giao</label>
-          <div class="input-group">
-            <input class="form-control numbers" type="text" id="shipment_ton" name="shipment_ton" tabindex="10" required="required" value="<?php echo $shipment_data->shipment_ton ?>" >
-          </div>
-          <label for="shipment_place_from">Nơi lấy <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','shipment_place_from','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="shipment_place_from" name="shipment_place_from" required="required" tabindex="17">
-              <option value="">Chọn</option>
-              <?php foreach ($places as $place) { ?>
-                <option <?php echo $shipment_data->shipment_place_from==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
-              <?php } ?>
-            </select>
-          </div>
-          <label for="shipment_port_from">Lấy rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','shipment_port_from','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="shipment_port_from" name="shipment_port_from" tabindex="19">
-              <option value="">Chọn</option>
-              <?php foreach ($ports as $port) { ?>
-                <option <?php echo $shipment_data->shipment_port_from==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
-          
-          
-        </div>
-        <div class="col-md-2 col-xs-6">
-          <label for="shipment_staff">Tài xế <a title="Tài xế" id="vehicle_driver"><i class="ace-icon fa fa-user blue"></i></a></label>
-          <div class="input-group">
-            <input class="form-control" type="text" id="shipment_staff" name="shipment_staff" tabindex="5" readonly="" data="<?php echo $staffs->staff_id ?>" value="<?php echo $staffs->staff_name ?>" >
-          </div>
-          <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_unit">ĐVT</label>
-          <div class="input-group">
-            <select class="form-control" id="shipment_unit" name="shipment_unit" tabindex="11" required="required">
-              <?php foreach ($units as $unit) { ?>
-                <option <?php echo $shipment_data->shipment_unit==$unit->unit_id?'selected="selected"':null ?> value="<?php echo $unit->unit_id ?>"><?php echo $unit->unit_name ?></option>
-              <?php } ?>
-            </select>
-          </div>
-          <label for="shipment_place_to">Nơi hạ <a title="Thêm kho hàng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("place/add") ?>','Thêm kho hàng mới','shipment_place_to','<?php echo $this->url("place/getplace") ?>','add_place')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="shipment_place_to" name="shipment_place_to" required="required" tabindex="18">
-              <option value="">Chọn</option>
-              <?php foreach ($places as $place) { ?>
-                <option <?php echo $shipment_data->shipment_place_to==$place->place_id?'selected="selected"':null ?> value="<?php echo $place->place_id ?>"><?php echo $place->place_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
-          <label for="shipment_port_to">Trả rỗng <a title="Thêm cảng mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("port/add") ?>','Thêm cảng mới','shipment_port_to','<?php echo $this->url("port/getport") ?>','add_port')"></i></a></label>
-          <div class="input-group">
-            <select class="form-control select2" id="shipment_port_to" name="shipment_port_to" tabindex="20">
-              <option value="">Chọn</option>
-              <?php foreach ($ports as $port) { ?>
-                <option <?php echo $shipment_data->shipment_port_to==$port->place_id?'selected="selected"':null ?> value="<?php echo $port->place_id ?>"><?php echo $port->place_name ?></option>
-              <?php } ?>
-            </select>
-          </div> 
-          
-        </div>
-        <div class="col-md-2 col-xs-6">
-          <label for="shipment_comment">Ghi chú</label>
-          <div class="input-group">
-            <input class="form-control" type="text" id="shipment_comment" name="shipment_comment" tabindex="6" value="<?php echo $shipment_data->shipment_comment ?>" >
-          </div>
-          <div class="hr hr-8 dotted hr-double"></div>
-          <label for="shipment_start_date">Ngày lấy</label>
-          <div class="input-group">
-            <input class="form-control input-mask-datetime" type="text" id="shipment_start_date" name="shipment_start_date" tabindex="12" value="<?php echo date('d/m/Y H:m:s',$shipment_data->shipment_start_date) ?>" >
-          </div>
-          <label for="shipment_end_date">Ngày hạ</label>
-          <div class="input-group">
-            <input class="form-control input-mask-datetime" type="text" id="shipment_end_date" name="shipment_end_date" tabindex="13" value="<?php echo date('d/m/Y H:m:s',$shipment_data->shipment_end_date) ?>" >
-          </div>
-        </div>
-      </div>
-      <div id="roadshipment" class="tab-pane">
-        <div class="col-md-4">
-          <div class="widget-box transparent">
-            <div class="widget-header widget-header-small">
-              <h5 class="widget-title blue smaller">
-                <i class="ace-icon fa fa-location-arrow orange"></i>
-                <?php echo $km.' km - '.$oil.' lit - '.$time.'h' ?>
-              </h4>
-            </div>
-            <div class="widget-body">
-              <div class="widget-main padding-8">
-                <div id="profile-feed-1" class="profile-feed">
-                  <?php $m=0; foreach ($roads as $road) { ?>
-                    <div class="profile-activity clearfix">
-                      <div>
-                        <div class="pull-left">
-                          <input name="shipment_road[]" type="checkbox" class="checkbox_road ace" value="<?php echo $road->road_id ?>" checked><span class="lbl"></span>
-                        </div>
-                        <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_from] ?> </a> - <a class="user marker-link" markerid="<?php echo $m++ ?>"> <?php echo $route_data[$road->road_route_to] ?> </a>
-                        <div class="time">
-                          <i class="ace-icon fa fa-map-signs bigger-110"></i>
-                          <?php echo $road->road_km ?> km
-                          <i class="ace-icon fa fa-tint bigger-110"></i>
-                          <?php echo $road->road_oil ?> lit
-                          <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                          <?php echo $road->road_time ?>h
-                          
-                        </div>
-                      </div>
-
-                      <div class="tools action-buttons">
-                        <a class="blue" onclick="view_click_other('<?php echo $this->url("road/view/") ?>','Thông tin định mức tuyến đường',<?php echo $road->road_id ?>,'none')">
-                          <i class="ace-icon fa fa-info-circle bigger-125"></i>
-                        </a>
-                      </div>
-                    </div>
-                  <?php } ?>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div id="map_canvas" style="min-width:490px;width:100%;height:300px;"></div>
-        </div>
-
-        <script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?php echo MAP_KEY ?>&callback=initialize"></script>
-        <script>
-        var markers = new Array();
-        var locations = <?php echo json_encode($road_data ); ?>;
-
-        function initialize() {
-          var bounds = new google.maps.LatLngBounds();
-          var infowindow = new google.maps.InfoWindow();
-          var directionsDisplay = new google.maps.DirectionsRenderer({preserveViewport: true});
-          var directionsService = new google.maps.DirectionsService();
-
-          var map = new google.maps.Map(document.getElementById('map_canvas'), {
-            zoom: 10,
-            gestureHandling: 'greedy',
-            center: new google.maps.LatLng(10.8470055, 106.6500569),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          });
-          directionsDisplay.setMap(map);
-          
-          var marker, i;
-          var request = {
-            travelMode: google.maps.TravelMode.DRIVING
-          };
-          for (i = 0; i < locations.length; i++) {
-            marker = new google.maps.Marker({
-              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-              map: map,
-              title: locations[i][0]
-            });
-
-            
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-              return function() {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-              }
-            })(marker, i));
-
-            // Add marker to markers array
-            markers.push(marker);
-            bounds.extend(marker.position);
-
-            if (i == 0) request.origin = marker.getPosition();
-            else if (i == locations.length - 1) request.destination = marker.getPosition();
-            else {
-              if (!request.waypoints) request.waypoints = [];
-              request.waypoints.push({
-                location: marker.getPosition(),
-                stopover: true
-              });
-            }
-
-          }
-
-          //now fit the map to the newly inclusive bounds
-          map.fitBounds(bounds);
-
-          directionsService.route(request, function(result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-              var map = directionsDisplay.getMap();
-              directionsDisplay.setDirections(result);
-              map.setZoom(9);
-            }
-          });
-
-        }
-
-        $('.marker-link').click(function(){
-          google.maps.event.trigger(markers[$(this).attr('markerid')], 'click');
-        });
-        </script>
-        <script>
-          $('#profile-feed-1').ace_scroll({
-            height: '400px',
-            mouseWheelLock: true,
-            alwaysVisible : true
-          });
-        </script>
-      </div>
-      <div id="costshipment" class="tab-pane">
-        <div class="tabbable tabs-below">
-          <div class="tab-content">
-            <div id="costloan" class="tab-pane active">
-              <div class="col-md-6">
-                <label for="shipment_cost_lift_on">Nâng cont</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_lift_on" name="shipment_cost_lift_on" tabindex="15" value="<?php echo $lib->formatMoney($lift_on) ?>">
-                </div>
-                <label for="shipment_cost_lift_off">Hạ cont</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_lift_off" name="shipment_cost_lift_off" tabindex="15" value="<?php echo $lib->formatMoney($lift_off) ?>">
-                </div>
-                <label for="shipment_cost_lift_on_null">Nâng cont rỗng</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_lift_on_null" name="shipment_cost_lift_on_null" tabindex="15" value="<?php echo $lib->formatMoney($lift_on_null) ?>">
-                </div>
-                <label for="shipment_cost_lift_off_null">Hạ cont rỗng</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_lift_off_null" name="shipment_cost_lift_off_null" tabindex="15" value="<?php echo $lib->formatMoney($lift_off_null) ?>">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <label for="shipment_cost_deposit">Cược cont</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_deposit" name="shipment_cost_deposit" tabindex="15" value="<?php echo $lib->formatMoney($deposit) ?>">
-                </div>
-                <label for="shipment_cost_clean">Rửa cont</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_clean" name="shipment_cost_clean" tabindex="15" value="<?php echo $lib->formatMoney($clean) ?>">
-                </div>
-                <label for="shipment_cost_trans">Chuyển cont</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_trans" name="shipment_cost_trans" tabindex="15" value="<?php echo $lib->formatMoney($trans) ?>">
-                </div>
-                <label for="shipment_cost_weight">Cân xe</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_weight" name="shipment_cost_weight" tabindex="15" value="<?php echo $lib->formatMoney($weight) ?>">
-                </div>
-                <label for="shipment_cost_document">Lấy hồ sơ</label>
-                <div class="input-group">
-                  <input class="form-control numbers" type="text" id="shipment_cost_document" name="shipment_cost_document" tabindex="15" value="<?php echo $lib->formatMoney($document) ?>">
-                </div>
-              </div>
-              <div class="clearfix"></div>
-              
-              
-            </div>
-            <div id="costrelease" class="tab-pane">
-              <label for="shipment_cost_release">Số tiền</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_release" name="shipment_cost_release" tabindex="15" value="<?php echo $lib->formatMoney($release) ?>">
-              </div>
-            </div>
-            <div id="costpark" class="tab-pane">
-              <label for="shipment_cost_park">Số tiền</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_park" name="shipment_cost_park" tabindex="15" value="<?php echo $lib->formatMoney($park) ?>">
-              </div>
-            </div>
-            <div id="costtoll" class="tab-pane">
-              <label for="shipment_cost_toll">Số tiền</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_toll" name="shipment_cost_toll" tabindex="15" value="<?php echo $lib->formatMoney($roadtoll) ?>">
-              </div>
-            </div>
-            <div id="costwarehouse" class="tab-pane">
-              
-              <label for="shipment_cost_cont">Bồi dưỡng cont</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_cont" name="shipment_cost_cont" tabindex="15" value="<?php echo $lib->formatMoney($warehouse_cont) ?>">
-              </div>
-            
-              <label for="shipment_cost_ton">Bồi dưỡng tấn</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_ton" name="shipment_cost_ton" tabindex="15" value="<?php echo $lib->formatMoney($warehouse_ton) ?>">
-              </div>
-            </div>
-            <div id="costpolice" class="tab-pane">
-              <label for="shipment_cost_police">Số tiền</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_police" name="shipment_cost_police" tabindex="15" value="<?php echo $lib->formatMoney($police) ?>">
-              </div>
-            </div>
-            <div id="costtire" class="tab-pane">
-              <label for="shipment_cost_tire">Số tiền</label>
-              <div class="input-group">
-                <input class="form-control numbers" type="text" id="shipment_cost_tire" name="shipment_cost_tire" tabindex="15" value="<?php echo $lib->formatMoney($tire) ?>">
-              </div>
-            </div>
-
-            <div id="othercost" class="tab-pane">
-              <table id="dataTable_shipment" style="width: 100%;">
-                <tbody>
-                  <?php if (count($shipment_costs)>0) { ?>
-                  <?php foreach ($shipment_costs as $shipment_cost) { ?>
-                    <tr>
-                      <td style="padding-right: 10px;"><input type="checkbox" name="chk" data="<?php echo $shipment_cost->shipment_cost_id ?>" title="<?php echo $shipment_cost->shipment_cost_shipment ?>"></td>
-                      <td>
-                          <table style="width:100%;">
-                              <tbody>
-                                <tr>
-                                  <td>
-                                    <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.shipment_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
-                                    <div class="input-group">
-                                      <select class="form-control shipment_cost_list" name="shipment_cost_list[]" tabindex="14">
-                                        <?php foreach ($cost_lists as $cost_list) { ?>
-                                          <option <?php echo $shipment_cost->shipment_cost_list==$cost_list->cost_list_id?'selected="selected"':null ?> value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
-                                        <?php } ?>
-                                      </select>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <label>Nội dung</label>
-                                    <div class="input-group">
-                                      <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15" value="<?php echo $shipment_cost->shipment_cost_comment ?>">
-                                    </div>
-                                  </td>
-                                  
-                                  <td>
-                                    <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" <?php echo $shipment_cost->shipment_cost_money_vat==1?'checked':null ?> ><span class="lbl"></span> VAT</label>
-                                    <div class="input-group">
-                                      <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16" data="<?php echo $shipment_cost->shipment_cost_id ?>" value="<?php echo $lib->formatMoney($shipment_cost->shipment_cost_money) ?>">
-                                    </div>
-                                    
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>
-                                    <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.shipment_cost_customer','<?php echo $this->url("customer/getallcustomer") ?>','add_customer')"></i></a></label>
-                                    <div class="input-group">
-                                      <select class="form-control shipment_cost_customer select2" name="shipment_cost_customer[]" tabindex="17">
-                                        <?php foreach ($customer_lists as $customer_list) { ?>
-                                          <option <?php echo $shipment_cost->shipment_cost_customer==$customer_list->customer_id?'selected="selected"':null ?> value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
-                                        <?php } ?>
-                                      </select>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <label>Số hóa đơn chứng từ</label>
-                                    <div class="input-group">
-                                      <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18" value="<?php echo $shipment_cost->shipment_cost_invoice ?>">
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <label>Ngày</label>
-                                    <div class="input-group">
-                                      <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19" value="<?php echo $lib->hien_thi_ngay_thang($shipment_cost->shipment_cost_invoice_date) ?>">
-                                    </div>
-                                  </td>
-                                </tr>
-                                
-                          </tbody></table>
-                          <div class="hr hr-8 dotted hr-double"></div>
-                      </td>
-                      
-                    </tr>
-                  <?php } ?>
-                  
-                  <?php }else{ ?>
-                  <tr>
-                    <td style="padding-right: 10px;"><input type="checkbox" name="chk"></td>
-                    <td>
-                        <table style="width:100%;">
-                            <tbody>
-                              <tr>
-                                <td>
-                                  <label>Chi phí <a title="Thêm chi phí mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới','.shipment_cost_list','<?php echo $this->url("costlist/getcostlist") ?>','add_costlist')"></i></a></label>
-                                  <div class="input-group">
-                                    <select class="form-control shipment_cost_list" name="shipment_cost_list[]" tabindex="14">
-                                      <?php foreach ($cost_lists as $cost_list) { ?>
-                                        <option value="<?php echo $cost_list->cost_list_id ?>" ><?php echo $cost_list->cost_list_name ?></option>
-                                      <?php } ?>
-                                    </select>
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>Nội dung</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_comment" name="shipment_cost_comment[]" tabindex="15">
-                                  </div>
-                                </td>
-                                
-                                <td>
-                                  <label>Số tiền <input name="shipment_cost_money_vat[]" type="checkbox" class="shipment_cost_money_vat ace" value="1" checked><span class="lbl"></span> VAT</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_money numbers" name="shipment_cost_money[]" tabindex="16">
-                                  </div>
-                                  
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>Người nhận <a title="Thêm người nhận mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("customer/add") ?>','Thêm người nhận mới','.shipment_cost_customer','<?php echo $this->url("customer/getcustomer") ?>','add_customer')"></i></a></label>
-                                  <div class="input-group">
-                                    <select class="form-control shipment_cost_customer select2" name="shipment_cost_customer[]" tabindex="17">
-                                      <?php foreach ($customer_lists as $customer_list) { ?>
-                                        <option value="<?php echo $customer_list->customer_id ?>" ><?php echo $customer_list->customer_code.'-'.$customer_list->customer_name ?></option>
-                                      <?php } ?>
-                                    </select>
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>Số hóa đơn chứng từ</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_invoice" name="shipment_cost_invoice[]" tabindex="18">
-                                  </div>
-                                </td>
-                                <td>
-                                  <label>Ngày</label>
-                                  <div class="input-group">
-                                    <input type="text" class="shipment_cost_invoice_date input-mask-date" name="shipment_cost_invoice_date[]" tabindex="19">
-                                  </div>
-                                </td>
-                              </tr>
-                              
-                        </tbody></table>
-                        <div class="hr hr-8 dotted hr-double"></div>
-                    </td>
-                    
-                </tr>
-                  <?php } ?>
-                  
-              </tbody>
-              </table>
-          
-              <input type="button" value="Thêm" onclick="addRow_shipment('dataTable_shipment')">
-
-              <input type="button" value="Xóa" onclick="deleteRow_shipment('dataTable_shipment')">
-            </div>
-          </div>
-          <ul class="nav nav-tabs" id="myTab3">
-            <li class="active">
-              <a data-toggle="tab" href="#costloan" aria-expanded="false">
-                <i class="red ace-icon fa fa-exchange bigger-110"></i>
-                Chi hộ
-              </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#costrelease" aria-expanded="false">
-                <i class="pink ace-icon fa fa-file-text-o bigger-110"></i>
-                Thanh lý
-              </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#costpark" aria-expanded="false">
-                <i class="brown ace-icon fa fa-anchor bigger-110"></i>
-                Neo xe
-              </a>
-            </li>
-            <li class="">
-              <a data-toggle="tab" href="#costtoll" aria-expanded="false">
-                <i class="pink ace-icon fa fa-car bigger-110"></i>
-                Cầu đường
-              </a>
-            </li>
-
-            <li class="">
-              <a data-toggle="tab" href="#costwarehouse" aria-expanded="false">
-                <i class="blue ace-icon fa fa-home bigger-110"></i>
-                Bồi dưỡng
-              </a>
-            </li>
-            <li class="">
-              <a data-toggle="tab" href="#costpolice" aria-expanded="false">
-                <i class="orange ace-icon fa fa-user-secret bigger-110"></i>
-               Công an
-              </a>
-            </li>
-            <li class="">
-              <a data-toggle="tab" href="#costtire" aria-expanded="false">
-                <i class="green ace-icon fa fa-support bigger-110"></i>
-               Vá vỏ - Rửa xe
-              </a>
-            </li>
-            <li class="">
-              <a data-toggle="tab" href="#othercost" aria-expanded="true">
-                <i class="ace-icon fa fa-rocket"></i>
-                Khác
-              </a>
-            </li>
-          </ul>
-
-          
-        </div>
-        <div class="text-right"><b>Tổng chi phí: <span id="sumcost"><?php echo $lib->formatMoney($sumcost) ?></span></b></div>
-        <script type="text/javascript">
-        $(document).ready(function(){
-          $( ".select2" ).select2({dropdownAutoWidth : true});
-        });
-
-          $('#costshipment .numbers').keyup(function(){
-            var total = 0;
-            $('#costshipment .numbers').each(function(){
-              total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
-            });
-            $('#sumcost').text(total);
-            $('#sumcost').text(function(index, value) {
-              return value
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              ;
-            });
-          });
-
-          function addRow_shipment(tableID){
-              var table=document.getElementById(tableID);
-              var rowCount=table.rows.length;
-              var row=table.insertRow(rowCount);
-              var colCount=table.rows[0].cells.length;
-              for(var i=0;i<colCount;i++){
-                  var newcell=row.insertCell(i);
-                  newcell.innerHTML=table.rows[0].cells[i].innerHTML;
-                  switch(newcell.childNodes[0].type){
-                      case"text":newcell.childNodes[0].value="";
-                      break;
-                      case"checkbox":newcell.childNodes[0].checked=false;
-                      break;
-                      case"select-one":newcell.childNodes[0].selectedIndex=0;
-                      break;
-                  }
-              }
-
-              $('.shipment_cost_money:last').val("");
-              $('.shipment_cost_comment:last').val("");
-              $('.shipment_cost_invoice:last').val("");
-              $('.shipment_cost_invoice_date:last').val("");
-
-              $('input[name="chk"]:last').attr('data',"");
-              $('input[name="chk"]:last').attr('title',"");
-
-              $('.select2-container:last').remove();
-              $('.shipment_cost_customer:last').removeClass('select2-hidden-accessible');
-              $('.shipment_cost_customer:last').select2();
-
-              $('#costshipment .numbers').keyup(function(){
-                var total = 0;
-                $('#costshipment .numbers').each(function(){
-                  total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
-                });
-                $('#sumcost').text(total);
-                $('#sumcost').text(function(index, value) {
-                  return value
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  ;
-                });
-              });
-
-          }
-          function deleteRow_shipment(tableID){
-              try{
-                  var table=document.getElementById(tableID);
-                  var rowCount=table.rows.length;
-
-                  bootbox.confirm("Bạn có chắc chắn muốn xóa không?", function(result) {
-                    if(result) {
-                      for(var i=0;i<rowCount;i++){
-                          var row=table.rows[i];
-                          var chkbox=row.cells[0].childNodes[0];
-                          if(null!=chkbox&&true==chkbox.checked){
-                            if(rowCount<=1){
-                                  alert_form("Không thể xóa hết.");
-                                  break;
-                              }
-                              else if(chkbox.getAttribute("title") > 0){
-                                  
-                                      var data = chkbox.getAttribute("data");
-                                      var shipment = chkbox.getAttribute("title");
-
-                                      $.post("<?php echo BASE_URL ?>/shipment/deleteshipmentcost", {data: data, shipment: shipment},
-                                         function(data){
-                                          
-                                         }); 
-
-                              }
-                              
-                              table.deleteRow(i);
-                              rowCount--;
-                              i--;
-
-                              var total = 0;
-                              $('#costshipment .numbers').each(function(){
-                                total += parseFloat($(this).val().replace(/\,/g,'')) || 0;
-                              });
-                              $('#sumcost').text(total);
-                              $('#sumcost').text(function(index, value) {
-                                return value
-                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                ;
-                              });
-                          }
-                      }
-                    }
-                  });
-              }
-              catch(e){
-                  alert(e);
-              }
-          }
-          </script>
+<?php $j=1; ?>
+<style type="text/css">
+    .approve{
+        color: green;
+    }
+</style>
+<table class="table_data" id="tblExport3" style="font-size: 12px;">
+<thead>
+    <tr>
         
-      </div>
-    </div>
-      
-</div>
+        <th rowspan="2"  class="fix">
+            STT
+        </th>
+        <th rowspan="2"  class="fix">
+            Số DO 
+        </th>
+        <th rowspan="2"  class="fix">
+            Ngày nhận 
+        </th>
+        <th rowspan="2"  class="fix">
+            Ngày giao 
+        </th>
+        <th rowspan="2"  class="fix">
+            Xe 
+        </th>
+        <th rowspan="2"  class="fix">
+            Mooc 
+        </th>
+        <th rowspan="2"  class="fix">
+            Tài xế 
+        </th>
+        
+        <th rowspan="2"  class="fix">
+            Nơi nhận 
+        </th>
+        <th rowspan="2"  class="fix">
+            Nơi giao 
+        </th>
+        <th rowspan="2"  class="fix">
+            Khách hàng 
+        </th>
+        <th rowspan="2"  class="fix">
+            Chiều dài (km)
+        </th>
+        <th rowspan="2"  class="fix">
+            Dầu thực lãnh
+        </th>
+        <th rowspan="2"  class="fix">
+            Dầu định mức 
+        </th>
+        <th rowspan="2"  class="fix">
+            Chi phí đi đường 
+        </th>
+        <th colspan="<?php echo count($loan_units) ?>"  class="fix">
+            Chi hộ 
+        </th>
+        <th rowspan="2"  class="fix">
+            Cầu đường 
+        </th>
+        
+        <th rowspan="2"  class="fix">
+            Công an 
+        </th>
+        
+        <th rowspan="2"  class="fix">
+            Bồi dưỡng 
+        </th>
+        
+        <th rowspan="2"  class="fix">
+            Mặt hàng 
+        </th>
+        <th colspan="<?php echo count($cont_units) ?>" class="fix">
+            Số lượng nhận 
+        </th>
+        <th colspan="<?php echo count($cont_units) ?>" class="fix">
+            Số lượng giao 
+        </th>
+        <th rowspan="2"  class="fix">
+            Giờ vào 
+        </th>
+        <th rowspan="2"  class="fix">
+            Giờ ra 
+        </th>
+       
+    </tr>
+    <tr>
+        <?php foreach ($loan_units as $loan) { ?>
+        <th class="fix">
+            <?php echo $loan->cost_list_name ?> 
+        </th>
+        <?php } ?>
+        <?php foreach ($cont_units as $cont) { ?>
+        <th class="fix">
+            <?php echo $cont->cont_unit_name ?> 
+        </th>
+        <?php } ?>
+        <?php foreach ($cont_units as $cont) { ?>
+        <th class="fix">
+            <?php echo $cont->cont_unit_name ?> 
+        </th>
+        <?php } ?>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php 
+    $v = array(); $daulanh=0; $km=0; $dinhmucdau=0; $boiduong=0; $cauduong=0; $congan=0; $diduong=0; 
+    $vdaulanh=array(); $vkm=array(); $vdinhmucdau=array(); $vboiduong=array(); $vcauduong=array(); $vcongan=array(); $vdiduong=array(); 
+    ?>
+    <?php foreach ($shipments as $shipment) : ?>
+    
+    <?php
+        $dau = ($shipment->shipment_road_oil>0?$shipment->shipment_road_oil:(isset($road['road_oil'][$shipment->shipment_id])?$road['road_oil'][$shipment->shipment_id]:0))+$shipment->shipment_road_oil_add;
+
+        $way = isset($road['way_name'][$shipment->shipment_id])?$road['way_name'][$shipment->shipment_id]:null;
+        $kms = isset($road['road_km'][$shipment->shipment_id])?$road['road_km'][$shipment->shipment_id]:null;
+        $oil = isset($road['road_oil'][$shipment->shipment_id])?$road['road_oil'][$shipment->shipment_id]:null;
+        $bd = isset($warehouse['boiduong_cn'][$shipment->shipment_id])?$warehouse['boiduong_cn'][$shipment->shipment_id]:null;
+        $cd = isset($road['bridge_cost'][$shipment->shipment_id])?$road['bridge_cost'][$shipment->shipment_id]:null;
+        $ca = isset($road['police_cost'][$shipment->shipment_id])?$road['police_cost'][$shipment->shipment_id]:null;
+        
+
+        $month = intval(date('m',$shipment->shipment_date));
+        $year = date('Y',$shipment->shipment_date);
+
+    ?>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" data="<?php echo $shipment->vehicle_id.$shipment->shipment_round ?>" id="<?php echo $shipment->shipment_id ?>" class="edit_tr">
+            <td class="fix" id="shipment_id_<?php echo $shipment->shipment_id; ?>"><?php echo $j++; ?></td>
+            <td class="fix" id="bill_number_<?php echo $shipment->shipment_id; ?>"><a target="_blank" href="<?php echo $this->url('shipment/index/'.$shipment->shipment_id) ?>" ><?php echo $shipment->bill_number; ?></a></td>
+
+            <td class="fix" id="bill_receive_date_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment->bill_receive_date); ?></td>
+            <td class="fix" id="bill_delivery_date_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment->bill_delivery_date); ?></td>
+            <td class="fix" data="<?php echo $shipment->vehicle; ?>" id="vehicle_<?php echo $shipment->shipment_id; ?>"><a target="_blank" href="<?php echo $this->url('vehicle/index/'.$shipment->vehicle) ?>" ><?php echo $shipment->vehicle_number; ?></a></td>
+            <td class="fix" data="<?php echo $shipment->romooc; ?>" id="romooc_<?php echo $shipment->shipment_id; ?>"><a target="_blank" href="<?php echo $this->url('romooc/index/'.$shipment->romooc) ?>" ><?php echo isset($romooc_data['romooc_number'][$shipment->romooc])?$romooc_data['romooc_number'][$shipment->romooc]:null; ?></a></td>
+            <td class="fix" id="steersman_name_<?php echo $shipment->shipment_id; ?>" data="<?php echo $shipment->steersman; ?>"><a target="_blank" href="<?php echo $this->url('steersman/index/'.$shipment->steersman) ?>" ><?php echo $shipment->steersman_name; ?></a></td>
+            <td class="fix" data="<?php echo $shipment->shipment_from; ?>" id="shipment_from_<?php echo $shipment->shipment_id; ?>"><a target="_blank" href="<?php echo $this->url('place/view/'.$shipment->shipment_from) ?>" ><?php echo $shipment->shipment_from==$place['place_id'][$shipment->shipment_from]?$place['place_name'][$shipment->shipment_from]:null ?></a></td>
+            <td class="fix" data="<?php echo $shipment->shipment_to; ?>" id="shipment_to_<?php echo $shipment->shipment_id; ?>"><a target="_blank" href="<?php echo $this->url('place/view/'.$shipment->shipment_to) ?>" ><?php echo $shipment->shipment_to==$place['place_id'][$shipment->shipment_to]?$place['place_name'][$shipment->shipment_to]:null ?></a></td>
+            
+            <td class="fix" data="<?php echo $shipment->customer; ?>" id="customer_<?php echo $shipment->shipment_id; ?>"><a target="_blank" href="<?php echo $this->url('customer/index/'.$shipment->customer) ?>" ><?php echo $shipment->customer_name; ?></a></td>
+            <td class="fix" id="road_km_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney(isset($road['road_km'][$shipment->shipment_id])?$road['road_km'][$shipment->shipment_id]:null); ?></td>
+            <td class="fix" id="shipment_oil_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->shipment_oil; ?></td>
+            <td class="fix" id="road_oil_<?php echo $shipment->shipment_id; ?>"><?php echo $dau; ?></td>
+            <td class="fix" id="shipment_cost_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney($shipment->shipment_road_add); ?></td>
+            <?php foreach ($loan_units as $loan) { 
+                $chiho = isset($loan_shipment_data[$shipment->shipment_id][$loan->cost_list_id])?$loan_shipment_data[$shipment->shipment_id][$loan->cost_list_id]:null;
+
+                $phatsinh[$loan->cost_list_id][$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($phatsinh[$loan->cost_list_id][$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?$phatsinh[$loan->cost_list_id][$shipment->vehicle_id][$shipment->shipment_round.$month.$year]+$chiho:$chiho;
+                $chiphi[$loan->cost_list_id] = isset($chiphi[$loan->cost_list_id])?$chiphi[$loan->cost_list_id]+$chiho:$chiho;
+            ?>
+            <td class="fix" id="shipment_loan_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney($chiho); ?></td>
+            <?php } ?>
+            <td class="fix" ><?php echo $lib->formatMoney(isset($road['bridge_cost'][$shipment->shipment_id])?$road['bridge_cost'][$shipment->shipment_id]:null); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney(isset($road['police_cost'][$shipment->shipment_id])?$road['police_cost'][$shipment->shipment_id]:null); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney(isset($warehouse['boiduong_cn'][$shipment->shipment_id])?$warehouse['boiduong_cn'][$shipment->shipment_id]:null); ?></td>
+            <td  class="fix" id="customer_type_<?php echo $shipment->shipment_id; ?>"><?php echo $customer_types[$shipment->shipment_id]; ?></td>
+            <?php foreach ($cont_units as $cont) { ?>
+            <td class="fix" id="bill_receive_ton_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->bill_receive_unit==$cont->cont_unit_id?$shipment->bill_receive_ton:null; ?></td>
+            <?php } ?>
+            <?php foreach ($cont_units as $cont) { ?>
+            <td class="fix" id="bill_delivery_ton_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->bill_delivery_unit==$cont->cont_unit_id?$shipment->bill_delivery_ton:null; ?></td>
+            <?php } ?>
+            <td class="fix" id="bill_in_<?php echo $shipment->shipment_id; ?>"><?php echo date('H:i:s',$shipment->bill_in); ?></td>
+            <td class="fix" id="bill_out_<?php echo $shipment->shipment_id; ?>"><?php echo date('H:i:s',$shipment->bill_out); ?></td>
+            
+        </tr>
+
+    
+            <?php
+
+            
+        
+
+        $v[$shipment->vehicle.$shipment->shipment_round.$month.$year] = isset($v[$shipment->vehicle.$shipment->shipment_round.$month.$year])?($v[$shipment->vehicle.$shipment->shipment_round.$month.$year] + 1) : (0+1) ;
+
+
+                $daulanh += $shipment->shipment_oil;
+                $km += $kms;
+                $dinhmucdau += $dau;
+                $boiduong += $bd;
+                $cauduong += $cd+$shipment->bridge_cost_add;
+                $congan += $ca;
+                $diduong += $shipment->shipment_road_add;
+                
+
+
+                ///////
+
+                $vdaulanh[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vdaulanh[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vdaulanh[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $shipment->shipment_oil):(0+$shipment->shipment_oil);
+                $vkm[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vkm[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vkm[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $kms):(0+$kms);
+                $vdinhmucdau[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vdinhmucdau[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vdinhmucdau[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $dau):(0+$dau);
+                $vboiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vboiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vboiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $bd):(0+$bd);
+                $vcauduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vcauduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vcauduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $cd+$shipment->bridge_cost_add):(0+$cd+$shipment->bridge_cost_add);
+                $vcongan[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vcongan[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vcongan[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $ca):(0+$ca);
+                $vdiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] = isset($vdiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?($vdiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year] + $shipment->shipment_road_add):(0+$shipment->shipment_road_add);
+                
+                ////////
+
+            if($arr[$shipment->vehicle.$shipment->shipment_round.$month.$year] == $v[$shipment->vehicle.$shipment->shipment_round.$month.$year]){
+            ?>
+            
+            <tr style="background-color: rgb(236, 215, 215);">
+                <td class="fix" colspan="8"></td>
+                <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px;" colspan="2">
+                    Tổng cộng
+                </th>
+                
+                <td class="fix warning" ><?php echo $lib->formatMoney($vkm[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                <td class="fix warning" ><?php echo $lib->formatMoney($vdaulanh[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                <td class="fix warning" ><?php echo $lib->formatMoney($vdinhmucdau[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                <td class="fix warning" ><?php echo $lib->formatMoney($vdiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                
+                <?php foreach ($loan_units as $loan) { ?>
+                <td class="fix warning" ><?php echo $lib->formatMoney(isset($phatsinh[$loan->cost_list_id][$shipment->vehicle_id][$shipment->shipment_round.$month.$year])?$phatsinh[$loan->cost_list_id][$shipment->vehicle_id][$shipment->shipment_round.$month.$year]:null) ?></td>
+                <?php } ?>
+
+                <td class="fix warning" ><?php echo $lib->formatMoney($vcauduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                <td class="fix warning" ><?php echo $lib->formatMoney($vcongan[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                <td class="fix warning" ><?php echo $lib->formatMoney($vboiduong[$shipment->vehicle_id][$shipment->shipment_round.$month.$year]) ?></td>
+                <td class="fix" colspan="9"></td>
+                
+            </tr>
+
+            <?php } ?>
+
+    <?php endforeach; ?>
+
+        <tr>
+            <td colspan="30"></td>
+        </tr>
+        <tr style="font-weight: bold;background-color: rgb(214, 249, 246);">
+            <td class="fix" colspan="8"></td>
+            <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px;" colspan="2">
+                Tổng cộng
+            </th>
+            <td class="fix " ><?php echo $lib->formatMoney($km) ?></td>
+            <td class="fix " ><?php echo $lib->formatMoney($daulanh) ?></td>
+            <td class="fix " ><?php echo $lib->formatMoney($dinhmucdau) ?></td>
+            <td class="fix " ><?php echo $lib->formatMoney($diduong) ?></td>
+            
+            <?php foreach ($loan_units as $loan) { ?>
+            <td class="fix " ><?php echo $lib->formatMoney(isset($chiphi[$loan->cost_list_id])?$chiphi[$loan->cost_list_id]:null) ?></td>
+            <?php } ?>
+            
+            <td class="fix " ><?php echo $lib->formatMoney($cauduong) ?></td>
+            <td class="fix " ><?php echo $lib->formatMoney($congan) ?></td>
+            <td class="fix " ><?php echo $lib->formatMoney($boiduong) ?></td>
+            <td class="fix" colspan="9"></td>
+            
+        </tr>
+   </tbody>
+</table>
+
+<div style="margin-top: 20px"><div class="add-box"><a class="add_button" id="btnExport3" ><i class="fa fa-download"></i> Xuất</a></div></div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    $("#btnExport3").click(function () {
+
+        $("#tblExport3").battatech_excelexport({
+
+            containerid: "tblExport3"
+
+           , datatype: 'table'
+
+        });
+
+    });
+
+});
+</script>

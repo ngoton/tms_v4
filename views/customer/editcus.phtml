@@ -1,0 +1,1396 @@
+<link href="<?php echo BASE_URL ?>/public/css/jquery.tagit.css" rel="stylesheet" type="text/css">
+<link href="<?php echo BASE_URL ?>/public/css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+<script src="<?php echo BASE_URL ?>/public/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1><a href="<?php echo $this->url('customer') ?>">KHÁCH HÀNG - ĐỐI TÁC - NGƯỜI THỤ HƯỞNG</a></h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('customer') ?>">Khách hàng - Đối tác - Người thụ hưởng</a></li>
+  </ol>
+</section>
+<!-- Main content -->
+    <section class="content">
+      <div class="tabs">
+        <ul class="tab-links">
+          <li <?php echo $customers->type_customer==1?'class="active"':null ?> ><a href="#tab1"><i class="fa fa-briefcase"></i> KHÁCH HÀNG</a></li>
+          <li <?php echo $customers->type_customer==2?'class="active"':null ?> ><a href="#tab2"><i class="fa fa-handshake-o"></i> ĐỐI TÁC</a></li>
+          <li <?php echo $customers->type_customer==3?'class="active"':null ?> ><a href="#tab3"><i class="fa fa-user"></i> NGƯỜI THỤ HƯỞNG</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab <?php echo $customers->type_customer==1?"active":null ?>" id="tab1" >
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Cập nhật Khách hàng</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form id="addcustomer" role="form" method="post" action="" enctype="multipart/form-data">
+                    <div class="row">
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="customer_code">Mã khách hàng</label>
+                            <input type="text" id="customer_code" placeholder="Mã khách hàng" required="required" tabindex="1" value="<?php echo $customers->customer_code ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_name">Tên khách hàng</label>
+                            <input type="text" id="customer_name" placeholder="Tên khách hàng" required="required" tabindex="2" value="<?php echo $customers->customer_name ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_company">Công ty</label>
+                            <input type="text" id="customer_company" placeholder="Công ty" tabindex="3" value="<?php echo $customers->customer_company ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_address">Địa chỉ</label>
+                            <input type="text" id="customer_address" placeholder="Địa chỉ" tabindex="4" value="<?php echo $customers->customer_address ?>">
+                          </div>
+                          
+                          
+                          
+                          
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        
+                      </div>
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="customer_from">Mã số thuế</label>
+                            <input type="text" id="customer_mst" class="number" placeholder="Mã số thuế" tabindex="5" value="<?php echo $customers->customer_mst ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_phone">Điện thoại</label>
+                            <input type="text" id="customer_phone" class="numbers" placeholder="Điện thoại" tabindex="6" value="<?php echo $customers->customer_phone ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_mobile">Di động</label>
+                            <input type="text" id="customer_mobile" class="numbers" placeholder="Di động" tabindex="7" value="<?php echo $customers->customer_mobile ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_email">Email</label>
+                            <input type="email" id="customer_email" placeholder="Email" tabindex="8" value="<?php echo $customers->customer_email ?>">
+                          </div>
+                          
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        
+                      </div>
+
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          
+                          <div class="form-group">
+                            <label for="customer_bank_account">Số tài khoản</label>
+                            <input type="text" id="customer_bank_account" class="number" placeholder="Số tài khoản" tabindex="9" value="<?php echo $customers->customer_bank_account ?>">
+                          </div>
+                          
+                          <div class="form-group">
+                            <label for="customer_bank_name">Ngân hàng</label>
+                            <input type="text" id="customer_bank_name" placeholder="Ngân hàng" tabindex="10" value="<?php echo $customers->customer_bank_name ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_bank_branch">Chi nhánh</label>
+                            <input type="text" id="customer_bank_branch" placeholder="Chi nhánh" tabindex="11" value="<?php echo $customers->customer_bank_branch ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_sub">Mặt hàng</label>
+                            <input type="text" id="customer_sub" tabindex="12" value="<?php echo $customer_sub ?>"  />
+                            <ul id="mytags"></ul>
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        
+                        
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          
+                          <div class="form-group">
+                            <label for="type_customer">Loại</label>
+                            <select style="width:120px" id="type_customer" tabindex="13" >
+                              <option <?php echo $customers->type_customer==1?'selected="selected"':null ?> value="1">Khách hàng</option>
+                              <option <?php echo $customers->type_customer==2?'selected="selected"':null ?> value="2">Đối tác</option>
+                              <option <?php echo $customers->type_customer==3?'selected="selected"':null ?> value="3">Khác</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        
+                        
+                      </div>
+                    </div>
+                      <div class="col-md-12">
+                        <fieldset class="groupbox">
+                          <legend>
+                              <span><h3>Người liên hệ</h3></span>
+                          </legend>
+
+                          <table id="dataTable" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                              <tbody>
+                              <?php if(count($contact_persons) > 0){ ?>
+                              <?php foreach ($contact_persons as $contact) { ?>
+                              <tr>
+                                  <td><input type="checkbox" name="chk" data="<?php echo $contact->contact_person_id ?>" title="<?php echo $contact->customer ?>"></td>
+                                  <td>
+                                      <table>
+                                          <tr>
+                                              <td>Họ tên</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_name" name="contact_person_name[]"  tabindex="12" data="<?php echo $contact->contact_person_id ?>" value="<?php echo $contact->contact_person_name ?>" disabled >
+                                              </td>
+                                              
+                                              <td>
+                                                  SĐT
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_phone numbers" name="contact_person_phone[]" tabindex="13" value="<?php echo $contact->contact_person_phone ?>" >
+                                              </td>
+                                              <td>
+                                                  Di động
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_mobile numbers" name="contact_person_mobile[]" tabindex="14" value="<?php echo $contact->contact_person_mobile ?>" >
+                                              </td>
+                                              <td>
+                                                  Email
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_email" name="contact_person_email[]" tabindex="15" value="<?php echo $contact->contact_person_email ?>" >
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Địa chỉ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_address" name="contact_person_address[]" tabindex="16" value="<?php echo $contact->contact_person_address ?>" >
+                                              </td>
+                                              <td>Chức vụ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_position" name="contact_person_position[]" tabindex="17" value="<?php echo $contact->contact_person_position ?>" >
+                                              </td><td>Bộ phận</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_department" name="contact_person_department[]" tabindex="18" value="<?php echo $contact->contact_person_department ?>" >
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                              <?php } ?>
+                              <?php } else{ ?>
+                              <tr>
+                                  <td><input type="checkbox" name="chk"></td>
+                                  <td>
+                                      <table>
+                                          <tr>
+                                              <td>Họ tên</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_name" name="contact_person_name[]"  tabindex="12">
+                                              </td>
+                                              
+                                              <td>
+                                                  SĐT
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_phone numbers" name="contact_person_phone[]" tabindex="13" >
+                                              </td>
+                                              <td>
+                                                  Di động
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_mobile numbers" name="contact_person_mobile[]" tabindex="14" >
+                                              </td>
+                                              <td>
+                                                  Email
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_email" name="contact_person_email[]" tabindex="15" >
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Địa chỉ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_address" name="contact_person_address[]" tabindex="16" >
+                                              </td>
+                                              <td>Chức vụ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_position" name="contact_person_position[]" tabindex="17" >
+                                              </td><td>Bộ phận</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_department" name="contact_person_department[]" tabindex="18" >
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                              <?php } ?>
+                          </tbody>
+                          </table>
+                      </fieldset>
+                          <input type="button" value="Thêm" onclick="addRow('dataTable')">
+
+                          <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+                      </div>
+
+                    <div class="row">
+
+                    </div>
+                  <?php if(!isset($disable_control)){ ?>
+                  <div class="row">
+                    <div class="box-footer">
+                      <input type="hidden" id="yes" value="<?php echo $customers->customer_id ?>" >
+                      <button type="submit" class="btn btn-primary" tabindex="12">Hoàn thành</button>
+                      <button type="reset" class="btn" tabindex="3">Nhập lại</button>
+                    </div>
+                    <div class="box-footer">
+                      <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                    </div>
+                  </div>
+                  <?php } ?>
+                  </form>
+                </div>
+                <!-- /.box -->
+
+              </div>
+              <!--/.col (left) -->
+              
+            </div>
+            <!-- /.row -->
+          </div>
+          <div class="tab <?php echo $customers->type_customer==2?"active":null ?>" id="tab2" >
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Cập nhật Đối tác</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form id="addcustomer2" role="form" method="post" action="" enctype="multipart/form-data">
+                    <div class="row">
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="customer_code">Mã đối tác</label>
+                            <input type="text" id="customer_code2" placeholder="Mã đối tác" required="required" tabindex="1" value="<?php echo $customers->customer_code ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_name">Tên đối tác</label>
+                            <input type="text" id="customer_name2" placeholder="Tên đối tác" required="required" tabindex="2" value="<?php echo $customers->customer_name ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_company">Công ty</label>
+                            <input type="text" id="customer_company2" placeholder="Công ty" tabindex="3" value="<?php echo $customers->customer_company ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_address">Địa chỉ</label>
+                            <input type="text" id="customer_address2" placeholder="Địa chỉ" tabindex="4" value="<?php echo $customers->customer_address ?>">
+                          </div>
+                          
+                          
+                          
+                          
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        
+                      </div>
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="customer_from">Mã số thuế</label>
+                            <input type="text" id="customer_mst2" class="number" placeholder="Mã số thuế" tabindex="5" value="<?php echo $customers->customer_mst ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_phone">Điện thoại</label>
+                            <input type="text" id="customer_phone2" class="numbers" placeholder="Điện thoại" tabindex="6" value="<?php echo $customers->customer_phone ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_mobile">Di động</label>
+                            <input type="text" id="customer_mobile2" class="numbers" placeholder="Di động" tabindex="7" value="<?php echo $customers->customer_mobile ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_email">Email</label>
+                            <input type="email" id="customer_email2" placeholder="Email" tabindex="8" value="<?php echo $customers->customer_email ?>">
+                          </div>
+                          
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        
+                      </div>
+
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          
+                          <div class="form-group">
+                            <label for="customer_bank_account">Số tài khoản</label>
+                            <input type="text" id="customer_bank_account2" class="number" placeholder="Số tài khoản" tabindex="9" value="<?php echo $customers->customer_bank_account ?>">
+                          </div>
+                          
+                          <div class="form-group">
+                            <label for="customer_bank_name">Ngân hàng</label>
+                            <input type="text" id="customer_bank_name2" placeholder="Ngân hàng" tabindex="10" value="<?php echo $customers->customer_bank_name ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_bank_branch">Chi nhánh</label>
+                            <input type="text" id="customer_bank_branch2" placeholder="Chi nhánh" tabindex="11" value="<?php echo $customers->customer_bank_branch ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_sub">Mặt hàng</label>
+                            <input type="text" id="customer_sub2" tabindex="12" value="<?php echo $customer_sub ?>"  />
+                            <ul id="mytags"></ul>
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        
+                        
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          
+                          <div class="form-group">
+                            <label for="type_customer">Loại</label>
+                            <select style="width:120px" id="type_customer2" tabindex="13" >
+                              <option <?php echo $customers->type_customer==1?'selected="selected"':null ?> value="1">Khách hàng</option>
+                              <option <?php echo $customers->type_customer==2?'selected="selected"':null ?> value="2">Đối tác</option>
+                              <option <?php echo $customers->type_customer==3?'selected="selected"':null ?> value="3">Khác</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        
+                        
+                      </div>
+                    </div>
+                      <div class="col-md-12">
+                        <fieldset class="groupbox">
+                          <legend>
+                              <span><h3>Người liên hệ</h3></span>
+                          </legend>
+
+                          <table id="dataTable2" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                              <tbody>
+                              <?php if(count($contact_persons) > 0){ ?>
+                              <?php foreach ($contact_persons as $contact) { ?>
+                              <tr>
+                                  <td><input type="checkbox" name="chk2" data="<?php echo $contact->contact_person_id ?>" title="<?php echo $contact->customer ?>"></td>
+                                  <td>
+                                      <table>
+                                          <tr>
+                                              <td>Họ tên</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_name2" name="contact_person_name2[]"  tabindex="12" data="<?php echo $contact->contact_person_id ?>" value="<?php echo $contact->contact_person_name ?>" disabled >
+                                              </td>
+                                              
+                                              <td>
+                                                  SĐT
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_phone2 numbers" name="contact_person_phone2[]" tabindex="13" value="<?php echo $contact->contact_person_phone ?>" >
+                                              </td>
+                                              <td>
+                                                  Di động
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_mobile2 numbers" name="contact_person_mobile2[]" tabindex="14" value="<?php echo $contact->contact_person_mobile ?>" >
+                                              </td>
+                                              <td>
+                                                  Email
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_email2" name="contact_person_email2[]" tabindex="15" value="<?php echo $contact->contact_person_email ?>" >
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Địa chỉ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_address2" name="contact_person_address2[]" tabindex="16" value="<?php echo $contact->contact_person_address ?>" >
+                                              </td>
+                                              <td>Chức vụ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_position2" name="contact_person_position2[]" tabindex="17" value="<?php echo $contact->contact_person_position ?>" >
+                                              </td><td>Bộ phận</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_department2" name="contact_person_department2[]" tabindex="18" value="<?php echo $contact->contact_person_department ?>" >
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                              <?php } ?>
+                              <?php } else{ ?>
+                              <tr>
+                                  <td><input type="checkbox" name="chk2"></td>
+                                  <td>
+                                      <table>
+                                          <tr>
+                                              <td>Họ tên</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_name2" name="contact_person_name2[]"  tabindex="12">
+                                              </td>
+                                              
+                                              <td>
+                                                  SĐT
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_phone2 numbers" name="contact_person_phone2[]" tabindex="13" >
+                                              </td>
+                                              <td>
+                                                  Di động
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_mobile2 numbers" name="contact_person_mobile2[]" tabindex="14" >
+                                              </td>
+                                              <td>
+                                                  Email
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_email2" name="contact_person_email2[]" tabindex="15" >
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Địa chỉ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_address2" name="contact_person_address2[]" tabindex="16" >
+                                              </td>
+                                              <td>Chức vụ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_position2" name="contact_person_position2[]" tabindex="17" >
+                                              </td><td>Bộ phận</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_department2" name="contact_person_department2[]" tabindex="18" >
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                              <?php } ?>
+                          </tbody>
+                          </table>
+                      </fieldset>
+                          <input type="button" value="Thêm" onclick="addRow2('dataTable2')">
+
+                          <input type="button" value="Xóa" onclick="deleteRow2('dataTable2')">
+                      </div>
+
+                    <div class="row">
+
+                    </div>
+                  <?php if(!isset($disable_control)){ ?>
+                  <div class="row">
+                    <div class="box-footer">
+                      <input type="hidden" id="yes2" value="<?php echo $customers->customer_id ?>" >
+                      <button type="submit" class="btn btn-primary" tabindex="12">Hoàn thành</button>
+                      <button type="reset" class="btn" tabindex="3">Nhập lại</button>
+                    </div>
+                    <div class="box-footer">
+                      <div id="error2" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                    </div>
+                  </div>
+                  <?php } ?>
+                  </form>
+                </div>
+                <!-- /.box -->
+
+              </div>
+              <!--/.col (left) -->
+              
+            </div>
+            <!-- /.row -->
+          </div>
+          <div class="tab <?php echo $customers->type_customer==3?"active":null ?>" id="tab3" >
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Cập nhật Người thụ hưởng</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form id="addcustomer3" role="form" method="post" action="" enctype="multipart/form-data">
+                    <div class="row">
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="customer_code">Mã người thụ hưởng</label>
+                            <input type="text" id="customer_code3" placeholder="Mã người thụ hưởng" required="required" tabindex="1" value="<?php echo $customers->customer_code ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_name">Tên khách hàng</label>
+                            <input type="text" id="customer_name3" placeholder="Tên người thụ hưởng" required="required" tabindex="2" value="<?php echo $customers->customer_name ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_address">Địa chỉ</label>
+                            <input type="text" id="customer_address3" placeholder="Địa chỉ" tabindex="4" value="<?php echo $customers->customer_address ?>">
+                          </div>
+                          
+                          
+                          
+                          
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        
+                      </div>
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="customer_phone">Điện thoại</label>
+                            <input type="text" id="customer_phone3" class="numbers" placeholder="Điện thoại" tabindex="6" value="<?php echo $customers->customer_phone ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_mobile">Di động</label>
+                            <input type="text" id="customer_mobile3" class="numbers" placeholder="Di động" tabindex="7" value="<?php echo $customers->customer_mobile ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_email">Email</label>
+                            <input type="email" id="customer_email3" placeholder="Email" tabindex="8" value="<?php echo $customers->customer_email ?>">
+                          </div>
+                          
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        
+                      </div>
+
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          
+                          <div class="form-group">
+                            <label for="customer_bank_account">Số tài khoản</label>
+                            <input type="text" id="customer_bank_account3" class="number" placeholder="Số tài khoản" tabindex="9" value="<?php echo $customers->customer_bank_account ?>">
+                          </div>
+                          
+                          <div class="form-group">
+                            <label for="customer_bank_name">Ngân hàng</label>
+                            <input type="text" id="customer_bank_name3" placeholder="Ngân hàng" tabindex="10" value="<?php echo $customers->customer_bank_name ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="customer_bank_branch">Chi nhánh</label>
+                            <input type="text" id="customer_bank_branch3" placeholder="Chi nhánh" tabindex="11" value="<?php echo $customers->customer_bank_branch ?>">
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        
+                        
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 col-xs-6">
+                        <div class="box-body">
+                          
+                          <div class="form-group">
+                            <label for="type_customer">Loại</label>
+                            <select style="width:120px" id="type_customer3" tabindex="13" >
+                              <option <?php echo $customers->type_customer==1?'selected="selected"':null ?> value="1">Khách hàng</option>
+                              <option <?php echo $customers->type_customer==2?'selected="selected"':null ?> value="2">Đối tác</option>
+                              <option <?php echo $customers->type_customer==3?'selected="selected"':null ?> value="3">Khác</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        
+                        
+                      </div>
+                    </div>
+                      <div style="display:none" class="col-md-12">
+                        <fieldset class="groupbox">
+                          <legend>
+                              <span><h3>Người liên hệ</h3></span>
+                          </legend>
+
+                          <input type="hidden" id="customer_company3" placeholder="Công ty" tabindex="3" value="<?php echo $customers->customer_company ?>">
+                          <input type="hidden" id="customer_mst3" class="number" placeholder="Mã số thuế" tabindex="5" value="<?php echo $customers->customer_mst ?>">
+                          <input type="hidden" id="customer_sub3" tabindex="12" value="<?php echo $customer_sub ?>"  />
+                            <ul id="mytags"></ul>
+
+                          <table id="dataTable3" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                              <tbody>
+                              <?php if(count($contact_persons) > 0){ ?>
+                              <?php foreach ($contact_persons as $contact) { ?>
+                              <tr>
+                                  <td><input type="checkbox" name="chk3" data="<?php echo $contact->contact_person_id ?>" title="<?php echo $contact->customer ?>"></td>
+                                  <td>
+                                      <table>
+                                          <tr>
+                                              <td>Họ tên</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_name3" name="contact_person_name3[]"  tabindex="12" data="<?php echo $contact->contact_person_id ?>" value="<?php echo $contact->contact_person_name ?>" disabled >
+                                              </td>
+                                              
+                                              <td>
+                                                  SĐT
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_phone3 numbers" name="contact_person_phone3[]" tabindex="13" value="<?php echo $contact->contact_person_phone ?>" >
+                                              </td>
+                                              <td>
+                                                  Di động
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_mobile3 numbers" name="contact_person_mobile3[]" tabindex="14" value="<?php echo $contact->contact_person_mobile ?>" >
+                                              </td>
+                                              <td>
+                                                  Email
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_email3" name="contact_person_email3[]" tabindex="15" value="<?php echo $contact->contact_person_email ?>" >
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Địa chỉ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_address3" name="contact_person_address3[]" tabindex="16" value="<?php echo $contact->contact_person_address ?>" >
+                                              </td>
+                                              <td>Chức vụ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_position3" name="contact_person_position3[]" tabindex="17" value="<?php echo $contact->contact_person_position ?>" >
+                                              </td><td>Bộ phận</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_department3" name="contact_person_department3[]" tabindex="18" value="<?php echo $contact->contact_person_department ?>" >
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                              <?php } ?>
+                              <?php } else{ ?>
+                              <tr>
+                                  <td><input type="checkbox" name="chk3"></td>
+                                  <td>
+                                      <table>
+                                          <tr>
+                                              <td>Họ tên</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_name3" name="contact_person_name3[]"  tabindex="12">
+                                              </td>
+                                              
+                                              <td>
+                                                  SĐT
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_phone3 numbers" name="contact_person_phone3[]" tabindex="13" >
+                                              </td>
+                                              <td>
+                                                  Di động
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_mobile3 numbers" name="contact_person_mobile3[]" tabindex="14" >
+                                              </td>
+                                              <td>
+                                                  Email
+                                              </td>
+                                              <td>
+                                                  <input type="text" class="contact_person_email3" name="contact_person_email3[]" tabindex="15" >
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Địa chỉ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_address3" name="contact_person_address3[]" tabindex="16" >
+                                              </td>
+                                              <td>Chức vụ</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_position3" name="contact_person_position3[]" tabindex="17" >
+                                              </td><td>Bộ phận</td>
+                                              <td>
+                                                  <input type="text" class="contact_person_department3" name="contact_person_department3[]" tabindex="18" >
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                              <?php } ?>
+                          </tbody>
+                          </table>
+                      </fieldset>
+                          <input type="button" value="Thêm" onclick="addRow3('dataTable3')">
+
+                          <input type="button" value="Xóa" onclick="deleteRow3('dataTable3')">
+                      </div>
+
+                    <div class="row">
+
+                    </div>
+                  <?php if(!isset($disable_control)){ ?>
+                  <div class="row">
+                    <div class="box-footer">
+                      <input type="hidden" id="yes3" value="<?php echo $customers->customer_id ?>" >
+                      <button type="submit" class="btn btn-primary" tabindex="12">Hoàn thành</button>
+                      <button type="reset" class="btn" tabindex="3">Nhập lại</button>
+                    </div>
+                    <div class="box-footer">
+                      <div id="error3" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                    </div>
+                  </div>
+                  <?php } ?>
+                  </form>
+                </div>
+                <!-- /.box -->
+
+              </div>
+              <!--/.col (left) -->
+              
+            </div>
+            <!-- /.row -->
+          </div>
+        </div>
+      </div>
+
+      
+    </section>
+    <!-- /.content -->
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('.numbers').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+            .replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")
+          ;
+        });
+      });
+      $('.number').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+          ;
+        });
+      });
+
+      
+
+    $("#addcustomer").validate({
+        errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        rules: {
+            
+        },
+        submitHandler: function(form) {
+            var customer_code = $('#customer_code').attr('value');
+            var customer_name = $('#customer_name').attr('value');
+            var customer_company = $('#customer_company').attr('value');
+            var customer_address = $('#customer_address').attr('value');
+            var customer_mst = $('#customer_mst').attr('value');
+            var customer_phone = $('#customer_phone').attr('value');
+            var customer_mobile = $('#customer_mobile').attr('value');
+            var customer_email = $('#customer_email').attr('value');
+            var customer_bank_account = $('#customer_bank_account').attr('value');
+            var customer_bank_name = $('#customer_bank_name').attr('value');
+            var customer_bank_branch = $('#customer_bank_branch').attr('value');
+            var customer_sub = $('#customer_sub').attr('value');
+            var type_customer = $('#type_customer').attr('value');
+
+            var contact_person = [];
+
+            var contact_person_name = [];
+            var contact_person_phone = [];
+            var contact_person_email = [];
+            var contact_person_mobile = [];
+            var contact_person_address = [];
+            var contact_person_position = [];
+            var contact_person_department = [];
+
+            $('.contact_person_name').each(function() { 
+                contact_person_name.push($(this).val());
+            });
+            $('.contact_person_phone').each(function() { 
+                contact_person_phone.push($(this).val());
+            });
+            $('.contact_person_mobile').each(function() { 
+                contact_person_mobile.push($(this).val());
+            });
+            $('.contact_person_email').each(function() { 
+                contact_person_email.push($(this).val());
+            });
+            $('.contact_person_address').each(function() { 
+                contact_person_address.push($(this).val());
+            });
+            $('.contact_person_position').each(function() { 
+                contact_person_position.push($(this).val());
+            });
+            $('.contact_person_department').each(function() { 
+                contact_person_department.push($(this).val());
+            });
+
+            for (var i = 0; i < contact_person_name.length; i++) {
+                contact_person.push({'contact_person_name':contact_person_name[i], 'contact_person_phone':contact_person_phone[i], 'contact_person_mobile':contact_person_mobile[i], 'contact_person_email':contact_person_email[i], 'contact_person_address':contact_person_address[i], 'contact_person_position':contact_person_position[i], 'contact_person_department':contact_person_department[i]});
+                
+                
+            };
+
+            
+            var yes = $('#yes').attr('value');
+         
+            $.ajax({
+                type: "POST", // phương thức gởi đi
+                url: "<?php echo BASE_URL ?>/customer/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                
+                data: {
+                    customer_code: customer_code,
+                    customer_name: customer_name,
+                    customer_company: customer_company,
+                    customer_address: customer_address,
+                    customer_mst: customer_mst,
+                    customer_phone: customer_phone,
+                    customer_mobile: customer_mobile,
+                    customer_email: customer_email,
+                    customer_bank_account: customer_bank_account,
+                    customer_bank_name: customer_bank_name,
+                    customer_bank_branch: customer_bank_branch,
+                    customer_sub: customer_sub,
+                    contact_person: contact_person,
+                    type_customer: type_customer,
+                    yes: yes,
+                }, // giá trị post
+                success: function(answer){ // if everything goes well
+                    //alert(answer);
+                    var data = JSON.parse(answer);
+
+                    $('#show').html(data.msg);
+                    $('#winpopup').show();
+                    $('#error').hide();
+                    $('#error').slideToggle(100); // hiển thị thẻ div success
+                    $('#error').html('<div class="successbox">'+data.msg+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                    $('#error').fadeOut(10000);
+
+                    $('#yes').val(data.id);
+
+                }
+            });
+            return false;
+             
+         }
+    });
+
+    $("#addcustomer2").validate({
+        errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        rules: {
+            
+        },
+        submitHandler: function(form) {
+          var customer_code = $('#customer_code2').attr('value');
+            var customer_name = $('#customer_name2').attr('value');
+            var customer_company = $('#customer_company2').attr('value');
+            var customer_address = $('#customer_address2').attr('value');
+            var customer_mst = $('#customer_mst2').attr('value');
+            var customer_phone = $('#customer_phone2').attr('value');
+            var customer_mobile = $('#customer_mobile2').attr('value');
+            var customer_email = $('#customer_email2').attr('value');
+            var customer_bank_account = $('#customer_bank_account2').attr('value');
+            var customer_bank_name = $('#customer_bank_name2').attr('value');
+            var customer_bank_branch = $('#customer_bank_branch2').attr('value');
+            var customer_sub = $('#customer_sub2').val().trim();
+            var type_customer = $('#type_customer2').attr('value');
+
+            var contact_person = [];
+
+            var contact_person_name = [];
+            var contact_person_phone = [];
+            var contact_person_email = [];
+            var contact_person_mobile = [];
+            var contact_person_address = [];
+            var contact_person_position = [];
+            var contact_person_department = [];
+
+            $('.contact_person_name2').each(function() { 
+                contact_person_name.push($(this).val());
+            });
+            $('.contact_person_phone2').each(function() { 
+                contact_person_phone.push($(this).val());
+            });
+            $('.contact_person_mobile2').each(function() { 
+                contact_person_mobile.push($(this).val());
+            });
+            $('.contact_person_email2').each(function() { 
+                contact_person_email.push($(this).val());
+            });
+            $('.contact_person_address2').each(function() { 
+                contact_person_address.push($(this).val());
+            });
+            $('.contact_person_position2').each(function() { 
+                contact_person_position.push($(this).val());
+            });
+            $('.contact_person_department2').each(function() { 
+                contact_person_department.push($(this).val());
+            });
+
+            for (var i = 0; i < contact_person_name.length; i++) {
+                contact_person.push({'contact_person_name':contact_person_name[i], 'contact_person_phone':contact_person_phone[i], 'contact_person_mobile':contact_person_mobile[i], 'contact_person_email':contact_person_email[i], 'contact_person_address':contact_person_address[i], 'contact_person_position':contact_person_position[i], 'contact_person_department':contact_person_department[i]});
+                
+                
+            };
+
+            
+            var yes = $('#yes2').attr('value');
+         
+            $.ajax({
+                type: "POST", // phương thức gởi đi
+                url: "<?php echo BASE_URL ?>/customer/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                
+                data: {
+                    customer_code: customer_code,
+                    customer_name: customer_name,
+                    customer_company: customer_company,
+                    customer_address: customer_address,
+                    customer_mst: customer_mst,
+                    customer_phone: customer_phone,
+                    customer_mobile: customer_mobile,
+                    customer_email: customer_email,
+                    customer_bank_account: customer_bank_account,
+                    customer_bank_name: customer_bank_name,
+                    customer_bank_branch: customer_bank_branch,
+                    customer_sub: customer_sub,
+                    contact_person: contact_person,
+                    type_customer: type_customer,
+                    yes: yes,
+                }, // giá trị post
+                success: function(answer){ // if everything goes well
+                    //alert(answer);
+                    var data = JSON.parse(answer);
+
+                    $('#show').html(data.msg);
+                    $('#winpopup').show();
+                    $('#error2').hide();
+                    $('#error2').slideToggle(100); // hiển thị thẻ div success
+                    $('#error2').html('<div class="successbox">'+data.msg+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                    $('#error2').fadeOut(10000);
+
+                    $('#yes2').val(data.id);
+
+                }
+            });
+            return false;
+             
+         }
+    });
+
+    $("#addcustomer3").validate({
+        errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+        rules: {
+            
+        },
+        submitHandler: function(form) {
+          var customer_code = $('#customer_code3').attr('value');
+            var customer_name = $('#customer_name3').attr('value');
+            var customer_company = $('#customer_company3').attr('value');
+            var customer_address = $('#customer_address3').attr('value');
+            var customer_mst = $('#customer_mst3').attr('value');
+            var customer_phone = $('#customer_phone3').attr('value');
+            var customer_mobile = $('#customer_mobile3').attr('value');
+            var customer_email = $('#customer_email3').attr('value');
+            var customer_bank_account = $('#customer_bank_account3').attr('value');
+            var customer_bank_name = $('#customer_bank_name3').attr('value');
+            var customer_bank_branch = $('#customer_bank_branch3').attr('value');
+            var customer_sub = $('#customer_sub3').val().trim();
+            var type_customer = $('#type_customer3').attr('value');
+
+            var contact_person = [];
+
+            var contact_person_name = [];
+            var contact_person_phone = [];
+            var contact_person_email = [];
+            var contact_person_mobile = [];
+            var contact_person_address = [];
+            var contact_person_position = [];
+            var contact_person_department = [];
+
+            $('.contact_person_name3').each(function() { 
+                contact_person_name.push($(this).val());
+            });
+            $('.contact_person_phone3').each(function() { 
+                contact_person_phone.push($(this).val());
+            });
+            $('.contact_person_mobile3').each(function() { 
+                contact_person_mobile.push($(this).val());
+            });
+            $('.contact_person_email3').each(function() { 
+                contact_person_email.push($(this).val());
+            });
+            $('.contact_person_address3').each(function() { 
+                contact_person_address.push($(this).val());
+            });
+            $('.contact_person_position3').each(function() { 
+                contact_person_position.push($(this).val());
+            });
+            $('.contact_person_department3').each(function() { 
+                contact_person_department.push($(this).val());
+            });
+
+            for (var i = 0; i < contact_person_name.length; i++) {
+                contact_person.push({'contact_person_name':contact_person_name[i], 'contact_person_phone':contact_person_phone[i], 'contact_person_mobile':contact_person_mobile[i], 'contact_person_email':contact_person_email[i], 'contact_person_address':contact_person_address[i], 'contact_person_position':contact_person_position[i], 'contact_person_department':contact_person_department[i]});
+                
+                
+            };
+
+
+            
+            var yes = $('#yes3').attr('value');
+         
+            $.ajax({
+                type: "POST", // phương thức gởi đi
+                url: "<?php echo BASE_URL ?>/customer/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                
+                data: {
+                    customer_code: customer_code,
+                    customer_name: customer_name,
+                    customer_company: customer_company,
+                    customer_address: customer_address,
+                    customer_mst: customer_mst,
+                    customer_phone: customer_phone,
+                    customer_mobile: customer_mobile,
+                    customer_email: customer_email,
+                    customer_bank_account: customer_bank_account,
+                    customer_bank_name: customer_bank_name,
+                    customer_bank_branch: customer_bank_branch,
+                    customer_sub: customer_sub,
+                    contact_person: contact_person,
+                    type_customer: type_customer,
+                    yes: yes,
+                }, // giá trị post
+                success: function(answer){ // if everything goes well
+                    //alert(answer);
+                    var data = JSON.parse(answer);
+
+                    $('#show').html(data.msg);
+                    $('#winpopup').show();
+                    $('#error3').hide();
+                    $('#error3').slideToggle(100); // hiển thị thẻ div success
+                    $('#error3').html('<div class="successbox">'+data.msg+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                    $('#error3').fadeOut(10000);
+
+                    $('#yes3').val(data.id);
+
+                }
+            });
+            return false;
+             
+         }
+    });
+
+  });
+
+function addRow(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.contact_person_name:last').attr('disabled',false);
+    $('.contact_person_name:last').attr('data',"");
+    $('.contact_person_name:last').val("");
+    $('.contact_person_phone:last').val("");
+    $('.contact_person_mobile:last').val("");
+    $('.contact_person_email:last').val("");
+    $('.contact_person_address:last').val("");
+    $('.contact_person_position:last').val("");
+    $('.contact_person_department:last').val("");
+
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('title',"");
+
+$('.numbers').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+            .replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")
+          ;
+        });
+      });
+      $('.number').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+          ;
+        });
+      });
+
+}
+function deleteRow(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        var r = confirm("Bạn có chắc chắn không?");
+        if (r == true){
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var customer = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/customer/deletecontact", {data: data, customer: customer},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+        }
+    }
+    catch(e){
+        alert(e);
+    }
+}
+
+$("#customer_sub").tagit({
+  tagSource: function(search, showChoices) {
+    $.ajax({
+      url: "<?php echo BASE_URL ?>/customer/getSub",
+      data: {search: search.term},
+      success: function(choices) {
+        showChoices(choices);
+      }
+    });
+  },
+  allowSpaces: true,
+});
+
+function addRow2(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
+            break;
+            case"checkbox":newcell.childNodes[0].checked=false;
+            break;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
+            break;
+        }
+    }
+
+    $('.contact_person_name2:last').attr('disabled',false);
+    $('.contact_person_name2:last').attr('data',"");
+    $('.contact_person_phone2:last').val("");
+    $('.contact_person_mobile2:last').val("");
+    $('.contact_person_email2:last').val("");
+    $('.contact_person_address2:last').val("");
+    $('.contact_person_position2:last').val("");
+    $('.contact_person_department2:last').val("");
+
+    $('input[name="chk2"]:last').attr('data',"");
+    $('input[name="chk2"]:last').attr('title',"");
+
+$('.numbers').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+            .replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")
+          ;
+        });
+      });
+      $('.number').keyup(function(event) {
+
+            // skip for arrow keys
+        if(event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function(index, value) {
+          return value
+            .replace(/[^0-9]/g, "")
+          ;
+        });
+      });
+
+}
+function deleteRow2(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        var r = confirm("Bạn có chắc chắn không?");
+        if (r == true){
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("title") > 0){
+                        
+                            var data = chkbox.getAttribute("data");
+                            var customer = chkbox.getAttribute("title");
+
+                            $.post("<?php echo BASE_URL ?>/customer/deletecontact", {data: data, customer: customer},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+        }
+    }
+    catch(e){
+        alert(e);
+    }
+}
+
+$("#customer_sub2").tagit({
+  tagSource: function(search, showChoices) {
+    $.ajax({
+      url: "<?php echo BASE_URL ?>/customer/getSub",
+      data: {search: search.term},
+      success: function(choices) {
+        showChoices(choices);
+      }
+    });
+  },
+  allowSpaces: true,
+});
+
+jQuery(document).ready(function() {
+    jQuery('.tabs .tab-links a').on('click', function(e)  {
+        var currentAttrValue = jQuery(this).attr('href');
+
+        var id = currentAttrValue.replace('#tab','');
+        $('.tab_active').val(id);
+        // Show/Hide Tabs
+        jQuery('.tabs ' + currentAttrValue).addClass('active').siblings().removeClass('active');
+        jQuery('.tabs ' + currentAttrValue).slideDown(300).siblings().slideUp(300);
+
+ 
+        // Change/remove current tab to active
+        jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+ 
+        e.preventDefault();
+    });
+
+    jQuery('.tabs .tab-left a').on('click', function(e)  {
+        var currentAttrValue = jQuery(this).attr('href');
+ 
+        // Show/Hide Tabs
+        jQuery('.tabs ' + currentAttrValue).addClass('active').siblings().removeClass('active');
+        jQuery('.tabs ' + currentAttrValue).slideDown(300).siblings().slideUp(300);
+ 
+        // Change/remove current tab to active
+        jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+ 
+        e.preventDefault();
+    });
+});
+
+<?php if ($customers->type_customer==1) { ?>
+  $('#tab1').show();
+  $('.tab-links li:nth-child(1)').show();
+  $('#tab1').addClass('active');
+  $('#tab2').hide();
+  $('#tab3').hide();
+  $('.tab-links li:nth-child(1)').addClass('active');
+  $('.tab-links li:nth-child(2)').hide();
+  $('.tab-links li:nth-child(3)').hide();
+  $('#tab1').css({'display':'block'});
+  $('#tab2').hide();
+  $('#tab3').hide();
+<?php } 
+else if ($customers->type_customer==2) { ?>
+  $('#tab2').show();
+  $('.tab-links li:nth-child(2)').show();
+  $('#tab2').addClass('active');
+  $('#tab1').hide();
+  $('#tab3').hide();
+  $('.tab-links li:nth-child(2)').addClass('active');
+  $('.tab-links li:nth-child(1)').hide();
+  $('.tab-links li:nth-child(3)').hide();
+  $('#tab2').css({'display':'block'});
+  $('#tab1').hide();
+  $('#tab3').hide();
+<?php } 
+else if ($customers->type_customer==3) { ?>
+  $('#tab3').show();
+  $('.tab-links li:nth-child(3)').show();
+  $('#tab3').addClass('active');
+  $('#tab2').hide();
+  $('#tab1').hide();
+  $('.tab-links li:nth-child(3)').addClass('active');
+  $('.tab-links li:nth-child(2)').hide();
+  $('.tab-links li:nth-child(1)').hide();
+  $('#tab3').css({'display':'block'});
+  $('#tab2').hide();
+  $('#tab1').hide();
+<?php } ?>
+</script>

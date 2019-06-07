@@ -1,651 +1,1441 @@
 ﻿Time|User|Action|Id|Table|Fields
-24/05/2018 23:24:36|admin|add|1|user|user
+12/12/2017 11:29:29|admin|add|167|import_stock|11-1512774000-1----22---1
 
-24/05/2018 23:54:55|admin|delete|0|user|
+13/06/2018 10:58:38|root|add|1|road_list|1-1528322400-44-6500000-21851,21852,21868,21869,22114,22115,22197,22198,22184,22249,22296,22425,22448,22476,22576,22662,22577,22586,22652-1514761200-1517353200-1514761200-1517439599
 
-25/05/2018 00:05:47|admin|add|1|user|user
+13/06/2018 10:59:14|root|edit|1|road_list|1-1528322400-44-6120000-21851,21852,21868,21869,22114,22115,22197,22198,22184,22249,22296,22425,22448,22476,22576,22662,22577-1514761200-1517353200-1514761200-1517439599
 
-25/05/2018 00:07:50|admin|delete|0|user|
+13/06/2018 11:00:42|root|delete|1|road_list|
 
-25/05/2018 07:50:02|admin|delete||user|
+13/06/2018 11:04:27|root|edit|21851|shipment|4-3-19-48-44-2-43340-3-84.853-0-0-0-0-1515366000-0-1-1--0-0--0--0---0-0--1-0--0--0--0--0-0-150000-70167628-1515193200-1515193200-43410-3-43340-3-1515249780-1515253200-0-5-0--43410-3--8-2196-3677529.02-150000-3527529.02-0-150000
 
-25/05/2018 08:17:47|admin|edit|1|user|827ccb0eea8a706c4c34a16891f84e7b-1--["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclepass","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report","info","user","permission","backup","update"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclepass":"sparevehiclepass","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report","info":"info","user":"user","permission":"permission","backup":"backup","update":"update"}
+22/10/2018 12:22:19|admin|add|2436|road|4-1-5-5-0-1-0--0-200000-100000-100000-1000000-500000-0-1540162800-1634857200-1
 
-25/05/2018 08:19:56|admin|edit|1|user|81dc9bdb52d04dc20036dbd8313ed055-1-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclepass","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report","info","user","permission","backup","update"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclepass":"sparevehiclepass","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report","info":"info","user":"user","permission":"permission","backup":"backup","update":"update"}
+23/10/2018 08:27:44|admin|delete|12|vehicle|
 
-25/05/2018 08:20:23|admin|edit|1|user|81dc9bdb52d04dc20036dbd8313ed055-1-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclepass","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report","info","user","permission","backup","update"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclepass":"sparevehiclepass","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report","info":"info","user":"user","permission":"permission","backup":"backup","update":"update"}
+23/10/2018 08:27:46|admin|edit|12|vehicle|70K 1509--1
 
-25/05/2018 10:10:07|admin|edit|1|user|1-ngoton007@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclepass","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report","info","user","permission","backup","update"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclepass":"sparevehiclepass","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report","info":"info","user":"user","permission":"permission","backup":"backup","update":"update"}
+23/10/2018 08:27:48|admin|edit|7|vehicle|70H 9456--1
 
-25/05/2018 11:02:23|admin|edit|1|user|81dc9bdb52d04dc20036dbd8313ed055-1-ngoton007@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclepass","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report","info","user","permission","backup","update"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclepass":"sparevehiclepass","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report","info":"info","user":"user","permission":"permission","backup":"backup","update":"update"}
+23/10/2018 08:28:00|admin|delete|11|vehicle|
 
-25/05/2018 11:11:44|admin|edit|1|user|81dc9bdb52d04dc20036dbd8313ed055-1-ngoton007@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclepass","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report","info","user","permission","backup","update"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclepass":"sparevehiclepass","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report","info":"info","user":"user","permission":"permission","backup":"backup","update":"update"}
+23/10/2018 08:28:21|admin|delete|10|vehicle|
 
-25/05/2018 11:16:08|admin|add|1|user|user
+23/10/2018 08:28:31|admin|edit|10|vehicle|70K 1288--1
 
-25/05/2018 11:19:01|admin|changepassword|1|user|
+23/10/2018 08:28:40|admin|delete|25|vehicle|
 
-25/05/2018 11:26:31|admin|changepassword|1|user|
+23/10/2018 08:28:42|admin|edit|25|vehicle|70K 1753--1
 
-25/05/2018 11:28:51|admin|changepassword|1|user|
+23/10/2018 08:28:54|admin|delete|4|vehicle|
 
-25/05/2018 13:13:28|admin|edit|2|user|81dc9bdb52d04dc20036dbd8313ed055-2-ngoton008@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report"}
+23/10/2018 08:28:58|admin|edit|4|vehicle|70K 1252--1
 
-25/05/2018 13:19:40|admin|edit|2|user|81dc9bdb52d04dc20036dbd8313ed055-2-ngoton008@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report"}
+23/10/2018 08:33:33|admin|delete|5|vehicle|
 
-25/05/2018 13:26:06|admin|edit|2|user|2-ngoton008@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report"}
+23/10/2018 08:33:33|admin|edit|5|vehicle|70K 1253--1
 
-25/05/2018 14:23:44|admin|add|3|user|user2
+23/10/2018 08:33:37|admin|delete|6|vehicle|
 
-25/05/2018 14:37:15|admin|delete|3|user|
+23/10/2018 08:33:38|admin|edit|6|vehicle|70K 1274--1
 
-25/05/2018 14:40:07|admin|add|4|user|asas
+23/10/2018 08:33:44|admin|delete|7|vehicle|
 
-25/05/2018 14:40:13|admin|add|5|user|asa1
+23/10/2018 08:33:45|admin|edit|7|vehicle|70H 9456--1
 
-25/05/2018 14:40:24|admin|delete|5|user|
+23/10/2018 08:33:48|admin|delete|8|vehicle|
 
-25/05/2018 14:43:00|admin|delete|4|user|
+23/10/2018 08:33:48|admin|edit|8|vehicle|70H 9175--1
 
-26/05/2018 21:40:52|admin|delete||user|
+23/10/2018 08:33:51|admin|delete|9|vehicle|
 
-27/05/2018 04:02:00|admin|edit|2|user|81dc9bdb52d04dc20036dbd8313ed055-2-ngoton008@yahoo.com-0-["oil","road","warehouse","customer","vehicle","romooc","place","route","salary","salarybonus","steersman","staff","department","importstock","exportstock","house","sparepart","repair","roadcost","checkingcost","insurancecost","sparevehicle","sparevehiclelist","sparedrap","stock","used","spareparttracking","shipment","newshipment","shipmenttemp","driver","vehiclework","vehicleromooc","vehicleromooc","tollcost","marketing","shipmentlist","loanlist","sell","receiptvoucher","paymentvoucher","internaltransfer","bankbalance","receivable","payable","loan","importstock","exportstock","stock","vat","vat","exvat","sales","cost","noinvoice","tolls","salary","salary","repairsalary","costlist","bank","account","trucking","customership","truckinglist","repairlist","roadcostlist","checkingcostlist","insurancecostlist","oilreport","advance","commission","quantity","profit","round","officecost","vehicleanalytics","report"]-{"oil":"oil","road":"road","warehouse":"warehouse","customer":"customer","vehicle":"vehicle","romooc":"romooc","place":"place","route":"route","salary":"salary","salarybonus":"salarybonus","steersman":"steersman","staff":"staff","department":"department","importstock":"importstock","exportstock":"exportstock","house":"house","sparepart":"sparepart","repair":"repair","roadcost":"roadcost","checkingcost":"checkingcost","insurancecost":"insurancecost","sparevehicle":"sparevehicle","sparevehiclelist":"sparevehiclelist","sparedrap":"sparedrap","stock":"stock","used":"used","spareparttracking":"spareparttracking","shipment":"shipment","newshipment":"newshipment","shipmenttemp":"shipmenttemp","driver":"driver","vehiclework":"vehiclework","vehicleromooc":"vehicleromooc","tollcost":"tollcost","marketing":"marketing","shipmentlist":"shipmentlist","loanlist":"loanlist","sell":"sell","receiptvoucher":"receiptvoucher","paymentvoucher":"paymentvoucher","internaltransfer":"internaltransfer","bankbalance":"bankbalance","receivable":"receivable","payable":"payable","loan":"loan","vat":"vat","exvat":"exvat","sales":"sales","cost":"cost","noinvoice":"noinvoice","tolls":"tolls","repairsalary":"repairsalary","costlist":"costlist","bank":"bank","account":"account","trucking":"trucking","customership":"customership","truckinglist":"truckinglist","repairlist":"repairlist","roadcostlist":"roadcostlist","checkingcostlist":"checkingcostlist","insurancecostlist":"insurancecostlist","oilreport":"oilreport","advance":"advance","commission":"commission","quantity":"quantity","profit":"profit","round":"round","officecost":"officecost","vehicleanalytics":"vehicleanalytics","report":"report"}
+23/10/2018 08:34:54|admin|edit|9|vehicle|70K 1397--1
 
-27/05/2018 23:08:19|admin|delete||user|
+23/10/2018 08:35:01|admin|delete|13|vehicle|
 
-28/05/2018 00:56:09|admin|delete|2|user|
+23/10/2018 08:35:03|admin|edit|13|vehicle|70K 1278--1
 
-28/05/2018 01:02:38|admin|add|3|user|user
+23/10/2018 08:35:06|admin|delete|14|vehicle|
 
-28/05/2018 08:55:53|admin|edit|1|info|CÔNG TY TNHH VIỆT TRA DE-2147483647-Số 545, Tổ 10, Ấp Hương Phước, Xã Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai-025 193 7677-it@viet-trade.org-Nguyễn Hoàng Minh Long-Phạm Hoài Thương Ly-Hoàng Minh Vy
+23/10/2018 08:35:07|admin|edit|14|vehicle|70K 1364--1
 
-28/05/2018 08:56:59|admin|edit|1|info|CÔNG TY TNHH VIỆT TRA DE-2147483647-Số 545, Tổ 10, Ấp Hương Phước, Xã Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai-025 193 7677-it@viet-trade.org-Nguyễn Hoàng Minh Long-Phạm Hoài Thương Ly-Hoàng Minh Vy
+23/10/2018 08:35:09|admin|delete|15|vehicle|
 
-28/05/2018 08:58:44|admin|edit|1|info|CÔNG TY TNHH VIỆT TRA DE-2147483647-Số 545, Tổ 10, Ấp Hương Phước, Xã Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai-025 193 7677-it@viet-trade.org-Nguyễn Hoàng Minh Long-Phạm Hoài Thương Ly-Hoàng Minh Vy
+23/10/2018 08:35:10|admin|edit|15|vehicle|70K 1703--1
 
-28/05/2018 08:59:47|admin|edit|1|info|CÔNG TY TNHH VIỆT TRA DE-2147483648-Số 545, Tổ 10, Ấp Hương Phước, Xã Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai-025 193 7677-it@viet-trade.org-Nguyễn Hoàng Minh Long-Phạm Hoài Thương Ly-Hoàng Minh Vy
+23/10/2018 08:35:13|admin|delete|16|vehicle|
 
-29/05/2018 20:53:25|admin|add|1|department|GD-Giám đốc
+23/10/2018 08:35:15|admin|edit|16|vehicle|70K 1422--1
 
-29/05/2018 20:58:25|admin|edit|1|department|GD1-Giám đốc1
+23/10/2018 08:35:17|admin|delete|17|vehicle|
 
-29/05/2018 20:58:38|admin|edit|1|department|GD-Giám đốc
+23/10/2018 08:35:18|admin|edit|17|vehicle|70K 1776--1
 
-29/05/2018 20:59:23|admin|add|2|department|NS-Nhân sự
+23/10/2018 08:35:20|admin|delete|18|vehicle|
 
-29/05/2018 20:59:41|admin|delete|2|department|
+23/10/2018 08:35:23|admin|edit|18|vehicle|70H 8972--1
 
-29/05/2018 20:59:55|admin|delete|1|department|
+23/10/2018 08:35:25|admin|delete|19|vehicle|
 
-29/05/2018 21:00:13|admin|add|3|department|GD-Giám đốc
+23/10/2018 08:35:27|admin|edit|19|vehicle|70C 01683--1
 
-29/05/2018 21:20:04|admin|add|1|position|GD-Giám đốc
+23/10/2018 08:35:29|admin|delete|48|vehicle|
 
-29/05/2018 21:20:15|admin|edit|1|position|GD1-Giám đốc1
+23/10/2018 08:35:29|admin|edit|48|vehicle|70K 1618--1
 
-29/05/2018 21:20:24|admin|edit|1|position|GD-Giám đốc
+23/10/2018 08:35:31|admin|delete|46|vehicle|
 
-29/05/2018 21:20:55|admin|add|2|position|KT-Kế toán
+23/10/2018 08:35:32|admin|edit|46|vehicle|70H 9154--1
 
-29/05/2018 21:21:16|admin|edit|2|position|KT-Kế toán
+23/10/2018 08:35:35|admin|delete|45|vehicle|
 
-29/05/2018 21:21:27|admin|delete|2|position|
+23/10/2018 08:35:37|admin|edit|45|vehicle|70H 9165--1
 
-29/05/2018 22:57:38|admin|edit|3|department|-
+23/10/2018 08:35:38|admin|delete|44|vehicle|
 
-29/05/2018 22:58:30|admin|edit|3|department|GD-Giám đốc
+23/10/2018 08:35:39|admin|edit|44|vehicle|70K 1283--1
 
-29/05/2018 22:58:54|admin|add|4|department|NS-Nhân sự
+23/10/2018 08:35:41|admin|delete|43|vehicle|
 
-29/05/2018 23:01:40|admin|edit|1|position|GD1-Giám đốc1
+23/10/2018 08:35:41|admin|edit|43|vehicle|70C 01863--1
 
-29/05/2018 23:01:48|admin|edit|1|position|GD-Giám đốc
+23/10/2018 08:35:43|admin|delete|41|vehicle|
 
-30/05/2018 01:11:26|admin|add|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-1-1-4-1526317200-1527094800-1-1212232323
+23/10/2018 08:35:46|admin|edit|41|vehicle|70C 03318--1
 
-30/05/2018 01:28:53|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 9111-a@a.com-12323-ACB-1-1-4-1526317200-1527094800-3-1212232323
+23/10/2018 08:35:48|admin|delete|40|vehicle|
 
-30/05/2018 01:29:16|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-4-1526317200-1527094800--1212232323
+23/10/2018 08:35:49|admin|edit|40|vehicle|70C 03880--1
 
-30/05/2018 01:32:48|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200-1527094800-0-1212232323
+23/10/2018 08:35:51|admin|delete|39|vehicle|
 
-30/05/2018 01:33:02|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200-1527613200-0-1212232323
+23/10/2018 08:35:52|admin|edit|39|vehicle|70K 1527--1
 
-30/05/2018 01:34:22|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200-1527613200-0-1212232323
+23/10/2018 08:35:57|admin|delete|38|vehicle|
 
-30/05/2018 02:01:44|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200-1527613200-0-1212232323
+23/10/2018 08:35:57|admin|edit|38|vehicle|70K 1228--1
 
-30/05/2018 02:01:58|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200--0-1212232323
+23/10/2018 08:35:59|admin|delete|36|vehicle|
 
-30/05/2018 15:04:46|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200--1-1212232323
+23/10/2018 08:36:00|admin|edit|36|vehicle|70H 9195--1
 
-01/06/2018 00:17:01|admin|add|1|shipping|222-MSC
+23/10/2018 08:36:02|admin|delete|35|vehicle|
 
-01/06/2018 00:18:01|admin|add|2|shipping|155-CMA-CMG
+23/10/2018 08:36:02|admin|edit|35|vehicle|70H 9182--1
 
-01/06/2018 00:18:14|admin|edit|2|shipping|155-CMA-CGM
+23/10/2018 08:36:05|admin|delete|20|vehicle|
 
-01/06/2018 00:46:49|admin|add|1|unit|KG
+23/10/2018 08:36:05|admin|edit|20|vehicle|70K 1208--1
 
-01/06/2018 00:46:58|admin|add|2|unit|Tấn
+23/10/2018 08:36:14|admin|add|88|vehicle|51--1
 
-01/06/2018 00:47:13|admin|add|3|unit|Cont 20
+23/10/2018 08:36:22|admin|delete|21|vehicle|
 
-01/06/2018 00:47:19|admin|add|4|unit|Cont 40
+23/10/2018 08:36:24|admin|edit|21|vehicle|70K 1236--1
 
-01/06/2018 00:47:25|admin|add|5|unit|Cont 45
+23/10/2018 08:36:56|admin|add|89|vehicle|51D 17548-51R19854-1
 
-01/06/2018 00:48:16|admin|add|6|unit|Chuyến
+23/10/2018 08:37:18|admin|add|90|vehicle|51D 17458-60R02275-1
 
-01/06/2018 21:04:07|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200-1530032400-0-1212232323
+23/10/2018 08:37:39|admin|add|91|vehicle|60C 30491-51R31308-1
 
-01/06/2018 21:04:17|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200--0-1212232323
+23/10/2018 08:37:47|admin|delete|5|romooc|
 
-01/06/2018 21:05:36|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-1-3-1526317200--0-1212232323
+23/10/2018 08:37:47|admin|edit|5|romooc|70R 00010
 
-01/06/2018 21:35:41|admin|add|1|bonus|1527786000--20000-10000
+23/10/2018 08:37:49|admin|delete|6|romooc|
 
-01/06/2018 21:39:58|admin|edit|1|bonus|1527786000--20000-10000
+23/10/2018 08:37:50|admin|edit|6|romooc|70R 00015
 
-01/06/2018 21:41:58|admin|add|2|bonus|1529427600--20000-15000
+23/10/2018 08:37:52|admin|delete|72|romooc|
 
-01/06/2018 21:42:31|admin|edit|2|bonus|1527786000--20000-15000
+23/10/2018 08:37:52|admin|edit|72|romooc|70R 00031
 
-01/06/2018 21:42:49|admin|edit|1|bonus|1525107600-1527699600-20000-10000
+23/10/2018 08:37:54|admin|delete|7|romooc|
 
-01/06/2018 23:05:24|admin|add|1|route|19-Ngã 3 Vũng Tàu
+23/10/2018 08:37:56|admin|edit|7|romooc|70R 00038
 
-01/06/2018 23:05:35|admin|edit|1|route|19-Ngã 3 Vũng Tàu
+23/10/2018 08:38:02|admin|delete|87|romooc|
 
-01/06/2018 23:15:27|admin|add|1|place|31-Samsung
+23/10/2018 08:38:02|admin|edit|87|romooc|70R 00042
 
-01/06/2018 23:15:36|admin|edit|1|place|31-Samsung
+23/10/2018 08:38:04|admin|delete|8|romooc|
 
-01/06/2018 23:50:18|admin|edit|1|place|31-Samsung
+23/10/2018 08:38:05|admin|edit|8|romooc|70R 00043
 
-01/06/2018 23:51:14|admin|edit|2|bonus|1527786000--30000-15000
+23/10/2018 08:38:06|admin|delete|9|romooc|
 
-02/06/2018 00:15:26|admin|edit|1|place|31-Samsung-SS
+23/10/2018 08:38:08|admin|edit|9|romooc|70R 00050
 
-02/06/2018 00:44:00|admin|add|1|romooc|51C-1293
+23/10/2018 08:38:11|admin|delete|10|romooc|
 
-02/06/2018 00:44:15|admin|edit|1|romooc|51C-129.35
+23/10/2018 08:38:11|admin|edit|10|romooc|70R 00053
 
-02/06/2018 08:33:18|admin|add|1|vehicle|7-A00-2018-86-1-51B-2943
+23/10/2018 08:38:13|admin|delete|75|romooc|
 
-02/06/2018 08:34:23|admin|edit|1|vehicle|7-A01-2018-86--51B-2943
+23/10/2018 08:38:14|admin|edit|75|romooc|70R 00054
 
-02/06/2018 08:36:39|admin|edit|1|vehicle|7-A01-2018-86--51B-2943
+23/10/2018 08:38:16|admin|delete|11|romooc|
 
-02/06/2018 08:37:36|admin|edit|1|vehicle|7-A01-2018-86-1-51B-2943
+23/10/2018 08:38:18|admin|edit|11|romooc|70R 00067
 
-03/06/2018 21:14:34|admin|add|2|position|PGD-Phó giám đốc
+23/10/2018 08:38:21|admin|delete|12|romooc|
 
-03/06/2018 21:34:17|admin|add|3|position|TP-Trưởng phòng
+23/10/2018 08:38:21|admin|edit|12|romooc|70R 00089
 
-03/06/2018 21:34:24|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-3-3-1526317200--0-1212232323
+23/10/2018 08:38:23|admin|delete|13|romooc|
 
-03/06/2018 21:34:50|admin|edit|1|staff|NV01-Nguyễn Văn A-Đồng Nai-121323232-1525107600-0902 085 911-a@a.com-12323-ACB-0-3-3-1526317200--Không sử dụng-1212232323
+23/10/2018 08:38:24|admin|edit|13|romooc|70R 00097
 
-04/06/2018 01:19:47|admin|add|1|customer|KH01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-023-ACB-Đồng Nai-1-1
+23/10/2018 08:38:25|admin|delete|14|romooc|
 
-04/06/2018 09:17:42|admin|edit|1|customer|KH01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-23-ACB-Đồng Nai-1-1
+23/10/2018 08:38:28|admin|edit|14|romooc|70R 00103
 
-04/06/2018 09:24:10|admin|edit|1|customer|KH01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-23-ACB-Đồng Nai-1-1
+23/10/2018 08:38:29|admin|delete|15|romooc|
 
-04/06/2018 09:25:23|admin|edit|1|customer|NCC01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-23-ACB-Đồng Nai-2-1
+23/10/2018 08:38:30|admin|edit|15|romooc|70R 00104
 
-04/06/2018 09:27:30|admin|edit|1|customer|NCC01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-23-ACB-Đồng Nai-2-1
+23/10/2018 08:38:32|admin|delete|16|romooc|
 
-04/06/2018 09:27:59|admin|edit|1|customer|NCC01-Việt Trade-Công ty TNHH Việt Trade-3603295302-Số 545, Tổ 10, Ấp Hương Phước, X. Phước Tân, TP. Biên Hoà, Đồng Nai-19-0251 393 7677-0902 085 911-it@viet-trade.org-23-ACB-Đồng Nai-2-1,2
+23/10/2018 08:38:32|admin|edit|16|romooc|70R 00110
 
-04/06/2018 10:56:48|admin|add|1|oil|Rỗng-0.32
+23/10/2018 08:38:34|admin|delete|74|romooc|
 
-04/06/2018 10:57:00|admin|edit|1|oil|Rỗng-0.33
+23/10/2018 08:38:36|admin|edit|74|romooc|70R 00111
 
-04/06/2018 10:57:07|admin|edit|1|oil|Rỗng-0.32
+23/10/2018 08:38:37|admin|delete|17|romooc|
 
-04/06/2018 22:50:32|admin|add|1|warehouse|1-1527786000---150000-200000-20000-10000-250000
+23/10/2018 08:38:38|admin|edit|17|romooc|70R 00114
 
-04/06/2018 22:55:23|admin|edit|1|warehouse|1-1527786000--480000-150000-200000-20000-10000-250000
+23/10/2018 08:38:40|admin|delete|18|romooc|
 
-04/06/2018 22:59:53|admin|add|2|place|31-PEPSI-PEP
+23/10/2018 08:38:42|admin|delete|18|romooc|
 
-04/06/2018 23:02:09|admin|edit|1|warehouse|2-1527786000--480000-150000-200000-20000-10000-250000
+23/10/2018 08:38:43|admin|edit|18|romooc|70R 00115
 
-04/06/2018 23:02:16|admin|edit|1|warehouse|1-1527786000--480000-150000-200000-20000-10000-250000
+23/10/2018 08:38:45|admin|delete|19|romooc|
 
-05/06/2018 16:08:25|admin|edit|2|place|19-PEPSI-PEP-11.0686305-107.16759760000002
+23/10/2018 08:38:46|admin|edit|19|romooc|70R 00117
 
-05/06/2018 16:09:11|admin|edit|1|place|31-Samsung-SS-10.8230989-106.6296638
+23/10/2018 08:38:47|admin|delete|84|romooc|
 
-05/06/2018 16:22:58|admin|edit|1|route|19-Ngã 3 Vũng Tàu-10.905750648800774-106.84863129220412
+23/10/2018 08:38:50|admin|edit|84|romooc|70R 00350
 
-06/06/2018 13:15:42|admin|add|2|oil|Lên núi-0.45
+23/10/2018 08:38:51|admin|delete|81|romooc|
 
-06/06/2018 23:31:59|admin|add|1|toll|19-3603023253-QL 51 T1--1-AA/02-10.8606451-106.92575650000003
+23/10/2018 08:38:52|admin|edit|81|romooc|70R 00359
 
-06/06/2018 23:33:35|admin|edit|1|toll|19-Công ty CP phát triển đường cao tốc Biên Hòa - Vũng Tàu-QL 51 T1-3603023253-1-AA/02-10.8606451-106.92575650000003
+23/10/2018 08:38:54|admin|delete|20|romooc|
 
-07/06/2018 00:01:22|admin|add|2|toll|31-Trạm thu phí xa lộ Hà Nội-Xa lộ Hà Nội-3030435465-2-AB/032-10.9031623-106.84420820000003
+23/10/2018 08:38:55|admin|edit|20|romooc|70R 00366
 
-07/06/2018 00:02:34|admin|add|2|route|31-Cảng Cát Lái-10.757996-106.78893160000007
+23/10/2018 08:38:57|admin|delete|82|romooc|
 
-07/06/2018 00:03:08|admin|add|3|route|2-Cảng Cái Mép-10.5385454-107.03179769999997
+23/10/2018 08:38:57|admin|edit|82|romooc|70R 00394
 
-07/06/2018 00:25:43|admin|edit|2|toll|31-Trạm thu phí xa lộ Hà Nội-Xa lộ Hà Nội-3030435465-2-AB/032-10.821735444106489-106.75875306129456
+23/10/2018 08:38:59|admin|delete|21|romooc|
 
-07/06/2018 10:53:12|admin|add|1|road|1-1-1-1-1527786000--1.5-35-[{"road_oil_way":"1""road_oil_lit":"3.2""road_oil_km":"10""id_road_oil":""}{"road_oil_way":"2""road_oil_lit":"11.25""road_oil_km":"25""id_road_oil":""}{"toll":"1""road_toll_vat":"on""road_toll_money":"20000""id_road_toll":""}{"toll":"2""road_toll_vat":"on""road_toll_money":"10000""id_road_toll":""}]-0.5-30000-200000-150000-20000-200000-500000
+23/10/2018 08:39:00|admin|edit|21|romooc|70R 00463
 
-07/06/2018 13:18:14|admin|edit|1|road|1-1-1-1-1527786000--1.50-30-12.2-0.50-30000-200000.00-150000.00-20000.00-200000.00-500000.00
+23/10/2018 08:39:02|admin|delete|22|romooc|
 
-07/06/2018 13:19:49|admin|edit|1|road|1-1-1-1-1527786000--1.50-35-13.8-0.50-30000-200000.00-150000.00-20000.00-200000.00-500000.00
+23/10/2018 08:39:02|admin|edit|22|romooc|70R 00529
 
-07/06/2018 13:20:58|admin|edit|1|road|1-1-1-1-1527786000--1.50-35-13.8-0.50-30000-200000.00-150000.00-20000.00-200000.00-500000.00
+23/10/2018 08:39:04|admin|delete|86|romooc|
 
-07/06/2018 13:29:44|admin|edit|1|road|1-1-1-1-1527786000--1.50-35-13.15-0.50-25000-200000.00-150000.00-20000.00-200000.00-500000.00
+23/10/2018 08:39:05|admin|edit|86|romooc|70R 0053
 
-07/06/2018 13:32:57|admin|edit|1|road|1-1-1-1-1527786000--1.50-35.00-13.15-0.50-25000.00-200000.00-150000.00-20000.00-200000.00-500000.00
+23/10/2018 08:39:07|admin|delete|23|romooc|
 
-07/06/2018 13:35:44|admin|edit|1|road|1-2-2-3-1527786000--1.50-35.00-13.15-0.50-25000.00-200000.00-150000.00-20000.00-200000.00-500000.00
+23/10/2018 08:39:08|admin|edit|23|romooc|70R 00575
 
-07/06/2018 13:37:37|admin|add|2|road|1-2-1-2-1527786000--2-40-15.4-5-35000-100000-200000-50000-500000-200000
+23/10/2018 08:39:11|admin|delete|24|romooc|
 
-07/06/2018 14:34:38|admin|edit|1|road|1-2-2-3-1527786000--1.5-35.55-13.326-0.5-25000-200000-150000-20000-200000-500000
+23/10/2018 08:39:11|admin|edit|24|romooc|70R 00603
 
-07/06/2018 15:40:52|admin|add|3|road|2-1-1-2---2.5-37.5-16.55-2-20000-400000-200000-10000-600000-500000
+23/10/2018 08:39:14|admin|delete|25|romooc|
 
-07/06/2018 15:41:24|admin|edit|3|road|2-1-1-2-1527786000--2.5-37.5-16.55-2-20000-400000-200000-10000-600000-500000
+23/10/2018 08:39:18|admin|delete|25|romooc|
 
-07/06/2018 15:42:31|admin|add|4|road|2-1-1-2-1528563600--3-17-7.39-5-10000-300000-200000-50000-100000-200000
+23/10/2018 08:39:19|admin|edit|25|romooc|70R 00610
 
-07/06/2018 15:43:05|admin|edit|3|road|2-1-1-2-1525107600-1527699600-2.5-37.5-16.55-2-20000-400000-200000-10000-600000-500000
+23/10/2018 08:39:20|admin|delete|77|romooc|
 
-07/06/2018 15:43:13|admin|edit|4|road|2-1-1-2-1527786000--3-17-7.39-5-10000-300000-200000-50000-100000-200000
+23/10/2018 08:39:21|admin|edit|77|romooc|70R 00755
 
-07/06/2018 17:00:29|admin|add|1|cost_list|8-Nâng cont-NC
+23/10/2018 08:39:23|admin|delete|78|romooc|
 
-07/06/2018 17:00:43|admin|edit|1|cost_list|2-Nâng cont1-NC1
+23/10/2018 08:39:23|admin|edit|78|romooc|70R 00775
 
-07/06/2018 17:00:55|admin|edit|1|cost_list|8-Nâng cont-NC
+23/10/2018 08:39:25|admin|delete|79|romooc|
 
-08/06/2018 10:48:01|admin|add|2|vehicle|1-E310-2018-220--50A-134.65
+23/10/2018 08:39:26|admin|edit|79|romooc|70R 00806
 
-08/06/2018 10:48:24|admin|add|1|vehicle_work|1528995600--2
+23/10/2018 08:39:28|admin|delete|28|romooc|
 
-08/06/2018 10:55:14|admin|edit|1|vehicle_work|1528995600-1530291600-1
+23/10/2018 08:39:28|admin|edit|28|romooc|70R 00938
 
-08/06/2018 13:37:55|admin|add|1|driver|1527786000-1530291600-1-1
+23/10/2018 08:39:30|admin|delete|83|romooc|
 
-08/06/2018 13:37:55|admin|add|2|staff|NV02---------0-1-3----
+23/10/2018 08:39:30|admin|edit|83|romooc|70R 01057
 
-08/06/2018 13:38:15|admin|edit|1|driver|1527786000--2-1
+23/10/2018 08:39:32|admin|delete|29|romooc|
 
-08/06/2018 13:38:15|admin|add|3|vehicle|1---220--
+23/10/2018 08:39:33|admin|edit|29|romooc|70R 0586
 
-08/06/2018 17:01:35|admin|add|1|vehicle_romooc|1-1-1528390800
+23/10/2018 08:39:34|admin|delete|30|romooc|
 
-09/06/2018 08:39:24|admin|edit|1|vehicle_romooc|1527786000--2-1
+23/10/2018 08:39:35|admin|edit|30|romooc|70R 0589
 
-09/06/2018 09:14:13|admin|add|1|house|LX-Lốp xe
+23/10/2018 08:39:37|admin|delete|31|romooc|
 
-09/06/2018 09:14:20|admin|edit|1|house|LX1-Lốp xe1
+23/10/2018 08:39:37|admin|edit|31|romooc|70R 0607
 
-09/06/2018 09:14:26|admin|edit|1|house|LX-Lốp xe
+23/10/2018 08:39:39|admin|delete|80|romooc|
 
-11/06/2018 22:00:32|admin|add|2|customer|KH01-Samsung-Công ty TNHH Samsung Vina-3603422324-Q9-31-0283 943 231------1-3
+23/10/2018 08:39:39|admin|edit|80|romooc|70R 0628
 
-11/06/2018 22:03:36|admin|add|1|booking|--2-8624223-1-2-CMA-4232-1-2-1528650000-1528650000-2-4000000-Hang nhập-1
+23/10/2018 08:39:41|admin|delete|32|romooc|
 
-12/06/2018 00:09:53|admin|edit|1|booking|1527786000-DH001-2-8624223-2-2-CMA-4232-1-2-1528650000-1528650000-3-4100000-Hang nhập-1
+23/10/2018 08:39:42|admin|edit|32|romooc|70R 0697
 
-12/06/2018 00:12:46|admin|edit|1|booking|1527786000-DH001-2-8624223-2-2-CMA-4232-1-2-1528650000-1528650000-3-4100000-Hang nhập-1
+23/10/2018 08:39:43|admin|delete|33|romooc|
 
-13/06/2018 15:38:10|admin|edit|1|booking|1527786000-DH001-2-8624223-2-2-CMA-4232-1-2-1528650000-1529427600-3-4100000-Hang nhập-1
+23/10/2018 08:39:44|admin|edit|33|romooc|70R 0701
 
-13/06/2018 16:02:45|admin|complete|1|newbooking|1529427600-1-1-0-2-1
+23/10/2018 08:39:46|admin|delete|34|romooc|
 
-14/06/2018 11:05:23|admin|edit|1|shipment_temp|1-2
+23/10/2018 08:39:47|admin|edit|34|romooc|70R 0702
 
-14/06/2018 14:10:29|admin|delete|1|shipment_temp|
+23/10/2018 08:39:56|admin|delete||romooc|
 
-14/06/2018 14:10:56|admin|complete|1|newbooking|1529427600-1-1-0-3-3
+23/10/2018 08:40:01|admin|delete|35|romooc|
 
-18/06/2018 23:05:16|admin|add|3|customer|KH02-Pepsi-Công ty TNHH Pepsico---31-------1-4,5
+23/10/2018 08:40:01|admin|delete|4|romooc|
 
-18/06/2018 23:07:11|admin|add|2|booking|1529254800-DH002-3-0435265353-1-1-A-642-2-1-1529254800-1530291600-2-3000000-Hàng dễ vỡ-1
+23/10/2018 08:40:01|admin|delete|36|romooc|
 
-19/06/2018 00:44:20|admin|complete|2|newbooking|1529254800-1-2-0-1-1
+23/10/2018 08:40:01|admin|delete|37|romooc|
 
-19/06/2018 00:45:08|admin|add|1|dispatch|1529341200-DX01-2-51C-129.35-Nguyễn Văn A-1-2-1528650000-1529427600-HI-2-3-1-1
+23/10/2018 08:40:01|admin|delete|38|romooc|
 
-19/06/2018 02:36:12|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-HI-2-3-2-1
+23/10/2018 08:40:01|admin|delete|39|romooc|
 
-19/06/2018 15:28:54|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-HI-2-1-1
+23/10/2018 08:40:01|admin|delete|40|romooc|
 
-19/06/2018 15:35:11|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-HI-2-1-1
+23/10/2018 08:40:01|admin|delete|41|romooc|
 
-19/06/2018 15:35:36|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-Hàng xuất-2-1-1
+23/10/2018 08:40:01|admin|delete|42|romooc|
 
-20/06/2018 14:34:46|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-Hàng xuất-2-1-1
+23/10/2018 08:40:01|admin|delete|43|romooc|
 
-20/06/2018 16:06:32|admin|add|1|shipment|1529341200-1-2-2-423-2-1-1-1-3-CU0232355-2-2-4-1-2-1529254800-1529427600-Hàng xuất-2000000.00-1
+23/10/2018 08:40:02|admin|delete|69|romooc|
 
-20/06/2018 23:17:00|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-Hàng xuất-2-1-2-1-1529254800-1530291600-Lô phụ-3-2-1
+23/10/2018 08:40:02|admin|delete|44|romooc|
 
-20/06/2018 23:28:14|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-Hàng xuất-2-1-2-1-1529254800-1530291600-Lô phụ-3-2-1
+23/10/2018 08:40:02|admin|delete|45|romooc|
 
-21/06/2018 00:18:06|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-Lô phụ-3-3-2-1-1
+23/10/2018 08:40:02|admin|delete|46|romooc|
 
-21/06/2018 00:24:37|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-Lô phụ-3-3-2-1-1
+23/10/2018 08:40:02|admin|delete|76|romooc|
 
-21/06/2018 00:52:24|admin|add|2|shipment|1529341200-1-3-1-PỦ-2-1-1-2-5-PI23243532-1-1-5-2-1-1529258400-1530289800-Lô phụ-1000000.00-1
+23/10/2018 08:40:02|admin|delete|73|romooc|
 
-21/06/2018 00:58:00|admin|add|3|shipment|1529341200-1-3-1-A2243-2-1-1-2-6-LU4354522-1-1-4-2-1-1529255160-1530291960-Lô phụ-2000000.00-1-1
+23/10/2018 08:40:02|admin|delete|47|romooc|
 
-21/06/2018 21:23:07|admin|add|3|booking|1529514000-DH003-3-BK352724-1-2---2-2-1529514000-1529514000-1000-10000000--1
+23/10/2018 08:40:02|admin|delete|48|romooc|
 
-21/06/2018 21:23:48|admin|add|3|shipping|1-UASC
+23/10/2018 08:40:02|admin|delete|49|romooc|
 
-21/06/2018 21:24:03|admin|add|4|booking|1529514000-DH004-3--1-3---2-2-1529514000-1529514000----1
+23/10/2018 08:40:02|admin|delete|50|romooc|
 
-23/06/2018 08:47:13|admin|add|4|shipment|1529341200-1-2-2-B242562-2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960-Hàng xuất-100000.00-0-1,2-1
+23/10/2018 08:40:02|admin|delete|51|romooc|
 
-23/06/2018 10:29:16|admin|delete|2|shipment|
+23/10/2018 08:40:02|admin|delete|68|romooc|
 
-23/06/2018 10:29:49|admin|add|5|shipment|1529686800-1-3-1-P042423-2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960-Lô phụ-1000000.00-1-4-1
+23/10/2018 08:40:02|admin|delete|52|romooc|
 
-23/06/2018 23:13:57|admin|edit|4|shipment|1529341200-1-2-2-B242562-2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960-Hàng xuất-undefined-0-1,2-1
+23/10/2018 08:40:02|admin|delete|53|romooc|
 
-25/06/2018 00:18:41|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-4--Hàng xuất-2-2-1-2-2-1-1529254800-1530291600--5-Lô phụ-3-3-2-1-1
+23/10/2018 08:40:03|admin|delete|54|romooc|
 
-25/06/2018 00:38:03|admin|edit|5|shipment|1529686800-1-3-1-P042423-2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960-4--Lô phụ-undefined-1-4-1
+23/10/2018 08:40:03|admin|delete|85|romooc|
 
-25/06/2018 00:39:01|admin|edit|5|shipment|1529686800-1-3-1-P042423-2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960-4--Lô phụ-undefined-1-4-1
+23/10/2018 08:40:03|admin|delete|56|romooc|
 
-25/06/2018 00:42:11|admin|edit|1|shipment|1529341200-1-2-2-423-2-1-1-1-3-CU0232355-2-2-4-1-2-1529255160-1529427960--5-Hàng xuất-undefined-0-1,2-1
+23/10/2018 08:40:03|admin|delete|57|romooc|
 
-25/06/2018 09:20:54|admin|add|3|place|31-Cảng Cát Lái-CL-10.757996-106.78893160000007-1
+23/10/2018 08:40:03|admin|delete|58|romooc|
 
-25/06/2018 09:21:10|admin|edit|3|place|31-Cảng Cát Lái1-CL-10.7771236-106.80860660000008-1
+23/10/2018 08:40:03|admin|delete|26|romooc|
 
-25/06/2018 09:21:16|admin|edit|3|place|31-Cảng Cát Lái-CL-10.757996-106.78893160000007-1
+23/10/2018 08:40:03|admin|delete|27|romooc|
 
-25/06/2018 09:22:46|admin|edit|1|place|31-Samsung1-SS-10.823099-106.62966400000005-
+23/10/2018 08:40:03|admin|delete|59|romooc|
 
-25/06/2018 09:22:51|admin|edit|1|place|31-Samsung-SS-10.7734346-106.70387559999995-
+23/10/2018 08:40:03|admin|delete|60|romooc|
 
-25/06/2018 20:47:42|admin|add|1|lift|1527786000--3--590000-465000
+23/10/2018 08:40:03|admin|delete|61|romooc|
 
-25/06/2018 22:25:44|admin|add|4|customer|NCC02-Cảng Cát Lái-Công ty cổ phần Cát Lái---31-------2-
+23/10/2018 08:40:03|admin|delete|71|romooc|
 
-25/06/2018 22:30:00|admin|edit|1|lift|1527786000--3-3-4-590000-465000
+23/10/2018 08:40:03|admin|delete|62|romooc|
 
-26/06/2018 11:17:32|admin|edit|1|dispatch|1529341200-DX01-2-undefined-1-1-2-1529254800-1529427600-3-3-2-4-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3--2-1-1
+23/10/2018 08:40:03|admin|delete|70|romooc|
 
-26/06/2018 11:18:23|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-3-3-2-4-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3--2-1-1
+23/10/2018 08:40:03|admin|delete|63|romooc|
 
-26/06/2018 11:21:14|admin|add|2|dispatch|1529946000-DX02-2-1-1-2-1-1529254800-1530291600-3-3-2-5-Nhập-3--2-1-1-2-1528650000-1529427600-3-3-1-6-Phụ-2--1-2-1
+23/10/2018 08:40:03|admin|delete|64|romooc|
 
-26/06/2018 11:29:46|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600-3-3-2-4-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3-3-2-1-1
+23/10/2018 08:40:04|admin|delete|3|romooc|
 
-26/06/2018 11:30:44|admin|edit|2|dispatch|1529946000-DX02-2-1-1-2-1-1529254800-1530291600-3-3-2-5-Nhập-3-3-2-1-1-2-1528650000-1529427600-3-3-1-6-Phụ-2-2-1-2-1
+23/10/2018 08:40:04|admin|delete|65|romooc|
 
-26/06/2018 11:32:20|admin|add|3|dispatch|1529946000-DX03-2-1-1-2-1-1529254800-1530291600---2-6--3--2-1--------6------1
+23/10/2018 08:40:04|admin|delete|66|romooc|
 
-26/06/2018 13:09:41|admin|delete|3|dispatch|
+23/10/2018 08:40:04|admin|delete|67|romooc|
 
-26/06/2018 13:11:23|admin|delete|2|dispatch|
+23/10/2018 08:40:24|admin|add|88|romooc|51R19854
 
-26/06/2018 13:13:26|admin|add|4|dispatch|1529946000-DX02-2-1-1-2-1-1529254800-1530291600---1-6-nhập-3--2-1--------6------1
+23/10/2018 08:40:34|admin|add|89|romooc|60R02275
 
-26/06/2018 13:14:35|admin|add|5|dispatch|1529946000-DX03-2-1-1-1-2-1528650000-1529427600----6---2-1-2--------6------1
+23/10/2018 08:40:45|admin|add|90|romooc|51R31308
 
-26/06/2018 13:17:12|admin|edit|5|dispatch|1529946000-DX03-2-1-1-2-1-1529254800-1530291600---0-6--3--2-1-------0-6------1
+23/10/2018 08:41:54|admin|delete|11|customer|
 
-26/06/2018 13:34:25|admin|add|6|dispatch|1529946000-DX04-2-1-1-2-1-1529254800-1530291600----6--3--2-1--------6------1
+23/10/2018 08:41:54|admin|delete|41|customer|
 
-26/06/2018 13:36:15|admin|delete|4|dispatch|
+23/10/2018 08:41:54|admin|delete|6|customer|
 
-26/06/2018 13:36:18|admin|delete|5|dispatch|
+23/10/2018 08:41:54|admin|delete|39|customer|
 
-26/06/2018 13:36:22|admin|delete|6|dispatch|
+23/10/2018 08:41:54|admin|delete|50|customer|
 
-26/06/2018 13:37:35|admin|add|7|dispatch|1529946000-DX02-2-1-1-2-1-1529254800-1530291600----6--3--2-1--------6------1
+23/10/2018 08:41:54|admin|delete|25|customer|
 
-26/06/2018 14:04:37|admin|add|8|dispatch|1529946000-DX03-2-1-1-1-2-1528650000-1529427600----6--2-2-1-2--------6------1
+23/10/2018 08:41:54|admin|delete|49|customer|
 
-26/06/2018 14:05:11|admin|add|9|dispatch|1529946000-DX04-2-1-1-2-1-1529254800-1530291600----6--3-3-2-1--------6------1
+23/10/2018 08:41:54|admin|delete|19|customer|
 
-26/06/2018 14:10:37|admin|delete|7|dispatch|
+23/10/2018 08:41:54|admin|delete|20|customer|
 
-26/06/2018 14:10:47|admin|edit|8|dispatch|1529946000-DX03-2-1-1-2-1-1529254800-1530291600---0-6--3-3-2-1-------0-6------1
+23/10/2018 08:41:54|admin|delete|30|customer|
 
-26/06/2018 14:17:21|admin|edit|1|dispatch|1529341200-DX01-2-1-1-3-2-1529254800-1529427600-3-3-2-4-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3-3-2-1-1
+23/10/2018 08:41:54|admin|delete|32|customer|
 
-26/06/2018 14:18:14|admin|edit|1|dispatch|1529341200-DX01-2-1-1-3-2-1529254800-1529427600-3-3-2-3-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3-3-2-1-1
+23/10/2018 08:41:54|admin|delete|4|customer|
 
-26/06/2018 14:43:17|admin|edit|1|lift|1527786000--3-3-4-590000-465000-400000-350000
+23/10/2018 08:41:54|admin|delete|15|customer|
 
-26/06/2018 14:43:33|admin|edit|1|dispatch|1529341200-DX01-2-1-1-3-2-1529254800-1529427600--3-2-3-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3-3-2-1-1
+23/10/2018 08:41:54|admin|delete|9|customer|
 
-26/06/2018 15:51:00|admin|add|1|shipdeposit|1529946000--2-3-2000000
+23/10/2018 08:41:54|admin|delete|38|customer|
 
-26/06/2018 15:53:13|admin|edit|1|shipdeposit|1529946000--2-4-2000000
+23/10/2018 08:41:54|admin|delete|28|customer|
 
-26/06/2018 16:05:03|admin|edit|1|shipdeposit|1529946000--1-4-2000000
+23/10/2018 08:41:54|admin|delete|29|customer|
 
-26/06/2018 16:05:19|admin|edit|9|dispatch|1529946000-DX04-2-1-1-2-1-1529254800-1530291600---1-3--3-3-2-1-------0-6------1
+23/10/2018 08:41:54|admin|delete|35|customer|
 
-26/06/2018 16:05:33|admin|edit|9|dispatch|1529946000-DX04-2-1-1-2-1-1529254800-1530291600---1-4--3-3-2-1-------0-6------1
+23/10/2018 08:41:54|admin|delete|17|customer|
 
-26/06/2018 16:13:47|admin|edit|1|dispatch|1529341200-DX01-2-1-1-1-2-1529254800-1529427600--3-2-3-Hàng xuất-2-2-1-2-2-1-1529254800-1530291600-3-3-40-2-Lô phụ-3-3-2-1-1
+23/10/2018 08:41:54|admin|delete|21|customer|
 
-27/06/2018 08:14:31|admin|edit|8|dispatch|1529946000-DX03-2-1-1-2-3-1529254800-1530291600---0-3--3-3-2-1-------0-6------1
+23/10/2018 08:41:54|admin|delete|2|customer|
 
-27/06/2018 08:15:25|admin|delete|4|shipment|
+23/10/2018 08:41:54|admin|delete|16|customer|
 
-27/06/2018 11:11:31|admin|add|6|shipment|1529341200-1-2-2--2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960--3-Hàng xuất-100000.00-0-1,2-1690000-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"350000","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"60000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"350000"}
+23/10/2018 08:41:54|admin|delete|42|customer|
 
-27/06/2018 11:16:34|admin|delete|6|shipment|
+23/10/2018 08:41:54|admin|delete|24|customer|
 
-27/06/2018 11:17:28|admin|add|7|shipment|1529341200-1-2-2--2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960--3-Hàng xuất-100000.00-0-1,2-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"350000","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"60000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"350000"}
+23/10/2018 08:41:54|admin|delete|43|customer|
 
-28/06/2018 08:09:44|admin|delete|3|shipment|
+23/10/2018 08:41:54|admin|delete|14|customer|
 
-28/06/2018 08:09:49|admin|delete|1|shipment|
+23/10/2018 08:41:54|admin|delete|33|customer|
 
-28/06/2018 08:09:53|admin|delete|5|shipment|
+23/10/2018 08:41:54|admin|delete|7|customer|
 
-28/06/2018 08:11:35|admin|add|8|shipment|1530118800-9-3-1-B5344-2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960----1000000.00-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000"}
+23/10/2018 08:41:54|admin|delete|36|customer|
 
-28/06/2018 10:45:39|admin|add|9|shipment|1530118800-9-3-1--2-1-1-2-6-LU4354522-1-1-4-2-1-1529255160-1530291960----2000000.00-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"2000000","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000"}
+23/10/2018 08:41:54|admin|delete|22|customer|
 
-28/06/2018 10:45:51|admin|delete|9|shipment|
+23/10/2018 08:41:54|admin|delete|44|customer|
 
-28/06/2018 10:45:55|admin|delete|8|shipment|
+23/10/2018 08:41:54|admin|delete|37|customer|
 
-28/06/2018 10:57:13|admin|add|10|shipment|1530118800-9-3-1--2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960----1000000.00-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000"}
+23/10/2018 08:41:54|admin|delete|48|customer|
 
-28/06/2018 14:18:22|admin|edit|10|shipment|1530118800-9-3-1--2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960----undefined-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000"}
+23/10/2018 08:41:54|admin|delete|40|customer|
 
-28/06/2018 14:18:29|admin|edit|10|shipment|1530118800-9-3-1--2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960----undefined-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000"}
+23/10/2018 08:41:54|admin|delete|34|customer|
 
-28/06/2018 14:26:24|admin|edit|7|shipment|1529341200-1-2-2--2-1-1-1-4-AU64542-1-1-3-1-2-1529255160-1529427960--3-Hàng xuất-undefined-0-1,2-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"350000","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"60000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"350000","shipment_cost_release":"50000","shipment_cost_park":"100000"}
+23/10/2018 08:41:54|admin|delete|51|customer|
 
-28/06/2018 14:26:36|admin|edit|10|shipment|1530118800-9-3-1--2-1-1-2-5-PI23243532-1-1-5-2-1-1529255160-1530291960----undefined-0-4-1-{"shipment_cost_lift_on":"0","shipment_cost_lift_off":"0","shipment_cost_lift_on_null":"0","shipment_cost_lift_off_null":"0","shipment_cost_deposit":"0","shipment_cost_clean":"0","shipment_cost_trans":"0","shipment_cost_weight":"0","shipment_cost_document":"0","shipment_cost_toll":"10000","shipment_cost_cont":"480000","shipment_cost_ton":"150000","shipment_cost_police":"300000","shipment_cost_tire":"200000","shipment_cost_release":"0","shipment_cost_park":"0"}
+23/10/2018 08:41:55|admin|delete|47|customer|
 
-28/06/2018 21:40:20|admin|add|1|gas|-1000-1200-50-2-1
+23/10/2018 08:41:55|admin|delete|31|customer|
 
-28/06/2018 21:42:29|admin|edit|1|gas|1530147660-1000-1200-50-2-1
+23/10/2018 08:41:55|admin|delete|8|customer|
 
-28/06/2018 23:52:42|admin|edit|2|vehicle|1-E310-2018-220--50A-134.65-40-400
+23/10/2018 08:41:55|admin|delete|13|customer|
 
-28/06/2018 23:52:54|admin|edit|1|vehicle|7-A01-2018-86-1-51B-2943-30-300
+23/10/2018 08:41:55|admin|delete|23|customer|
 
-29/06/2018 00:17:44|admin|edit|1|gas|1530061560-1000-1200-50-2-1
+23/10/2018 08:41:55|admin|delete|27|customer|
 
-29/06/2018 00:18:21|admin|add|2|gas|1530205200-1300-1400-60-2-1
+23/10/2018 08:41:55|admin|delete|12|customer|
 
-29/06/2018 00:27:37|admin|edit|2|gas|1530205560-1300-1400-160-2-1
+23/10/2018 08:42:47|admin|delete|103|steersman|
 
-29/06/2018 00:28:43|admin|edit|2|gas|1530205560-1200-1400-160-2-1
+23/10/2018 08:42:47|admin|delete|47|steersman|
 
-29/06/2018 00:29:15|admin|edit|2|gas|1530205560-2000-2000-160-2-1
+23/10/2018 08:42:47|admin|delete|97|steersman|
 
-29/06/2018 14:38:17|admin|add|5|customer|NCC03-Cục quản lý đường bộ----31-------2-
+23/10/2018 08:42:47|admin|delete|48|steersman|
 
-29/06/2018 14:38:57|admin|add|1|road_cost|1530205200-1530205200-1561741200-2--5-100000-10000-Đường bộ
+23/10/2018 08:42:47|admin|delete|104|steersman|
 
-29/06/2018 16:57:21|admin|edit|1|road_cost|1530205200-1530205200-1561741200-2,1--5-100000-10000-Đường bộ-0000054
+23/10/2018 08:42:47|admin|delete|50|steersman|
 
-29/06/2018 16:57:39|admin|edit|1|road_cost|1530205200-1530205200-1561741200-1-1-5-100000-10000-Đường bộ-0000054
+23/10/2018 08:42:47|admin|delete|42|steersman|
 
-29/06/2018 17:00:40|admin|edit|1|road_cost|1530205200-1530205200-1561741200--1-5-100000-10000-Đường bộ-0000054-1
+23/10/2018 08:42:47|admin|delete|52|steersman|
 
-29/06/2018 17:00:55|admin|edit|1|road_cost|1530205200-1530205200-1561741200-2-1-5-100000-10000-Đường bộ-0000054-2
+23/10/2018 08:42:47|admin|delete|51|steersman|
 
-29/06/2018 22:44:44|admin|add|1|checking_cost|1530205200-1530205200-1561741200-1-1-5-5000000-500000-Kiểm định-0000563-2
+23/10/2018 08:42:47|admin|delete|49|steersman|
 
-29/06/2018 22:45:05|admin|edit|1|checking_cost|1530205200-1530205200-1561741200-1-1-5-5000000-500000-Kiểm định-0000563-2
+23/10/2018 08:42:47|admin|delete|53|steersman|
 
-29/06/2018 22:50:21|admin|add|1|insurance_cost|1530205200-1530205200-1561827600-2,1-1-5-2000000-200000-Bảo hiểm-00000564-3
+23/10/2018 08:42:47|admin|delete|54|steersman|
 
-29/06/2018 22:50:39|admin|edit|1|insurance_cost|1530205200-1530205200-1561827600-2,1-1-5-1000000-100000-Bảo hiểm-00000564-3
+23/10/2018 08:42:47|admin|delete|89|steersman|
 
-05/07/2018 14:29:22|admin|add|1|spare_part_code|DR11R20-Double Road 11.00R20
+23/10/2018 08:42:47|admin|delete|55|steersman|
 
-05/07/2018 14:29:50|admin|edit|1|spare_part_code|DR11R20DR801-Double Road 11.00R20 DR801
+23/10/2018 08:42:47|admin|delete|56|steersman|
 
-05/07/2018 14:52:17|admin|add|2|spare_part_code|VT-VAT
+23/10/2018 08:42:47|admin|delete|99|steersman|
 
-05/07/2018 14:54:27|admin|add|1|spare_part|1-Double Road 11.00R20 DR801-OT2524653636-DR-05-07-2018-Bộ
+23/10/2018 08:42:47|admin|delete|57|steersman|
 
-05/07/2018 15:02:51|admin|edit|1|spare_part|1-Double Road 11.00R20 DR801-OT2524653636-DR-1514739600-Bộ
+23/10/2018 08:42:47|admin|delete|108|steersman|
 
-05/07/2018 15:24:34|admin|add|2|spare_part|2-VAT0002-AR246432535-AT-1531846800-L
+23/10/2018 08:42:47|admin|delete|94|steersman|
 
-05/07/2018 15:25:10|admin|add|3|spare_part|1-Double Road 11.00R20 DR801-OT2424312---
+23/10/2018 08:42:47|admin|delete|58|steersman|
 
-06/07/2018 08:55:19|admin|add|1|repair_code|THAY NHỚT MÁY
+23/10/2018 08:42:47|admin|delete|59|steersman|
 
-06/07/2018 08:55:35|admin|add|2|repair_code|THAY NHỚT HỘP SỐ
+23/10/2018 08:42:47|admin|delete|60|steersman|
 
-07/07/2018 08:52:05|admin|add|1|repair|1530896400-2--2--250,000-1-1
+23/10/2018 08:42:47|admin|delete|107|steersman|
 
-07/07/2018 09:15:00|admin|edit|1|repair|1530896400-2-PSC001-2--250000-1-1
+23/10/2018 08:42:47|admin|delete|109|steersman|
 
-12/07/2018 13:20:37|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|61|steersman|
 
-12/07/2018 13:48:52|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|62|steersman|
 
-12/07/2018 13:50:32|admin|delete|3|spare_stock|
+23/10/2018 08:42:47|admin|delete|63|steersman|
 
-12/07/2018 13:51:00|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|64|steersman|
 
-12/07/2018 13:57:16|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|65|steersman|
 
-12/07/2018 14:32:42|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|84|steersman|
 
-12/07/2018 14:33:34|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|66|steersman|
 
-12/07/2018 14:34:55|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|96|steersman|
 
-12/07/2018 14:36:09|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|92|steersman|
 
-12/07/2018 14:41:27|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|67|steersman|
 
-12/07/2018 14:51:30|admin|edit|2|import_stock|1531242000-PNK02--a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|95|steersman|
 
-12/07/2018 14:57:35|admin|edit|2|import_stock|1531242000-PNK02-1-a-745-1531242000-a-a-1-1
+23/10/2018 08:42:47|admin|delete|68|steersman|
 
-12/07/2018 14:58:10|admin|delete|2|spare_stock|
+23/10/2018 08:42:47|admin|delete|69|steersman|
 
-12/07/2018 14:58:24|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|111|steersman|
 
-12/07/2018 15:01:49|admin|delete|2|spare_stock|
+23/10/2018 08:42:47|admin|delete|106|steersman|
 
-12/07/2018 15:01:52|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|100|steersman|
 
-12/07/2018 15:03:04|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|85|steersman|
 
-12/07/2018 15:03:37|admin|delete|7|spare_stock|
+23/10/2018 08:42:47|admin|delete|70|steersman|
 
-12/07/2018 15:03:39|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|71|steersman|
 
-12/07/2018 15:06:30|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|72|steersman|
 
-12/07/2018 15:15:06|admin|delete|2|spare_stock|
+23/10/2018 08:42:47|admin|delete|91|steersman|
 
-12/07/2018 15:21:12|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|86|steersman|
 
-12/07/2018 16:03:38|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|87|steersman|
 
-12/07/2018 16:35:17|admin|delete|2|spare_stock|
+23/10/2018 08:42:47|admin|delete|90|steersman|
 
-12/07/2018 16:35:20|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:42:47|admin|delete|74|steersman|
 
-12/07/2018 16:35:32|admin|delete|10|spare_stock|
+23/10/2018 08:42:47|admin|delete|73|steersman|
 
-12/07/2018 16:35:52|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:44:20|admin|add|112|steersman|Huỳnh Thanh Trọn-0-0-HTT----1475276400-
 
-12/07/2018 16:41:23|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:44:38|admin|delete|88|steersman|
 
-12/07/2018 16:41:54|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:44:38|admin|delete|110|steersman|
 
-12/07/2018 16:43:13|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:44:38|admin|delete|75|steersman|
 
-12/07/2018 16:46:20|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:44:38|admin|delete|78|steersman|
 
-12/07/2018 16:47:14|admin|edit|1|import_stock|1531242000-PNK01-1-Nhập kho-000423-1531242000-A-BH-1-1
+23/10/2018 08:44:38|admin|delete|79|steersman|
 
-14/07/2018 09:42:30|admin|delete|2|spare_stock|
+23/10/2018 08:44:38|admin|delete|80|steersman|
 
-14/07/2018 11:16:54|admin|add|1|export_stock|1531501200-PNK01-XK-1-1
+23/10/2018 08:44:38|admin|delete|81|steersman|
 
-16/07/2018 10:15:47|admin|delete|1|export_stock|
+23/10/2018 08:44:38|admin|delete|76|steersman|
 
-16/07/2018 10:16:12|admin|add|2|export_stock|1531674000-PNK01-XK-1-1
+23/10/2018 08:44:38|admin|delete|77|steersman|
 
-16/07/2018 14:55:22|admin|edit|2|export_stock|1531674000-PNK01-XK-selected=-1
+23/10/2018 08:44:38|admin|delete|101|steersman|
 
-16/07/2018 14:55:35|admin|edit|2|export_stock|1531674000-PNK01-XK--1
+23/10/2018 08:44:38|admin|delete|82|steersman|
 
-16/07/2018 14:55:59|admin|edit|2|export_stock|1531674000-PNK01-XK--1
+23/10/2018 08:44:38|admin|delete|83|steersman|
 
-16/07/2018 14:58:55|admin|delete|2|spare_stock|
+23/10/2018 08:44:38|admin|delete|93|steersman|
 
-16/07/2018 14:58:59|admin|edit|2|export_stock|1531674000-PNK01-XK--1
+23/10/2018 08:44:38|admin|delete|98|steersman|
 
-20/07/2018 09:52:00|admin|edit|3|booking|1529514000-3-BK352724-1-2----1
+23/10/2018 08:44:38|admin|delete|44|steersman|
 
-21/08/2018 15:31:44|admin|add|1|coordinate|1534784400-DX01-1---2-4-2-2-Nhanh-1
+23/10/2018 08:44:38|admin|delete|102|steersman|
 
-21/08/2018 15:31:44|admin|add|2|coordinate|1534784400-DX01-2---3-5-1-1-Ok-1
+23/10/2018 08:44:38|admin|delete|46|steersman|
 
-21/08/2018 15:32:49|admin|add|3|coordinate|1534784400-DX01-1---2-4-2-2-Nhanh-1
+23/10/2018 08:44:38|admin|delete|45|steersman|
 
-21/08/2018 15:32:49|admin|add|4|coordinate|1534784400-DX01-2---3-5-1-1-Ok-1
+23/10/2018 08:44:38|admin|delete|41|steersman|
 
-21/08/2018 15:33:35|admin|add|5|coordinate|1534784400-DX01-1---2-4-2-2-Nhanh-1
+23/10/2018 08:44:54|admin|edit|112|steersman|HUỲNH THANH TRỌN-0-0-HTT----1475276400-
 
-21/08/2018 15:33:35|admin|add|6|coordinate|1534784400-DX01-2---3-5-1-1-Ok-1
+23/10/2018 08:45:12|admin|edit|112|steersman|HUỲNH THANH TRỌN-0-0-HTT----1475276400-
 
-21/08/2018 15:35:38|admin|add|7|coordinate|1534784400-DX01-2-1-8624223-3-6-1-2-A-1
+23/10/2018 08:45:46|admin|add|113|steersman|TRƯƠNG THANH NHÀN-0-0-TNN----1506812400-
 
-21/08/2018 15:35:38|admin|add|8|coordinate|1534784400-DX01-1-2-0435265353-1-5-2-1-B-1
+23/10/2018 08:46:44|admin|add|114|steersman|ĐỖ NGỌC HÂN-0-0-DNH----1475276400-
 
-21/08/2018 16:02:01|admin|edit|7|coordinate|1534784400-DX01-2-BK352724--3-3-2-2-A-1
+23/10/2018 08:47:14|admin|edit|114|steersman|DO NGOC HAN-0-0-DNH----1475276400-
 
-21/08/2018 16:04:26|admin|edit|7|coordinate|1534784400-DX01-2-"3"-BK352724-3-5-2-2-A-1
+23/10/2018 08:47:24|admin|edit|112|steersman|HUYNH THANH TRON-0-0-HTT----1475276400-
 
-14/09/2018 16:49:39|admin|edit|2|export_stock|1531674000-PNK01-XK--1
+23/10/2018 08:47:35|admin|edit|113|steersman|TRUONG THANH NHAN-0-0-TNN----1506812400-
 
-14/09/2018 16:50:00|admin|edit|2|export_stock|1531674000-PNK01-XK-1-1
+23/10/2018 08:47:48|admin|delete|6|staff|
 
-17/09/2018 08:25:40|admin|add|1|spare_vehicle|2-1537117200-10-1-2
+23/10/2018 08:47:48|admin|delete|13|staff|
 
-17/09/2018 08:29:43|admin|add|2|spare_vehicle|2-1537203600-10-1
+23/10/2018 08:47:48|admin|delete|46|staff|
 
-17/09/2018 08:50:49|admin|add|3|spare_vehicle|1-1537117200-12-1-2
+23/10/2018 08:47:48|admin|delete|14|staff|
+
+23/10/2018 08:47:49|admin|delete|15|staff|
+
+23/10/2018 08:47:49|admin|delete|16|staff|
+
+23/10/2018 08:47:49|admin|delete|47|staff|
+
+23/10/2018 08:47:49|admin|delete|17|staff|
+
+23/10/2018 08:47:49|admin|delete|7|staff|
+
+23/10/2018 08:47:49|admin|delete|18|staff|
+
+23/10/2018 08:47:49|admin|delete|19|staff|
+
+23/10/2018 08:47:49|admin|delete|20|staff|
+
+23/10/2018 08:47:49|admin|delete|21|staff|
+
+23/10/2018 08:47:49|admin|delete|22|staff|
+
+23/10/2018 08:47:49|admin|delete|23|staff|
+
+23/10/2018 08:47:49|admin|delete|8|staff|
+
+23/10/2018 08:47:49|admin|delete|24|staff|
+
+23/10/2018 08:47:49|admin|delete|25|staff|
+
+23/10/2018 08:47:49|admin|delete|26|staff|
+
+23/10/2018 08:47:49|admin|delete|27|staff|
+
+23/10/2018 08:47:49|admin|delete|28|staff|
+
+23/10/2018 08:47:49|admin|delete|29|staff|
+
+23/10/2018 08:47:49|admin|delete|30|staff|
+
+23/10/2018 08:47:50|admin|delete|9|staff|
+
+23/10/2018 08:47:50|admin|delete|31|staff|
+
+23/10/2018 08:47:50|admin|delete|32|staff|
+
+23/10/2018 08:47:50|admin|delete|33|staff|
+
+23/10/2018 08:47:50|admin|delete|34|staff|
+
+23/10/2018 08:47:50|admin|delete|35|staff|
+
+23/10/2018 08:47:50|admin|delete|36|staff|
+
+23/10/2018 08:47:50|admin|delete|37|staff|
+
+23/10/2018 08:47:50|admin|delete|10|staff|
+
+23/10/2018 08:47:50|admin|delete|11|staff|
+
+23/10/2018 08:47:50|admin|delete|12|staff|
+
+23/10/2018 08:47:50|admin|delete|41|staff|
+
+23/10/2018 08:47:50|admin|delete|38|staff|
+
+23/10/2018 08:47:50|admin|delete|40|staff|
+
+23/10/2018 08:47:50|admin|delete|48|staff|
+
+23/10/2018 08:47:50|admin|delete|45|staff|
+
+23/10/2018 08:47:50|admin|delete|43|staff|
+
+23/10/2018 08:47:50|admin|delete|44|staff|
+
+23/10/2018 08:47:50|admin|delete|39|staff|
+
+23/10/2018 08:47:50|admin|delete|42|staff|
+
+23/10/2018 08:48:34|admin|delete|86|vehicle|
+
+23/10/2018 08:48:34|admin|delete|88|vehicle|
+
+23/10/2018 08:48:34|admin|delete|87|vehicle|
+
+23/10/2018 08:48:34|admin|delete|82|vehicle|
+
+23/10/2018 08:48:34|admin|delete|60|vehicle|
+
+23/10/2018 08:48:34|admin|delete|62|vehicle|
+
+23/10/2018 08:48:34|admin|delete|63|vehicle|
+
+23/10/2018 08:48:34|admin|delete|37|vehicle|
+
+23/10/2018 08:48:34|admin|delete|68|vehicle|
+
+23/10/2018 08:48:34|admin|delete|49|vehicle|
+
+23/10/2018 08:48:34|admin|delete|58|vehicle|
+
+23/10/2018 08:48:35|admin|delete|67|vehicle|
+
+23/10/2018 08:48:35|admin|delete|64|vehicle|
+
+23/10/2018 08:48:35|admin|delete|75|vehicle|
+
+23/10/2018 08:48:35|admin|delete|73|vehicle|
+
+23/10/2018 08:48:35|admin|delete|72|vehicle|
+
+23/10/2018 08:48:35|admin|delete|22|vehicle|
+
+23/10/2018 08:48:35|admin|delete|31|vehicle|
+
+23/10/2018 08:48:35|admin|delete|53|vehicle|
+
+23/10/2018 08:48:35|admin|delete|56|vehicle|
+
+23/10/2018 08:48:35|admin|delete|28|vehicle|
+
+23/10/2018 08:48:35|admin|delete|42|vehicle|
+
+23/10/2018 08:48:35|admin|delete|34|vehicle|
+
+23/10/2018 08:48:35|admin|delete|24|vehicle|
+
+23/10/2018 08:48:35|admin|delete|47|vehicle|
+
+23/10/2018 08:48:35|admin|delete|23|vehicle|
+
+23/10/2018 08:48:35|admin|delete|33|vehicle|
+
+23/10/2018 08:48:35|admin|delete|52|vehicle|
+
+23/10/2018 08:48:35|admin|delete|50|vehicle|
+
+23/10/2018 08:48:35|admin|delete|30|vehicle|
+
+23/10/2018 08:48:35|admin|delete|54|vehicle|
+
+23/10/2018 08:48:35|admin|delete|29|vehicle|
+
+23/10/2018 08:48:35|admin|delete|32|vehicle|
+
+23/10/2018 08:48:35|admin|delete|27|vehicle|
+
+23/10/2018 08:48:35|admin|delete|51|vehicle|
+
+23/10/2018 08:48:36|admin|delete|55|vehicle|
+
+23/10/2018 08:48:36|admin|delete|26|vehicle|
+
+23/10/2018 08:48:36|admin|delete|84|vehicle|
+
+23/10/2018 08:48:36|admin|delete|57|vehicle|
+
+23/10/2018 08:48:36|admin|delete|66|vehicle|
+
+23/10/2018 08:48:36|admin|delete|78|vehicle|
+
+23/10/2018 08:48:36|admin|delete|77|vehicle|
+
+23/10/2018 08:48:36|admin|delete|74|vehicle|
+
+23/10/2018 08:48:36|admin|delete|83|vehicle|
+
+23/10/2018 08:48:36|admin|delete|70|vehicle|
+
+23/10/2018 08:48:36|admin|delete|76|vehicle|
+
+23/10/2018 08:48:36|admin|delete|61|vehicle|
+
+23/10/2018 08:48:43|admin|edit|90|vehicle|51D 17458--1
+
+23/10/2018 08:48:54|admin|edit|89|vehicle|51D 17548--1
+
+23/10/2018 08:49:01|admin|edit|91|vehicle|60C 30491--1
+
+23/10/2018 08:49:10|admin|edit|85|vehicle|XE NÂNG XA MÁT--1
+
+23/10/2018 08:49:26|admin|delete|69|vehicle|
+
+23/10/2018 08:49:26|admin|delete|85|vehicle|
+
+23/10/2018 08:49:26|admin|delete|80|vehicle|
+
+23/10/2018 08:51:20|admin|add|285|driver|89-1475276400-1475276400-112
+
+23/10/2018 08:51:47|admin|edit|285|driver|89-1475276400-1696114800-112
+
+23/10/2018 08:52:24|admin|add|287|driver|89-1475276400-1696114800-113
+
+23/10/2018 08:52:54|admin|delete|285|driver|
+
+23/10/2018 08:52:55|admin|edit|285|driver|89-1475276400-1475190000-112
+
+23/10/2018 08:53:30|admin|add|288|driver|91-1475276400-1696114800-114
+
+23/10/2018 08:54:02|admin|delete|286|driver|
+
+23/10/2018 08:54:04|admin|edit|286|driver|89-1696201200-1696114800-112
+
+23/10/2018 08:54:30|admin|add|289|driver|90-1475276400-1696114800-112
+
+23/10/2018 08:57:15|admin|add|461|vehicleromooc|90-89-1540249200-
+
+23/10/2018 08:57:36|admin|add|462|vehicleromooc|89-88-1540249200-
+
+23/10/2018 08:57:56|admin|add|463|vehicleromooc|91-90-1540249200-
+
+23/10/2018 08:59:26|admin|edit|6|place|1-CẢNG CÁT LÁI
+
+23/10/2018 08:59:42|admin|delete|33|place|
+
+23/10/2018 08:59:42|admin|delete|7|place|
+
+23/10/2018 08:59:42|admin|delete|28|place|
+
+23/10/2018 08:59:42|admin|delete|20|place|
+
+23/10/2018 08:59:42|admin|delete|46|place|
+
+23/10/2018 08:59:42|admin|delete|23|place|
+
+23/10/2018 08:59:42|admin|delete|6|place|
+
+23/10/2018 08:59:42|admin|delete|57|place|
+
+23/10/2018 08:59:42|admin|delete|40|place|
+
+23/10/2018 08:59:42|admin|delete|4|place|
+
+23/10/2018 08:59:42|admin|delete|11|place|
+
+23/10/2018 08:59:42|admin|delete|18|place|
+
+23/10/2018 08:59:42|admin|delete|15|place|
+
+23/10/2018 08:59:43|admin|delete|41|place|
+
+23/10/2018 08:59:43|admin|delete|42|place|
+
+23/10/2018 08:59:43|admin|delete|65|place|
+
+23/10/2018 08:59:43|admin|delete|1|place|
+
+23/10/2018 08:59:43|admin|delete|32|place|
+
+23/10/2018 08:59:43|admin|delete|24|place|
+
+23/10/2018 08:59:43|admin|delete|17|place|
+
+23/10/2018 08:59:43|admin|delete|27|place|
+
+23/10/2018 08:59:43|admin|delete|26|place|
+
+23/10/2018 08:59:43|admin|delete|29|place|
+
+23/10/2018 08:59:43|admin|delete|52|place|
+
+23/10/2018 08:59:43|admin|delete|19|place|
+
+23/10/2018 08:59:43|admin|delete|36|place|
+
+23/10/2018 08:59:43|admin|delete|37|place|
+
+23/10/2018 08:59:43|admin|delete|61|place|
+
+23/10/2018 08:59:43|admin|delete|60|place|
+
+23/10/2018 08:59:43|admin|delete|47|place|
+
+23/10/2018 08:59:43|admin|delete|13|place|
+
+23/10/2018 08:59:43|admin|delete|12|place|
+
+23/10/2018 08:59:43|admin|delete|62|place|
+
+23/10/2018 08:59:43|admin|delete|14|place|
+
+23/10/2018 08:59:43|admin|delete|21|place|
+
+23/10/2018 08:59:43|admin|delete|25|place|
+
+23/10/2018 08:59:43|admin|delete|64|place|
+
+23/10/2018 08:59:43|admin|delete|55|place|
+
+23/10/2018 08:59:43|admin|delete|39|place|
+
+23/10/2018 08:59:43|admin|delete|59|place|
+
+23/10/2018 08:59:43|admin|delete|51|place|
+
+23/10/2018 08:59:43|admin|delete|22|place|
+
+23/10/2018 08:59:43|admin|delete|3|place|
+
+23/10/2018 08:59:43|admin|delete|31|place|
+
+23/10/2018 08:59:43|admin|delete|53|place|
+
+23/10/2018 08:59:43|admin|delete|56|place|
+
+23/10/2018 08:59:43|admin|delete|50|place|
+
+23/10/2018 08:59:43|admin|delete|35|place|
+
+23/10/2018 08:59:43|admin|delete|66|place|
+
+23/10/2018 08:59:43|admin|delete|9|place|
+
+23/10/2018 08:59:58|admin|add|67|place|1-CẢNG CÁT LÁI
+
+23/10/2018 09:00:10|admin|delete|67|place|
+
+23/10/2018 09:00:10|admin|delete|30|place|
+
+23/10/2018 09:00:11|admin|delete|63|place|
+
+23/10/2018 09:00:11|admin|delete|58|place|
+
+23/10/2018 09:00:11|admin|delete|34|place|
+
+23/10/2018 09:00:11|admin|delete|38|place|
+
+23/10/2018 09:00:11|admin|delete|16|place|
+
+23/10/2018 09:00:11|admin|delete|5|place|
+
+23/10/2018 09:00:11|admin|delete|45|place|
+
+23/10/2018 09:00:11|admin|delete|8|place|
+
+23/10/2018 09:00:11|admin|delete|54|place|
+
+23/10/2018 09:00:11|admin|delete|44|place|
+
+23/10/2018 09:00:11|admin|delete|43|place|
+
+23/10/2018 09:00:28|admin|add|68|place|1-CẢNG CÁT LÁI
+
+23/10/2018 09:04:27|admin|add|69|place|3-ICD SÓNG THẦN
+
+23/10/2018 09:07:28|admin|add|70|place|3-VSIP1
+
+23/10/2018 09:11:00|admin|add|71|place|3-G-FORTUNE ĐỒNG AN
+
+23/10/2018 09:14:09|admin|add|72|place|1-DEPOT 5
+
+23/10/2018 09:14:30|admin|delete|37|route|
+
+23/10/2018 09:14:30|admin|delete|5|route|
+
+23/10/2018 09:14:30|admin|delete|28|route|
+
+23/10/2018 09:14:30|admin|delete|58|route|
+
+23/10/2018 09:14:30|admin|delete|45|route|
+
+23/10/2018 09:14:30|admin|delete|4|route|
+
+23/10/2018 09:14:30|admin|delete|7|route|
+
+23/10/2018 09:14:30|admin|delete|19|route|
+
+23/10/2018 09:14:30|admin|delete|23|route|
+
+23/10/2018 09:14:30|admin|delete|21|route|
+
+23/10/2018 09:14:30|admin|delete|46|route|
+
+23/10/2018 09:14:31|admin|delete|47|route|
+
+23/10/2018 09:14:31|admin|delete|67|route|
+
+23/10/2018 09:14:31|admin|delete|71|route|
+
+23/10/2018 09:14:31|admin|delete|16|route|
+
+23/10/2018 09:14:31|admin|delete|27|route|
+
+23/10/2018 09:14:31|admin|delete|18|route|
+
+23/10/2018 09:14:31|admin|delete|43|route|
+
+23/10/2018 09:14:31|admin|delete|32|route|
+
+23/10/2018 09:14:31|admin|delete|29|route|
+
+23/10/2018 09:14:31|admin|delete|20|route|
+
+23/10/2018 09:14:31|admin|delete|64|route|
+
+23/10/2018 09:14:31|admin|delete|34|route|
+
+23/10/2018 09:14:31|admin|delete|68|route|
+
+23/10/2018 09:14:31|admin|delete|31|route|
+
+23/10/2018 09:14:31|admin|delete|33|route|
+
+23/10/2018 09:14:31|admin|delete|25|route|
+
+23/10/2018 09:14:31|admin|delete|52|route|
+
+23/10/2018 09:14:31|admin|delete|24|route|
+
+23/10/2018 09:14:31|admin|delete|41|route|
+
+23/10/2018 09:14:31|admin|delete|69|route|
+
+23/10/2018 09:14:31|admin|delete|62|route|
+
+23/10/2018 09:14:31|admin|delete|61|route|
+
+23/10/2018 09:14:32|admin|delete|10|route|
+
+23/10/2018 09:14:32|admin|delete|42|route|
+
+23/10/2018 09:14:32|admin|delete|6|route|
+
+23/10/2018 09:14:32|admin|delete|9|route|
+
+23/10/2018 09:14:32|admin|delete|8|route|
+
+23/10/2018 09:14:32|admin|delete|66|route|
+
+23/10/2018 09:14:32|admin|delete|63|route|
+
+23/10/2018 09:14:32|admin|delete|55|route|
+
+23/10/2018 09:14:32|admin|delete|56|route|
+
+23/10/2018 09:14:32|admin|delete|44|route|
+
+23/10/2018 09:14:32|admin|delete|60|route|
+
+23/10/2018 09:14:32|admin|delete|26|route|
+
+23/10/2018 09:14:32|admin|delete|12|route|
+
+23/10/2018 09:14:32|admin|delete|36|route|
+
+23/10/2018 09:14:32|admin|delete|53|route|
+
+23/10/2018 09:14:32|admin|delete|57|route|
+
+23/10/2018 09:14:32|admin|delete|51|route|
+
+23/10/2018 09:14:55|admin|add|72|route|1-DEPOT 5
+
+23/10/2018 09:15:09|admin|add|73|route|3-VSIP1
+
+23/10/2018 09:15:30|admin|delete|72|route|
+
+23/10/2018 09:15:30|admin|delete|2|route|
+
+23/10/2018 09:15:30|admin|delete|40|route|
+
+23/10/2018 09:15:30|admin|delete|70|route|
+
+23/10/2018 09:15:30|admin|delete|35|route|
+
+23/10/2018 09:15:30|admin|delete|65|route|
+
+23/10/2018 09:15:30|admin|delete|13|route|
+
+23/10/2018 09:15:30|admin|delete|59|route|
+
+23/10/2018 09:15:30|admin|delete|38|route|
+
+23/10/2018 09:15:30|admin|delete|11|route|
+
+23/10/2018 09:15:30|admin|delete|15|route|
+
+23/10/2018 09:15:30|admin|delete|17|route|
+
+23/10/2018 09:15:30|admin|delete|73|route|
+
+23/10/2018 09:15:30|admin|delete|50|route|
+
+23/10/2018 09:15:30|admin|delete|3|route|
+
+23/10/2018 09:15:30|admin|delete|49|route|
+
+23/10/2018 09:15:30|admin|delete|54|route|
+
+23/10/2018 09:15:30|admin|delete|48|route|
+
+23/10/2018 09:15:42|admin|add|74|route|1-DEPOT 5
+
+23/10/2018 09:15:54|admin|add|75|route|3-VSIP1
+
+23/10/2018 09:16:14|admin|add|76|route|1-CÁT LÁI
+
+23/10/2018 09:16:42|admin|add|77|route|2-AMATA
+
+23/10/2018 09:17:03|admin|add|78|route|3-ICD SÓNG THẦN
+
+23/10/2018 09:19:09|admin|add|79|route|41-MOTO LONG BÌNH
+
+23/10/2018 09:20:24|admin|add|80|route|1-SOTRANS
+
+23/10/2018 09:20:57|admin|add|73|place|1-SOTRANS
+
+23/10/2018 09:21:17|admin|add|81|route|1-BÃI XE
+
+23/10/2018 09:21:34|admin|edit|78|route|3-ICD SONG THAN
+
+23/10/2018 09:21:50|admin|edit|68|place|1-CÁT LÁI
+
+23/10/2018 09:21:57|admin|edit|71|place|3-G-FORTUNE DONG AN
+
+23/10/2018 09:22:06|admin|edit|69|place|3-ICD SONG THAN
+
+23/10/2018 09:28:57|admin|edit|5|salary_bonus|10000-20000-1490914800-1806447600
+
+23/10/2018 09:36:45|admin|add|74|place|16-AVF
+
+23/10/2018 09:36:56|admin|edit|74|place|16-AVF - AU VIET
+
+23/10/2018 09:56:44|admin|add|2437|road|70-68-81-81-0-0.5-0--10000-200000-0-0-0-0-0-1540249200-1634943600-1
+
+23/10/2018 10:38:57|admin|add|2439|road|70-68-81-81-0-0.5-0--0-200000-0-0-0-0-0-1540249200-1634943600-1
+
+23/10/2018 10:44:45|admin|add|2441|road|70-68-81-81-0-0-0--0-200000-0-0-360000-0-0-1540249200-1634943600-1
+
+23/10/2018 10:54:10|admin|add|214|marketing|1540249200-74-68-52-1-10000000-0-1-1540249200-1540335600-1--41
+
+23/10/2018 10:55:07|admin|add|197|shipment_temp|214
+
+23/10/2018 11:38:56|admin|edit|79|route|1-MOTO LONG BÌNH
+
+23/10/2018 11:39:26|admin|add|75|place|1-MOTO LONG BÌNH
+
+23/10/2018 11:46:03|admin|add|53|customer|ATU-ANH TÚ----------1-
+
+23/10/2018 11:48:18|admin|add|215|marketing|1536274800-75-73-53-0-0-0-1-1536274800-1540249200-1--41
+
+23/10/2018 11:48:48|admin|add|198|shipment_temp|215
+
+24/10/2018 09:54:16|admin|add|19|cost_list|DAU-ĐỔ DẦU-5
+
+24/10/2018 09:54:27|admin|edit|19|cost_list|DAU-DO DAU-5
+
+24/10/2018 09:56:28|admin|add|20|cost_list|KHOAN-KHOAN MOI CHUYEN-10
+
+24/10/2018 09:57:34|admin|add|21|cost_list|KHAC-PHAT SINH KHAC-12
+
+24/10/2018 09:58:08|admin|edit|3|cost_list|HC-HẠ CONT-8
+
+24/10/2018 10:01:45|admin|edit|11|cost_list|BX-BAI XE-6
+
+24/10/2018 10:02:40|admin|edit|3|cost_list|HC-HA CONT-8
+
+24/10/2018 10:02:54|admin|delete|18|cost_list|
+
+24/10/2018 10:04:58|admin|delete|15|cost_list|
+
+24/10/2018 10:05:02|admin|delete|17|cost_list|
+
+24/10/2018 10:05:48|admin|edit|214|marketing|1540249200-74-68-52-1-10000000-0-1-1540249200-1540335600-1-
+
+24/10/2018 10:07:44|admin|add|216|marketing|1536274800-75-73-53-1-0-0-1-1536274800-1540944000-1--41
+
+24/10/2018 10:08:10|admin|add|199|shipment_temp|216
+
+24/10/2018 10:09:44|admin|add|15240|shipment|75-73-89--113-53-0-1-0-0-0-0-0-1536274800-1-1-1--0-0--0--0---0-0--1-0--0--0--0--0-0-0-030918-1536274800-1536274800-0-1-0-1-1536274800-1536274800-0-0---0-1----0-0-0-0-0-41-198-0-0-0-0-1
+
+24/10/2018 10:11:08|admin|edit|461|vehicleromooc|90-89-1540249200-
+
+24/10/2018 10:24:05|admin|add|217|marketing|1536274800-75-73-53-1-0-0-1-1536274800-1540335600-1--41
+
+24/10/2018 10:24:21|admin|delete|198|shipment_temp|
+
+24/10/2018 10:24:25|admin|edit|198|shipment_temp|1540249200-1-0
+
+24/10/2018 10:24:57|admin|add|200|shipment_temp|217
+
+24/10/2018 10:29:09|admin|add|15241|shipment|75-73-89--113-53-1-1-0-0-0-0-0-1536274800-1-1-1--0-0--0--0---0-0--1-0--0--0--0--0-0-200000-ATU030918-1536274800-1536274800-1-1-1-1-1536274800-1536274800-0-0---1-1----0-0-0-0-0-41-200-0-0-0-0-1
+
+24/10/2018 10:30:49|admin|delete|199|shipment_temp|
+
+24/10/2018 10:30:52|admin|edit|199|shipment_temp|1540335600-1-1
+
+24/10/2018 10:31:50|admin|add|218|marketing|1538002800-70-68-53-1-0-0-1-1538002800-1540335600-1--41
+
+24/10/2018 10:32:15|admin|add|201|shipment_temp|218
+
+24/10/2018 10:35:30|admin|add|15242|shipment|70-68-89--113-53-1-1-0-0-0-0-0-1538002800-1-1-1--0-0--0--0---0-0--1-0--0--0--0--0-0-200000-ATU060918-1538002800-1538002800-1-1-1-1-1538002800-1538002800-0-0---1-1----0-0-0-0-0-41-201-0-0-0-0-1
+
+24/10/2018 10:41:45|admin|add|76|place|1-BAI XE
+
+24/10/2018 10:42:27|admin|add|82|route|12-GFORTUNE-DONG AN
+
+24/10/2018 10:42:42|admin|edit|82|route|1-GFORTUNE-DONG AN
+
+24/10/2018 10:42:57|admin|edit|82|route|3-GFORTUNE-DONG AN
+
+24/10/2018 10:48:56|admin|add|2442|road|76-73-82-79-0-0.5-0--240000-0-0-0-200000-0-0-1535756400-1630450800-1
+
+25/10/2018 08:35:35|admin|edit|200|shipment_temp|1540335600-1-1
+
+25/10/2018 09:02:42|admin|edit|461|vehicleromooc|90-89-1540249200-1703980800
+
+25/10/2018 09:02:55|admin|edit|462|vehicleromooc|89-88-1540249200-1703980800
+
+25/10/2018 09:03:01|admin|edit|463|vehicleromooc|91-90-1540249200-1703980800
+
+25/10/2018 09:17:16|admin|add|2443|road|68-69-75-81-0-1-0--0-200000-0-0-0-750000-0-1535756400-1703980800-1
+
+25/10/2018 11:14:10|admin|add|77|place|2-AMATA
+
+25/10/2018 11:14:27|admin|add|78|place|3-VSIP2
+
+25/10/2018 11:15:19|admin|add|79|place|57-MINH HƯNG (TG)
+
+25/10/2018 11:15:31|admin|add|80|place|1-KCN CAO
+
+25/10/2018 11:15:48|admin|add|81|place|1-TÂY NAM
+
+25/10/2018 11:16:11|admin|add|82|place|1-TÂN TẠO
+
+25/10/2018 11:16:25|admin|edit|82|place|1-TAN TAO
+
+25/10/2018 11:16:34|admin|edit|79|place|57-MINH HUNG (TG)
+
+25/10/2018 11:18:47|admin|add|83|place|2-NOK (AMATA)
+
+25/10/2018 11:18:57|admin|add|84|place|12-MỸ PHƯỚC
+
+25/10/2018 11:19:36|admin|add|85|place|3-HONDA LEX (VSIP1)
+
+25/10/2018 11:20:04|admin|add|86|place|1-SANKAI (MY PHUOC 3)
+
+25/10/2018 11:20:30|admin|edit|86|place|3-SANKAI (MY PHUOC 3)
+
+25/10/2018 11:20:49|admin|edit|84|place|3-MY PHUOC
+
+25/10/2018 11:27:27|admin|add|1|oil|THONG THUONG-0.45
+
+25/10/2018 11:28:01|admin|delete|2218|road|
+
+25/10/2018 11:28:01|admin|delete|2220|road|
+
+25/10/2018 11:28:01|admin|delete|2333|road|
+
+25/10/2018 11:28:01|admin|delete|2341|road|
+
+25/10/2018 11:28:01|admin|delete|2325|road|
+
+25/10/2018 11:28:01|admin|delete|2431|road|
+
+25/10/2018 11:28:01|admin|delete|2432|road|
+
+25/10/2018 11:28:01|admin|delete|2308|road|
+
+25/10/2018 11:28:01|admin|delete|2398|road|
+
+25/10/2018 11:28:01|admin|delete|2400|road|
+
+25/10/2018 11:28:01|admin|delete|2350|road|
+
+25/10/2018 11:28:01|admin|delete|2401|road|
+
+25/10/2018 11:28:01|admin|delete|2417|road|
+
+25/10/2018 11:28:01|admin|delete|2418|road|
+
+25/10/2018 11:28:01|admin|delete|2419|road|
+
+25/10/2018 11:28:01|admin|delete|2420|road|
+
+25/10/2018 11:28:01|admin|delete|2421|road|
+
+25/10/2018 11:28:01|admin|delete|2422|road|
+
+25/10/2018 11:28:01|admin|delete|2433|road|
+
+25/10/2018 11:28:01|admin|delete|2184|road|
+
+25/10/2018 11:28:01|admin|delete|2186|road|
+
+25/10/2018 11:28:01|admin|delete|2326|road|
+
+25/10/2018 11:28:01|admin|delete|2328|road|
+
+25/10/2018 11:28:01|admin|delete|2410|road|
+
+25/10/2018 11:28:01|admin|delete|2412|road|
+
+25/10/2018 11:28:01|admin|delete|2403|road|
+
+25/10/2018 11:28:01|admin|delete|2377|road|
+
+25/10/2018 11:28:01|admin|delete|2390|road|
+
+25/10/2018 11:28:01|admin|delete|2394|road|
+
+25/10/2018 11:28:01|admin|delete|2392|road|
+
+25/10/2018 11:28:01|admin|delete|2315|road|
+
+25/10/2018 11:28:01|admin|delete|2317|road|
+
+25/10/2018 11:28:01|admin|delete|2319|road|
+
+25/10/2018 11:28:01|admin|delete|2356|road|
+
+25/10/2018 11:28:01|admin|delete|2359|road|
+
+25/10/2018 11:28:01|admin|delete|2361|road|
+
+25/10/2018 11:28:01|admin|delete|2300|road|
+
+25/10/2018 11:28:01|admin|delete|2343|road|
+
+25/10/2018 11:28:01|admin|delete|2345|road|
+
+25/10/2018 11:28:01|admin|delete|2329|road|
+
+25/10/2018 11:28:01|admin|delete|2332|road|
+
+25/10/2018 11:28:01|admin|delete|2346|road|
+
+25/10/2018 11:28:01|admin|delete|2347|road|
+
+25/10/2018 11:28:01|admin|delete|2349|road|
+
+25/10/2018 11:28:01|admin|delete|2413|road|
+
+25/10/2018 11:28:01|admin|delete|2415|road|
+
+25/10/2018 11:28:01|admin|delete|2363|road|
+
+25/10/2018 11:28:01|admin|delete|2435|road|
+
+25/10/2018 11:30:11|admin|edit|1|oil|THONG THUONG-0.9
+
+25/10/2018 11:40:41|admin|add|2444|road|74-68-81-81-90.00-0.5-100-1-510000-200000-0-0-0-0-0-1535756400-1703980800-1
+
+25/10/2018 11:44:48|admin|add|15243|shipment|74-68-91--114-52-1-1-10000000-0-0-0-0-1536793200-1-1-1--0-0--0--0---0-0--1-0--0--0--0--0-0-0-6187982250-1536793200-1536793200-1-1-1-1-1536793200-1536793200-0-0---1-1---2444-10000000-710000-9290000-0-710000-41-197-0-0-0-0-1
+
+25/10/2018 11:46:24|admin|add|83|route|12-AVF - ÂU VIỆT
+
+25/10/2018 11:46:53|admin|add|84|route|3-VSIP2
+
+25/10/2018 11:47:25|admin|add|85|route|57-MINH HUNG (TG)
+
+25/10/2018 11:47:35|admin|add|86|route|1-KCN CAO
+
+25/10/2018 11:48:01|admin|add|87|route|1-TÂY NAM
+
+25/10/2018 11:48:38|admin|add|88|route|2-NOK (AMATA)
+
+25/10/2018 11:48:51|admin|add|89|route|3-MY PHUOC
+
+25/10/2018 11:49:27|admin|add|90|route|3-HONDA LEX (VSIP1)
+
+25/10/2018 11:49:54|admin|add|91|route|3-SAKAI MY PHUOC 3
+
+25/10/2018 11:51:20|admin|edit|83|route|12-AVF - AU VIET
+
+25/10/2018 11:51:27|admin|edit|83|route|16-AVF - AU VIET
+
+25/10/2018 11:54:10|admin|add|2445|road|76-76-83-76-90.00-0.5-100-1-510000-200000-0-0-0-0-0-1535756400-1703980800-1
+
+25/10/2018 11:54:48|admin|delete|2444|road|
+
+25/10/2018 11:54:53|admin|edit|2444|road|74-68-81-81-90-0.5-100-1-510000-200000-0-0-0-0-0-1535756400-1703980800-1
+
+25/10/2018 11:56:02|admin|delete||shipment_temp|
+
+25/10/2018 11:56:09|admin|delete||shipment_temp|
+
+25/10/2018 11:56:59|admin|edit|201|shipment_temp|1540335600-1-1
+
+25/10/2018 11:57:08|admin|delete||shipment_temp|
+
+25/10/2018 11:57:12|admin|delete||shipment_temp|
+
+25/10/2018 11:59:23|admin|add|202|shipment_temp|216
+
+25/10/2018 12:01:07|admin|edit|214|marketing|1540249200-74-68-52-1-10000000-0-1-1540249200-1540422000-1-
+
+23/03/2019 14:37:40|admin|edit|90|vehicle|51D 17458--1
+
+23/03/2019 14:37:58|admin|edit|90|vehicle|51D 17458-902345844-1
 

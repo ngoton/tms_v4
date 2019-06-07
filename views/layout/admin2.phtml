@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title><?php echo isset($title) ? $title : null ?> - Tân Cảng Miền Trung</title>
+  <meta name="keywords" content="Logistics, Xuất Khẩu, Nhập Khẩu, Xuất Nhập Khẩu, Vận Chuyển Hàng Hóa, Vận Chuyển, Hàng Siêu Trọng, Salan, Xà Lan, Sà Lan, Vận Chuyển Sà Lan, Thủ Tục Hải Quan, Hải Quan, Thông Quan, Mở Tờ Khai, Hun Trùng, Đóng Cont, Đóng Hàng, Forwarder, Stufffing, Unstuffing, Export, Import, Terminal, Port, Sea Port, Transhit, Transhipment, OOG, Over Weight, Over Hight, Over Length, Barge, Barging, Barge team, Barge Fleet, Inland Water Way, IWW, Ship, Vessel, Canoe, River, Channal, Pilot, Boarding Agent, Đại lý tàu, Husbanding Agent, Cambudia, Barging Service, Customs, Customs transhipment, Customs Clearance, EDI, Manifest, E-Manifest, chỉnh sửa Manifest, Adjust Manifest, Inbound, Outbound, Cargo, container, 20', 40', Reefer container, Flatrach, Tank, Hàng Quá Khổ, Cấm Tải, Chất lượng,">
+  <meta name="description" content="<?php echo isset($title) ? $title.' - ' : null ?>Logistics - Vận chuyển - Thủ tục hải quan - Manifest - Container">
+  <meta name="generator" content="Tan Cang Mien Trung">
+  <link href="<?php BASE_URL ?>/public/img/logo.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
+	<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/style.css">
+	<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/bootstrap-responsive.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/js/ui/jquery-ui.css">
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/html5.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.form.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/custom.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/localization/messages_vi.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/bootstrap.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="<?php echo BASE_URL ?>/public/js/jquery.battatech.excelexport.js"></script>
+
+  <style type="text/css">
+    ul,ol{padding:0;margin:0px;}
+    ul ul,ul ol,ol ol,ol ul{margin-bottom:0;}
+    li {line-height: 18px;}
+  </style>
+</head>
+
+<body>
+  <script type="text/javascript">
+    $(function () {
+      
+
+
+        setNavigation();
+        $('.home').click(function(){
+
+          var hrefval = $(this).attr("data");
+          
+              if(hrefval != "#") {
+                closeSidepage('.slide-content');
+                openSidepage(hrefval);
+
+                $('.nav li').removeClass('active');
+
+                $(this).closest('li').addClass('active');
+                $(this).closest('li').parents('li').addClass('active');
+
+                $("html, body").animate({ scrollTop: 0 }, 1);
+              }
+
+        });
+
+        
+        $('.png').click(function(){
+          $('#support').animate({
+            height: '300px'
+          }, 300);
+        });
+        $('.close').click(function(){
+          $('#support').animate({
+            height: '22px'
+          }, 300);
+        });
+
+
+      
+    });
+
+
+      function openSidepage(id) {
+        $(id).css({display: "block"});
+        $(id).animate({
+          left: '0px'
+        }, 500, 'easeOutBack'); 
+      }
+      
+      function closeSidepage(id){
+        
+        $(id).animate({
+          left: '-1500px'
+        }, 100, 'easeOutQuint');  
+        $(id).css({left: "-1500px",display: "none"});
+      }
+
+    function setNavigation() {
+        var path = window.location.pathname;
+        path = path.replace(/\/$/, "");
+        path = decodeURIComponent(path);
+
+        $(".nav a").each(function () {
+            var href = "/"+$(this).attr('data');
+
+            if (path.substring(0, href.length) === href) {
+                $(this).closest('li').addClass('active');
+                $(this).closest('li').parents('li').addClass('active');
+
+            }
+            if (window.location.hash == $(this).attr("data")) {
+              var hrefval = $(this).attr("data");
+          
+              if(hrefval != "#") {
+                closeSidepage('.slide-content');
+                openSidepage(hrefval);
+
+                $(this).closest('li').addClass('active');
+                $(this).closest('li').parents('li').addClass('active');
+
+                $("html, body").animate({ scrollTop: 0 }, 1);
+              }
+            }
+            
+        });
+
+        if (path == "" && window.location.hash == "") {
+            closeSidepage('.slide-content');
+            openSidepage('#index');
+
+            $('li').first().addClass('active');
+
+        }
+    }
+
+$(document).ready(function() {
+    function fixDiv() {
+      
+      var $cache = $('.navbar-fixed-top'); 
+      if ($(window).scrollTop() > 150) {
+        $cache.css({'position': 'fixed', 'top': '0'}); 
+        $(".navbar-inner").css({'width':'100%'});
+        $(".navbar").css({'width':'100%'});
+      }
+      else{
+        var w = $(".table_data").width();
+        $cache.css({'position': 'relative', 'top': 'auto'});
+        $(".navbar-inner").width(w);
+        $(".navbar").width(w);
+      }
+      
+    }
+  $(window).scroll(fixDiv);
+  fixDiv();
+});
+
+var check_lock_user = 0;
+  $.ajax({
+      type: "POST",
+      url: "<?php echo BASE_URL ?>/admin/checklockuser",
+      data: "data=<?php echo isset($_SESSION['userid_logined'])?$_SESSION['userid_logined']:0 ?>", // or any data you want to send
+      cache: false,
+      success: function(html){
+        check_lock_user = html;
+        if (check_lock_user==1) {
+          $.ajax({
+            type: "GET",
+            url: "<?php echo BASE_URL ?>/user/logout",
+            data: "data=1", // or any data you want to send
+            cache: false,
+            success: function(html){
+              window.location.href = "<?php echo BASE_URL ?>";
+            }
+          });
+        };
+      }
+    });
+  
+$(document).ready(function () {
+        $("#btnExport").click(function () {
+            $("#tblExport").battatech_excelexport({
+                containerid: "tblExport"
+               , datatype: 'table'
+            });
+        });
+    });
+  </script>
+  
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="<?php echo $this->url('') ?>"><b><font style="color:#ffc153;">TCMT</font></b></a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 1 || $_SESSION['role_logined'] == 7 )) { ?>
+              <li><a  data="#" href="#">Thông tin</a>
+                <ul>
+                  <li><a data="menu" href="<?php echo $this->url('menu') ?>">Danh mục</a></li>
+                
+                  <li><a data="post" href="<?php echo $this->url('post') ?>">Bài viết</a></li>
+                  <li><a data="#" href="#">Thư viện</a>
+                    <ul>
+                      <li><a data="album" href="<?php echo $this->url('album') ?>">Hình ảnh</a></li>
+                      <li><a data="video" href="<?php echo $this->url('video') ?>">Video</a></li>
+                      <li><a data="presentation" href="<?php echo $this->url('presentation') ?>">Presentation</a></li>
+                      <li><a data="brochure" href="<?php echo $this->url('brochure') ?>">Brochure</a></li>
+                    </ul>
+                  </li>
+                  <?php if($_SESSION['user_logined']=='cmthanh' || $_SESSION['user_logined']=='admintcmt' ){ ?>
+                  <li><a data="user" href="<?php echo $this->url('user') ?>">Tài khoản</a></li>
+                  <?php } ?>
+                </ul>
+              </li>
+              <?php } ?>
+
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 2)) { ?>
+                <li><a data="post" href="<?php echo $this->url('post') ?>">Bài viết</a></li>
+                <li><a data="#" href="#">Thư viện</a>
+                  <ul>
+                    <li><a data="album" href="<?php echo $this->url('album') ?>">Hình ảnh</a></li>
+                    <li><a data="video" href="<?php echo $this->url('video') ?>">Video</a></li>
+                    <li><a data="presentation" href="<?php echo $this->url('presentation') ?>">Presentation</a></li>
+                    <li><a data="brochure" href="<?php echo $this->url('brochure') ?>">Brochure</a></li>
+                  </ul>
+                </li>
+              <?php } ?>
+              
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 1 || $_SESSION['role_logined'] == 4 || $_SESSION['role_logined'] == 7)) { ?>
+              <li><a data="#" href="#">Thủ quỹ</a>
+                <ul>
+                  <li><a data="accounting" href="<?php echo $this->url('accounting') ?>">Chuyển tiền</a></li>
+                  <li><a data="tollcost" href="<?php echo $this->url('tollcost') ?>">Phiếu cầu đường</a></li>
+                  <li><a data="tolls" href="<?php echo $this->url('tolls') ?>">Phí cầu đường</a></li>
+                </ul>
+              </li>
+              
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 4)) { ?>
+              <li><a data="cost" href="<?php echo $this->url('cost') ?>">Chi phí</a>
+                  <ul>
+                    <li><a data="cost" href="<?php echo $this->url('cost') ?>">Chi phí</a></li>
+                    <li><a data="noinvoice" href="<?php echo $this->url('noinvoice') ?>">Chi phí không hóa đơn</a></li>
+                    <li><a data="tolls" href="<?php echo $this->url('tolls') ?>">Phí cầu đường</a></li>
+                  </ul>
+              </li>
+              <li><a data="shipment" href="<?php echo $this->url('shipment') ?>">Điều độ</a></li>
+              <li><a data="#" href="#">Nhân sự</a>
+                <ul>
+                  <li><a data="steersman" href="<?php echo $this->url('steersman') ?>">Danh sách tài xế</a></li>
+                  <li><a data="driver" href="<?php echo $this->url('driver') ?>">Bàn giao xe</a></li>
+                  <li><a data="salary/driver" href="<?php echo $this->url('salary/driver') ?>">Lương tài xế</a></li>
+                </ul>
+              </li>
+              <?php } ?>
+
+              <?php } ?>
+
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 6)) { ?>
+                <li><a data="marketing" href="<?php echo $this->url('marketing') ?>">Lô hàng</a></li>
+                <li><a data="sales" href="<?php echo $this->url('sales') ?>">Doanh thu (Điều xe)</a></li>
+                <li><a data="revenue" href="<?php echo $this->url('revenue') ?>">Doanh thu (Kế toán)</a></li>
+                <li><a data="customer" href="<?php echo $this->url('customer') ?>">Khách hàng</a></li>
+                <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a>
+                  <ul>
+                    <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a></li>
+                    <li><a data="vehiclework" href="<?php echo $this->url('vehiclework') ?>">Thời gian chạy xe</a></li>
+                  </ul>
+                </li>
+                <li><a data="shipment" href="<?php echo $this->url('shipment') ?>">Điều độ</a></li>
+                <li><a data="commission" href="<?php echo $this->url('commission') ?>">Hoa hồng</a></li>
+              <?php } ?>
+              
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 3 || $_SESSION['role_logined'] == 8 )) { ?>
+              <li><a data="#" href="#">Danh mục</a>
+                  <ul>
+                    <li><a data="#" href="#">Định mức</a>
+                      <ul>
+                        <li><a data="road" href="<?php echo $this->url('road') ?>">Định mức đang sử dụng</a></li>
+                        <li><a data="newroad" href="<?php echo $this->url('newroad') ?>">Thêm khung định mức mới</a></li>
+                      </ul>
+                    </li>
+                  <li><a data="#" href="#">Bồi dưỡng</a>
+                    <ul>
+                      <li><a data="warehouse" href="<?php echo $this->url('warehouse') ?>">Bồi dưỡng</a></li>
+                      <li><a data="newwarehouse" href="<?php echo $this->url('newwarehouse') ?>">Thêm bảng bồi dưỡng mới</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a>
+                    <ul>
+                      <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a></li>
+                      <li><a data="vehiclework" href="<?php echo $this->url('vehiclework') ?>">Thời gian chạy xe</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="customer" href="<?php echo $this->url('customer') ?>">Khách hàng</a></li>
+                  <li><a data="contermet" href="<?php echo $this->url('contermet') ?>">Số contermet</a></li>
+                  </ul>
+                </li>
+                <li><a data="#" href="#">Nhân sự</a>
+                  <ul>
+                    <li><a data="steersman" href="<?php echo $this->url('steersman') ?>">Danh sách tài xế</a></li>
+                    <li><a data="driver" href="<?php echo $this->url('driver') ?>">Bàn giao xe</a></li>
+                    <li><a data="salary/driver" href="<?php echo $this->url('salary/driver') ?>">Lương tài xế</a></li>
+                  </ul>
+                </li>
+                <li><a data="shipment" href="<?php echo $this->url('shipment') ?>">Điều độ</a></li>
+                <li><a data="#" href="#">Lô hàng </a>
+                  <ul>
+                    <li><a data="marketing" href="<?php echo $this->url('marketing') ?>">Lô hàng mới</a></li>
+                    <li><a data="newshipment" href="<?php echo $this->url('newshipment') ?>">Lô hàng đang chờ</a></li>
+                    <li><a data="shipmenttemp" href="<?php echo $this->url('shipmenttemp') ?>">Lô hàng đã nhận</a></li>
+                  </ul>
+                </li>
+                <li><a data="sales" href="<?php echo $this->url('sales') ?>">Doanh thu</a></li>
+                <li><a data="cost" href="<?php echo $this->url('cost') ?>">Chi phí</a>
+                  <ul>
+                    <li><a data="cost" href="<?php echo $this->url('cost') ?>">Chi phí</a></li>
+                    <li><a data="noinvoice" href="<?php echo $this->url('noinvoice') ?>">Chi phí không hóa đơn</a></li>
+                    <li><a data="tolls" href="<?php echo $this->url('tolls') ?>">Phí cầu đường</a></li>
+                  </ul>
+                </li>
+                <li><a data="#" href="#">Báo cáo</a>
+                  <ul>
+                    <li><a data="oil" href="<?php echo $this->url('oil') ?>">Dầu</a></li>
+                    <li><a data="oilexcess" href="<?php echo $this->url('oilexcess') ?>">Dầu phát sinh</a></li>
+                    <li><a data="commission" href="<?php echo $this->url('commission') ?>">Hoa hồng</a></li>
+                  </ul>
+                </li>
+              </li>
+              <?php } ?>
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 1 || $_SESSION['role_logined'] == 7)) { ?>
+              <li><a data="#" href="#">Kế toán</a>
+                <ul>
+                  <li><a data="sales" href="<?php echo $this->url('sales') ?>">Doanh thu (Điều xe)</a></li>
+                  <li><a data="revenue" href="<?php echo $this->url('revenue') ?>">Doanh thu (Kế toán)</a></li>
+                  <li><a data="cost" href="<?php echo $this->url('cost') ?>">Chi phí</a>
+                    <ul>
+                      <li><a data="cost" href="<?php echo $this->url('cost') ?>">Chi phí</a></li>
+                      <li><a data="noinvoice" href="<?php echo $this->url('noinvoice') ?>">Chi phí không hóa đơn</a></li>
+                      <li><a data="tolls" href="<?php echo $this->url('tolls') ?>">Phí cầu đường</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><a data="marketing" href="<?php echo $this->url('marketing') ?>">Kinh doanh</a></li>
+               <li><a data="#" href="#">Điều độ</a>
+                <ul>
+                  <li><a data="shipment" href="<?php echo $this->url('shipment') ?>">Điều độ</a></li>
+                  <li><a data="#" href="#">Lô hàng </a>
+                    <ul>
+                      <li><a data="newshipment" href="<?php echo $this->url('newshipment') ?>">Lô hàng mới</a></li>
+                      <li><a data="shipmenttemp" href="<?php echo $this->url('shipmenttemp') ?>">Lô hàng đã nhận</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="#" href="#">Định mức</a>
+                    <ul>
+                      <li><a data="road" href="<?php echo $this->url('road') ?>">Định mức đang sử dụng</a></li>
+                      <li><a data="newroad" href="<?php echo $this->url('newroad') ?>">Thêm khung định mức mới</a></li>
+                    </ul>
+                  </li>
+                  
+                  <li><a data="#" href="#">Bồi dưỡng</a>
+                    <ul>
+                      <li><a data="warehouse" href="<?php echo $this->url('warehouse') ?>">Bồi dưỡng</a></li>
+                      <li><a data="newwarehouse" href="<?php echo $this->url('newwarehouse') ?>">Thêm bảng bồi dưỡng mới</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a>
+                    <ul>
+                      <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a></li>
+                      <li><a data="vehiclework" href="<?php echo $this->url('vehiclework') ?>">Thời gian chạy xe</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="customer" href="<?php echo $this->url('customer') ?>">Khách hàng</a></li>
+                  <li><a data="contermet" href="<?php echo $this->url('contermet') ?>">Số contermet</a></li>
+                </ul>
+               </li>
+              <li><a data="#" href="#">Vật tư</a>
+                <ul>
+                  <li><a data="tire" href="<?php echo $this->url('tire') ?>">Danh sách vỏ</a></li>
+                  <li><a data="equipment" href="<?php echo $this->url('equipment') ?>">Bảng thay thế vỏ</a></li>
+                  <li><a data="mooc" href="<?php echo $this->url('mooc') ?>">Đổi mooc</a></li>
+                  <li><a data="tire/report" href="<?php echo $this->url('tire/report') ?>">Thống kê tình trạng</a></li>
+                  <li><a data="tire/statistics" href="<?php echo $this->url('tire/statistics') ?>">Kết quả hoạt động</a></li>
+                </ul>
+              </li>
+              <li><a data="#" href="#">Nhân sự</a>
+                <ul>
+                  <li><a data="steersman" href="<?php echo $this->url('steersman') ?>">Danh sách tài xế</a></li>
+                  <li><a data="driver" href="<?php echo $this->url('driver') ?>">Bàn giao xe</a></li>
+                  <li><a data="salary/driver" href="<?php echo $this->url('salary/driver') ?>">Lương tài xế</a></li>
+                </ul>
+              </li>
+              <?php } ?>
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 5)) { ?>
+              <li><a data="tire" href="<?php echo $this->url('tire') ?>">Danh sách vỏ</a></li>
+              <li><a data="equipment" href="<?php echo $this->url('equipment') ?>">Bảng thay thế vỏ</a></li>
+              <li><a data="mooc" href="<?php echo $this->url('mooc') ?>">Đổi mooc</a></li>
+              <li><a data="tire/report" href="<?php echo $this->url('tire/report') ?>">Thống kê tình trạng</a></li>
+              <li><a data="tire/statistics" href="<?php echo $this->url('tire/statistics') ?>">Kết quả hoạt động</a></li>
+              <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a>
+                  <ul>
+                    <li><a data="vehicle" href="<?php echo $this->url('vehicle') ?>">Danh sách xe</a></li>
+                    <li><a data="vehiclework" href="<?php echo $this->url('vehiclework') ?>">Thời gian chạy xe</a></li>
+                  </ul>
+                </li>
+              <li><a data="#" href="#">Nhân sự</a>
+                <ul>
+                  <li><a data="steersman" href="<?php echo $this->url('steersman') ?>">Danh sách tài xế</a></li>
+                  <li><a data="driver" href="<?php echo $this->url('driver') ?>">Bàn giao xe</a></li>
+                  <li><a data="salary/driver" href="<?php echo $this->url('salary/driver') ?>">Lương tài xế</a></li>
+                </ul>
+              </li>
+              <?php } ?>
+              
+              <?php if ($_SESSION && ($_SESSION['role_logined'] == 1 || $_SESSION['role_logined'] == 7 || $_SESSION['role_logined'] == 4 || $_SESSION['role_logined'] == 6)) { ?>
+              <li><a data="#" href="#">Tổng hợp</a>
+                <ul>
+                  <li><a data="report/report" href="<?php echo $this->url('report/report') ?>">Kết quả hoạt động</a>
+                    <ul>
+                      <li><a data="report/report" href="<?php echo $this->url('report/report') ?>">Đội xe</a></li>
+                      <li><a data="report/first" href="<?php echo $this->url('report/first') ?>">Đội 1</a></li>
+                      <li><a data="report/second" href="<?php echo $this->url('report/second') ?>">Đội 2</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="oil" href="<?php echo $this->url('oil') ?>">Dầu</a></li>
+                  <li><a data="oilexcess" href="<?php echo $this->url('oilexcess') ?>">Dầu phát sinh</a></li>
+                  <li><a data="advance" href="<?php echo $this->url('advance') ?>">Tạm ứng</a></li>
+                  <li><a data="commission" href="<?php echo $this->url('commission') ?>">Hoa hồng</a></li>
+                  <li><a data="#" href="#">Doanh thu - Chi phí</a>
+                    <ul>
+                      <li><a data="quantity" href="<?php echo $this->url('quantity') ?>">Theo tuyến</a></li>
+                      <li><a data="profit" href="<?php echo $this->url('profit') ?>">Theo vòng</a></li>
+                      <li><a data="round" href="<?php echo $this->url('round') ?>">Chi phí vòng</a></li>
+                    </ul>
+                  </li>
+                  <li><a data="statistics" href="<?php echo $this->url('statistics') ?>">Thống kê</a></li>
+                  
+                </ul>
+              </li>
+              
+              <?php if($_SESSION['user_logined']=='cmthanh' || $_SESSION['user_logined']=='admintcmt' ){ ?>
+                <li><a data="#" href="#">CV chờ xử lý</a>
+                  <ul>
+                    <li><a data="pending" href="<?php echo $this->url('pending') ?>">Chi phí phát sinh</a></li>
+                    <li><a data="pending/equipment" href="<?php echo $this->url('pending/equipment') ?>">Thay thế vỏ lốp</a></li>
+                    <li><a data="pending/vehicle" href="<?php echo $this->url('pending/vehicle') ?>">Thay thế vỏ theo xe</a></li>
+                    <li><a data="pending/supplies" href="<?php echo $this->url('pending/supplies') ?>">Mua sắm đội xe</a></li>
+                  </ul>
+                </li>
+              <?php } ?>
+              <?php } ?>
+              <?php if ($_SESSION && $_SESSION['role_logined'] == 10) { ?>
+              <li><a data="#" href="#">Nhân sự</a>
+                <ul>
+                  <li><a data="steersman" href="<?php echo $this->url('steersman') ?>">Danh sách tài xế</a></li>
+                  <li><a data="driver" href="<?php echo $this->url('driver') ?>">Bàn giao xe</a></li>
+                  <li><a data="salary/driver" href="<?php echo $this->url('salary/driver') ?>">Lương tài xế</a></li>
+                </ul>
+              </li>
+              <?php } ?>
+              
+              <?php if (isset($_SESSION['role_logined'])) { ?>
+                <li><a data="nearly" href="<?php echo $this->url('nearly') ?>">Báo cáo ngày</a></li>
+                <li><a data="supplies" href="<?php echo $this->url('supplies') ?>">Mua sắm đội xe</a></li>
+                <?php if ($_SESSION && $_SESSION['role_logined'] == 9) { ?>
+                <li><a data="oil" href="<?php echo $this->url('oil') ?>">Dầu</a></li>
+                <?php } ?>
+              <?php } ?>
+              <?php if ($_SESSION && $_SESSION['role_logined'] == 1) { ?>
+              <li><a data="#" href="#">Task</a>
+                <ul>
+                  <li><a data="work" href="<?php echo $this->url('work') ?>">Định mức công việc</a></li>
+                  <li><a data="task" href="<?php echo $this->url('task') ?>">Danh sách công việc</a></li>
+                </ul>
+              </li>
+              <?php } ?>
+
+            </ul>
+          </div><!--/.nav-collapse -->
+
+          <!-- Kiem tra dang nhap -->
+          <?php 
+          if ($_SESSION) {
+            ?>
+            <a class="logined" href="<?php echo $this->url('user/logout') ?>">&nbsp; | Logout</a><a class="logined" href="<?php echo BASE_URL.'/user/info/'.$_SESSION['userid_logined'] ?>"><b><i><?php echo $_SESSION['user_logined']; ?> </i></b></a>
+            <?php
+          }
+          else{
+            ?>
+            <a class="logined" href="<?php echo $this->url('user/login') ?>">Login</a>
+            <?php
+          }
+          ?>
+          <!-- end -->
+        </div>
+      </div>
+    </div>
+
+    
+    <div id="container">
+    	
+			<?php echo $content; ?>
+      
+            
+        
+    </div> <!-- /container -->
+    
+    <footer >
+            <p>Copyright &copy; <?php echo date('Y') ?> by <a  href="<?php echo BASE_URL ?>">TCMT</a>. All rights reserved.</p><br>
+            <span style="font-size:5px">Powered by <a target="_blank" style="color:#fff" href="http://www.tinhoctainha.com">Dịch vụ Tin Học Tại Nhà</a></span>
+    </footer>
+
+  </body>
+</html>

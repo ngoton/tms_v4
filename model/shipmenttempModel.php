@@ -11,36 +11,23 @@ Class shipmenttempModel Extends baseModel {
     public function createShipment($data) 
     {    
         /*$data = array(
-        	'Shipment_id' => $data['Shipment_id'],
-        	'Shipment_name' => $data['Shipment_name'],
-        	'Shipment_birth' => $data['Shipment_birth'],
-        	'Shipment_gender' => $data['Shipment_gender'],
-            'Shipment_address' => $data['Shipment_address'],
-            'Shipment_phone' => $data['Shipment_phone'],
-            'Shipment_email' => $data['Shipment_email'],
-            'cmnd' => $data['cmnd'],
-            'bank' => $data['bank'],
-            'account' => $data['account'],
+        	'Shipmentname' => $data['Shipmentname'],
+        	'password' => $data['password'],
+        	'create_time' => $data['create_time'],
+        	'role' => $data['role'],
         	);*/
-
         return $this->insert($this->table,$data);
     }
-    public function updateShipment($data,$where) 
+    public function updateShipment($data,$id) 
     {    
-        if ($this->getShipmentByWhere($where)) {
+        if ($this->getShipmentByWhere($id)) {
         	/*$data = array(
-            'Shipment_id' => $data['Shipment_id'],
-            'Shipment_name' => $data['Shipment_name'],
-            'Shipment_birth' => $data['Shipment_birth'],
-            'Shipment_gender' => $data['Shipment_gender'],
-            'Shipment_address' => $data['Shipment_address'],
-            'Shipment_phone' => $data['Shipment_phone'],
-            'Shipment_email' => $data['Shipment_email'],
-            'cmnd' => $data['cmnd'],
-            'bank' => $data['bank'],
-            'account' => $data['account'],
-            );*/
-	        return $this->update($this->table,$data,$where);
+	        	'Shipmentname' => $data['Shipmentname'],
+	        	'password' => $data['password'],
+	        	'create_time' => $data['create_time'],
+	        	'role' => $data['role'],
+	        	);*/
+	        return $this->update($this->table,$data,$id);
         }
         
     }
@@ -50,10 +37,10 @@ Class shipmenttempModel Extends baseModel {
     	}
     }
     public function getShipment($id){
-        return $this->getByID($this->table,$id);
+    	return $this->getByID($this->table,$id);
     }
     public function getShipmentByWhere($where){
-    	return $this->getByWhere($this->table,$where);
+        return $this->getByWhere($this->table,$where);
     }
     public function getAllShipmentByWhere($id){
         return $this->query('SELECT * FROM shipment_temp WHERE shipment_temp_id != '.$id);
@@ -61,8 +48,17 @@ Class shipmenttempModel Extends baseModel {
     public function getLastShipment(){
         return $this->getLast($this->table);
     }
+    public function checkShipment($id,$shipment_from,$shipment_to,$vehicle,$shipment_date,$shipment_round){
+        return $this->query('SELECT * FROM shipment_temp WHERE shipment_id != '.$id.' AND shipment_from = "'.$shipment_from.'" AND shipment_to = '.$shipment_to.' AND vehicle = '.$vehicle.' AND shipment_date = '.$shipment_date.' AND shipment_round = '.$shipment_round);
+    }
+    public function checkUpdate($vehicle,$shipment_round,$shipment_date){
+        return $this->query('SELECT * FROM shipment_temp WHERE vehicle = '.$vehicle.' AND shipment_date >= '.strtotime('-1 month' ,strtotime('30-'.date('m-Y',$shipment_date))).' AND shipment_date <= '.strtotime('29-'.date('m-Y',$shipment_date)).' AND shipment_round != '.$shipment_round.' AND shipment_update = 0');
+    }
     public function queryShipment($sql){
         return $this->query($sql);
+    }
+    public function checkComplete($vehicle,$shipment_round,$shipment_date){
+        return $this->query('SELECT * FROM shipment_temp WHERE vehicle = '.$vehicle.' AND shipment_date >= '.strtotime('-1 month' ,strtotime('30-'.date('m-Y',$shipment_date))).' AND shipment_date <= '.strtotime('29-'.date('m-Y',$shipment_date)).' AND shipment_round != '.$shipment_round.' AND shipment_complete = 0');
     }
 }
 ?>

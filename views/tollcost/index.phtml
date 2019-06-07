@@ -1,0 +1,781 @@
+<?php
+$url_order = 'ASC';
+if ($order_by == 'toll_cost_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+elseif ($order_by == 'toll_symbol')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'toll_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'invoice_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'toll_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'toll_mst')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'toll_type')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'toll_cost')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'toll_cost_vat')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'shipment_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'vehicle_number')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+
+    $i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>TỔNG HỢP PHIẾU CẦU ĐƯỜNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('tollcost') ?>">Phiếu cầu đường</a></li>
+  </ol>
+</section>
+<div id="content" style="padding:5px;">
+  
+
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+        <div class="add-box">
+            <select id="sl_round" name="sl_round" style="width:90px">
+             <?php 
+                for ($k=1; $k < 13; $k++) { 
+                    echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+                }
+             ?>
+            </select>
+            <select id="sl_staff" name="sl_staff" style="width:100px">
+             <?php 
+                $nam = date('Y');
+                for ($k=($nam-5); $k < ($nam+5); $k++) { 
+                    echo '<option value="'.$k.'">Năm '.$k.'</option>';
+                }
+             ?>
+            </select>
+
+            <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+            
+        </div>
+    </div>
+    <div class="tablenav top">
+        <div style="clear:both"></div>
+        <div class="add-box">
+                  
+            Từ  <input style="width:100px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+            Đến  <input style="width:100px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+             <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+            
+        </div>
+    </div>
+    <div class="tablenav top">
+        <div style="clear:both"></div>
+        
+        <div class="add-box">
+            <input type="button" name="chon" id="chon" value="Chọn" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+        </div>
+        
+        <div class="add-box" style="margin-right: 5px">
+            <select name="sl_vehicle" id="sl_vehicle">
+                <option selected="selected" value="0">Xe</option>
+                <?php foreach ($vehicles as $sm) { ?>
+                <option value="<?php echo $sm->vehicle_id ?>"><?php echo $sm->vehicle_number ?></option>
+                <?php } ?>
+            </select>
+
+            
+            
+        </div>
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc" style="width:200px">
+            <option  value="18446744073709">Hiển thị tất cả</option>
+            <option value="50">Hiển thị 50 giá trị</option>
+            <option value="100">Hiển thị 100 giá trị</option>
+            <option value="150">Hiển thị 150 giá trị</option>
+            <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+
+      </div>
+</div>
+<table class="table_data" id="tblExport">
+<thead>
+    <tr>
+        
+        <th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_cost_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'toll_cost_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_type','<?php echo $url_order ?>')">Loại <?php if ($order_by == 'toll_type'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_symbol','<?php echo $url_order ?>')">Mẫu số <?php if ($order_by == 'toll_symbol'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_number','<?php echo $url_order ?>')">Ký hiệu <?php if ($order_by == 'toll_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','invoice_number','<?php echo $url_order ?>')">Số hóa đơn <?php if ($order_by == 'invoice_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_name','<?php echo $url_order ?>')">Người bán <?php if ($order_by == 'toll_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_mst','<?php echo $url_order ?>')">MST <?php if ($order_by == 'toll_mst'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_cost','<?php echo $url_order ?>')">Giá trị chưa thuế <?php if ($order_by == 'toll_cost'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_cost_vat','<?php echo $url_order ?>')">Thuế GTGT <?php if ($order_by == 'toll_cost_vat'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','toll_cost','<?php echo $url_order ?>')">Tổng cộng <?php if ($order_by == 'toll_cost'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <?php if(!isset($disable_control)){ ?>
+        <th  class="fix"></th>
+        <?php } ?>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php $tonggt=0; $tongthue=0; $stt=1; $vehicle = 0; $v = array(); $gt = array(); $thue = array(); $kthue = array(); $tongkthue = 0; ?>
+    <?php foreach ($toll_costs as $cost) : ?>
+    <?php if($cost->vehicle != $vehicle){
+        $vehicle = $cost->vehicle;
+    ?>
+        <tr style="font-weight: bold; color: rgb(23, 119, 226);background-color: rgb(222, 239, 236);">
+            <th class="fix" colspan="11"><?php echo $cost->vehicle_number ?></th>
+        </tr>
+    <?php } ?>
+    
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');"  id="<?php echo $cost->toll_cost_id ?>" class="edit_tr">
+            <td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $cost->toll_cost_id ?>"></td>
+            <td class="fix" id="toll_cost_id_<?php echo $cost->toll_cost_id; ?>"><?php echo $i++; ?></td>
+            <td class="fix" id="toll_type_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->toll_type==1?'Vé thu phí':'Cước đường bộ' ; ?></td>
+            <td class="fix" id="toll_symbol_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->toll_symbol; ?></td>
+            <td class="fix" id="toll_number_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->toll_number; ?></td>
+            <td class="fix" id="invoice_number_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->invoice_number; ?></td>
+            <td class="fix" data="<?php echo $cost->toll; ?>" id="toll_name_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->toll_name; ?></td>
+            <td class="fix" id="toll_mst_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->toll_mst; ?></td>
+            
+            <td class="fix" id="toll_cost_<?php echo $cost->toll_cost_id; ?>"><?php echo $lib->formatMoney($cost->toll_cost); ?></td>
+            <td class="fix" id="toll_cost_vat_<?php echo $cost->toll_cost_id; ?>"><?php echo $lib->formatMoney($cost->toll_cost_vat); ?></td>
+            <td class="fix" id="toll_cost_all_<?php echo $cost->toll_cost_id; ?>"><?php echo $lib->formatMoney($cost->toll_cost+$cost->toll_cost_vat); ?></td>
+            <td class="fix" style="display:none" id="shipment_<?php echo $cost->toll_cost_id; ?>"><?php echo $cost->shipment; ?></td>
+            <td class="fix" style="display:none" id="invoice_date_<?php echo $cost->toll_cost_id; ?>"><?php echo $lib->hien_thi_ngay_thang($cost->invoice_date); ?></td>
+            <?php if(!isset($disable_control)){ ?>
+            <td class="pull-right">
+                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $cost->toll_cost_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
+            </td>
+            <?php } ?>
+        </tr>
+
+    
+            <?php
+
+            $v[$cost->vehicle] = isset($v[$cost->vehicle])?($v[$cost->vehicle] + 1) : (0+1) ;
+
+            $gt[$cost->vehicle] = isset($gt[$cost->vehicle])?$gt[$cost->vehicle]:0;
+            $thue[$cost->vehicle] = isset($thue[$cost->vehicle])?$thue[$cost->vehicle]:0;
+            $kthue[$cost->vehicle] = isset($kthue[$cost->vehicle])?$kthue[$cost->vehicle]:0;
+
+            if($cost->toll_cost_vat > 0){
+                $tonggt += $cost->toll_cost;
+                $tongthue += $cost->toll_cost_vat;
+
+                $gt[$cost->vehicle] = isset($gt[$cost->vehicle])?$gt[$cost->vehicle]+$cost->toll_cost:$cost->toll_cost;
+                $thue[$cost->vehicle] = isset($thue[$cost->vehicle])?$thue[$cost->vehicle]+$cost->toll_cost_vat:$cost->toll_cost_vat;
+            }
+            else{
+                $tongkthue += $cost->toll_cost;
+
+                $kthue[$cost->vehicle] = isset($kthue[$cost->vehicle])?$kthue[$cost->vehicle]+$cost->toll_cost:$cost->toll_cost;
+            }
+
+            if ($arr[$cost->vehicle] == $v[$cost->vehicle]) { 
+                
+            ?>
+                <tr>
+                    <td class="fix" colspan="6"></td>
+                    <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align:right" colspan="2">
+                        Hóa đơn VAT
+                    </th>
+                    
+                    <td class="fix" ><?php echo $lib->formatMoney($gt[$cost->vehicle]) ?></td>
+                    <td class="fix" ><?php echo $lib->formatMoney($thue[$cost->vehicle]) ?></td>
+                    <td class="fix" ><?php echo $lib->formatMoney($gt[$cost->vehicle]+$thue[$cost->vehicle]) ?></td>
+                    
+                </tr>
+                <tr>
+                    <td class="fix" colspan="6"></td>
+                    <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align:right" colspan="2">
+                        Vé không thuế
+                    </th>
+                    
+                    <td class="fix" ><?php echo $lib->formatMoney($kthue[$cost->vehicle]) ?></td>
+                    <td class="fix" ></td>
+                    <td class="fix" ><?php echo $lib->formatMoney($kthue[$cost->vehicle]) ?></td>
+                    
+                </tr>
+                <tr>
+                    <td class="fix" colspan="6"></td>
+                    <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align:right" colspan="2">
+                        Tổng
+                    </th>
+                    
+                    <td class="fix" ><?php echo $lib->formatMoney($gt[$cost->vehicle]+$kthue[$cost->vehicle]) ?></td>
+                    <td class="fix" ><?php echo $lib->formatMoney($thue[$cost->vehicle]) ?></td>
+                    <td class="fix" ><?php echo $lib->formatMoney($gt[$cost->vehicle]+$thue[$cost->vehicle]+$kthue[$cost->vehicle]) ?></td>
+                    
+                </tr>
+            
+            <?php } ?>
+
+    <?php endforeach; ?>
+
+
+
+        <tr style="margin-top:10px">
+            <td class="fix" colspan="11"></td>
+        </tr>
+        <tr style="font-weight:bold">
+            <td class="fix" colspan="5"></td>
+            <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; " colspan="3">
+                Tổng hóa đơn VAT
+            </th>
+            
+            <td class="fix" ><?php echo $lib->formatMoney($tonggt) ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tongthue) ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tonggt+$tongthue) ?></td>
+            
+        </tr>
+        <tr style="font-weight:bold">
+            <td class="fix" colspan="5"></td>
+            <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; " colspan="3">
+                Tổng vé không thuế
+            </th>
+            
+            <td class="fix" ><?php echo $lib->formatMoney($tongkthue) ?></td>
+            <td class="fix" ></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tongkthue) ?></td>
+            
+        </tr>
+        <tr style="font-weight:bold">
+            <td class="fix" colspan="5"></td>
+            <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; " colspan="3">
+                Tổng cộng
+            </th>
+            
+            <td class="fix" ><?php echo $lib->formatMoney($tonggt+$tongkthue) ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tongthue) ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tonggt+$tongthue+$tongkthue) ?></td>
+            
+        </tr>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+<div class="add-field">
+    <section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="add_toll_cost" role="form" method="post" action="" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="toll_number">Ký hiệu</label>
+                      <input type="text" id="toll_number"  name="toll_number" tabindex="1" >
+                    </div>
+                    <div class="form-group">
+                      <label for="toll_cost">Giá chưa thuế</label>
+                      <input type="text" id="toll_cost"  name="toll_cost" tabindex="4" required="required" class="numbers" >
+                    </div>
+                    <div class="form-group">
+                      <label for="shipment">Chuyến hàng</label>
+                      <select id="shipment" name="shipment" tabindex="6" required="required" >
+                        <?php foreach ($shipments as $ship) { ?>
+                            <option value="<?php echo $ship->shipment_id ?>"><?php echo $lib->hien_thi_ngay_thang($ship->shipment_date).': '.$ship->vehicle_number.' '.$place['place_name'][$ship->shipment_from].'-'.$place['place_name'][$ship->shipment_to].' ['.$ship->customer_name.']' ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                              <label for="invoice_number">Số hóa đơn</label>
+                              <input type="text" id="invoice_number"  name="invoice_number" tabindex="2" style="width:100px" >
+                          </div>
+                          <div class="col-md-6 col-xs-6">
+                            <label for="invoice_date">Ngày</label>
+                              <input type="text" id="invoice_date"  name="invoice_date" tabindex="2" style="width:60px" class="ngay" >
+                          </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="toll_cost_vat">Thuế</label>
+                      <input type="text" id="toll_cost_vat"  name="toll_cost_vat" tabindex="5" class="numbers" >
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="toll">Người bán <a target="_blank" title="Thêm trạm thu phí" href="<?php echo $this->url('road') ?>"><i class="fa fa-plus"></i></a></label>
+                      <input type="text" autocomplete="off" id="toll"  name="toll" tabindex="3"  placeholder="Nhập tên hoặc * để chọn" required="required" >
+                        <ul id="customer_list_id"></ul>
+                    </div>
+                    <div class="form-group">
+                      <label for="toll_cost_total">Tổng cộng</label>
+                      <input disabled type="text" id="toll_cost_total"  name="toll_cost_total" class="numbers" >
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+
+              </div>
+              
+              <?php if(!isset($disable_control)){ ?>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+                    <button type="submit" class="btn btn-primary" tabindex="7">Hoàn thành</button>
+                    <button type="reset" class="btn" tabindex="8">Nhập lại</button>
+                  </div>
+                  <div class="box-footer">
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </form>
+          </div>
+          <!-- /.box -->
+
+        </div>
+        <!--/.col (left) -->
+        
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+       
+</div>
+
+<script type="text/javascript">
+$('html').click(function(e) {
+    $('#customer_list_id').slideUp(200);
+});
+
+    $('.edit_tr').click(function(e){
+        if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
+            if(!$('.checkbox').is(':focus')){
+                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+            }
+            var toll_number = $(this).find("#toll_number_"+$(this).attr('id')).text();
+            var invoice_number = $(this).find("#invoice_number_"+$(this).attr('id')).text();
+            var toll_name = $(this).find("#toll_name_"+$(this).attr('id')).text();
+            var toll = $(this).find("#toll_name_"+$(this).attr('id')).attr('data');
+            var toll_cost = $(this).find("#toll_cost_"+$(this).attr('id')).text();
+            var toll_cost_vat = $(this).find("#toll_cost_vat_"+$(this).attr('id')).text();
+            var shipment = $(this).find("#shipment_"+$(this).attr('id')).text();
+            var invoice_date = $(this).find("#invoice_date_"+$(this).attr('id')).text();
+
+            $('#toll_number').val(toll_number);
+            $('#invoice_number').val(invoice_number);
+            $('#toll').val(toll_name);
+            $('#toll').attr('data',toll);
+            $('#toll').attr('code',true);
+            $('#toll_cost').val(toll_cost);
+            $('#toll_cost_vat').val(toll_cost_vat);
+            $('#toll_cost_total').val(parseInt(toll_cost.replace(/\,/g,''))+parseInt(toll_cost_vat.replace(/\,/g,'')));
+            $('#shipment option[value='+shipment+']').attr('selected','selected');
+            $('#invoice_date').val(invoice_date.replace(/\//g,"-"));
+
+            $('#yes').val($(this).attr('id'));
+
+            $(".numbers").val(function(index, value) {
+              return value
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              ;
+            });
+
+            $( ".add-field" ).dialog( "open" );
+        }
+    });
+</script>
+<script type="text/javascript">
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
+        $('#toll_number').val("");
+        $('#invoice_number').val("");
+        $('#toll').val("");
+        $('#toll').attr('data',"");
+        $('#toll_cost').val("");
+        $('#invoice_date').val("");
+        
+        $('.number').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.number').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+
+   $( ".add-field" ).dialog( "open" );
+
+}
+
+$(document).ready(function(){
+            // Validate form
+            $("#add_toll_cost").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+                
+                    if ($('#toll').attr('code') == 'false') {
+                        $('#toll').val("");
+                        $('#toll').focus();
+                        return false;
+                    };
+
+                    var toll_number = $('#toll_number').attr('value');
+                    var invoice_number = $('#invoice_number').attr('value');
+                    var toll = $('#toll').attr('data');
+                    var toll_cost = $('#toll_cost').attr('value');
+                    var toll_cost_vat = $('#toll_cost_vat').attr('value');
+                    var shipment = $('#shipment').attr('value');
+                    var invoice_date = $('#invoice_date').attr('value');
+
+                    
+                    var yes = $('#yes').attr('value');
+                    
+                    var action      = "them";
+                 
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/tollcost/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            toll_number: toll_number,
+                            invoice_number: invoice_number,
+                            toll: toll,
+                            toll_cost: toll_cost,
+                            toll_cost_vat: toll_cost_vat,
+                            shipment: shipment,
+                            invoice_date: invoice_date,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            //alert(answer);
+                            $('#error').hide();
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error').fadeOut(10000);
+
+                            if (yes != "") {
+                                if (answer.trim() != "Thông tin này đã tồn tại" ) {
+                                  setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    $('#export_stock_name_'+yes).text(export_stock_name);
+                                    $('#province_name_'+yes).text($('#province option:selected').text());
+                                }
+                            }
+                            else{
+                                if (answer.trim() != "Thông tin này đã tồn tại") {
+                                  setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    var lastID = parseInt($('#lasted').html());
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+                                    $('.table_data > tbody:last')
+                                    .append(
+                                        '<tr onclick="HighLightTR(this,#4d90fe,cc3333);" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="export_stock_name_'+parseInt(lastID+1)+'">'+export_stock_name+'</td><td class="fix" data="'+province+'" id="province_name_'+parseInt(lastID+1)+'">'+$('#province option:selected').text()+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+                                    );
+
+                                    $('#lasted').html(parseInt(lastID+2));
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+
+    $('#toll').keyup(function(){
+      
+        var keyword = $(this).val();
+        $.ajax({
+            url: '<?php echo BASE_URL ?>/tollcost/gettoll',
+            type: 'POST',
+            data: {keyword:keyword},
+            success:function(data){
+                $('#customer_list_id').slideDown(200);
+                $('#customer_list_id').html(data);
+            }
+        });
+        if ($('#toll').val() == "" || $('#toll').attr('data') == "") {
+            //$('#loc_from').val("");
+            $('#toll').attr('data',"");
+            $('#toll').attr('code',false);
+        }
+      
+   });
+   $('#toll').on('keydown', function() {
+        var key = event.keyCode || event.charCode;
+
+        if( key == 8 || key == 46 ){
+            $('#toll').attr('data',"");
+        }
+            
+      }); 
+
+    $('.number').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+        ;
+      });
+    });
+   
+   $('.numbers').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+
+
+});
+
+function set_item(value,name,cost,check) {
+    // change input value
+    $('#toll').val(name);
+    $("#toll").attr("data",value);
+    $("#toll").attr("code",'true');
+    
+    if (check == 1) {
+        $('#toll_cost').val(Math.round(cost/1.1));
+        $('#toll_cost_vat').val(cost-Math.round(cost/1.1));
+    }
+    else{
+        $('#toll_cost').val(cost);
+        $('#toll_cost_vat').val("");
+    }
+    $('#toll_cost_total').val(cost);
+    
+    // hide proposition list
+    $('#customer_list_id').hide();
+    $('#toll').focus();
+     
+    $(".numbers").val(function(index, value) {
+      return value
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      ;
+    }); 
+}
+</script>
+<script type="text/javascript">
+var l = "<?php echo $limit ?>";
+$('#chonloc option[value='+l+']').attr('selected','selected');
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "auto",
+    title: "Phiếu cầu đường",
+    hide: 'fold',
+    show: 'blind'
+});
+
+</script>
+<script type="text/javascript">
+    $(function() {
+    var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+         
+    };  
+    $("#batdau").datepicker(pickerOpts);
+
+    var pickerOpts4 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+                
+         },
+         
+    };  
+    $("#ketthuc").datepicker(pickerOpts4);
+              
+            
+    
+});
+
+var pickerOpay2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true
+    }; 
+    $(".ngay").datepicker(pickerOpay2);
+
+var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+var v = "<?php echo $vong ?>";
+$('#sl_round option[value='+v+']').attr('selected','selected');
+
+var tt = "<?php echo $trangthai ?>";
+$('#sl_staff option[value='+tt+']').attr('selected','selected');
+
+</script>
+<script type="text/javascript">
+    
+    $('#sl_round').change(function(){
+        var m = $(this).val();
+        var y = $('#sl_staff').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
+    $('#sl_staff').change(function(){
+        var y = $(this).val();
+        var m = $('#sl_round').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+</script>

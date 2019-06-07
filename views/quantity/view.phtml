@@ -1,0 +1,160 @@
+
+<table class="table_data" style="font-size: 12px;">
+<thead>
+    <tr>
+        
+        
+        <th  class="fix">
+            <a >Xe </a>
+        </th>
+        <th  class="fix">
+            <a >Tên TX </a>
+        </th>
+        <th  class="fix">
+            <a >Vòng chạy </a>
+        </th>
+        <th  class="fix">
+            <a >Ngày </a>
+        </th>
+        <th  class="fix">
+            <a >Kho đi </a>
+        </th>
+        <th  class="fix">
+            <a >Kho đến </a>
+        </th>
+        <th  class="fix">
+            <a >Chiều đi </a>
+        </th>
+        <th  class="fix">
+            <a >Khách hàng </a>
+        </th>
+        <th  class="fix">
+            <a >Người LH </a>
+        </th>
+        <th  class="fix">
+            <a >SĐT </a>
+        </th>
+        <th  class="fix">
+            <a >Cước</a>
+        </th>
+        <th  class="fix">
+            <a >Trọng tải </a>
+        </th>
+        <th  class="fix">
+            <a >Định mức lit dầu </a>
+        </th>
+        <th  class="fix">
+            <a >Bồi dưỡng CN </a>
+        </th>
+        <th  class="fix">
+            <a >Cầu đường </a>
+        </th>
+        <th  class="fix">
+            <a >Công an </a>
+        </th>
+        <th  class="fix">
+            <a >Vá vỏ </a>
+        </th>
+        <th  class="fix">
+            <a >Chi phí dầu </a>
+        </th>
+
+        <th  class="fix">
+            <a >Chi phí cố định </a>
+        </th>
+        <th  class="fix">
+            <a >Tiền ứng dầu </a>
+        </th>
+        <th  class="fix">
+            <a >Chi phí phát sinh </a>
+        </th>
+        <th  class="fix">
+            <a >Doanh thu </a>
+        </th>
+        <th  class="fix">
+            <a >Tổng chi phí </a>
+        </th>
+        <th  class="fix">
+            <a >Lợi nhuận </a>
+        </th>
+        
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php $doanhthu=0; $chiphi=0; $loinhuan=0; $dinhmucdau=0; $boiduong=0; $cauduong=0; $congan=0; $vavo=0; $chiphidau=0; $chiphicodinh=0; $tienung=0; $phatsinh=0; ?>
+    <?php foreach ($shipments as $shipment) : ?>
+    
+    
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" data="<?php echo $shipment->vehicle_id.$shipment->shipment_round ?>" id="<?php echo $shipment->shipment_id ?>" class="edit_tr">
+            
+            <td class="fix" data="<?php echo $shipment->vehicle; ?>" id="vehicle_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->vehicle_number; ?></td>
+            <td class="fix" ><?php echo $shipment->driver_name; ?></td>
+            <td class="fix" id="shipment_round_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->shipment_round; ?></td>
+            <td class="fix" id="shipment_date_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment->shipment_date); ?></td>
+            <td class="fix" data="<?php echo $shipment->shipment_from; ?>" id="shipment_from_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->shipment_from==$warehouse['warehouse_id'][$shipment->shipment_from]?$warehouse['warehouse_name'][$shipment->shipment_from]:null ?></td>
+            <td class="fix" data="<?php echo $shipment->shipment_to; ?>" id="shipment_to_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->shipment_to==$warehouse['warehouse_id'][$shipment->shipment_to]?$warehouse['warehouse_name'][$shipment->shipment_to]:null ?></td>
+            <td class="fix" ><?php echo $road['way'][$shipment->shipment_id]==1?"Lên":($road['way'][$shipment->shipment_id]==2?"Xuống":($road['way'][$shipment->shipment_id]==3?"Bằng":"Rỗng")); ?></td>
+            <td class="fix" data="<?php echo $shipment->customer; ?>" id="customer_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->customer_name; ?></td>
+            <td class="fix" ><?php echo $shipment->customer_contact; ?></td>
+            <td class="fix" ><?php echo $shipment->customer_phone; ?></td>
+            <td class="fix" id="shipment_charge_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney($shipment->shipment_charge); ?></td>
+            <td class="fix" id="shipment_ton_<?php echo $shipment->shipment_id; ?>"><?php echo $shipment->shipment_ton; ?></td>
+            <td class="fix" ><?php echo $road['road_oil'][$shipment->shipment_id]; ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($warehouse['boiduong_cn'][$shipment->shipment_id]); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($road['bridge_cost'][$shipment->shipment_id]); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($road['police_cost'][$shipment->shipment_id]); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($road['tire_cost'][$shipment->shipment_id]); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($road['oil_cost'][$shipment->shipment_id]); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($warehouse['boiduong_cn'][$shipment->shipment_id]+$road['bridge_cost'][$shipment->shipment_id]+$road['police_cost'][$shipment->shipment_id]+$road['tire_cost'][$shipment->shipment_id]); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($shipment->oil_add); ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney(($shipment->approve==1)?$shipment->cost_add:0); ?></td>
+            <td class="fix" id="shipment_revenue_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney($shipment->shipment_revenue); ?></td>
+            <td class="fix" id="shipment_cost_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney($shipment->shipment_cost); ?></td>
+            <td class="fix" id="shipment_profit_<?php echo $shipment->shipment_id; ?>"><?php echo $lib->formatMoney($shipment->shipment_profit); ?></td>
+            
+        </tr>
+
+    
+            <?php
+                $doanhthu += $shipment->shipment_revenue;
+                $chiphi += $shipment->shipment_cost;
+                $loinhuan += $shipment->shipment_profit;
+
+                $dinhmucdau += $road['road_oil'][$shipment->shipment_id];
+                $boiduong += $warehouse['boiduong_cn'][$shipment->shipment_id];
+                $cauduong += $road['bridge_cost'][$shipment->shipment_id];
+                $congan += $road['police_cost'][$shipment->shipment_id];
+                $vavo += $road['tire_cost'][$shipment->shipment_id];
+                $chiphidau += $road['oil_cost'][$shipment->shipment_id];
+                $chiphicodinh += $warehouse['boiduong_cn'][$shipment->shipment_id] + $road['bridge_cost'][$shipment->shipment_id] + $road['police_cost'][$shipment->shipment_id] +$road['tire_cost'][$shipment->shipment_id];
+                $tienung += $shipment->oil_add;
+
+                $phatsinh += ($shipment->approve==1)?$shipment->cost_add:0;
+
+            ?>
+
+    <?php endforeach; ?>
+
+        <tr>
+            <td class="fix" colspan="10"></td>
+            <th style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px;" colspan="2">
+                Tổng cộng
+            </th>
+            
+            <td class="fix warning" ><?php echo $lib->formatMoney($dinhmucdau) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($boiduong) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($cauduong) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($congan) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($vavo) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($chiphidau) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($chiphicodinh) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($tienung) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($phatsinh) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($doanhthu) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($chiphi) ?></td>
+            <td class="fix warning" ><?php echo $lib->formatMoney($loinhuan) ?></td>
+            
+        </tr>
+   </tbody>
+</table>

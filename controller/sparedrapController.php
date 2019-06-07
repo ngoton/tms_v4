@@ -1,75 +1,50 @@
 <?php
-
 Class sparedrapController Extends baseController {
-
     public function index() {
-
         $this->view->setLayout('admin');
-
         if (!isset($_SESSION['userid_logined'])) {
-
             return $this->view->redirect('user/login');
-
         }
-        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
-
-            return $this->view->redirect('admin');
-
+        if (!isset(json_decode($_SESSION['user_permission_action'])->sparedrap) || json_decode($_SESSION['user_permission_action'])->sparedrap != "sparedrap") {
+            $this->view->data['disable_control'] = 1;
         }
-
-
         $this->view->data['lib'] = $this->lib;
-
-        $this->view->data['title'] = 'Quản lý phụ tùng thay ra';
-
-
+        $this->view->data['title'] = 'Quản lý thông tin vật tư';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $order_by = isset($_POST['order_by']) ? $_POST['order_by'] : null;
-
             $order = isset($_POST['order']) ? $_POST['order'] : null;
-
             $page = isset($_POST['page']) ? $_POST['page'] : null;
-
             $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : null;
-
             $limit = isset($_POST['limit']) ? $_POST['limit'] : 18446744073709;
-
             $batdau = isset($_POST['batdau']) ? $_POST['batdau'] : null;
+
             $ketthuc = isset($_POST['ketthuc']) ? $_POST['ketthuc'] : null;
-            $nv = isset($_POST['nv']) ? $_POST['nv'] : null;
-            $tha = isset($_POST['tha']) ? $_POST['tha'] : null;
-            $na = isset($_POST['na']) ? $_POST['na'] : null;
+            $vong = isset($_POST['vong']) ? $_POST['vong'] : null;
 
+            $trangthai = isset($_POST['staff']) ? $_POST['staff'] : null;
         }
-
         else{
-
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'end_time ASC, code';
-
-            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC';
-
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'spare_part_code';
+            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
-
             $keyword = "";
+            $limit = 50;
+            $batdau = '01-'.date('m-Y');
 
-            $limit = 100;
+            $ketthuc = date('t-m-Y');
 
-            $batdau = '01/'.date('m/Y');
-            $ketthuc = date('t/m/Y');
-            $nv = 1;
-            $tha = date('m');
-            $na = date('Y');
+            $vong = (int)date('m',strtotime($batdau));
 
+            $trangthai = date('Y',strtotime($batdau));
         }
 
-        $ngaybatdau = strtotime(str_replace('/', '-', $batdau));
-        $ngayketthuc = strtotime(str_replace('/', '-', $ketthuc). ' + 1 days');
-        $tha = (int)date('m',$ngaybatdau);
-        $na = (int)date('Y',$ngaybatdau);
-        $nv = ceil($tha/3);
+        $ngayketthuc = date('d-m-Y', strtotime($ketthuc. ' + 1 days'));
 
+        $vong = (int)date('m',strtotime($batdau));
+
+        $trangthai = date('Y',strtotime($batdau));
+        
         $vehicle_model = $this->model->get('vehicleModel');
         $romooc_model = $this->model->get('romoocModel');
 
@@ -80,162 +55,170 @@ Class sparedrapController Extends baseController {
         }
         $this->view->data['vehicle_data'] = $vehicle_data;
         
-        $romoocs = $romooc_model->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+        $romoocs = $romooc_model->getAllVehicle(array('order_by'=>'romooc_number','order'=>'ASC'));
         $romooc_data = array();
         foreach ($romoocs as $ro) {
             $romooc_data[$ro->romooc_id] = $ro->romooc_number;
         }
         $this->view->data['romooc_data'] = $romooc_data;
 
-        $spare_drap_model = $this->model->get('sparedrapModel');
-
+        $spare_model = $this->model->get('sparedrapModel');
         $sonews = $limit;
-
         $x = ($page-1) * $sonews;
-
         $pagination_stages = 2;
 
-        $join = array('table'=>'spare_vehicle','where'=>'spare_vehicle = spare_vehicle_id LEFT JOIN spare_part ON spare_drap.spare_part = spare_part_id LEFT JOIN spare_part_code ON spare_part_code=spare_part_code_id','join'=>'LEFT JOIN');
+        $json = array('table'=>'spare_part, spare_vehicle','where'=>'spare_drap.spare_part = spare_part_id AND spare_vehicle = spare_vehicle_id');
         $data = array(
-            'where'=>'1=1',
+            'where' => 'end_time >= '.strtotime($batdau).' AND end_time < '.strtotime($ngayketthuc),
         );
-
-        if ($batdau!="") {
-            $data['where'] .= ' AND end_time >= '.$ngaybatdau;
-        }
-        if ($ketthuc!="") {
-            $data['where'] .= ' AND end_time < '.$ngayketthuc;
-        }
-
-        if (isset($_POST['filter'])) {
-            
-            if (isset($_POST['vehicle'])) {
-                $data['where'] .= ' AND vehicle IN ('.implode(',',$_POST['vehicle']).')';
-            }
-            if (isset($_POST['romooc'])) {
-                $data['where'] .= ' AND romooc IN ('.implode(',',$_POST['romooc']).')';
-            }
-            if (isset($_POST['spare_part'])) {
-                $data['where'] .= ' AND spare_part_code_id IN ('.implode(',',$_POST['spare_part']).')';
-            }
-            $this->view->data['filter'] = 1;
-        }
-
-        $tongsodong = count($spare_drap_model->getAllStock($data, $join));
-
+        
+        $tongsodong = count($spare_model->getAllStock($data,$json));
         $tongsotrang = ceil($tongsodong / $sonews);
-
         
 
-
-
         $this->view->data['page'] = $page;
-
         $this->view->data['order_by'] = $order_by;
-
         $this->view->data['order'] = $order;
-
         $this->view->data['keyword'] = $keyword;
-
-        $this->view->data['limit'] = $limit;
-
         $this->view->data['pagination_stages'] = $pagination_stages;
-
         $this->view->data['tongsotrang'] = $tongsotrang;
-
         $this->view->data['sonews'] = $sonews;
-
+        $this->view->data['limit'] = $limit;
         $this->view->data['batdau'] = $batdau;
+
         $this->view->data['ketthuc'] = $ketthuc;
-        $this->view->data['nv'] = $nv;
-        $this->view->data['tha'] = $tha;
-        $this->view->data['na'] = $na;
 
+        $this->view->data['vong'] = $vong;
 
+        $this->view->data['trangthai'] = $trangthai;
 
         $data = array(
-
             'order_by'=>$order_by,
-
             'order'=>$order,
-
             'limit'=>$x.','.$sonews,
-
-            'where'=>'1=1',
-
+            'where' => 'end_time >= '.strtotime($batdau).' AND end_time < '.strtotime($ngayketthuc),
             );
 
-        if ($batdau!="") {
-            $data['where'] .= ' AND end_time >= '.$ngaybatdau;
-        }
-        if ($ketthuc!="") {
-            $data['where'] .= ' AND end_time < '.$ngayketthuc;
-        }
-
-        if (isset($_POST['filter'])) {
-            
-            if (isset($_POST['vehicle'])) {
-                $data['where'] .= ' AND vehicle IN ('.implode(',',$_POST['vehicle']).')';
-            }
-            if (isset($_POST['romooc'])) {
-                $data['where'] .= ' AND romooc IN ('.implode(',',$_POST['romooc']).')';
-            }
-            if (isset($_POST['spare_part'])) {
-                $data['where'] .= ' AND spare_part_code_id IN ('.implode(',',$_POST['spare_part']).')';
-            }
-            
-        }
-
+        
         if ($keyword != '') {
-
-            $search = ' ( code LIKE "%'.$keyword.'%" 
+            $search = ' AND ( spare_part_code LIKE "%'.$keyword.'%" 
                         OR spare_part_name LIKE "%'.$keyword.'%" 
                         OR spare_part_seri LIKE "%'.$keyword.'%" 
                         OR spare_part_brand LIKE "%'.$keyword.'%" )';
-
-            $data['where'] = $search;
-
+            $data['where'] .= $search;
         }
-
-
-
-        $spares = $spare_drap_model->getAllStock($data,$join);
+        
+        $spares = $spare_model->getAllStock($data,$json);
         $this->view->data['spares'] = $spares;
 
+        $spare_sub_model = $this->model->get('sparesubModel');
 
+        $shipment_model = $this->model->get('shipmentModel');
+        $road_model = $this->model->get('roadModel');
 
-        return $this->view->show('sparedrap/index');
+        $spare_vehicle_model = $this->model->get('sparevehicleModel');
+        $data_vehicle = array();
 
+        $spare_part_types = array();
+        foreach ($spares as $spare) {
+            $spare_sub = "";
+            $sts = explode(',', $spare->spare_part_type);
+            foreach ($sts as $key) {
+                $subs = $spare_sub_model->getStock($key);
+                if ($subs) {
+                    if ($spare_sub == "")
+                        $spare_sub .= $subs->spare_sub_name;
+                    else
+                        $spare_sub .= ','.$subs->spare_sub_name;
+                }
+                
+            }
+            $spare_part_types[$spare->spare_drap_id] = $spare_sub;
+
+            $data_im = array(
+                'where' => 'spare_part = '.$spare->spare_part_id.' AND start_time > 0 ',
+            );
+            $stock_ims = $spare_vehicle_model->getAllStock($data_im);
+            foreach ($stock_ims as $im) {
+
+                $end_time = 0;
+                $data_ex = array(
+                    'where' => 'spare_part = '.$spare->spare_part_id.' AND end_time > 0 AND end_time >= '.$im->start_time,
+                    'order_by' => 'end_time ASC',
+                    'limit' => 1,
+                );
+                $stock_exs = $spare_vehicle_model->getAllStock($data_ex);
+                foreach ($stock_exs as $ex) {
+                    $end_time = $ex->end_time;
+                }
+
+                if ($im->vehicle > 0) {
+                    $data_ship = array(
+                        'where'=>'vehicle = '.$im->vehicle.' AND shipment_date >= '.$im->start_time,
+                    );
+                    if ($end_time > 0) {
+                        $data_ship['where'] .= ' AND shipment_date <= '.$end_time;
+                    }
+                    $shipments = $shipment_model->getAllShipment($data_ship);
+                    foreach ($shipments as $ship) {
+                        $check_sub = 1;
+                        if ($ship->shipment_sub==1) {
+                           $check_sub = 0;
+                        }
+                        $roads = $road_model->getAllRoad(array('where'=>'road_id IN ("'.str_replace(',', '","', $ship->route).'")'));
+                        foreach ($roads as $road) {
+                            $data_vehicle[$spare->spare_part_id]['km'] = isset($data_vehicle[$spare->spare_part_id]['km'])?$data_vehicle[$spare->spare_part_id]['km']+$road->road_km*$check_sub:$road->road_km*$check_sub;
+                        }
+                    }
+                }
+                if ($im->romooc > 0) {
+                    $data_ship = array(
+                        'where'=>'romooc = '.$im->romooc.' AND shipment_date >= '.$im->start_time,
+                    );
+                    if ($end_time > 0) {
+                        $data_ship['where'] .= ' AND shipment_date <= '.$end_time;
+                    }
+                    $shipments = $shipment_model->getAllShipment($data_ship);
+                    foreach ($shipments as $ship) {
+                        $check_sub = 1;
+                        if ($ship->shipment_sub==1) {
+                           $check_sub = 0;
+                        }
+                        $roads = $road_model->getAllRoad(array('where'=>'road_id IN ("'.str_replace(',', '","', $ship->route).'")'));
+                        foreach ($roads as $road) {
+                            $data_vehicle[$spare->spare_part_id]['km'] = isset($data_vehicle[$spare->spare_part_id]['km'])?$data_vehicle[$spare->spare_part_id]['km']+$road->road_km*$check_sub:$road->road_km*$check_sub;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->view->data['data_vehicle'] = $data_vehicle;
+        
+        $this->view->data['spare_part_types'] = $spare_part_types;
+
+        $this->view->data['lastID'] = isset($spare_model->getLastStock()->spare_drap_id)?$spare_model->getLastStock()->spare_drap_id:0;
+        
+        $this->view->show('sparedrap/index');
     }
-    public function filter(){
-        $this->view->disableLayout();
 
-        $this->view->data['lib'] = $this->lib;
-        $this->view->data['title'] = 'Lọc dữ liệu';
+    public function getSub(){
+        header('Content-type: application/json');
+        $q = $_GET["search"];
 
-        $vehicle = $this->model->get('vehicleModel');
-
-        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-
-        $romooc = $this->model->get('romoocModel');
-
-        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
-
-        $spare_part_code_model = $this->model->get('sparepartcodeModel');
-
-        $this->view->data['spares'] = $spare_part_code_model->getAllStock(array('order_by'=>'name','order'=>'ASC'));
-
-        $this->view->data['page'] = $_GET['page'];
-        $this->view->data['order_by'] = $_GET['order_by'];
-        $this->view->data['order'] = $_GET['order'];
-        $this->view->data['limit'] = $_GET['limit'];
-        $this->view->data['keyword'] = $_GET['keyword'];
-
-        return $this->view->show('sparedrap/filter');
+        $sub_model = $this->model->get('sparesubModel');
+        $data = array(
+            'where' => 'spare_sub_name LIKE "%'.$q.'%"',
+        );
+        $subs = $sub_model->getAllStock($data);
+        $arr = array();
+        foreach ($subs as $sub) {
+            $arr[] = $sub->spare_sub_name;
+        }
+        
+        echo json_encode($arr);
     }
-
 
 
 }
-
 ?>

@@ -48,6 +48,9 @@ Class sparestockModel Extends baseModel {
     public function getLastStock(){
         return $this->getLast($this->table);
     }
+    public function checkStock($id,$seri){
+        return $this->query('SELECT * FROM spare_stock WHERE spare_stock_id != '.$id.' AND spare_stock_code = "'.$seri.'"');
+    }
     public function queryStock($sql){
         return $this->query($sql);
     }

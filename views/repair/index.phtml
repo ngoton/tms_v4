@@ -1,291 +1,899 @@
 
 <?php
-$url_order = 'DESC';
+$url_order = 'ASC';
 if ($order_by == 'repair_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'repair_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'repair_date')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'repair_code_name')
+elseif ($order_by == 'repair_price')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'staff_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'repair_price')
+elseif ($order_by == 'vehicle')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-$i = $sonews*$page-($sonews-1);
+elseif ($order_by == 'romooc')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+
+    $i = $sonews*$page-($sonews-1);
 
 ?>
 
 <div id="loading"></div>
 <div id="winpopup"></div>
-<div class="col-xs-7">
-    <div class="pull-left">
-      <select id="sl_nv" name="sl_nv" style="width:70px">
-       <option value="1">Quý I</option>
-       <option value="2">Quý II</option>
-       <option value="3">Quý III</option>
-       <option value="4">Quý IV</option>
-      </select>
-      <select id="sl_tha" name="sl_tha" style="width:80px">
-       <?php 
-          for ($k=1; $k < 13; $k++) { 
-              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
-          }
-       ?>
-      </select>
-      <select id="sl_na" name="sl_na" style="width:90px">
-       <?php 
-          $nam = date('Y');
-          for ($k=($nam-5); $k < ($nam+5); $k++) { 
-              echo '<option value="'.$k.'">Năm '.$k.'</option>';
-          }
-       ?>
-      </select>
-      <span class="input-icon">
-        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
-        <i class="ace-icon fa fa-calendar blue"></i>
-      </span>
-      <span class="input-icon">
-        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
-        <i class="ace-icon fa fa-calendar blue"></i>
-      </span>
-        
-      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
-      
-    </div>
-</div>
-<div class="col-xs-5">
-    <div class="tools action-buttons pull-right">
-        <?php
-        if (isset($filter)) {
-            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
-        }
-        ?>
-        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
-            <option value="18446744073709">All</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="500">500</option>
-        </select>
-        <a class="purpose" data-original-title="Thêm mới">
-            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("repair/add") ?>','Thêm phiếu sửa chữa mới')"></i>
-        </a> 
-        <div class="pull-right pos-rel dropdown-hover">
-            <button class="btn btn-minier bigger" style="line-height: 26px">
-                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
-            </button>
-
-            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                <li>
-                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
-                        <span class="orange">
-                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
-                        <span class="green">
-                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("repair/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
-                        <span class="red">
-                            <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
-                        <span class="purple">
-                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("repair/import") ?>','Nhập dữ liệu từ file Excel')"></i>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    
-                    <div class="text-center pos-rel dropdown-hover">
-                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
-                            <span class="blue">
-                                <i class="ace-icon fa fa-cloud-download bigger-150"></i>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
-                            <li>
-                                <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
-                                    <span class="green">
-                                        <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblexport')"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
-                                    <span class="red">
-                                        <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblexport')"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
-                                    <span class="blue">
-                                        <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblexport')"></i>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                
-            </ul>
-        </div>                        
-    </div>
-</div>
-<div class="clearfix"></div>
+<section class="content-header">
+    <h1>PHIẾU SỬA CHỮA BẢO DƯỠNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('repair') ?>">Sửa chữa bảo dưỡng</a></li>
+  </ol>
+</section>
 <div id="content" style="padding:5px;">
-   
-<table class="table_data" id="tblexport" >
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="export_excel" href="<?= $this->url('repair/export/'.strtotime($batdau).'/'.strtotime($ketthuc).'/'.$xe.'/'.$mooc)?>" ><i class="fa fa-download"></i> Xuất</a></div>
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+        <div class="add-box">
+            <select id="sl_round" name="sl_round" style="width:90px">
+             <?php 
+                for ($k=1; $k < 13; $k++) { 
+                    echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+                }
+             ?>
+            </select>
+            <select id="sl_staff" name="sl_staff" style="width:100px">
+             <?php 
+                $nam = date('Y');
+                for ($k=($nam-5); $k < ($nam+5); $k++) { 
+                    echo '<option value="'.$k.'">Năm '.$k.'</option>';
+                }
+             ?>
+            </select>
+
+            <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+            
+        </div>
+    </div>
+    <div class="tablenav top">
+        <div style="clear:both"></div>
+        <div class="add-box">
+                  
+            Từ  <input style="width:80px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+            Đến  <input style="width:80px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+             <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+            
+        </div>
+
+      </div>
+    <div class="tablenav top">
+      <div style="clear:both"></div>
+        
+        <div class="add-box">
+            <input type="button" name="chon" id="chon" value="Chọn" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+        </div>
+        
+        <div class="add-box" style="margin-right: 5px">
+            <select name="sl_nv" id="sl_nv">
+                <option selected="selected" value="0">Mooc</option>
+                <?php foreach ($romoocs as $sm) { ?>
+                <option value="<?php echo $sm->romooc_id ?>"><?php echo $sm->romooc_number ?></option>
+                <?php } ?>
+            </select>
+
+            
+            
+        </div>
+        <div class="add-box" style="margin-right: 5px">
+            <select name="sl_vehicle" id="sl_vehicle">
+                <option selected="selected" value="0">Xe</option>
+                <?php foreach ($vehicles as $sm) { ?>
+                <option value="<?php echo $sm->vehicle_id ?>"><?php echo $sm->vehicle_number ?></option>
+                <?php } ?>
+            </select>
+
+            
+            
+        </div>
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+          <option  value="18446744073709">Hiển thị tất cả</option>
+          <option value="50">Hiển thị 50 giá trị</option>
+                <option value="100">Hiển thị 100 giá trị</option>
+                <option value="150">Hiển thị 150 giá trị</option>
+                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
 <thead>
     <tr>
-    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
-        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'repair_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
-        <th>
+        <th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'repair_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_code','<?php echo $url_order ?>')">Phiếu sửa chữa <?php if ($order_by == 'repair_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'repair_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_vehicle','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'repair_vehicle'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle','<?php echo $url_order ?>')">Số xe <?php if ($order_by == 'vehicle'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_romooc','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'repair_romooc'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'romooc'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_code_name','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'repair_code_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_comment','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'repair_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_price','<?php echo $url_order ?>')">Chi phí <?php if ($order_by == 'repair_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','repair_price','<?php echo $url_order ?>')">Tổng thanh toán <?php if ($order_by == 'repair_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th>
+        
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_name','<?php echo $url_order ?>')">Nhân viên <?php if ($order_by == 'staff_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>   
-        <th>
-            
         </th>
+        
+           
+        <?php if(!isset($disable_control)){ ?>
+           
+        <th  class="fix">&nbsp;</th>
+        <?php } ?>
     </tr>
+    
    </thead>
    <tbody>
-    <?php foreach ($repairs as $repair) : ?>
-        <tr id="<?php echo $repair->repair_id ?>" class="edit_tr">
-            <td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $repair->repair_id ?>"><span class="lbl"></span></td>
-            <td class="text-center"><?php echo $i++; ?></td>
-            <td><?php echo $lib->hien_thi_ngay_thang($repair->repair_date); ?></td>
-            <td><?php echo isset($vehicle_data[$repair->repair_vehicle])?$vehicle_data[$repair->repair_vehicle]:null; ?></td>
-            <td><?php echo isset($romooc_data[$repair->repair_romooc])?$romooc_data[$repair->repair_romooc]:null; ?></td>
-            <td><?php echo $repair->repair_code_name; ?></td>
-            <td><?php echo $lib->formatMoney($repair->repair_price); ?></td>
-            <td><?php echo $repair->staff_name; ?></td>
+    <?php 
+    $tongthanhtien = 0;
+    foreach ($repairs as $repair) : 
+      $tongthanhtien += $repair->repair_price;
+      ?>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $repair->repair_id ?>" class="edit_tr">
+            <td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $repair->repair_id ?>"></td>
+            <td class="fix"><?php echo $i++; ?></td>
+            <td class="fix"  id="repair_code_<?php echo $repair->repair_id; ?>"><?php echo $repair->repair_code ?></td>
+            <td class="fix" id="repair_date_<?php echo $repair->repair_id; ?>"><?php echo $lib->hien_thi_ngay_thang($repair->repair_date) ?></td>
+            <td class="fix" data="<?php echo $repair->vehicle ?>" id="vehicle_<?php echo $repair->repair_id; ?>"><a target="_blank" href="<?php echo $this->url('vehicle/index/'.$repair->vehicle) ?>" ><?php echo isset($vehicle_data['id'][$repair->vehicle])?$vehicle_data['name'][$repair->vehicle]:null; ?></a></td>
+            <td class="fix" data="<?php echo $repair->romooc ?>" id="romooc_<?php echo $repair->repair_id; ?>"><a target="_blank" href="<?php echo $this->url('romooc/index/'.$repair->romooc) ?>" ><?php echo isset($romooc_data['id'][$repair->romooc])?$romooc_data['name'][$repair->romooc]:null; ?></a></td>
+            <td class="fix"  id="repair_comment_<?php echo $repair->repair_id; ?>"><?php echo $repair->repair_comment ?></td>
+            <td class="fix"  id="repair_price_<?php echo $repair->repair_id; ?>"><?php echo $lib->formatMoney($repair->repair_price) ?></td>
+            <td class="fix" data="<?php echo $repair->staff ?>" id="staff_name_<?php echo $repair->repair_id; ?>"><?php echo $repair->staff_name ?></td>
             
-            <td class="text-right">
-                <div class="tools action-buttons">
-                    <a class="blue"  onclick="view_click('<?php echo $this->url("repair/view/") ?>','Thông tin phiếu sửa chữa',<?php echo $repair->repair_id ?>)">
-                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
-                    </a>
-                    <a class="green"  onclick="edit_click('<?php echo $this->url("repair/edit/") ?>','Cập nhật phiếu sửa chữa',<?php echo $repair->repair_id ?>)">
-                        <i class="ace-icon fa fa-pencil bigger-130"></i>
-                    </a>
-
-                    <a class="red" >
-                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $repair->repair_id ?>)"></i>
-                    </a>
-                </div>
+        
+            <?php if(!isset($disable_control)){ ?>
+            <td class="pull-right">
+                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $repair->repair_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
             </td>
+            <?php } ?>
         </tr>
     <?php endforeach; ?>
+    <tr  style="font-weight: bold; color: rgb(23, 119, 226);" >
+            
+            <th colspan="7" style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align: right;" >
+                Tổng cộng
+            </th>
+            <td class="fix" ><?php echo $lib->formatMoney($tongthanhtien) ?></td>
+            <td class="fix" ></td>
+        </tr>
    </tbody>
 </table>
 <?php
 $this->helper('slidePaginator');
 ?>
-</div>
-<script type="text/javascript">
-    var ch = "<?php echo $limit ?>";
-$('#chonloc option[value='+ch+']').attr('selected','selected');
-var nv = "<?php echo $nv ?>";
-$('#sl_nv option[value='+nv+']').attr('selected','selected');
-var tha = "<?php echo $tha ?>";
-$('#sl_tha option[value='+tha+']').attr('selected','selected');
-var na = "<?php echo $na ?>";
-$('#sl_na option[value='+na+']').attr('selected','selected');
+<div class="add-field">
+    <section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="add_repair" role="form" method="post" action="" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="repair_date">Ngày</label>
+                      <input class="ngay" type="text" id="repair_date"  name="repair_date" tabindex="1" required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label for="vehicle">Xe</label>
+                      <select id="vehicle" name="vehicle" tabindex="4" >
+                        <option value="">Chọn</option>
+                        <?php foreach ($vehicles as $vehicle) { ?>
+                          <option value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="repair_code">Số phiếu</label>
+                      <input type="text" id="repair_code"  name="repair_code" tabindex="2" required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label for="romooc">Mooc</label>
+                      <select id="romooc" name="romooc" tabindex="5">
+                        <option value="">Chọn</option>
+                        <?php foreach ($romoocs as $romooc) { ?>
+                          <option value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="repair_comment">Nội dung</label>
+                      <input type="text" id="repair_comment"  name="repair_comment" tabindex="3" required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label for="staff">Nhân viên <a target="_blank" title="Thêm nhân viên" href="<?php echo $this->url('staff') ?>"><i class="fa fa-plus"></i></a></label>
+                      <input type="text" autocomplete="off" id="staff"  name="staff" tabindex="6"  placeholder="Nhập tên hoặc * để chọn" required="required" >
+                        <ul id="customer_list_id"></ul>
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
 
-$(document).ready(function(){
-    $('#batdau').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true,
-        calendarWeeks: true,
-        weekStart: 1, 
-        todayHighlight: true
-      });
-    $('#ketthuc').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true,
-        calendarWeeks: true,
-        weekStart: 1, 
-        todayHighlight: true
-      });
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <fieldset class="groupbox">
+                    <legend>
+                        <span><h3>Chi tiết</h3></span>
+                    </legend>
+
+                    <table id="dataTable" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
+                        <tbody>
+                        <tr>
+                            <td><input type="checkbox" name="chk"></td>
+                            <td>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>Nội dung</td>
+                                        <td>
+                                            <input type="text" class="repair_list_comment" name="repair_list_comment[]" tabindex="9" >
+                                        </td>
+                                        <td>Đơn giá</td>
+                                        <td>
+                                            <input type="text" class="repair_list_price numbers" name="repair_list_price[]" tabindex="10" >
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </fieldset>
+                    <input type="button" value="Thêm" onclick="addRow('dataTable')">
+
+                    <input type="button" value="Xóa" onclick="deleteRow('dataTable')">
+                </div>
+              </div>
+              <?php if(!isset($disable_control)){ ?>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+                    <button type="submit" class="btn btn-primary" tabindex="6">Hoàn thành</button>
+                    <button type="reset" class="btn" tabindex="7">Nhập lại</button>
+                  </div>
+                  <div class="box-footer">
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </form>
+          </div>
+          <!-- /.box -->
+
+        </div>
+        <!--/.col (left) -->
+        
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+       
+</div>
+
+
+<script type="text/javascript">
+$('html').click(function(e) {
+    
+    $('#customer_list_id').slideUp(200);
 });
 
-$('#sl_nv').change(function(){
-      var q = $(this).val();
-      var y = $('#sl_na').val();
-      var m,n;
+    $('.edit_tr').click(function(e){
+        if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
+            if(!$('.checkbox').is(':focus')){
+                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+            }
+            var repair_code = $(this).find("#repair_code_"+$(this).attr('id')).text();
+            var repair_date = $(this).find("#repair_date_"+$(this).attr('id')).text();
+            var vehicle_number = $(this).find("#vehicle_"+$(this).attr('id')).attr('data');
+            var romooc_number = $(this).find("#romooc_"+$(this).attr('id')).attr('data');
+            var staff = $(this).find("#staff_name_"+$(this).attr('id')).attr('data');
+            var staff_name = $(this).find("#staff_name_"+$(this).attr('id')).text();
+            var repair_comment = $(this).find("#repair_comment_"+$(this).attr('id')).text();
+            
+            //alert(repair_code);
+            $('#yes').val($(this).attr('id'));
+            
+            $('#repair_date').val(repair_date.replace(/\//g,"-"));
+            $('#repair_code').val(repair_code);
+
+            $('#vehicle option[value='+vehicle_number+']').attr('selected','selected');
+            $('#romooc option[value='+romooc_number+']').attr('selected','selected');
+            $('#staff').attr('data',staff);
+            $('#staff').val(staff_name);
+            $('#repair_comment').val(repair_comment);
+
+            $('#dataTable tbody tr').remove();
+        
+            var repair_id = $(this).attr('id');
+            $.ajax({
+                url: '<?php echo BASE_URL ?>/repair/repairlist',
+                type: 'POST',
+                data: {repair:repair_id},
+                success:function(data){
+                    //alert(data);
+                    $('#dataTable tbody').append(data);
+                    
+
+                   
+                    $('.number').keyup(function(event) {
+
+                          // skip for arrow keys
+                      if(event.which >= 37 && event.which <= 40) return;
+
+                      // format number
+                      $(this).val(function(index, value) {
+                        return value
+                          .replace(/[^0-9-.]/g, "")
+                        ;
+                      });
+                    });
+                   
+                   $('.numbers').keyup(function(event) {
+
+                          // skip for arrow keys
+                      if(event.which >= 37 && event.which <= 40) return;
+
+                      // format number
+                      $(this).val(function(index, value) {
+                        return value
+                          .replace(/[^0-9]/g, "")
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ;
+                      });
+                    });
+
+                }
+            });
+
+            $( ".add-field" ).dialog( "open" );
+        }
+    });
+</script>
+<script type="text/javascript">
+
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
+        $('#repair_code').val("");
+        $('#repair_date').val("");
+        $('#vehicle option[value=""]').attr('selected','selected');
+        $('#romooc option[value=""]').attr('selected','selected');
+            $('#staff').attr('data',"");
+            $('#staff').val("");
+        $('#repair_comment').val("");
+        
+        $('input[name="chk"]').attr('data',"");
+
+        $('.number').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.number').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+
+   $( ".add-field" ).dialog( "open" );
+
+}
+
+
+$(document).ready(function(){
+            // Validate form
+            $("#add_repair").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+                
+                    if ($('#staff').attr('code') == 'false') {
+                        $('#staff').val("");
+                        $('#staff').focus();
+                        return false;
+                    };
+
+                    var repair_code = $('#repair_code').attr('value');
+                    var repair_date = $('#repair_date').attr('value');
+                    var vehicle = $('#vehicle').attr('value');
+                    var romooc = $('#romooc').attr('value');
+                    var staff = $('#staff').attr('data');
+                    var repair_comment = $('#repair_comment').attr('value');
+
+                    var repair_list = [];
+
+                    var repair_list_comment = [];
+                    var repair_list_price = [];
+                    var repair_list_id = [];
+
+                    $('.repair_list_comment').each(function() { 
+                        repair_list_comment.push($(this).val());
+                        repair_list_id.push($(this).attr('data'));
+                    });
+
+                    $('.repair_list_price').each(function() { 
+                        repair_list_price.push($(this).val());
+                    });
+
+
+
+                    for (var i = 0; i < repair_list_comment.length; i++) {
+                        repair_list.push({'repair_list_comment':repair_list_comment[i], 'repair_list_price':repair_list_price[i], 'repair_list_id':repair_list_id[i]});
+                        
+                        
+                    };
+                    
+                    var yes = $('#yes').attr('value');
+                    
+                    var action      = "them";
+                 
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/repair/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            repair_code: repair_code,
+                            repair_date: repair_date,
+                            vehicle: vehicle,
+                            romooc: romooc,
+                            staff: staff,
+                            repair_comment: repair_comment,
+                            repair_list: repair_list,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            //alert(answer);
+                            $('#error').hide();
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error').fadeOut(10000);
+
+                            if (yes != "") {
+                                if (answer.trim() != "Thông tin này đã tồn tại" ) {
+                                  setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    $('#repair_name_'+yes).text(repair_name);
+                                    $('#province_name_'+yes).text($('#province option:selected').text());
+                                }
+                            }
+                            else{
+                                if (answer.trim() != "Thông tin này đã tồn tại") {
+                                  setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    var lastID = parseInt($('#lasted').html());
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+                                    $('.table_data > tbody:last')
+                                    .append(
+                                        '<tr onclick="HighLightTR(this,#4d90fe,cc3333);" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="repair_name_'+parseInt(lastID+1)+'">'+repair_name+'</td><td class="fix" data="'+province+'" id="province_name_'+parseInt(lastID+1)+'">'+$('#province option:selected').text()+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+                                    );
+
+                                    $('#lasted').html(parseInt(lastID+2));
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+   
+   $('#staff').keyup(function(){
       
-      switch(q) {
-        case "1":
-            m=1;
-            n=3;
+        var keyword = $(this).val();
+        $.ajax({
+            url: '<?php echo BASE_URL ?>/repair/getstaff',
+            type: 'POST',
+            data: {keyword:keyword},
+            success:function(data){
+                $('#customer_list_id').slideDown(200);
+                $('#customer_list_id').html(data);
+            }
+        });
+        if ($('#staff').val() == "" || $('#staff').attr('data') == "") {
+            //$('#loc_from').val("");
+            $('#staff').attr('data',"");
+            $('#staff').attr('code',false);
+        }
+      
+   });
+
+   $('#vehicle').change(function(){
+        if ($(this).val() != "") {
+            $('#romooc option[value=""]').attr('selected','selected');
+        }
+    });
+   $('#romooc').change(function(){
+        if ($(this).val() != "") {
+            $('#vehicle option[value=""]').attr('selected','selected');
+        }
+    });
+
+   
+    $('.number').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+        ;
+      });
+    });
+   
+   $('.numbers').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+    
+
+});
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+  function set_item_staff(value,name) {
+    // change input value
+    $('#staff').val(name);
+    $("#staff").attr("data",value);
+    $("#staff").attr("code",'true');
+    
+    // hide proposition list
+    $('#customer_list_id').hide();
+    $('#staff').focus();
+     
+}
+</script>
+<div style="display:none" id="lasted"></div>
+<script type="text/javascript">
+    var count = parseInt(<?php echo $lastID ?>);
+    $('#lasted').html(count);
+
+$("#import_excel").click(function(){
+        $("#winpopup").dialog({
+            draggable:true,
+            modal: true,
+            autoOpen: false,
+            height:300,
+            width:400,
+            resizable: false,
+            title:'Import Excel',
+            
+        });
+        $("#winpopup").load($(this).attr('href'));
+        $("#winpopup").dialog("open");
+         
+        return false;
+    });
+</script>
+</div>
+
+<script type="text/javascript">
+var l = "<?php echo $limit ?>";
+$('#chonloc option[value='+l+']').attr('selected','selected');
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "auto",
+    title: "Phiếu sửa chữa bảo dưỡng",
+    hide: 'fold',
+    show: 'blind'
+});
+
+
+var pickerOpay2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true
+    }; 
+    $(".ngay").datepicker(pickerOpay2);
+
+
+function addRow(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+    var row=table.insertRow(rowCount);
+    var colCount=table.rows[0].cells.length;
+    for(var i=0;i<colCount;i++){
+        var newcell=row.insertCell(i);
+        newcell.innerHTML=table.rows[0].cells[i].innerHTML;
+        switch(newcell.childNodes[0].type){
+            case"text":newcell.childNodes[0].value="";
             break;
-        case "2":
-            m=4;
-            n=6;
+            case"checkbox":newcell.childNodes[0].checked=false;
             break;
-        case "3":
-            m=7;
-            n=9;
+            case"select-one":newcell.childNodes[0].selectedIndex=0;
             break;
-        case "4":
-            m=10;
-            n=12;
-            break;
-      }
+        }
+    }
 
-      var firstDay = new Date(y, m-1, 1);
-      var lastDay = new Date(y, n, 0);
+    $('.repair_list_comment:last').val("");
+    $('.repair_list_price:last').val("");
+    
+    $('input[name="chk"]:last').attr('data',"");
+    $('input[name="chk"]:last').attr('tabindex',0);
+    $('input[name="chk"]:last').attr('title',"");
+    $('input[name="chk"]:last').attr('class',"");
+    $('input[name="chk"]:last').attr('alt',0);
 
-      $('#batdau').datepicker("setDate", firstDay );
-      $('#ketthuc').datepicker("setDate", lastDay );
+    
+   
+    $('.number').keyup(function(event) {
 
-  });
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
 
-$('#sl_tha').change(function(){
-      var m = $(this).val();
-      var y = $('#sl_na').val();
-      var firstDay = new Date(y, m-1, 1);
-      var lastDay = new Date(y, m, 0);
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+        ;
+      });
+    });
+   
+   $('.numbers').keyup(function(event) {
 
-      $('#batdau').datepicker("setDate", firstDay );
-      $('#ketthuc').datepicker("setDate", lastDay );
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
 
-  });
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
 
-  $('#sl_na').change(function(){
-      var y = $(this).val();
-      var m = $('#sl_tha').val();
-      var firstDay = new Date(y, m-1, 1);
-      var lastDay = new Date(y, m, 0);
+   
 
-      $('#batdau').datepicker("setDate", firstDay );
-      $('#ketthuc').datepicker("setDate", lastDay );
+}
+function deleteRow(tableID){
+    try{
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
 
-  });
+        var r = confirm("Bạn có chắc chắn không?");
+        if (r == true){
+            for(var i=0;i<rowCount;i++){
+                var row=table.rows[i];
+                var chkbox=row.cells[0].childNodes[0];
+                if(null!=chkbox&&true==chkbox.checked){
+                  if(rowCount<=1){
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    else if(chkbox.getAttribute("data") > 0){
+                        
+                            var repair_list = chkbox.getAttribute("data");
+                            $.post("<?php echo BASE_URL ?>/repair/deletelist", {repair_list: repair_list},
+                               function(data){
+                                //alert(data);
+                               }); 
+                        
+                    }
+                    
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+        }
+    }
+    catch(e){
+        alert(e);
+    }
+}
+</script>
+
+<style type="text/css">
+    #ui-datepicker-div{
+        font-size: 13px;
+    }
+</style>
+<script type="text/javascript">
+    $(function() {
+    var pickerOpts = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+         
+    };  
+    $("#batdau").datepicker(pickerOpts);
+
+    var pickerOpts4 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+                
+         },
+         
+    };  
+    $("#ketthuc").datepicker(pickerOpts4);
+              
+            
+    
+});
+
+var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+var v = "<?php echo $vong ?>";
+$('#sl_round option[value='+v+']').attr('selected','selected');
+
+var tt = "<?php echo $trangthai ?>";
+$('#sl_staff option[value='+tt+']').attr('selected','selected');
+
+var x = "<?php echo $xe ?>";
+$('#sl_vehicle option[value='+x+']').attr('selected','selected');
+
+var m = "<?php echo $mooc ?>";
+$('#sl_nv option[value='+m+']').attr('selected','selected');
+
+</script>
+<script type="text/javascript">
+    
+    $('#sl_round').change(function(){
+        var m = $(this).val();
+        var y = $('#sl_staff').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
+    $('#sl_staff').change(function(){
+        var y = $(this).val();
+        var m = $('#sl_round').val();
+        var firstDay = new Date(y, m-1, 1);
+        var lastDay = new Date(y, m, 0);
+
+        $('#batdau').datepicker("setDate", firstDay );
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+    });
+
 </script>

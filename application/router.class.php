@@ -117,13 +117,13 @@ private function getController() {
     {
         /*** get the parts of the route ***/
         $parts = explode('/', $route);
-        $parts[0] = str_replace("-", "", $parts[0]); // gioi-thieu => gioithieu
+        $parts[0] = str_replace('-', '', $parts[0]);
         $this->controller = $parts[0];
         if(isset( $parts[1]))
         {
             $this->action = $parts[1];
         }
-        if(isset( $parts[2]) && is_numeric($parts[2]))
+        if(isset( $parts[2]))
         {
             $this->param_id = $parts[2];
         }

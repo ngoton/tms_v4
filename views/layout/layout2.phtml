@@ -1,0 +1,366 @@
+<!DOCTYPE html <?php echo BASE_URL ?>/public "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title><?php echo isset($title) ? $title : "Công ty CP Tân Cảng Miền Trung" ?></title>
+  <meta name="keywords" content="Logistics, Xuất Khẩu, Nhập Khẩu, Xuất Nhập Khẩu, Vận Chuyển Hàng Hóa, Vận Chuyển, Hàng Siêu Trọng, Salan, Xà Lan, Sà Lan, Vận Chuyển Sà Lan, Thủ Tục Hải Quan, Hải Quan, Thông Quan, Mở Tờ Khai, Hun Trùng, Đóng Cont, Đóng Hàng, Forwarder, Stufffing, Unstuffing, Export, Import, Terminal, Port, Sea Port, Transhit, Transhipment, OOG, Over Weight, Over Hight, Over Length, Barge, Barging, Barge team, Barge Fleet, Inland Water Way, IWW, Ship, Vessel, Canoe, River, Channal, Pilot, Boarding Agent, Đại lý tàu, Husbanding Agent, Cambudia, Barging Service, Customs, Customs transhipment, Customs Clearance, EDI, Manifest, E-Manifest, chỉnh sửa Manifest, Adjust Manifest, Inbound, Outbound, Cargo, container, 20', 40', Reefer container, Flatrach, Tank, Hàng Quá Khổ, Cấm Tải, Chất lượng,">
+  <meta name="description" content="<?php echo isset($description) ? $description : 'Tân Cảng Miền Trung - Logistics, Vận chuyển đường bộ, đường biển, Thủ tục hải quan, Container, Xuất nhập khẩu tại Quy Nhơn, Bình Định' ?>">
+  <meta property="og:url"           content="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="<?php echo isset($title) ? $title : "Công ty CP Tân Cảng Miền Trung" ?>" />
+  <meta property="og:description"   content="<?php echo isset($description) ? $description : 'Tân Cảng Miền Trung - Logistics, Vận chuyển đường bộ, đường biển, Thủ tục hải quan, Container, Xuất nhập khẩu tại Quy Nhơn, Bình Định' ?>" />
+  <meta property="og:image"         content="<?php echo BASE_URL ?>/public/img/logo-tcmt.png" />
+  <meta name="generator" content="Tan Cang Mien Trung">
+  <meta name="alexaVerifyID" content="sxIal2YtJ9ubFCePnmLSE-La4c4"/>
+  <meta http-equiv="content-language" content="vi" />
+  <link rel="alternate" href="<?php echo BASE_URL ?>" hreflang="vi-vn" />
+  <link href="<?php BASE_URL ?>/public/img/logo.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/style.css">
+	<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/default.css">
+	<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/js/ui/jquery-ui.css">
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/html5.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.form.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="<?php BASE_URL ?>/public/js/custom.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/localization/messages_vi.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/bootstrap.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/bootstrap.min.js"></script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56488212-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</head>
+
+<body>
+  <div class="Module">
+      <a class="show-ctfrm" href="<?php echo $this->url('bang-gia') ?>">
+          <img alt="Bảng giá dịch vụ" src="<?php echo BASE_URL ?>/public/img/baogia.png" title="Bảng giá dịch vụ" height="133px">
+      </a>
+  </div>
+  
+  <div class="Module-left">
+      <a class="show-ctfrm" href="<?php echo $this->url('gps') ?>">
+          <img alt="Theo dõi hành trình" src="<?php echo BASE_URL ?>/public/img/hanhtrinh.png" title="Theo dõi hành trình" height="133px">
+      </a>
+  </div>
+<!-- 
+  <div id="loginBar"></div>
+  <h3 id="loginBarHandle">
+      <label for="LoginControl"><a href="<?php echo $this->url('bang-gia') ?>" class="concealed noOutline">Bảng giá dịch vụ</a></label>
+    </h3> -->
+  <div id="container">
+    <header>
+      <div id="ribbon">
+        <div class="site-image-title">
+          <h2 style="padding-top:5px">
+            
+            <table>
+              <tbody><tr>
+                <td>
+                  <a href="<?php echo $this->url(""); ?>"><img src="<?php echo BASE_URL ?>/public/img/logo-tcmt.png"></a>
+                </td>
+                
+              </tr>
+            </tbody></table>
+          </h2>       
+        </div>
+        <div class="s4-trc-container-menu">
+          <span><a href="<?php echo $this->url(""); ?>" style="color:#fff">Trang chủ</a><span style="color:white">&nbsp;|&nbsp;</span>
+          <a href="<?php echo $this->url(""); ?>" style="color:#fff">Sơ đồ trang</a><span style="color:white">&nbsp;|&nbsp;</span>
+
+          
+          </span>
+          <?php if(!isset($_SESSION['userid_logined'])){ ?>
+          <a id="ctl00_IdWelcome_ExplicitLogin" class="s4-signInLink" href="<?php echo $this->url("user/login"); ?>" style="display:inline;">Đăng nhập</a>
+          <?php }else{ ?>
+          <span><a href="<?php echo $this->url("admin"); ?>" style="color:#fff">Quản trị</a><span style="color:white">&nbsp;|&nbsp;</span>
+
+          <a id="ctl00_IdWelcome_ExplicitLogin" class="s4-signInLink" href="<?php echo $this->url("user/logout"); ?>" style="display:inline;">Đăng xuất</a>
+          <?php } ?>
+          <br>
+          <div style="text-align:right; padding-top:5px">
+            <table style="float:right">
+              <tbody><tr>
+                <td>
+                  <img src="<?php echo BASE_URL ?>/public/images/flag_en.png" alt="English">
+                </td>
+                <td>
+                  <a href="http://en.tancangmientrung.com"><span style="color:white; font-size:11px">English</span></a>
+                </td>
+              </tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+      <div id="menu">
+        <ul style="margin-left: -27px">
+
+          <?php
+          if (isset($menus)) {
+          
+          foreach ($menus as $menu) {
+                if($menu->menu_parent == 0){
+                    if ($menu->menu_id == 7) {
+                      echo '<li><a href="#" title="Import - Export">Import - Export</a>
+                          <ul>
+                            <li><a href="'.$this->url('tapioca-chips').'" title="Tapioca Chips">Tapioca Chips</a></li>
+                            <li><a href="'.$this->url('chili-powder').'" title="Chili Powder">Chili Powder</a></li>
+                            <li><a href="'.$this->url('incense-powder').'" title="Incense Powder">Incense Powder</a></li>
+                            <li><a href="'.$this->url('sugar').'" title="Sugar">Sugar</a></li>
+                            <li><a href="'.$this->url('wood-pellets').'" title="Wood Pellets">Wood Pellets</a></li>
+                            <li><a href="'.$this->url('coffee').'" title="Coffee bean">Coffee bean</a></li>
+                            <li><a href="'.$this->url('tea').'" title="Tea">Tea</a></li>
+                          </ul>
+                      </li>';
+                      echo '<li><a href="'.$this->url('bang-gia').'" title="Bảng giá dịch vụ">Bảng giá dịch vụ</a></li>';
+                    }
+                    echo '<li><a href="'.$this->url('page/'.$menu->permalink).'" title="'.$menu->menu_name.'">'.$menu->menu_name.'</a>';
+                    echo '<ul>';
+                    if($menu->menu_id != 5 && $menu->menu_id != 6){
+                      foreach ($menus as $menu_child) {
+                          if($menu_child->menu_parent == $menu->menu_id){
+                              echo '<li><a href="'.$this->url('page/'.$menu_child->permalink).'" title="'.$menu_child->menu_name.'">'.$menu_child->menu_name.'</a></li>';
+                          }
+                      }
+                    }
+                    echo '</ul></li>';
+                }
+            }
+          }
+          ?>
+          
+        </ul>
+      </div>
+    </header>
+    <div id="wrapper">
+      <div id="slider">
+        <div id="divMain" style="height: 250px">
+          <div id="divShow_1" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 1; background: url(<?php echo BASE_URL ?>/public/images/b2.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_2" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b3.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_3" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b4.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_4" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b5.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_5" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b6.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_6" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b7.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_7" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b8.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_8" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b9.png) no-repeat;">
+            &nbsp;</div>
+          <div id="divShow_9" style="position: absolute; width: 1000px; height: 250px; vertical-align: bottom; cursor: pointer; opacity: 0; display: none; background: url(<?php echo BASE_URL ?>/public/images/b1.png) no-repeat;">
+            &nbsp;</div>
+          <div style="position: absolute; margin-top: 215px; width: 410px; margin-left: 560px">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;</td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_0" name="divPage" onclick="changeSelectImg(this.id, 0);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page_selected.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_1" name="divPage" onclick="changeSelectImg(this.id, 1);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_2" name="divPage" onclick="changeSelectImg(this.id, 2);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_3" name="divPage" onclick="changeSelectImg(this.id, 3);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_4" name="divPage" onclick="changeSelectImg(this.id, 4);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_5" name="divPage" onclick="changeSelectImg(this.id, 5);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_6" name="divPage" onclick="changeSelectImg(this.id, 6);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_7" name="divPage" onclick="changeSelectImg(this.id, 7);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_8" name="divPage" onclick="changeSelectImg(this.id, 8);" style="width: 12px; height: 12px; overflow: hidden; cursor: pointer; background: url(<?php echo BASE_URL ?>/public/images/page.png);">
+                      &nbsp;</div>
+                  </td>
+                  <td nowrap="nowrap" style="padding-left: 6px; width: 12px">
+                    <div id="divPage_9" name="divPage" onclick="changeSelectImg(this.id, 8);" style="width: 12px; height: 12px; background: url(<?php echo BASE_URL ?>/public/images/page.png); overflow: hidden; cursor: pointer">
+                      &nbsp;</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="position: absolute; margin-top: 19px; width: 450px; margin-left: 550px">
+            <span style="font-family: Arial; color: #ffff00; font-size: 16px; font-weight: bold">"ĐỈNH CAO KẾT NỐI VẬN TẢI ĐA PHƯƠNG THỨC" </span></span>
+            <ul style="list-style: square none outside; color: white; font-size: 12px">
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Dịch vụ cảng biển, kho bãi">Dịch vụ cảng biển, kho bãi</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Cảng mở, cảng trung chuyển">Cảng mở, cảng trung chuyển</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Xây dựng sửa chữa công trình thủy, công nghiệp, dân dụng">Xây dựng sửa chữa công trình thủy, công nghiệp, dân dụng</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Dịch vụ vận tải hàng hóa đường bộ, đường sông, lai dắt tàu biển">Dịch vụ vận tải hàng hóa đường bộ, đường sông, lai dắt tàu biển</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Dịch vụ nạo vét cứu hộ trên biển, trên sông">Dịch vụ nạo vét cứu hộ trên biển, trên sông</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Dịch vụ logistics và khai thuê hải quan">Dịch vụ logistics và khai thuê hải quan</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Kinh doanh vận tải đa phương thức quốc tế">Kinh doanh vận tải đa phương thức quốc tế</a></li>
+              <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Dịch vụ ICD, xếp dỡ, kiểm đếm, giao nhận hàng hóa">Dịch vụ ICD, xếp dỡ, kiểm đếm, giao nhận hàng hóa</a></li>
+                <li>
+                <a style="font-family: Arial; color: white" href="<?php echo BASE_URL ?>" title="Dịch vụ xuất nhập khẩu">Dịch vụ xuất nhập khẩu</a></li>
+            </ul>
+            <span style="margin-left: 40px"><a href="<?php echo $this->url('page/gioi-thieu') ?>" style="font-family: Arial; color: #ffff00; font-size: 12px">&gt;&gt; Xem chi tiết</a> </span></div>
+        </div>
+      </div>
+
+      <div id="main-content">
+        <?php echo $content ?>
+      </div>
+    </div>
+  </div>
+  <div style="clear:both"></div>
+    <footer>
+            @<?php echo date('Y') ?> -
+            
+                <b>CÔNG TY CỔ PHẦN TÂN CẢNG MIỀN TRUNG</b>
+               &nbsp;
+                Địa chỉ: Phường Hải Cảng, TP. Qui Nhơn, tỉnh Bình Định
+                <br>
+                Điện thoại: 056.65.56789 - 0932 6789 89 
+                &nbsp;
+                Email :
+                <a href="mailto:biz@tancangmientrung.com" tabindex="0">
+                    <span style="font-size: 11px; color:blue">biz@tancangmientrung.com</span>
+                </a>
+                &nbsp;
+                - Skype :
+                <a href="mailto:biz@tancangmientrung.com" tabindex="0">
+                    <span style="font-size: 11px; color:blue">tcmt.hotline</span>
+                </a>
+                <br>
+                <span style="font-size:5px">Powered by <a target="_blank" style="color:#fff" href="http://www.tinhoctainha.com">Dịch vụ Tin Học Tại Nhà</a></span>
+    </footer>
+  </div>
+  <script language="javascript" type="text/javascript">
+    function getPosOffset(what, offsettype) {
+        var totaloffset = (offsettype == "left") ? what.offsetLeft : what.offsetTop;
+        var parentEl = what.offsetParent;
+        while (parentEl != null) {
+            totaloffset = (offsettype == "left") ? totaloffset + parentEl.offsetLeft : totaloffset + parentEl.offsetTop;
+            parentEl = parentEl.offsetParent;
+        }
+        return totaloffset;
+    }
+    var numRep = 25;
+    var curRep = 0;
+    var maxOpac = 1;
+    var stepRep = maxOpac / numRep;
+    var listDiv = document.getElementsByTagName("div");
+    var listItem = new Array();
+    var listPageNum = new Array();
+    var bgNormal = "url(<?php echo BASE_URL?>/public/images/page.png)";
+    var bgSelected = "url(<?php echo BASE_URL?>/public/images/page_selected.png)";
+    for (var i = 0; i < listDiv.length; i++) 
+    {
+        if (listDiv[i].id.indexOf("divShow_") == 0) 
+        {
+            listItem[listItem.length] = listDiv[i];
+            listPageNum[listPageNum.length] = document.getElementById("divPage_" + listPageNum.length);
+        }
+    }
+
+    var curItem = listItem.length - 1;
+    var nextItem = 0;
+    var totalImg = listItem.length;
+    var intervalID;
+    var timeoutID;
+    var changing = false;
+    function playSlideShow() 
+    {
+        
+        changing = true;
+        listItem[nextItem].style.display = "";
+        intervalID = window.setInterval("changeOpac()", 40);
+    }
+
+    function changeSelectImg(theID, imgIndex) 
+    {
+        if (imgIndex == curItem) return;
+        window.clearInterval(intervalID);
+        listPageNum[curItem].style.background = bgNormal;
+        listPageNum[parseInt(imgIndex)].style.background = bgSelected;
+        if (changing) {
+            window.clearInterval(intervalID);
+            changing = false;
+            if (imgIndex != nextItem) {
+
+                listItem[curItem].style.display = "none";
+                listItem[nextItem].style.display = "";
+                listItem[curItem].style.opacity = 0;
+                listItem[nextItem].style.opacity = 1;
+                
+                curItem = nextItem;
+                nextItem = parseInt(imgIndex);
+                if (listItem[nextItem] == null)
+                    nextItem = 0;
+            }
+        }
+        else {
+            window.clearTimeout(timeoutID);
+            nextItem = parseInt(imgIndex);
+        }
+        playSlideShow();
+    }
+    function changeOpac() 
+    {
+        listItem[curItem].style.opacity = maxOpac - stepRep * curRep;
+        listItem[nextItem].style.opacity = stepRep * curRep;
+
+        curRep += 1;
+        if (curRep > numRep) 
+        {
+            
+            curRep = 0;
+            listItem[curItem].style.display = "none";
+            listPageNum[curItem].style.background = bgNormal;
+            listPageNum[nextItem].style.background = bgSelected;
+            
+            curItem = nextItem;
+            nextItem += 1;
+            if (listItem[nextItem] == null)
+                nextItem = 0;
+            timeoutID = window.setTimeout("playSlideShow()", 3000);
+            changing = false;
+            window.clearInterval(intervalID);
+        }
+    }
+    playSlideShow();
+</script>
+</body>
+</html>

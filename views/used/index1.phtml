@@ -1,0 +1,166 @@
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+
+<?php
+$url_order = 'ASC';
+if ($order_by == 'spare_part_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_code')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_seri')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_brand')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'spare_part_date_manufacture')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+    $i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>THỜI GIAN SỬ DỤNG</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('used') ?>">Vật tư</a></li>
+  </ol>
+</section>
+<div id="content" style="padding:5px;">
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        
+    </div>
+    <div class="tablenav top">
+      <div style="clear:both"></div>
+      <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <?php } ?>
+
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+            <option  value="18446744073709">Hiển thị tất cả</option>
+            <option value="50">Hiển thị 50 giá trị</option>
+            <option value="100">Hiển thị 100 giá trị</option>
+            <option value="150">Hiển thị 150 giá trị</option>
+            <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
+<thead>
+    <tr>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'spare_part_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Số xe <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Mã phụ tùng <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_name','<?php echo $url_order ?>')">Tên phụ tùng <?php if ($order_by == 'spare_part_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Lần đầu lắp vào <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Số km đã sử dụng <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','spare_part_code','<?php echo $url_order ?>')">Thay ra lần cuối <?php if ($order_by == 'spare_part_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        
+        
+    </tr>
+    
+    
+   </thead>
+   <tbody>
+    <?php foreach ($spares as $spare_part) : ?>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $spare_part->spare_part_id ?>" class="edit_tr">
+            <td class="fix"><?php echo $i++; ?></td>
+            <td class="fix" ><?php echo isset($vehicle_data['name'][$data_vehicle[$spare_part->spare_part_id]['vehicle']])?$vehicle_data['name'][$data_vehicle[$spare_part->spare_part_id]['vehicle']]:null ?></td>
+            <td class="fix" ><?php echo isset($romooc_data['name'][$data_vehicle[$spare_part->spare_part_id]['romooc']])?$romooc_data['name'][$data_vehicle[$spare_part->spare_part_id]['romooc']]:null ?></td>
+            <td class="fix"  id="spare_part_code_<?php echo $spare_part->spare_part_id; ?>"><a target="_blank" href="<?php echo $this->url('sparepart/index/'.$spare_part->spare_part_id) ?>" ><?php echo $spare_part->spare_part_code ?></a></td>
+            <td class="fix"  id="spare_part_name_<?php echo $spare_part->spare_part_id; ?>"><?php echo $spare_part->spare_part_name.($spare_part->spare_part_seri!=""?' - ['.$spare_part->spare_part_seri.']':null) ?></td>
+            <td class="fix" ><?php echo (isset($data_vehicle[$spare_part->spare_part_id]['import']) && $data_vehicle[$spare_part->spare_part_id]['import']>0)?$lib->hien_thi_ngay_thang($data_vehicle[$spare_part->spare_part_id]['import']):null ?></td>
+            <td class="fix" ><?php echo isset($data_vehicle[$spare_part->spare_part_id]['km'])?$lib->formatMoney($data_vehicle[$spare_part->spare_part_id]['km']):null ?></td>
+            <td class="fix" ><?php echo (isset($data_vehicle[$spare_part->spare_part_id]['export']) && $data_vehicle[$spare_part->spare_part_id]['export']>0)?$lib->hien_thi_ngay_thang($data_vehicle[$spare_part->spare_part_id]['export']):null ?></td>
+
+            
+        </tr>
+    <?php endforeach; ?>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+<style type="text/css">
+    #ui-datepicker-div{
+        font-size: 13px;
+    }
+</style>
+<script type="text/javascript">
+ 
+var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+$(document).ready(function() {
+    $('#tblExport').DataTable({
+        "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "Tất cả"]],
+        "order": [[ 1, "desc" ], [ 2, "desc" ], [ 3, "desc" ]],
+        "columnDefs": [
+            { "visible": false, "targets": [1,2] }
+        ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+          var index = iDisplayIndex +1;
+            $('td:eq(0)',nRow).html(index);
+            return nRow
+        },
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(1, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group" style="font-weight: bold; color: rgb(23, 119, 226);background-color: rgb(222, 239, 236);"><td colspan="5">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+            api.column(2, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group" style="font-weight: bold; color: rgb(23, 119, 226);background-color: rgb(222, 239, 236);"><td colspan="5">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
+    });
+
+} );
+</script>
