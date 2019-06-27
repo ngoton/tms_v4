@@ -48,9 +48,6 @@ Class repairModel Extends baseModel {
     public function getLastRepair(){
         return $this->getLast($this->table);
     }
-    public function checkRepair($id,$seri){
-        return $this->query('SELECT * FROM repair WHERE repair_id != '.$id.' AND repair_code = "'.$seri.'"');
-    }
     public function queryRepair($sql){
         return $this->query($sql);
     }

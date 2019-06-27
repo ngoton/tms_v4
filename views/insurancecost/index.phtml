@@ -1,1737 +1,356 @@
-<link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/jquery.multiselect.css" />
-
-<script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.multiselect.js"></script>
 
 <?php
-
-$url_order = 'ASC';
-
+$url_order = 'DESC';
 if ($order_by == 'insurance_cost_id')
-
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-
-
 elseif ($order_by == 'insurance_cost_date')
-
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-elseif ($order_by == 'insurance_cost_number')
-
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-elseif ($order_by == 'customer_name')
-
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'insurance_cost_vat')
-
+elseif ($order_by == 'insurance_cost_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'insurance_cost_price')
-
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-elseif ($order_by == 'start_time')
-
+elseif ($order_by == 'insurance_cost_vat')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-elseif ($order_by == 'end_time')
-
+elseif ($order_by == 'customer_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-
-    $ii = $sonews*$page-($sonews-1);
-
-
+elseif ($order_by == 'insurance_cost_start_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'insurance_cost_end_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
 
 ?>
-
-
 
 <div id="loading"></div>
-
 <div id="winpopup"></div>
-
-<section class="content-header">
-
-    <h1>PHÍ BẢO HIỂM</h1>
-
-  <ol class="breadcrumb">
-
-    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-
-    <li class="active"><a href="<?php echo $this->url('insurancecost') ?>">Phí bảo hiểm</a></li>
-
-  </ol>
-
-</section>
-
-<div id="content" style="padding:5px;">
-
-
-
-    <div class="search-box">
-
+<div class="col-xs-7">
+    <div class="pull-left">
+      <select id="sl_nv" name="sl_nv" style="width:70px">
+       <option value="1">Quý I</option>
+       <option value="2">Quý II</option>
+       <option value="3">Quý III</option>
+       <option value="4">Quý IV</option>
+      </select>
+      <select id="sl_tha" name="sl_tha" style="width:80px">
+       <?php 
+          for ($k=1; $k < 13; $k++) { 
+              echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <select id="sl_na" name="sl_na" style="width:90px">
+       <?php 
+          $nam = date('Y');
+          for ($k=($nam-5); $k < ($nam+5); $k++) { 
+              echo '<option value="'.$k.'">Năm '.$k.'</option>';
+          }
+       ?>
+      </select>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="start-date" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> > 
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
+      <span class="input-icon">
+        <input style="width:120px" autocomplete="off" type="search" class="end-date" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >
+        <i class="ace-icon fa fa-calendar blue"></i>
+      </span>
         
-
-        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
-
-        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
-
-        <?php if(!isset($disable_control)){ ?>
-
-        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
-
-        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
-
-        <?php } ?>
-
-    </div>
-
-    <div class="tablenav top">
-
-        <div class="add-box">
-
-            <select id="sl_round" name="sl_round" style="width:90px">
-
-             <?php 
-
-                for ($k=1; $k < 13; $k++) { 
-
-                    echo '<option value="'.$k.'">Tháng '.$k.'</option>';
-
-                }
-
-             ?>
-
-            </select>
-
-            <select id="sl_staff" name="sl_staff" style="width:100px">
-
-             <?php 
-
-                $nam = date('Y');
-
-                for ($k=($nam-5); $k < ($nam+5); $k++) { 
-
-                    echo '<option value="'.$k.'">Năm '.$k.'</option>';
-
-                }
-
-             ?>
-
-            </select>
-
-
-
-            <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
-
-            
-
-        </div>
-
-    </div>
-
-    <div class="tablenav top">
-
-        <div style="clear:both"></div>
-
-        <div class="add-box">
-
-                  
-
-            Từ  <input style="width:80px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
-
-            Đến  <input style="width:80px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
-
-             <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
-
-            
-
-        </div>
-
-
-
-      </div>
-
-      <div class="tablenav top">
-
-        <div style="clear:both"></div>
-
-        
-
-        <div class="add-box">
-
-            <input type="button" name="chon" id="chon" value="Chọn" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
-
-        </div>
-
-        
-
-        <div class="add-box" style="margin-right: 5px">
-
-
-            <select style="width:120px" name="sl_vehicle" id="sl_vehicle">
-
-                <option value="0">Xe</option>
-
-                <?php foreach ($vehicles as $sm) { ?>
-
-                <option value="<?php echo $sm->vehicle_id ?>"><?php echo $sm->vehicle_number ?></option>
-
-                <?php } ?>
-
-            </select>
-            <select style="width:120px" name="sl_nv" id="sl_nv">
-
-                <option value="0">Mooc</option>
-
-                <?php foreach ($romoocs as $sm) { ?>
-
-                <option value="<?php echo $sm->romooc_id ?>"><?php echo $sm->romooc_number ?></option>
-
-                <?php } ?>
-
-            </select>
-
-
-            
-
-            
-
-        </div>
-
-        <?php if(!isset($disable_control)){ ?>
-
-        <div class="alignleft actions">
-
-            <select name="action" id="action">
-
-                <option value="-1" selected="selected">Chọn</option>
-
-                
-
-                <option value="delete">Xóa</option>
-
-            </select>
-
-            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
-
-        </div>
-
-        <?php } ?>
-
-        <div class="alignleft actions">
-
-        <select name="m" id="chonloc" style="width:200px">
-
-            <option value="18446744073709">Hiển thị tất cả</option>
-
-            <option value="50">Hiển thị 50 giá trị</option>
-
-            <option value="100">Hiển thị 100 giá trị</option>
-
-            <option value="150">Hiển thị 150 giá trị</option>
-
-            <option value="200">Hiển thị 200 giá trị</option>
-
-            <option selected="selected" value="250">Hiển thị 250 giá trị</option>
-
-        </select>
-
-        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
-
-        </div>
-
-
-
-      </div>
-
-</div>
-
-
-
-
-
-<table class="table_data" id="tblExport">
-
-<thead>
-
-    <tr>
-
-    	<th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
-
-        <th  class="fix" >
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'insurance_cost_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'insurance_cost_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_comment','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'insurance_cost_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vehicle','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'vehicle'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','romooc','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'romooc'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_number','<?php echo $url_order ?>')">Số hóa đơn <?php if ($order_by == 'insurance_cost_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Đơn vị <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_price','<?php echo $url_order ?>')">Chi phí <?php if ($order_by == 'insurance_cost_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_vat','<?php echo $url_order ?>')">Thuế GTGT <?php if ($order_by == 'insurance_cost_vat'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','start_time','<?php echo $url_order ?>')">Hiệu lực từ <?php if ($order_by == 'start_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-        <th  class="fix">
-
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','end_time','<?php echo $url_order ?>')">Hết hiệu lực <?php if ($order_by == 'end_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-
-        </th>
-
-        <?php if(!isset($disable_control)){ ?>
-
-           
-
-        <th  class="fix">&nbsp;</th>
-
-        <?php } ?>
-
-    </tr>
-
-    
-
-   </thead>
-
-   <tbody>
-
-    <?php 
-      $tongthanhtien = 0; $tongvat = 0;
-    foreach ($insurance_costs as $insurance_cost) : 
-      $tongthanhtien += $insurance_cost->insurance_cost_price;
-      $tongvat += $insurance_cost->insurance_cost_vat;
-
-      $vehicle = "";
-      if ($insurance_cost->vehicle != "") {
-        $ve = explode(',', $insurance_cost->vehicle);
-        foreach ($ve as $key) {
-            $vehicle .= ' | '.'<a target="_blank" href="'.$this->url('vehicle/index/'.$key).'" >'.$vehicle_data['vehicle_number'][$key].'</a>';
-            
-        }
-      }
+      <input class="btn btn-white btn-primary" type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
       
-      $romooc = "";
-      if ($insurance_cost->romooc != "") {
-        $mo = explode(',', $insurance_cost->romooc);
-        foreach ($mo as $key) {
-            $romooc .= ' | '.'<a target="_blank" href="'.$this->url('romooc/index/'.$key).'" >'.$romooc_data['romooc_number'][$key].'</a>';
-            
-        }
-      }
-    ?>
-
-    
-
-        
-
-        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $insurance_cost->insurance_cost_id ?>" class="edit_tr">
-
-        	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $insurance_cost->insurance_cost_id ?>"></td>
-
-            <td  class="fix"><?php echo $ii++; ?></td>
-
-            <td class="fix" id="insurance_cost_date_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $lib->hien_thi_ngay_thang($insurance_cost->insurance_cost_date); ?></td>
-            <td class="fix" id="insurance_cost_comment_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $insurance_cost->insurance_cost_comment; ?></td>
-
-            <td class="fix" id="vehicle_number_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $vehicle; ?></td>
-            <td class="fix" id="romooc_number_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $romooc; ?></td>
-
-            <td class="fix" id="insurance_cost_number_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $insurance_cost->insurance_cost_number; ?></td>
-
-            <td class="fix" data="<?php echo $insurance_cost->customer; ?>" id="customer_<?php echo $insurance_cost->insurance_cost_id; ?>"><a target="_blank" href="<?php echo $this->url('customer/editcus/'.$insurance_cost->customer) ?>" ><?php echo $insurance_cost->customer_name; ?></a></td>
-
-            <td class="fix" id="insurance_cost_price_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $lib->formatMoney($insurance_cost->insurance_cost_price); ?></td>
-
-            <td class="fix" id="insurance_cost_vat_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $lib->formatMoney($insurance_cost->insurance_cost_vat); ?></td>
-
-            <td class="fix" id="start_time_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $lib->hien_thi_ngay_thang($insurance_cost->start_time); ?></td>
-
-            <td class="fix" id="end_time_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $lib->hien_thi_ngay_thang($insurance_cost->end_time); ?></td>
-
-            <td class="fix" style="display:none" id="vehicle_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $insurance_cost->vehicle; ?></td>
-
-            <td class="fix" style="display:none" id="romooc_<?php echo $insurance_cost->insurance_cost_id; ?>"><?php echo $insurance_cost->romooc; ?></td>
-
-            <?php if(!isset($disable_control)){ ?>
-
-            <td class="pull-right">
-
-                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
-
-                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $insurance_cost->insurance_cost_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
-
-            </td>
-
-            <?php } ?>
-
-        </tr>
-
-
-
-    <?php endforeach; ?>
-
-        <tr  style="font-weight: bold; color: rgb(23, 119, 226);" >
-            
-            <th colspan="8" style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align: right;" >
-                Tổng cộng
-            </th>
-            <td class="fix" ><?php echo $lib->formatMoney($tongthanhtien) ?></td>
-            <td class="fix" ><?php echo $lib->formatMoney($tongvat) ?></td>
-            <td class="fix" ></td>
-            <td class="fix" ></td>
-        </tr>
-
-   </tbody>
-
-</table>
-
-<?php
-
-$this->helper('slidePaginator');
-
-?>
-
-
-
-<div class="add-field">
-
-    <section class="content">
-
-      <div class="row">
-
-        <!-- left column -->
-
-        <div class="col-md-12">
-
-          <!-- general form elements -->
-
-          <div class="box box-primary">
-
-            <!-- /.box-header -->
-
-            <!-- form start -->
-
-            <form id="add_insurance_cost" role="form" method="post" action="" enctype="multipart/form-data">
-
-              <div class="row">
-
-                <div class="col-md-3 col-xs-6">
-
-                  <div class="box-body">
-
-                    <div class="form-group">
-
-                      <label for="insurance_cost_date">Ngày</label>
-
-                      <input class="ngay" type="text" id="insurance_cost_date"  name="insurance_cost_date" tabindex="1" required="required" >
-
-                    </div>
-
-                    
-
-                    <div class="form-group">
-
-                      <label for="insurance_cost_price">Lệ phí</label>
-
-                      <input type="text" class="numbers" id="insurance_cost_price"  name="insurance_cost_price" tabindex="4" required="required" >
-
-                    </div>
-
-                    <div class="form-group">
-
-                      <label for="vehicle">Xe</label>
-
-                      <select id="vehicle" name="vehicle" tabindex="8" required="required" multiple >
-                        <?php foreach ($vehicles as $vehicle) { ?>
-                          <option title="<?php echo $vehicle->vehicle_number ?>" value="<?php echo $vehicle->vehicle_id ?>"><?php echo $vehicle->vehicle_number ?></option>
-                        <?php } ?>
-                      </select>
-
-                    </div>
-
-                    <div class="form-group">
-                        <textarea id="vehicle_number" name="vehicle_number" disabled></textarea>
-                    </div>
-                    
-
-                  </div>
-
-                  <!-- /.box-body -->
-
-                  
-
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-
-                  <div class="box-body">
-
-                    <div class="form-group">
-
-                      <label for="insurance_cost_number">Số hóa đơn</label>
-
-                      <input type="text" id="insurance_cost_number"  name="insurance_cost_number" tabindex="2">
-
-                    </div>
-
-                    <div class="form-group">
-
-                      <label for="insurance_cost_vat">Thuế GTGT</label>
-
-                      <input type="text" class="numbers" id="insurance_cost_vat"  name="insurance_cost_vat" tabindex="6" >
-
-                    </div>
-
-                    <div class="form-group">
-
-                      <label for="romooc">Mooc</label>
-
-                      <select id="romooc" name="romooc" tabindex="10" multiple >
-                        <?php foreach ($romoocs as $romooc) { ?>
-                          <option title="<?php echo $romooc->romooc_number ?>" value="<?php echo $romooc->romooc_id ?>"><?php echo $romooc->romooc_number ?></option>
-                        <?php } ?>
-                      </select>
-
-                    </div>
-                    <div class="form-group">
-
-                      <textarea id="romooc_number" name="romooc_number" disabled></textarea>
-
-                    </div>
-                    
-
-                  </div>
-
-                  <!-- /.box-body -->
-
-                  
-
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-
-                  <div class="box-body">
-
-                    <div class="form-group">
-
-                      <label for="customer">Đơn vị <a target="_blank" title="Thêm đơn vị" href="<?php echo $this->url('customer') ?>"><i class="fa fa-plus"></i></a></label>
-
-                      <input type="text" autocomplete="off" id="customer"  name="customer" tabindex="3"  placeholder="Nhập tên hoặc * để chọn" required="required" >
-
-                        <ul id="customer_list_id"></ul>
-
-                    </div>
-
-                    
-
-                    <div class="form-group">
-                      <label for="start_time">Hiệu lực từ ngày</label>
-                      <input class="ngay" type="text"   id="start_time" name="start_time" tabindex="7" required="required" >
-                    </div>
-
-                    
-
-                  </div>
-
-                  <!-- /.box-body -->
-
-                  
-
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-
-                  <div class="box-body">
-
-                    <div class="form-group">
-
-                      <label for="insurance_cost_comment">Nội dung</label>
-
-                      <input type="text" id="insurance_cost_comment"  name="insurance_cost_comment" tabindex="11"  required="required" >
-
-                    </div>
-
-                    <div class="form-group">
-                      <label for="end_time">Ngày hết hạn</label>
-                      <input class="ngay" type="text"   id="end_time" name="end_time" tabindex="9" required="required" >
-                    </div>
-
-                </div>
-
-
-
-              </div>
-
-              
-
-              <?php if(!isset($disable_control)){ ?>
-
-              <div class="row">
-
-                <div class="col-md-12">
-
-                    <div class="box-footer">
-
-                    <input type="hidden" readonly id="yes" name="yes" required="required" >
-
-                    <button type="submit" class="btn btn-primary" tabindex="12">Hoàn thành</button>
-
-                    <button type="reset" class="btn" tabindex="13">Nhập lại</button>
-
-                  </div>
-
-                  <div class="box-footer">
-
-                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-              <?php } ?>
-
-            </form>
-
-          </div>
-
-          <!-- /.box -->
-
-
-
-        </div>
-
-        <!--/.col (left) -->
-
-        
-
-      </div>
-
-      <!-- /.row -->
-
-    </section>
-
-    <!-- /.content -->
-
-       
-
+    </div>
 </div>
+<div class="col-xs-5">
+    <div class="tools action-buttons pull-right">
+        <?php
+        if (isset($filter)) {
+            echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+        }
+        ?>
+        <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+            <option value="18446744073709">All</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
+        <a class="purpose" data-original-title="Thêm mới">
+            <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("insurancecost/add") ?>','Thêm phí bảo hiểm mới')"></i>
+        </a> 
+        <div class="pull-right pos-rel dropdown-hover">
+            <button class="btn btn-minier bigger" style="line-height: 26px">
+                <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+            </button>
 
+            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                <li>
+                    <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                        <span class="orange">
+                            <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                        <span class="green">
+                            <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("insurancecost/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                        <span class="red">
+                            <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                        <span class="purple">
+                            <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("insurancecost/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    
+                    <div class="text-center pos-rel dropdown-hover">
+                        <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                            <span class="blue">
+                                <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                            <li>
+                                <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                    <span class="green">
+                                        <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                    <span class="red">
+                                        <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                    <span class="blue">
+                                        <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>                        
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblExport" >
+<thead>
+    <tr>
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'insurance_cost_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'insurance_cost_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_comment','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'insurance_cost_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_vehicle','<?php echo $url_order ?>')">Xe <?php if ($order_by == 'insurance_cost_vehicle'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_romooc','<?php echo $url_order ?>')">Mooc <?php if ($order_by == 'insurance_cost_romooc'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_code','<?php echo $url_order ?>')">Số hóa đơn <?php if ($order_by == 'insurance_cost_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Tên đơn vị <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_price','<?php echo $url_order ?>')">Số tiền <?php if ($order_by == 'insurance_cost_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_vat','<?php echo $url_order ?>')">Thuế GTGT <?php if ($order_by == 'insurance_cost_vat'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_price','<?php echo $url_order ?>')">Tổng cộng <?php if ($order_by == 'insurance_cost_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_start_date','<?php echo $url_order ?>')">Ngày hiệu lực <?php if ($order_by == 'insurance_cost_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','insurance_cost_end_date','<?php echo $url_order ?>')">Ngày hết hạn <?php if ($order_by == 'insurance_cost_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+           
+        <th>
+            
+        </th>
+    </tr>
+   </thead>
+   <tbody>
+    <?php $tongtien=0; $tongvat=0;
+    foreach ($insurance_costs as $insurance_cost) : 
+        $tongtien += $insurance_cost->insurance_cost_price;
+        $tongvat += $insurance_cost->insurance_cost_vat;
 
+        $vehicles = explode(',', $insurance_cost->insurance_cost_vehicle);
+        $romoocs = explode(',', $insurance_cost->insurance_cost_romooc);
 
-<script type="text/javascript">
-
-$('html').click(function(e) {
-
-    $('#customer_list_id').slideUp(200);
-
-});
-
-
-
-    $('.edit_tr').click(function(e){
-
-        if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
-
-            if(!$('.checkbox').is(':focus')){
-
-                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
-
+        $str1 = "";
+        foreach ($vehicles as $key => $value) {
+            $ve = isset($vehicle_data[$value])?$vehicle_data[$value]:null;
+            if ($str1=="") {
+                $str1 .= '<a onclick="view_click(\''.$this->url("vehicle/view/").'\',\'Thông tin xe\','.$value.',\'none\')">'.$ve.'</a>';
             }
-
-            var insurance_cost_number = $(this).find("#insurance_cost_number_"+$(this).attr('id')).text();
-
-            var customer_name = $(this).find("#customer_"+$(this).attr('id')).text();
-
-            var customer = $(this).find("#customer_"+$(this).attr('id')).attr('data');
-
-            var insurance_cost_date = $(this).find("#insurance_cost_date_"+$(this).attr('id')).text();
-
-            var insurance_cost_price = $(this).find("#insurance_cost_price_"+$(this).attr('id')).text();
-
-            var insurance_cost_vat = $(this).find("#insurance_cost_vat_"+$(this).attr('id')).text();
-
-            var vehicle = $(this).find("#vehicle_"+$(this).attr('id')).text();
-
-            var romooc = $(this).find("#romooc_"+$(this).attr('id')).text();
-
-            var start_time = $(this).find("#start_time_"+$(this).attr('id')).text();
-
-            var end_time = $(this).find("#end_time_"+$(this).attr('id')).text();
-
-            var insurance_cost_comment = $(this).find("#insurance_cost_comment_"+$(this).attr('id')).text();
-
-            var vehicle_number = $(this).find("#vehicle_number_"+$(this).attr('id')).text();
-
-            var romooc_number = $(this).find("#romooc_number_"+$(this).attr('id')).text();
-
-
-
-            $('#insurance_cost_number').val(insurance_cost_number);
-
-            $('#insurance_cost_comment').val(insurance_cost_comment);
-
-            $('#customer').val(customer_name);
-
-            $('#customer').attr('data',customer);
-
-            $('#customer').attr('code',true);
-
-            $('#insurance_cost_date').val(insurance_cost_date.replace(/\//g,"-"));
-
-            $('#insurance_cost_price').val(insurance_cost_price);
-
-            $('#insurance_cost_vat').val(insurance_cost_vat);
-
-            $('#start_time').val(start_time.replace(/\//g,"-"));
-
-            $('#end_time').val(end_time.replace(/\//g,"-"));
-
-            $('#vehicle_number').val(vehicle_number);
-
-            $('#romooc_number').val(romooc_number);
-
-            var text = jQuery('#vehicle_number').val(),
-                // look for any "\n" occurences
-                matches = text.match(/\n/g),
-                breaks = matches ? matches.length : 2;
-
-            jQuery('#vehicle_number').attr('rows',breaks + 2);
-
-            var text = jQuery('#romooc_number').val(),
-                // look for any "\n" occurences
-                matches = text.match(/\n/g),
-                breaks = matches ? matches.length : 2;
-
-            jQuery('#romooc_number').attr('rows',breaks + 2);
-
-
-
-            $('#yes').val($(this).attr('id'));
-
-            $.ajax({
-
-                url: '<?php echo BASE_URL ?>/insurancecost/getvehicleadd',
-
-                type: 'POST',
-
-                data: {vehicle:vehicle},
-
-                success:function(data){
-
-
-
-                    $('#vehicle').html(data);
-
-                    $('#vehicle').multiselect( 'refresh' );
-
-                    $("#vehicle").multiselect({
-                        click: function(event, ui){
-                            if(ui.checked == 1){
-                                $('#vehicle_number').val($('#vehicle_number').val()+' | '+ui.text);
-                            }
-                            else{
-                                $('#vehicle_number').val($('#vehicle_number').val().replace(' | '+ui.text,''));
-                            }
-
-                            var text = jQuery('#vehicle_number').val(),
-                                // look for any "\n" occurences
-                                matches = text.match(/\n/g),
-                                breaks = matches ? matches.length : 2;
-
-                            jQuery('#vehicle_number').attr('rows',breaks + 2);
-                        },
-                        checkAll: function(){
-                        },
-                        uncheckAll: function(){
-                            $('#vehicle_number').val("");
-
-                            var text = jQuery('#vehicle_number').val(),
-                                // look for any "\n" occurences
-                                matches = text.match(/\n/g),
-                                breaks = matches ? matches.length : 2;
-
-                            jQuery('#vehicle_number').attr('rows',breaks + 2);
-                        }
-                    });
-
-                }
-
-            });
-
-            $.ajax({
-
-                url: '<?php echo BASE_URL ?>/insurancecost/getromoocadd',
-
-                type: 'POST',
-
-                data: {romooc:romooc},
-
-                success:function(data){
-
-
-
-                    $('#romooc').html(data);
-
-                    $('#romooc').multiselect( 'refresh' );
-
-
-                    $("#romooc").multiselect({
-                        click: function(event, ui){
-                            if(ui.checked == 1){
-                                $('#romooc_number').val($('#romooc_number').val()+' | '+ui.text);
-                            }
-                            else{
-                                $('#romooc_number').val($('#romooc_number').val().replace(' | '+ui.text,''));
-                            }
-                            var text = jQuery('#romooc_number').val(),
-                                // look for any "\n" occurences
-                                matches = text.match(/\n/g),
-                                breaks = matches ? matches.length : 2;
-
-                            jQuery('#romooc_number').attr('rows',breaks + 2);
-                        },
-                        checkAll: function(){
-                        },
-                        uncheckAll: function(){
-                            $('#romooc_number').val("");
-
-                            var text = jQuery('#romooc_number').val(),
-                                // look for any "\n" occurences
-                                matches = text.match(/\n/g),
-                                breaks = matches ? matches.length : 2;
-
-                            jQuery('#romooc_number').attr('rows',breaks + 2);
-                        }
-                    });
-
-
-
-                }
-
-            });
-
-
-
-
-            $( ".add-field" ).dialog( "open" );
-
+            else{
+                $str1 .= ',<a onclick="view_click(\''.$this->url("vehicle/view/").'\',\'Thông tin xe\','.$value.',\'none\')">'.$ve.'</a>';
+            }
         }
 
-    });
+        $str2 = "";
+        foreach ($romoocs as $key => $value) {
+            $ro = isset($romooc_data[$value])?$romooc_data[$value]:null;
+            if ($str2=="") {
+                $str2 .= '<a onclick="view_click(\''.$this->url("romooc/view/").'\',\'Thông tin mooc\','.$value.',\'none\')">'.$ro.'</a>';
+            }
+            else{
+                $str2 .= ',<a onclick="view_click(\''.$this->url("romooc/view/").'\',\'Thông tin mooc\','.$value.',\'none\')">'.$ro.'</a>';
+            }
+        }
+    ?>
+        <tr id="<?php echo $insurance_cost->insurance_cost_id ?>" class="edit_tr" <?php echo ($insurance_cost->insurance_cost_end_date=="" || $insurance_cost->insurance_cost_end_date==0 || $insurance_cost->insurance_cost_end_date>=strtotime(date('d-m-Y')))?'style="color: #000"':'style="color:#999"' ?> >
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $insurance_cost->insurance_cost_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($insurance_cost->insurance_cost_date); ?></td>
+            <td><?php echo $insurance_cost->insurance_cost_comment; ?></td>
+            <td><?php echo $str1; ?></td>
+            <td><?php echo $str2; ?></td>
+            <td><?php echo $insurance_cost->insurance_cost_code; ?></td>
+            <td><a onclick="view_click('<?php echo $this->url("customer/view/") ?>','Thông tin nhà cung cấp',<?php echo $insurance_cost->insurance_cost_customer ?>,'none')"><?php echo $insurance_cost->customer_name; ?></a></td>
+            <td class="text-right"><?php echo $lib->formatMoney($insurance_cost->insurance_cost_price); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($insurance_cost->insurance_cost_vat); ?></td>
+            <td class="text-right"><?php echo $lib->formatMoney($insurance_cost->insurance_cost_price+$insurance_cost->insurance_cost_vat); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($insurance_cost->insurance_cost_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($insurance_cost->insurance_cost_end_date); ?></td>
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("insurancecost/view/") ?>','Thông tin phí bảo hiểm',<?php echo $insurance_cost->insurance_cost_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("insurancecost/edit/") ?>','Cập nhật phí bảo hiểm',<?php echo $insurance_cost->insurance_cost_id ?>)">
+                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
 
-</script>
-
+                    <a class="red" >
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $insurance_cost->insurance_cost_id ?>)"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    <tr style="font-weight: bold;" class="blue">
+        <td colspan="8" class="text-center">Tổng cộng</td>
+        <td class="text-right"><?php echo $lib->formatMoney($tongtien); ?></td>
+        <td class="text-right"><?php echo $lib->formatMoney($tongvat); ?></td>
+        <td class="text-right"><?php echo $lib->formatMoney($tongtien+$tongvat); ?></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+</div>
 <script type="text/javascript">
-
-function add_click(){
-
-    $('#yes').val("");
-
-    $('.add-field').slideDown(500);
-
-     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
-
-        $('#insurance_cost_number').val("");
-
-        $('#insurance_cost_comment').val("");
-
-        $('#customer').val("");
-
-        $('#customer').attr('data',"");
-
-        $('#customer').attr('code',false);
-
-        $('#insurance_cost_date').val("");
-
-        $('#insurance_cost_price').val("");
-
-        $('#insurance_cost_vat').val("");
-
-        $('#start_time').val("");
-
-        $('#end_time').val("");
-
-        $('#vehicle_number').val("");
-
-        $('#romooc_number').val("");
-
-        var text = jQuery('#vehicle_number').val(),
-            // look for any "\n" occurences
-            matches = text.match(/\n/g),
-            breaks = matches ? matches.length : 2;
-
-        jQuery('#vehicle_number').attr('rows',breaks + 2);
-
-        var text = jQuery('#romooc_number').val(),
-            // look for any "\n" occurences
-            matches = text.match(/\n/g),
-            breaks = matches ? matches.length : 2;
-
-        jQuery('#romooc_number').attr('rows',breaks + 2);
-        
-
-        $('.number').focus(function(){
-
-            if ( $(this).val() == '0') {
-
-               $(this).val(""); 
-
-            };
-
-            
-
-        });
-
-        $('.number').blur(function(){
-
-            if ( $(this).val() == "") {
-
-                $(this).val(0);
-
-            };
-
-            
-
-        });
-
-
-
-
-
-   $( ".add-field" ).dialog( "open" );
-
-
-
-}
-
-
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
 
 $(document).ready(function(){
-
-            // Validate form
-
-            $("#add_insurance_cost").validate({
-
-                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
-
-                rules: {
-
-                    
-
-                },
-
-                submitHandler: function(form) {
-
-                
-
-                    if ($('#customer').attr('code') == 'false') {
-
-                        $('#customer').val("");
-
-                        $('#customer').focus();
-
-                        return false;
-
-                    };
-
-
-
-                    var insurance_cost_number = $('#insurance_cost_number').attr('value');
-
-                    var insurance_cost_comment = $('#insurance_cost_comment').attr('value');
-
-                    var customer = $('#customer').attr('data');
-
-                    var insurance_cost_date = $('#insurance_cost_date').attr('value');
-
-                    var insurance_cost_price = $('#insurance_cost_price').attr('value');
-
-                    var insurance_cost_vat = $('#insurance_cost_vat').attr('value');
-
-                    var start_time = $('#start_time').attr('value');
-
-                    var end_time = $('#end_time').attr('value');
-
-                    var vehicle = $('#vehicle').val();
-
-                    var romooc = $('#romooc').val();
-
-
-
-                    var yes = $('#yes').attr('value');
-
-                    
-
-                    var action      = "them";
-
-                 
-
-                    $.ajax({
-
-                        type: "POST", // phương thức gởi đi
-
-                        url: "<?php echo BASE_URL ?>/insurancecost/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
-
-                        data: {
-
-                            insurance_cost_number: insurance_cost_number,
-
-                            insurance_cost_comment: insurance_cost_comment,
-
-                            customer: customer,
-
-                            insurance_cost_date: insurance_cost_date,
-
-                            insurance_cost_price: insurance_cost_price,
-
-                            insurance_cost_vat: insurance_cost_vat,
-
-                            start_time: start_time,
-
-                            end_time: end_time,
-
-                            vehicle: vehicle,
-
-                            romooc: romooc,
-
-                            yes: yes,
-
-                            }, // giá trị post
-
-                        success: function(answer){ // if everything goes well
-
-                            //alert(answer);
-
-                            $('#error').hide();
-
-                            $('#error').slideToggle(100); // hiển thị thẻ div success
-
-                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-
-                            $('#error').fadeOut(10000);
-
-
-
-                            if (yes != "") {
-
-                                if (answer.trim() != "Thông tin này đã tồn tại" ) {
-
-                                  setTimeout(function() {
-
-                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-
-                                      }, 200);
-
-                                    $('#export_stock_name_'+yes).text(export_stock_name);
-
-                                    $('#province_name_'+yes).text($('#province option:selected').text());
-
-                                }
-
-                            }
-
-                            else{
-
-                                if (answer.trim() != "Thông tin này đã tồn tại") {
-
-                                  setTimeout(function() {
-
-                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-
-                                      }, 200);
-
-                                    var lastID = parseInt($('#lasted').html());
-
-                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
-
-                                    $('.table_data > tbody:last')
-
-                                    .append(
-
-                                        '<tr onclick="HighLightTR(this,#4d90fe,cc3333);" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="export_stock_name_'+parseInt(lastID+1)+'">'+export_stock_name+'</td><td class="fix" data="'+province+'" id="province_name_'+parseInt(lastID+1)+'">'+$('#province option:selected').text()+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
-
-                                    );
-
-
-
-                                    $('#lasted').html(parseInt(lastID+2));
-
-                                }
-
-                            }
-
-                        }
-
-                    });
-
-                    return false;
-
-                     
-
-                 }
-
-            });
-
-
-
-    $('#customer').keyup(function(){
-
-      
-
-        var keyword = $(this).val();
-
-        $.ajax({
-
-            url: '<?php echo BASE_URL ?>/insurancecost/getcustomer',
-
-            type: 'POST',
-
-            data: {keyword:keyword},
-
-            success:function(data){
-
-                $('#customer_list_id').slideDown(200);
-
-                $('#customer_list_id').html(data);
-
-            }
-
-        });
-
-        if ($('#customer').val() == "" || $('#customer').attr('data') == "") {
-
-            //$('#loc_from').val("");
-
-            $('#customer').attr('data',"");
-
-            $('#customer').attr('code',false);
-
-        }
-
-      
-
-   });
-
-   $('#customer').on('keydown', function() {
-
-        var key = event.keyCode || event.charCode;
-
-
-
-        if( key == 8 || key == 46 ){
-
-            $('#customer').attr('data',"");
-
-        }
-
-            
-
-      }); 
-
-
-
-
-    $('.number').keyup(function(event) {
-
-
-
-          // skip for arrow keys
-
-      if(event.which >= 37 && event.which <= 40) return;
-
-
-
-      // format number
-
-      $(this).val(function(index, value) {
-
-        return value
-
-          .replace(/[^0-9-.]/g, "")
-
-        ;
-
+    $('#batdau').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
       });
-
-    });
-
-   
-
-   $('.numbers').keyup(function(event) {
-
-
-
-          // skip for arrow keys
-
-      if(event.which >= 37 && event.which <= 40) return;
-
-
-
-      // format number
-
-      $(this).val(function(index, value) {
-
-        return value
-
-          .replace(/[^0-9]/g, "")
-
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
-        ;
-
+    $('#ketthuc').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        weekStart: 1, 
+        todayHighlight: true
       });
-
-    });
-
-
-
-
-
 });
 
-function get_number(id){
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
 
-    return $(id).val().replace(/\,/g,'');
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
 
-}
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
 
-function set_item_customer(value,name,mst,address) {
+  });
 
-    // change input value
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
 
-    $('#customer').val(name);
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
 
-    $("#customer").attr("data",value);
+  });
 
-    $("#customer").attr("code",'true');
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
 
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
 
-
-    // hide proposition list
-
-    $('#customer_list_id').hide();
-
-    $('#customer').focus();
-
-     
-
-    $(".numbers").val(function(index, value) {
-
-      return value
-
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
-      ;
-
-    }); 
-
-}
-
+  });
 </script>
-
-<script type="text/javascript">
-
-
-
-$( ".add-field" ).dialog({
-
-    autoOpen: false,
-
-    modal: true,
-
-    width: "auto",
-
-    title: "Phí bảo hiểm",
-
-    hide: 'fold',
-
-    show: 'blind'
-
-});
-
-
-
-</script>
-
-
-
-<script type="text/javascript">
-
-    $(function() {
-
-    var pickerOpts = {
-
-        closeText: "Đóng",
-
-        currentText: "Hiện tại",
-
-        nextText: "Tiếp",
-
-        prevText: "Quay lại",
-
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
-
-        "Thứ sáu", "Thứ bảy"],
-
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
-
-        "T6", "T7"],
-
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
-
-        "T6", "T7"],
-
-        //defaultDate: "+1w",
-
-        changeMonth: true,
-
-        changeYear: true,
-
-        dateFormat: 'dd-mm-yy',
-
-        firstDay: 1,
-
-        isRTL: false,
-
-        showButtonPanel: true,
-
-         
-
-    };  
-
-    $("#insurance_cost_date").datepicker(pickerOpts);
-
-
-
-    
-
-              
-
-            
-
-    
-
-});
-
-
-
-$("#vehicle").multiselect({
-    click: function(event, ui){
-        if(ui.checked == 1){
-            $('#vehicle_number').val($('#vehicle_number').val()+' | '+ui.text);
-        }
-        else{
-            $('#vehicle_number').val($('#vehicle_number').val().replace(' | '+ui.text,''));
-        }
-
-        var text = jQuery('#vehicle_number').val(),
-            // look for any "\n" occurences
-            matches = text.match(/\n/g),
-            breaks = matches ? matches.length : 2;
-
-        jQuery('#vehicle_number').attr('rows',breaks + 2);
-    },
-    checkAll: function(){
-    },
-    uncheckAll: function(){
-        $('#vehicle_number').val("");
-
-        var text = jQuery('#vehicle_number').val(),
-            // look for any "\n" occurences
-            matches = text.match(/\n/g),
-            breaks = matches ? matches.length : 2;
-
-        jQuery('#vehicle_number').attr('rows',breaks + 2);
-    }
-});
-$("#romooc").multiselect({
-    click: function(event, ui){
-        if(ui.checked == 1){
-            $('#romooc_number').val($('#romooc_number').val()+' | '+ui.text);
-        }
-        else{
-            $('#romooc_number').val($('#romooc_number').val().replace(' | '+ui.text,''));
-        }
-
-        var text = jQuery('#romooc_number').val(),
-            // look for any "\n" occurences
-            matches = text.match(/\n/g),
-            breaks = matches ? matches.length : 2;
-
-        jQuery('#romooc_number').attr('rows',breaks + 2);
-    },
-    checkAll: function(){
-    },
-    uncheckAll: function(){
-        $('#romooc_number').val("");
-
-        var text = jQuery('#romooc_number').val(),
-            // look for any "\n" occurences
-            matches = text.match(/\n/g),
-            breaks = matches ? matches.length : 2;
-
-        jQuery('#romooc_number').attr('rows',breaks + 2);
-    }
-});
-
-
-
-</script>
-
-
-
-
-
-
-
-<style type="text/css">
-
-    #ui-datepicker-div{
-
-        font-size: 13px;
-
-    }
-
-</style>
-
-<script type="text/javascript">
-
-    $(function() {
-
-    var pickerOpts = {
-
-        closeText: "Đóng",
-
-        currentText: "Hiện tại",
-
-        nextText: "Tiếp",
-
-        prevText: "Quay lại",
-
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
-
-        "Thứ sáu", "Thứ bảy"],
-
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
-
-        "T6", "T7"],
-
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
-
-        "T6", "T7"],
-
-        //defaultDate: "+1w",
-
-        changeMonth: true,
-
-        changeYear: true,
-
-        dateFormat: 'dd-mm-yy',
-
-        firstDay: 1,
-
-        isRTL: false,
-
-        showButtonPanel: true,
-
-        onClose: function(selectedDate) {
-
-                
-
-                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
-
-
-
-         },
-
-         
-
-    };  
-
-    $("#batdau").datepicker(pickerOpts);
-
-
-
-    var pickerOpts2 = {
-
-        closeText: "Đóng",
-
-        currentText: "Hiện tại",
-
-        nextText: "Tiếp",
-
-        prevText: "Quay lại",
-
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
-
-        "Thứ sáu", "Thứ bảy"],
-
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
-
-        "T6", "T7"],
-
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
-
-        "T6", "T7"],
-
-        //defaultDate: "+1w",
-
-        changeMonth: true,
-
-        changeYear: true,
-
-        dateFormat: 'dd-mm-yy',
-
-        firstDay: 1,
-
-        isRTL: false,
-
-        showButtonPanel: true,
-
-        onClose: function(selectedDate) {
-
-                
-
-                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
-
-                
-
-         },
-
-         
-
-    };  
-
-    $("#ketthuc").datepicker(pickerOpts2);
-
-              
-
-            
-    var pickerOpts3 = {
-        closeText: "Đóng",
-        currentText: "Hiện tại",
-        nextText: "Tiếp",
-        prevText: "Quay lại",
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-        dateFormat: 'dd-mm-yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-100:+5",
-        firstDay: 1,
-        isRTL: false,
-        showButtonPanel: true,
-        onSelect: function(dateStr) {
-          if ($('#end_time').val()=="") {
-            var d = $.datepicker.parseDate('dd-mm-yy', dateStr);
-            var years = parseInt(1, 10);
-
-            d.setFullYear(d.getFullYear() + years);
-
-            $('#end_time').datepicker('setDate', d);
-          }
-            
-        },
-        onClose: function(selectedDate) {
-                
-                $( "#end_time" ).datepicker( "option", "minDate", selectedDate );
-
-         },
-    }; 
-    $("#start_time").datepicker(pickerOpts3);
-
-    var pickerOpts4 = {
-        closeText: "Đóng",
-        currentText: "Hiện tại",
-        nextText: "Tiếp",
-        prevText: "Quay lại",
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-        dateFormat: 'dd-mm-yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-100:+5",
-        firstDay: 1,
-        isRTL: false,
-        showButtonPanel: true,
-        onClose: function(selectedDate) {
-                
-                $( "#start_time" ).datepicker( "option", "maxDate", selectedDate );
-
-         },
-    }; 
-    $("#end_time").datepicker(pickerOpts4);
-    
-
-});
-
-
-
-var ch = "<?php echo $limit ?>";
-
-$('#chonloc option[value='+ch+']').attr('selected','selected');
-
-
-
-var xe = "<?php echo $xe ?>";
-
-$('#sl_vehicle option[value='+xe+']').attr('selected','selected');
-
-
-var mooc = "<?php echo $mooc ?>";
-
-$('#sl_nv option[value='+mooc+']').attr('selected','selected');
-
-
-
-var v = "<?php echo $vong ?>";
-
-$('#sl_round option[value='+v+']').attr('selected','selected');
-
-
-
-var tt = "<?php echo $trangthai ?>";
-
-$('#sl_staff option[value='+tt+']').attr('selected','selected');
-
-
-
-</script>
-
-<script type="text/javascript">
-
-    
-
-    $('#sl_round').change(function(){
-
-        var m = $(this).val();
-
-        var y = $('#sl_staff').val();
-
-        var firstDay = new Date(y, m-1, 1);
-
-        var lastDay = new Date(y, m, 0);
-
-
-
-        $('#batdau').datepicker("setDate", firstDay );
-
-        $('#ketthuc').datepicker("setDate", lastDay );
-
-
-
-    });
-
-
-
-    $('#sl_staff').change(function(){
-
-        var y = $(this).val();
-
-        var m = $('#sl_round').val();
-
-        var firstDay = new Date(y, m-1, 1);
-
-        var lastDay = new Date(y, m, 0);
-
-
-
-        $('#batdau').datepicker("setDate", firstDay );
-
-        $('#ketthuc').datepicker("setDate", lastDay );
-
-
-
-    });
-
-
-
-</script>
-
-<style type="text/css">
-
-.ui-multiselect-menu {
-
-    z-index: 9999999;
-
-}
-
-</style>

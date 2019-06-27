@@ -1,161 +1,190 @@
 
 <?php
-$url_order = 'ASC';
+$url_order = 'DESC';
 if ($order_by == 'staff_id')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'staff_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'staff_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'staff_birth')
+elseif ($order_by == 'staff_code')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'staff_birthday')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'staff_gender')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'staff_address')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'staff_phone')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'staff_email')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'cmnd')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'bank')
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-elseif ($order_by == 'username')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'department_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-
-    $i = $sonews*$page-($sonews-1);
+elseif ($order_by == 'position_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'staff_start_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'staff_end_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
 
 ?>
 
 <div id="loading"></div>
 <div id="winpopup"></div>
-<section class="content-header">
-    <h1>DANH SÁCH NHÂN VIÊN</h1>
-  <ol class="breadcrumb">
-    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active"><a href="<?php echo $this->url('staff') ?>">Nhân viên</a></li>
-  </ol>
-</section>
-<div id="content" style="padding:5px;">
+<div class="tools action-buttons pull-right">
+    <?php
+    if (isset($filter)) {
+        echo '<a class="tooltip-warning" data-rel="tooltip" data-original-title="Dữ liệu đã được lọc bớt"><span class="green"><i class="ace-icon fa fa-filter bigger-150"></i></span></a>';
+    }
+    ?>
+    <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+        <option value="18446744073709">All</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+    </select>
+    <a class="purpose" data-original-title="Thêm mới">
+        <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("staff/add") ?>','Thêm nhân viên mới')"></i>
+    </a> 
+    <div class="pull-right pos-rel dropdown-hover">
+        <button class="btn btn-minier bigger" style="line-height: 26px">
+            <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+        </button>
 
-    <div class="search-box">
-        
-        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
-        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
-        <?php if(!isset($disable_control)){ ?>
-        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
-        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
-        <?php } ?>
-    </div>
-    <div class="tablenav top">
-        <?php if(!isset($disable_control)){ ?>
-        <div class="alignleft actions">
-            <select name="action" id="action">
-                <option value="-1" selected="selected">Chọn</option>
+        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+            <li>
+                <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                    <span class="orange">
+                        <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-success" data-rel="tooltip" data-original-title="Lọc">
+                    <span class="green">
+                        <i class="ace-icon fa fa-filter bigger-150" onclick="filter_click('<?php echo $this->url("staff/filter?page=".$page."&order_by=".$order_by."&order=".$order."&limit=".$limit."&keyword=".$keyword) ?>','Lọc dữ liệu')"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                    <span class="red">
+                        <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                    <span class="purple">
+                        <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("staff/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
                 
-                <option value="delete">Xóa</option>
-            </select>
-            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
-        </div>
-        <?php } ?>
-        <div class="alignleft actions">
-        <select name="m" id="chonloc">
-          <option  value="18446744073709">Hiển thị tất cả</option>
-          <option value="50">Hiển thị 50 giá trị</option>
-                <option value="100">Hiển thị 100 giá trị</option>
-                <option value="150">Hiển thị 150 giá trị</option>
-                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
-        </select>
-        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
-        </div>
-
-      </div>
-
+                <div class="text-center pos-rel dropdown-hover">
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                        <span class="blue">
+                            <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                        <li>
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                <span class="red">
+                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                <span class="blue">
+                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblExport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            
+        </ul>
+    </div>                        
 </div>
-
-
-<table class="table_data" id="tblExport">
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblExport" >
 <thead>
     <tr>
-    	<th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'staff_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th  class="fix">
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'staff_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_code','<?php echo $url_order ?>')">Mã NV <?php if ($order_by == 'staff_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th  class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_name','<?php echo $url_order ?>')">Họ tên <?php if ($order_by == 'staff_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_name','<?php echo $url_order ?>')">Tên nhân viên <?php if ($order_by == 'staff_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th  class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_birth','<?php echo $url_order ?>')">Ngày sinh <?php if ($order_by == 'staff_birth'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_birthday','<?php echo $url_order ?>')">Ngày sinh <?php if ($order_by == 'staff_birthday'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th  class="fix">
+        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_gender','<?php echo $url_order ?>')">Giới tính <?php if ($order_by == 'staff_gender'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th  class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_address','<?php echo $url_order ?>')">Địa chỉ <?php if ($order_by == 'staff_address'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_phone','<?php echo $url_order ?>')">Điện thoại <?php if ($order_by == 'staff_phone'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_phone','<?php echo $url_order ?>')">Số điện thoại <?php if ($order_by == 'staff_phone'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position_name','<?php echo $url_order ?>')">Chức vụ <?php if ($order_by == 'position_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_email','<?php echo $url_order ?>')">Email <?php if ($order_by == 'staff_email'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>   
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cmnd','<?php echo $url_order ?>')">CMND <?php if ($order_by == 'cmnd'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>  
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','bank','<?php echo $url_order ?>')">TK ngân hàng <?php if ($order_by == 'bank'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th> 
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','username','<?php echo $url_order ?>')">Tên truy cập <?php if ($order_by == 'username'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th> 
-        <th class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position','<?php echo $url_order ?>')">Chức vụ <?php if ($order_by == 'position'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th> 
-        <th class="fix">
+        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','department_name','<?php echo $url_order ?>')">Phòng <?php if ($order_by == 'department_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th> 
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_start_date','<?php echo $url_order ?>')">Ngày làm việc <?php if ($order_by == 'staff_start_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','staff_end_date','<?php echo $url_order ?>')">Ngày thôi việc <?php if ($order_by == 'staff_end_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
            
-        <?php if(!isset($disable_control)){ ?>
-        <th class="fix"></th>
-        <?php } ?>
+        <th>
+            
+        </th>
     </tr>
-    
    </thead>
    <tbody>
     <?php foreach ($staffs as $staff) : ?>
-        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $staff->staff_id ?>" class="edit_tr">
-        	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $staff->staff_id ?>"></td>
-            <td class="fix"><?php echo $i++; ?></td>
-            <td class="fix"  id="staff_code_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_code ?></td>
-            <td class="fix"  id="staff_name_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_name ?></td>
-            <td class="fix" id="staff_birth_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_birth; ?></td>
-            <td class="fix" data="<?php echo $staff->staff_gender; ?>" id="staff_gender_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_gender==null?"":($staff->staff_gender==0?"Nam":"Nữ"); ?></td>
-            <td class="fix" id="staff_address_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_address; ?></td>
-            <td class="fix" id="staff_phone_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_phone; ?></td>
-            <td class="fix" id="staff_email_<?php echo $staff->staff_id; ?>"><?php echo $staff->staff_email; ?></td>
-            <td class="fix" id="cmnd_<?php echo $staff->staff_id; ?>"><?php echo $staff->cmnd; ?></td>
-            <td class="fix" id="bank_<?php echo $staff->staff_id; ?>"><?php echo $staff->bank; ?></td>
-            <td class="fix" data="<?php echo $staff->account; ?>" id="account_<?php echo $staff->staff_id; ?>"><?php echo $staff->account>0?($staff->account==$user['user_id'][$staff->account]?$user['username'][$staff->account]:null):""; ?></td>
-            <td class="fix" id="position_<?php echo $staff->staff_id; ?>"><?php echo $staff->position; ?></td>
-            <td class="fix" id="department_<?php echo $staff->staff_id; ?>"><a target="_blank" href="<?php echo $this->url('department/index/'.$staff->department) ?>" ><?php echo $staff->department_name; ?></a></td>
-            <td style="display:none" class="fix" id="status_<?php echo $staff->staff_id; ?>"><?php echo $staff->status; ?></td>
-            <td style="display:none" class="fix" id="priority_<?php echo $staff->staff_id; ?>"><?php echo $staff->priority; ?></td>
-            <td style="display:none" class="fix" id="start_date_<?php echo $staff->staff_id; ?>"><?php echo $staff->start_date>0?$lib->hien_thi_ngay_thang($staff->start_date):null; ?></td>
-            <td style="display:none" class="fix" id="end_date_<?php echo $staff->staff_id; ?>"><?php echo $staff->end_date>0?$lib->hien_thi_ngay_thang($staff->end_date):null; ?></td>
+        <tr id="<?php echo $staff->staff_id ?>" class="edit_tr">
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $staff->staff_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $staff->staff_code; ?></td>
+            <td><?php echo $staff->staff_name; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($staff->staff_birthday); ?></td>
+            <td><?php echo $staff->staff_gender==0?'Nam':'Nữ'; ?></td>
+            <td><?php echo $staff->staff_phone; ?></td>
+            <td><?php echo $staff->position_name; ?></td>
+            <td><?php echo $staff->department_name; ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($staff->staff_start_date); ?></td>
+            <td><?php echo $lib->hien_thi_ngay_thang($staff->staff_end_date); ?></td>
             
-            <?php if(!isset($disable_control)){ ?>
-            <td class="pull-right">
-                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
-                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $staff->staff_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("staff/view/") ?>','Thông tin nhân viên',<?php echo $staff->staff_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("staff/edit/") ?>','Cập nhật nhân viên',<?php echo $staff->staff_id ?>)">
+                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
+
+                    <a class="red" >
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $staff->staff_id ?>)"></i>
+                    </a>
+                </div>
             </td>
-            <?php } ?>
         </tr>
     <?php endforeach; ?>
    </tbody>
@@ -163,509 +192,8 @@ elseif ($order_by == 'department_name')
 <?php
 $this->helper('slidePaginator');
 ?>
-<div class="add-field">
-    <section class="content">
-      <div class="row">
-        <!-- left column -->
-        <div class="col-md-12">
-          <!-- general form elements -->
-          <div class="box box-primary">
-            <!-- /.box-header -->
-            <!-- form start -->
-            <form id="add_staff" role="form" method="post" action="" enctype="multipart/form-data">
-              <div class="row">
-                <div class="col-md-3 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="staff_code">Mã nhân viên </label>
-                      <input type="text" id="staff_code"  name="staff_code" tabindex="1" required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label for="position">Chức vụ </label>
-                      <input type="text"  id="position" name="position" tabindex="5" >
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="department">Phòng ban </label>
-                      <select id="department" tabindex="9">
-                            <?php foreach ($departments as $department) {
-                                echo '<option value="'.$department->department_id.'">'.$department->department_name.'</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="start_date">Ngày làm việc </label>
-                      <input type="text"  id="start_date" name="start_date" tabindex="13" >
-                    </div>
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                <div class="col-md-3 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="staff_name">Họ tên</label>
-                      <input type="text" id="staff_name"  name="staff_name" tabindex="2" required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label for="staff_birth">Ngày sinh </label>
-                      <input type="text" id="staff_birth"  name="staff_birth" tabindex="6" required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label for="staff_gender">Giới tính </label>
-                      <input type="radio" checked  name="staff_gender" tabindex="10" value="0"> Nam
-                                <input type="radio"  name="staff_gender" tabindex="10" value="1"> Nữ
-                    </div>
-                    <div class="form-group">
-                      <label for="end_date">Ngày thôi việc </label>
-                      <input type="text"  id="end_date" name="end_date" tabindex="14" >
-                    </div>
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                <div class="col-md-3 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="staff_address">Địa chỉ</label>
-                      <input type="text" id="staff_address"  name="staff_address" tabindex="3" >
-                    </div>
-                    <div class="form-group">
-                      <label for="staff_phone">Số điện thoại </label>
-                      <input type="text" class="numbers" id="staff_phone" name="staff_phone" tabindex="7" >
-                    </div>
-                    <div class="form-group">
-                      <label for="staff_email">Email </label>
-                      <input type="email"  id="staff_email" name="staff_email" tabindex="11" >
-                    </div>
-                    <div class="form-group">
-                      <label for="priority">Thứ tự vị trí </label>
-                      <input type="number"  id="priority" name="priority" tabindex="15" style="width:50px" >
-                    </div>
-                    
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                <div class="col-md-3 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="cmnd">CMND</label>
-                      <input type="text" id="cmnd" class="number"  name="cmnd" tabindex="4" >
-                    </div>
-                    <div class="form-group">
-                      <label for="bank">Tài khoản ngân hàng </label>
-                      <input type="text"  id="bank" name="bank" tabindex="8" >
-                    </div>
-                    <div class="form-group">
-                      <label for="account">Tên truy cập </label>
-                      <select id="account" tabindex="12">
-                            <option value="0">Không sử dụng</option>
-                            <?php foreach ($users as $users) {
-                                echo '<option value="'.$users->user_id.'">'.$users->username.'</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="status">Trạng thái </label>
-                      <input type="radio" checked  name="status" tabindex="16" value="1"> Làm việc
-                        <input type="radio"  name="status" tabindex="16" value="0"> Đã nghỉ
-                    </div>
-                    
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                
-
-              </div>
-              <?php if(!isset($disable_control)){ ?>
-              <div class="row">
-                <div class="col-md-12">
-                    <div class="box-footer">
-                    <input type="hidden" readonly id="yes" name="yes" required="required" >
-                    <button type="submit" class="btn btn-primary" tabindex="17">Hoàn thành</button>
-                    <button type="reset" class="btn" tabindex="18">Nhập lại</button>
-                  </div>
-                  <div class="box-footer">
-                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
-                  </div>
-                </div>
-              </div>
-              <?php } ?>
-            </form>
-          </div>
-          <!-- /.box -->
-
-        </div>
-        <!--/.col (left) -->
-        
-      </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
-       
 </div>
-
-
 <script type="text/javascript">
-var pickerOpts2 = {
-        closeText: "Đóng",
-        currentText: "Hiện tại",
-        nextText: "Tiếp",
-        prevText: "Quay lại",
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-        dateFormat: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-100:+0",
-        firstDay: 1,
-        isRTL: false,
-        showButtonPanel: true
-    }; 
-    $("#staff_birth").datepicker(pickerOpts2);
-
-
-    $('.edit_tr').click(function(e){
-        if(e.target != '[object HTMLButtonElement]' && !$('.checkbox').is(':focus') && e.target.nodeName != "A"){
-            if(!$('.checkbox').is(':focus')){
-                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
-            }
-            var staff_code = $(this).find("#staff_code_"+$(this).attr('id')).text();
-            var staff_name = $(this).find("#staff_name_"+$(this).attr('id')).text();
-            var staff_birth = $(this).find("#staff_birth_"+$(this).attr('id')).text();
-            var staff_gender = $(this).find("#staff_gender_"+$(this).attr('id')).attr('data');
-            var staff_address = $(this).find("#staff_address_"+$(this).attr('id')).text();
-            var staff_phone = $(this).find("#staff_phone_"+$(this).attr('id')).text();
-            var staff_email = $(this).find("#staff_email_"+$(this).attr('id')).text();
-            var account = $(this).find("#account_"+$(this).attr('id')).attr('data');
-            var cmnd = $(this).find("#cmnd_"+$(this).attr('id')).text();
-            var bank = $(this).find("#bank_"+$(this).attr('id')).text();
-            var status = $(this).find("#status_"+$(this).attr('id')).text();
-            var position = $(this).find("#position_"+$(this).attr('id')).text();
-            var priority = $(this).find("#priority_"+$(this).attr('id')).text();
-            var start_date = $(this).find("#start_date_"+$(this).attr('id')).text();
-            var end_date = $(this).find("#end_date_"+$(this).attr('id')).text();
-            var department = $(this).find("#department_"+$(this).attr('id')).text();
-            //alert(staff_code);
-            $('#yes').val($(this).attr('id'));
-            
-            
-            $('#account option[value='+account+']').attr('selected','selected');
-            $('#staff_code').val(staff_code);
-            $('#staff_name').val(staff_name);
-            $('#staff_birth').val(staff_birth);
-            $('#staff_address').val(staff_address);
-            $('#staff_phone').val(staff_phone);
-            $('#staff_email').val(staff_email);
-            $('#cmnd').val(cmnd);
-            $('#bank').val(bank);
-            $('#position').val(position);
-            $('#priority').val(priority);
-            $('#start_date').val(start_date.replace(/\//g,"-"));
-            $('#end_date').val(end_date.replace(/\//g,"-"));
-            $('#department option:contains('+department+')').attr('selected','selected');
-            
-            var radioLength = $("input[name='staff_gender']").length;
-            for(var i = 0; i < radioLength; i++) {
-                $("input[name='staff_gender']")[i].checked = false;
-                if($("input[name='staff_gender']")[i].value == staff_gender) {
-                    $("input[name='staff_gender']")[i].checked = true;
-                }
-            }
-
-            var radioLength2 = $("input[name='status']").length;
-            for(var i = 0; i < radioLength2; i++) {
-                $("input[name='status']")[i].checked = false;
-                if($("input[name='status']")[i].value == status) {
-                    $("input[name='status']")[i].checked = true;
-                }
-            }
-
-            $('#staff_code').focus();
-            $('#staff_code').attr('data',"true");
-
-            $( ".add-field" ).dialog( "open" );
-        }
-    });
-</script>
-<script type="text/javascript">
-
-function add_click(){
-    $('#yes').val("");
-    $('.add-field').slideDown(500);
-     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
-        $('#staff_code').val("");
-        $('#staff_name').val("");
-        $('#staff_birth').val("");
-        $('#account option[value=""]').attr('selected','selected');
-        $("input[name='staff_gender'][value='0']").attr('checked',true);
-        $('#staff_address').val("");
-        $('#staff_phone').val("");
-        $('#staff_email').val("");
-        $('#position').val("");
-        $('#priority').val("");
-        $("input[name='status'][value='1']").attr('checked',true);
-        
-        $('.number').focus(function(){
-            if ( $(this).val() == '0') {
-               $(this).val(""); 
-            };
-            
-        });
-        $('.number').blur(function(){
-            if ( $(this).val() == "") {
-                $(this).val(0);
-            };
-            
-        });
-
-   $('#staff_code').focus();
-   $('#staff_code').attr('data',"false");
-
-   $( ".add-field" ).dialog( "open" );
-
-}
-
-
-$(document).ready(function(){
-            // Validate form
-            $("#add_staff").validate({
-                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
-                rules: {
-                    
-                },
-                submitHandler: function(form) {
-                
-                    var staff_code = $('#staff_code').attr('value');
-                    var staff_name = $('#staff_name').attr('value');
-                    var staff_birth = $('#staff_birth').attr('value');
-                    var staff_gender = $('input[name=staff_gender]:checked').val();
-                    var staff_address = $('#staff_address').attr('value');
-                    var staff_phone = $('#staff_phone').attr('value');
-                    var staff_email = $('#staff_email').attr('value');
-                    var cmnd = $('#cmnd').attr('value');
-                    var bank = $('#bank').attr('value');
-                    var account = $('#account').attr('value');
-                    var status = $('input[name=status]:checked').val();
-                    var position = $('#position').attr('value');
-                    var priority = $('#priority').attr('value');
-                    var start_date = $('#start_date').attr('value');
-                    var end_date = $('#end_date').attr('value');
-                    var department = $('#department').attr('value');
-
-                    var yes = $('#yes').attr('value');
-                    var check = $('#staff_code').attr('data');
-                    
-                    var action      = "them";
-                 
-                    $.ajax({
-                        type: "POST", // phương thức gởi đi
-                        url: "<?php echo BASE_URL ?>/staff/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
-                        data: {
-                            staff_code: staff_code,
-                            staff_name: staff_name,
-                            staff_birth: staff_birth,
-                            staff_gender: staff_gender,
-                            staff_address: staff_address,
-                            staff_phone: staff_phone,
-                            staff_email: staff_email,
-                            cmnd:cmnd,
-                            bank:bank,
-                            account:account,
-                            status: status,
-                            position:position,
-                            yes: yes,
-                            check: check,
-                            priority: priority,
-                            start_date: start_date,
-                            end_date: end_date,
-                            department: department
-                            }, // giá trị post
-                        success: function(answer){ // if everything goes well
-                            //alert(answer);
-                            $('#error').hide();
-                            $('#error').slideToggle(100); // hiển thị thẻ div success
-                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                            $('#error').fadeOut(10000);
-
-                            if (check == "true") {
-                                if (answer.trim() != "Tên truy cập đã được sử dụng" && answer.trim() != "Mã nhân viên đã được sử dụng") {
-                                    setTimeout(function() {
-                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-                                      }, 200);
-                                    $('#staff_code_'+yes).text(staff_code);
-                                    $('#staff_name_'+yes).text(staff_name);
-                                    $('#staff_birth_'+yes).text(staff_birth);
-                                    $('#staff_gender_'+yes).text(staff_gender==0?"Nam":"Nữ");
-                                    $('#staff_address_'+yes).text(staff_address);
-                                    $('#staff_phone_'+yes).text(staff_phone);
-                                    $('#staff_email_'+yes).text(staff_email);
-                                    $('#cmnd_'+yes).text(cmnd);
-                                    $('#bank_'+yes).text(bank);
-                                    $('#account_'+yes).text($("#account option:selected").text());
-                                }
-                            }
-                            else{
-                                if (answer.trim() != "Nhân viên này đã tồn tại" && answer.trim() != "Tên truy cập đã được sử dụng" && answer.trim() != "Mã nhân viên đã được sử dụng") {
-                                    setTimeout(function() {
-                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-                                      }, 200);
-                                    var lastID = parseInt($('#lasted').html());
-                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
-                                    $('.table_data > tbody:last')
-                                    .append(
-                                        '<tr onclick="HighLightTR(this,"#4d90fe","cc3333");" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="staff_code_'+parseInt(lastID+1)+'">'+staff_code+'</td><td class="fix" id="staff_name_'+parseInt(lastID+1)+'">'+staff_name+'</td><td class="fix" id="staff_birth_'+parseInt(lastID+1)+'">'+staff_birth+'</td><td class="fix" id="staff_gender_'+parseInt(lastID+1)+'">'+staff_gender==0?"Nam":"Nữ"+'</td><td class="fix" id="staff_address_'+parseInt(lastID+1)+'">'+staff_address+'</td><td class="fix" id="staff_phone_'+parseInt(lastID+1)+'">'+staff_phone+'</td><td class="fix" id="staff_email_'+parseInt(lastID+1)+'">'+staff_email+'</td><td class="fix" id="cmnd_'+parseInt(lastID+1)+'">'+cmnd+'</td><td class="fix" id="bank_'+parseInt(lastID+1)+'">'+bank+'</td><td class="fix" id="account_'+parseInt(lastID+1)+'">'+$("#account option:selected").text()+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
-                                    );
-
-                                    $('#lasted').html(parseInt(lastID+2));
-                                }
-                            }
-                        }
-                    });
-                    return false;
-                     
-                 }
-            });
-   
-   
-   
-    $('.number').keyup(function(event) {
-
-          // skip for arrow keys
-      if(event.which >= 37 && event.which <= 40) return;
-
-      // format number
-      $(this).val(function(index, value) {
-        return value
-          .replace(/[^0-9]/g, "")
-        ;
-      });
-    });
-   
-   $('.numbers').keyup(function(event) {
-
-          // skip for arrow keys
-      if(event.which >= 37 && event.which <= 40) return;
-
-      // format number
-      $(this).val(function(index, value) {
-        return value
-          .replace(/[^0-9]/g, "")
-          .replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")
-        ;
-      });
-    });
-    
-
-});
-function get_number(id){
-    return $(id).val().replace(/\,/g,'');
-}
-
-</script>
-<div style="display:none" id="lasted"></div>
-<script type="text/javascript">
-    var count = parseInt(<?php echo $lastID ?>);
-    $('#lasted').html(count);
-
-$("#import_excel").click(function(){
-        $("#winpopup").dialog({
-            draggable:true,
-            modal: true,
-            autoOpen: false,
-            height:300,
-            width:400,
-            resizable: false,
-            title:'Import Excel',
-            
-        });
-        $("#winpopup").load($(this).attr('href'));
-        $("#winpopup").dialog("open");
-         
-        return false;
-    });
-</script>
-</div>
-
-<script type="text/javascript">
-var l = "<?php echo $limit ?>";
-$('#chonloc option[value='+l+']').attr('selected','selected');
-
-$( ".add-field" ).dialog({
-    autoOpen: false,
-    modal: true,
-    width: "auto",
-    title: "Nhân viên",
-    hide: 'fold',
-    show: 'blind'
-});
-
-var pickerOpts3 = {
-        closeText: "Đóng",
-        currentText: "Hiện tại",
-        nextText: "Tiếp",
-        prevText: "Quay lại",
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
-        "Thứ sáu", "Thứ bảy"],
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
-        "T6", "T7"],
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
-        "T6", "T7"],
-        //defaultDate: "+1w",
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: 'dd-mm-yy',
-        firstDay: 1,
-        isRTL: false,
-        showButtonPanel: true,
-        onClose: function(selectedDate) {
-                
-                $( "#end_date" ).datepicker( "option", "minDate", selectedDate );
-
-         },
-         
-    };  
-    $("#start_date").datepicker(pickerOpts3);
-
-    var pickerOpts4 = {
-        closeText: "Đóng",
-        currentText: "Hiện tại",
-        nextText: "Tiếp",
-        prevText: "Quay lại",
-        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
-        "Thứ sáu", "Thứ bảy"],
-        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
-        "T6", "T7"],
-        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
-        "T6", "T7"],
-        //defaultDate: "+1w",
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: 'dd-mm-yy',
-        firstDay: 1,
-        isRTL: false,
-        showButtonPanel: true,
-        onClose: function(selectedDate) {
-                
-                $( "#start_date" ).datepicker( "option", "maxDate", selectedDate );
-                
-         },
-         
-    };  
-    $("#end_date").datepicker(pickerOpts4);
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
 </script>

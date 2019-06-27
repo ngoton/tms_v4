@@ -11,23 +11,36 @@ Class houseModel Extends baseModel {
     public function createHouse($data) 
     {    
         /*$data = array(
-        	'Housename' => $data['Housename'],
-        	'password' => $data['password'],
-        	'create_time' => $data['create_time'],
-        	'role' => $data['role'],
+        	'staff_id' => $data['staff_id'],
+        	'staff_name' => $data['staff_name'],
+        	'staff_birth' => $data['staff_birth'],
+        	'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
         	);*/
+
         return $this->insert($this->table,$data);
     }
-    public function updateHouse($data,$id) 
+    public function updateHouse($data,$where) 
     {    
-        if ($this->getHouseByWhere($id)) {
+        if ($this->getHouseByWhere($where)) {
         	/*$data = array(
-	        	'Housename' => $data['Housename'],
-	        	'password' => $data['password'],
-	        	'create_time' => $data['create_time'],
-	        	'role' => $data['role'],
-	        	);*/
-	        return $this->update($this->table,$data,$id);
+            'staff_id' => $data['staff_id'],
+            'staff_name' => $data['staff_name'],
+            'staff_birth' => $data['staff_birth'],
+            'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
+            );*/
+	        return $this->update($this->table,$data,$where);
         }
         
     }
@@ -37,22 +50,19 @@ Class houseModel Extends baseModel {
     	}
     }
     public function getHouse($id){
-    	return $this->getByID($this->table,$id);
+        return $this->getByID($this->table,$id);
     }
     public function getHouseByWhere($where){
-        return $this->getByWhere($this->table,$where);
+    	return $this->getByWhere($this->table,$where);
     }
     public function getAllHouseByWhere($id){
         return $this->query('SELECT * FROM house WHERE house_id != '.$id);
     }
-    public function getLastHouse(){
-        return $this->getLast($this->table);
-    }
-    public function checkHouse($id,$house_name){
-        return $this->query('SELECT * FROM house WHERE house_id != '.$id.' AND house_name = "'.$house_name.'"');
-    }
     public function queryHouse($sql){
         return $this->query($sql);
+    }
+    public function getLastHouse(){
+        return $this->getLast($this->table);
     }
 }
 ?>

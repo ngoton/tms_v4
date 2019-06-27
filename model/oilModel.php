@@ -11,23 +11,36 @@ Class oilModel Extends baseModel {
     public function createOil($data) 
     {    
         /*$data = array(
-        	'Oilname' => $data['Oilname'],
-        	'password' => $data['password'],
-        	'create_time' => $data['create_time'],
-        	'role' => $data['role'],
+        	'staff_id' => $data['staff_id'],
+        	'staff_name' => $data['staff_name'],
+        	'staff_birth' => $data['staff_birth'],
+        	'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
         	);*/
+
         return $this->insert($this->table,$data);
     }
-    public function updateOil($data,$id) 
+    public function updateOil($data,$where) 
     {    
-        if ($this->getOilByWhere($id)) {
+        if ($this->getOilByWhere($where)) {
         	/*$data = array(
-	        	'Oilname' => $data['Oilname'],
-	        	'password' => $data['password'],
-	        	'create_time' => $data['create_time'],
-	        	'role' => $data['role'],
-	        	);*/
-	        return $this->update($this->table,$data,$id);
+            'staff_id' => $data['staff_id'],
+            'staff_name' => $data['staff_name'],
+            'staff_birth' => $data['staff_birth'],
+            'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
+            );*/
+	        return $this->update($this->table,$data,$where);
         }
         
     }
@@ -37,22 +50,19 @@ Class oilModel Extends baseModel {
     	}
     }
     public function getOil($id){
-    	return $this->getByID($this->table,$id);
+        return $this->getByID($this->table,$id);
     }
     public function getOilByWhere($where){
-        return $this->getByWhere($this->table,$where);
+    	return $this->getByWhere($this->table,$where);
     }
     public function getAllOilByWhere($id){
         return $this->query('SELECT * FROM oil WHERE oil_id != '.$id);
     }
-    public function getLastOil(){
-        return $this->getLast($this->table);
-    }
-    public function checkOil($id,$way){
-        return $this->query('SELECT * FROM oil WHERE oil_id != '.$id.' AND way = "'.$way.'"');
-    }
     public function queryOil($sql){
         return $this->query($sql);
+    }
+    public function getLastOil(){
+        return $this->getLast($this->table);
     }
 }
 ?>

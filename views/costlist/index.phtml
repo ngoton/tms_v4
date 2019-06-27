@@ -1,429 +1,159 @@
+
 <?php
-$url_order = 'ASC';
+$url_order = 'DESC';
 if ($order_by == 'cost_list_id')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'cost_list_code')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($order_by == 'cost_list_name')
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-
-    $i = $sonews*$page-($sonews-1);
+elseif ($order_by == 'cost_type_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+$i = $sonews*$page-($sonews-1);
 
 ?>
 
 <div id="loading"></div>
 <div id="winpopup"></div>
-<section class="content-header">
-    <h1>DANH MỤC CHI PHÍ</h1>
-  <ol class="breadcrumb">
-    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active"><a href="<?php echo $this->url('costlist') ?>">Chi phí</a></li>
-  </ol>
-</section>
-<div id="content" style="padding:5px;">
+<div class="tools action-buttons pull-right">
+    <select name="m" id="chonloc" class="input-sm" onchange="limit_change($(this).val(),'<?php echo $order_by ?>','<?php echo $order ?>','<?php echo $keyword ?>')">
+        <option value="18446744073709">All</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+    </select>
+    <a class="purpose" data-original-title="Thêm mới">
+        <i class="ace-icon fa fa-plus-circle bigger-150" onclick="add_click('<?php echo $this->url("costlist/add") ?>','Thêm chi phí mới')"></i>
+    </a> 
+    <div class="pull-right pos-rel dropdown-hover">
+        <button class="btn btn-minier bigger" style="line-height: 26px">
+            <i class="ace-icon fa fa-windows icon-only bigger-120"></i>
+        </button>
 
-    <div class="search-box">
-        
-        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
-        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
-        <?php if(!isset($disable_control)){ ?>
-        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
-        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
-        <?php } ?>
-    </div>
-    <div class="tablenav top">
-        <?php if(!isset($disable_control)){ ?>
-        <div class="alignleft actions">
-            <select name="action" id="action">
-                <option value="-1" selected="selected">Chọn</option>
+        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+            <li>
+                <a class="tooltip-warning" data-rel="tooltip" data-original-title="Tìm">
+                    <span class="orange">
+                        <i class="ace-icon fa fa-search bigger-150" onclick="search_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-success" data-rel="tooltip" data-original-title="Tải lại">
+                    <span class="green">
+                        <i class="ace-icon fa fa-refresh bigger-150" onclick="refresh_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-error" data-rel="tooltip" data-original-title="Xóa">
+                    <span class="red">
+                        <i class="ace-icon fa fa-trash-o bigger-150" onclick="del_click()"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="tooltip-info" data-rel="tooltip" data-original-title="Nhập">
+                    <span class="purple">
+                        <i class="ace-icon fa fa-cloud-upload bigger-150" onclick="import_click('<?php echo $this->url("costlist/import") ?>','Nhập dữ liệu từ file Excel')"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
                 
-                <option value="delete">Xóa</option>
-            </select>
-            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
-        </div>
-        <?php } ?>
-        <div class="alignleft actions">
-        <select name="m" id="chonloc">
-          <option  value="18446744073709">Hiển thị tất cả</option>
-          <option value="50">Hiển thị 50 giá trị</option>
-                <option value="100">Hiển thị 100 giá trị</option>
-                <option value="150">Hiển thị 150 giá trị</option>
-                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
-        </select>
-        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
-        </div>
-
-      </div>
-
+                <div class="text-center pos-rel dropdown-hover">
+                    <a class="tooltip-info" data-rel="tooltip" data-original-title="Xuất">
+                        <span class="blue">
+                            <i class="ace-icon fa fa-cloud-download bigger-150"></i>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-caret dropdown-close dropdown-menu-right">
+                        <li>
+                            <a class="tooltip-success" data-rel="tooltip" data-original-title="Excel">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-file-excel-o bigger-130" onclick="export_click('excel','tblexport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-error" data-rel="tooltip" data-original-title="PDF">
+                                <span class="red">
+                                    <i class="ace-icon fa fa-file-pdf-o bigger-130" onclick="export_click('pdf','tblexport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-info" data-rel="tooltip" data-original-title="Word">
+                                <span class="blue">
+                                    <i class="ace-icon fa fa-file-word-o bigger-130" onclick="export_click('word','tblexport')"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            
+        </ul>
+    </div>                        
 </div>
-
-
-<table class="table_data" id="tblExport">
+<div class="clearfix"></div>
+<div id="content" style="padding:5px;">
+   
+<table class="table_data" id="tblexport" >
 <thead>
     <tr>
-        <th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
-        <th  class="fix" >
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'cost_list_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th  class="fix">
+    	<th><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall" class="ace ace-checkbox-2" /><span class="lbl"></span></th>
+        <th><a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'cost_list_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
+        <th>
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_code','<?php echo $url_order ?>')">Mã chi phí <?php if ($order_by == 'cost_list_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th  class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_name','<?php echo $url_order ?>')">Tên Chi phí <?php if ($order_by == 'cost_list_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_name','<?php echo $url_order ?>')">Tên chi phí <?php if ($order_by == 'cost_list_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <th  class="fix">
-            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_type','<?php echo $url_order ?>')">Loại chi phí <?php if ($order_by == 'cost_list_type'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        <th>
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_type_name','<?php echo $url_order ?>')">Loại chi phí <?php if ($order_by == 'cost_type_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        <?php if(!isset($disable_control)){ ?>
-        <th class="fix"></th>
-        <?php } ?>
+           
+        <th>
+            
+        </th>
     </tr>
-    
    </thead>
    <tbody>
-    <?php foreach ($costs as $cost_list) : ?>
-    
-        
-        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $cost_list->cost_list_id ?>" class="edit_tr" >
+    <?php foreach ($cost_lists as $cost_list) : ?>
+        <tr id="<?php echo $cost_list->cost_list_id ?>" class="edit_tr">
+        	<td class="text-center"><input name="check[]" type="checkbox" class="checkbox ace" value="<?php echo $cost_list->cost_list_id ?>"><span class="lbl"></span></td>
+            <td class="text-center"><?php echo $i++; ?></td>
+            <td><?php echo $cost_list->cost_list_code; ?></td>
+            <td><?php echo $cost_list->cost_list_name; ?></td>
+            <td><?php echo $cost_list->cost_type_name; ?></td>
             
-            <td>
-                <input name="check[]" type="checkbox" class="checkbox" value="<?php echo $cost_list->cost_list_id ?>">
+            
+            <td class="text-right">
+                <div class="tools action-buttons">
+                    <a class="blue"  onclick="view_click('<?php echo $this->url("costlist/view/") ?>','Thông tin chi phí',<?php echo $cost_list->cost_list_id ?>)">
+                        <i class="ace-icon fa fa-info-circle bigger-130"></i>
+                    </a>
+                    <a class="green"  onclick="edit_click('<?php echo $this->url("costlist/edit/") ?>','Cập nhật chi phí',<?php echo $cost_list->cost_list_id ?>)">
+                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
+
+                    <a class="red" >
+                        <i class="ace-icon fa fa-trash-o bigger-130" onclick="del(<?php echo $cost_list->cost_list_id ?>)"></i>
+                    </a>
+                </div>
             </td>
-            
-            <td  class="fix"><?php echo $i++; ?></td>
-            <td class="fix" id="cost_list_code_<?php echo $cost_list->cost_list_id; ?>"><?php echo $cost_list->cost_list_code; ?></td>
-            <td class="fix" id="cost_list_name_<?php echo $cost_list->cost_list_id; ?>"><?php echo $cost_list->cost_list_name; ?></td>
-            
-            <td class="fix" data="<?php echo $cost_list->cost_list_type; ?>" id="cost_list_type_<?php echo $cost_list->cost_list_id; ?>"><?php echo $cost_list->cost_type_name; ?></td>
-            
-            <?php if(!isset($disable_control)){ ?>
-            <td class="pull-right">
-                <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
-                <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $cost_list->cost_list_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
-            </td>
-            <?php } ?>
         </tr>
-
-
     <?php endforeach; ?>
-     
    </tbody>
 </table>
 <?php
 $this->helper('slidePaginator');
 ?>
-
-<div class="add-field">
-    <section class="content">
-      <div class="row">
-        <!-- left column -->
-        <div class="col-md-12">
-          <!-- general form elements -->
-          <div class="box box-primary">
-            <!-- /.box-header -->
-            <!-- form start -->
-            <form id="add_cost_list" role="form" method="post" action="" enctype="multipart/form-data">
-              <div class="row">
-                <div class="col-md-4 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="cost_list_code">Mã chi phí </label>
-                      <input  type="text" id="cost_list_code"  name="cost_list_code" tabindex="1"  required="required" >
-                    </div>
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                <div class="col-md-4 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="cost_list_name">Tên chi phí</label>
-                      <input   type="text" id="cost_list_name"  name="cost_list_name" tabindex="2"  required="required" >
-                    </div>
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                <div class="col-md-4 col-xs-6">
-                  <div class="box-body">
-                    <div class="form-group">
-                      <label for="cost_list_type">Loại chi phí</label>
-                      <select name="cost_list_type" id="cost_list_type" tabindex="3">
-                            <?php foreach ($cost_types as $cost) { ?>
-                              <option value="<?php echo $cost->cost_type_id ?>"><?php echo $cost->cost_type_name ?></option>
-                            <?php } ?>
-                            
-                        </select>
-                    </div>
-                    
-                  </div>
-                  <!-- /.box-body -->
-                  
-                </div>
-                
-
-              </div>
-              <?php if(!isset($disable_control)){ ?>
-              <div class="row">
-                <div class="col-md-12">
-                    <div class="box-footer">
-                    <input type="hidden" readonly id="yes" name="yes" required="required" >
-                    <button type="submit" class="btn btn-primary" tabindex="4">Hoàn thành</button>
-                    <button type="reset" class="btn" tabindex="5">Nhập lại</button>
-                  </div>
-                  <div class="box-footer">
-                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
-                  </div>
-                </div>
-              </div>
-              <?php } ?>
-            </form>
-          </div>
-          <!-- /.box -->
-
-        </div>
-        <!--/.col (left) -->
-        
-      </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
-       
 </div>
-
 <script type="text/javascript">
-
-
-  
-$('.add-field').hide();  
-
-
-
-    $('.edit_tr').click(function(e){
-        if(e.target != '[object HTMLButtonElement]' && e.target != '[object HTMLSpanElement]' && !$('.checkbox').is(':focus')) { 
-            if(!$('.checkbox').is(':focus')){
-                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
-            }
-            
-            var cost_list_code = $(this).find("#cost_list_code_"+$(this).attr('id')).text();
-            var cost_list_name = $(this).find("#cost_list_name_"+$(this).attr('id')).text();
-            var cost_list_type = $(this).find("#cost_list_type_"+$(this).attr('id')).attr('data');
-
-            //alert(cost_code);
-            $('#yes').val($(this).attr('id'));
-            
-            $("#cost_list_type option[value=" + cost_list_type + "]").attr('selected', 'selected');
-            $('#cost_list_code').val(cost_list_code);
-            $('#cost_list_name').val(cost_list_name);
-
-            $( ".add-field" ).dialog( "open" );
-        }
-
-        
-        
-    });
-
-
+    var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
 </script>
-<script type="text/javascript">
-
-function add_click(){
-    $('#yes').val("");
-    $('.add-field').slideDown(500);
-     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
-     
-        $('#cost_list_code').val("");
-        $('#cost_list_name').val("");
-        $("#cost_list_type option[value=1]").attr('selected', 'selected');
-                
-        $('.numbers').focus(function(){
-            if ( $(this).val() == '0') {
-               $(this).val(""); 
-            };
-            
-        });
-        $('.numbers').blur(function(){
-            if ( $(this).val() == "") {
-                $(this).val(0);
-            };
-            
-        });
-
-    $( ".add-field" ).dialog( "open" );
-}
-
-
-$(document).ready(function(){
-            // Validate form
-            $("#add_cost_list").validate({
-                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
-                rules: {
-                    
-                },
-                submitHandler: function(form) {
-                
-                    var cost_list_code = $('#cost_list_code').attr('value');
-                    var cost_list_name = $('#cost_list_name').attr('value');
-                    var cost_list_type = $('#cost_list_type').attr('value');
-                    
-                    var yes = $('#yes').attr('value');
-                    
-                    var action      = "them";
-                 
-                    $.ajax({
-                        type: "POST", // phương thức gởi đi
-                        url: "<?php echo BASE_URL ?>/costlist/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
-                        data: {
-                            
-                            cost_list_code: cost_list_code,
-                            cost_list_name: cost_list_name,
-                            cost_list_type: cost_list_type,
-
-                            yes: yes,
-
-                            }, // giá trị post
-                        success: function(answer){ // if everything goes well
-                            //alert(answer);
-                            $('#error').hide();
-                            $('#error').slideToggle(100); // hiển thị thẻ div success
-                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
-                            $('#error').fadeOut(10000);
-
-                            if (yes != "") {
-                                if (answer.trim() != "Danh mục đã tồn tại") {
-                                    setTimeout(function() {
-                                            sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-                                          }, 200);
-                                }
-                            }
-                            else{
-                                if (answer.trim() != "Danh mục đã tồn tại") {
-                                    setTimeout(function() {
-                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-                                      }, 200);
-                                }
-                                
-                            }
-                        }
-                    });
-                    return false;
-                     
-                 }
-            });
-
-
-
-
-   $('.numbers').keyup(function(event) {
-
-          // skip for arrow keys
-      if(event.which >= 37 && event.which <= 40) return;
-
-      // format number
-      $(this).val(function(index, value) {
-        return value
-          .replace(/[^0-9-.]/g, "")
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        ;
-      });
-    });
-
-    $('.number').keyup(function(event) {
-
-          // skip for arrow keys
-      if(event.which >= 37 && event.which <= 40) return;
-
-      // format number
-      $(this).val(function(index, value) {
-        return value
-          .replace(/[^0-9-]/g, "")
-        ;
-      });
-    });
-    
-
-});
-
-function get_number(id){
-    return $(id).val().replace(/\,/g,'');
-}
-function set_item(item,name) {
-    // change input value
-    $('#work_code').val(item);
-    $("#work_code").attr("data",name);
-    
-    $('#code_list_id').hide();
-    $('#work_code').focus();
-}
-
-</script>
-<div style="display:none" id="lasted"></div>
-<script type="text/javascript">
-    var count = parseInt(<?php echo $lastID ?>);
-    $('#lasted').html(count);
-
-$("#import_excel").click(function(){
-        $("#winpopup").dialog({
-            draggable:true,
-            modal: true,
-            autoOpen: false,
-            height:300,
-            width:400,
-            resizable: false,
-            title:'Import Excel',
-            
-        });
-        $("#winpopup").load($(this).attr('href'));
-        $("#winpopup").dialog("open");
-         
-        return false;
-    });
-
-
- 
-var x = "<?php echo $limit ?>";
-$('#chonloc option[value='+x+']').attr('selected','selected');
-
-
-</script>
-</div>
-
-<script type="text/javascript">
-
-
-$( ".add-field" ).dialog({
-    autoOpen: false,
-    modal: true,
-    width: "auto",
-    title: "Danh mục chi phí",
-    hide: 'fold',
-    show: 'blind'
-});
-
-
-
-$(".show").click(function(){
-    $("#winpopup").dialog({
-        draggable:true,
-        modal: true,
-        autoOpen: false,
-        width: "90%",
-        resizable: false,
-        position: "top",
-        title:'Chi tiết',
-        buttons: {
-            OK: function() {
-                $( this ).dialog( "close" );
-            },
-            Cancel: function() {
-                $( this ).dialog( "close" );
-            }
-        }
-    });
-    $("#winpopup").load($(this).attr('href'));
-    $("#winpopup").dialog("open");
-    return false;
-});
-
-</script>
-

@@ -11,23 +11,36 @@ Class warehouseModel Extends baseModel {
     public function createWarehouse($data) 
     {    
         /*$data = array(
-        	'Warehousename' => $data['Warehousename'],
-        	'password' => $data['password'],
-        	'create_time' => $data['create_time'],
-        	'role' => $data['role'],
+        	'staff_id' => $data['staff_id'],
+        	'staff_name' => $data['staff_name'],
+        	'staff_birth' => $data['staff_birth'],
+        	'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
         	);*/
+
         return $this->insert($this->table,$data);
     }
-    public function updateWarehouse($data,$id) 
+    public function updateWarehouse($data,$where) 
     {    
-        if ($this->getWarehouseByWhere($id)) {
+        if ($this->getWarehouseByWhere($where)) {
         	/*$data = array(
-	        	'Warehousename' => $data['Warehousename'],
-	        	'password' => $data['password'],
-	        	'create_time' => $data['create_time'],
-	        	'role' => $data['role'],
-	        	);*/
-	        return $this->update($this->table,$data,$id);
+            'staff_id' => $data['staff_id'],
+            'staff_name' => $data['staff_name'],
+            'staff_birth' => $data['staff_birth'],
+            'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
+            );*/
+	        return $this->update($this->table,$data,$where);
         }
         
     }
@@ -37,19 +50,19 @@ Class warehouseModel Extends baseModel {
     	}
     }
     public function getWarehouse($id){
-    	return $this->getByID($this->table,$id);
+        return $this->getByID($this->table,$id);
     }
     public function getWarehouseByWhere($where){
-        return $this->getByWhere($this->table,$where);
+    	return $this->getByWhere($this->table,$where);
     }
     public function getAllWarehouseByWhere($id){
         return $this->query('SELECT * FROM warehouse WHERE warehouse_id != '.$id);
     }
-    public function getLastWarehouse(){
-        return $this->getLast($this->table);
-    }
     public function queryWarehouse($sql){
         return $this->query($sql);
+    }
+    public function getLastWarehouse(){
+        return $this->getLast($this->table);
     }
 }
 ?>

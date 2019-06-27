@@ -22,6 +22,15 @@ class Library{
 	}
 
 	/*
+	* Xuất ra ngẫu nhiên mã màu
+	*/
+
+	public function rand_color() {
+	    return substr('00000' . dechex(mt_rand(0, 0xffffff)), -6);
+	}
+
+
+	/*
 	* cắt đầu 1 xâu với số từ nhất định
 	* param: xâu cần cắt, số lượng từ muốn cắt
 	* return: xâu được cắt
@@ -29,15 +38,15 @@ class Library{
 	public function truncateString($str,$len,$charset="UTF-8"){
 		$str = html_entity_decode($str,ENT_QUOTES,$charset);
 		if (mb_strlen($str,$charset) > $len) {
-			$arr = explode('', $str);
+			$arr = explode(' ', $str);
 			$str = mb_substr($str, 0, $len, $charset);
-			$arrRes = explode('', $str);
+			$arrRes = explode(' ', $str);
 			$last = $arr[count($arrRes)-1];
 			unset($arr);
 			if (strcasecmp($arrRes[count($arrRes)-1], $last)) {
 				unset($arrRes[count($arrRes)-1]);
 			}
-			return implode('', $arrRes)."...";
+			return implode(' ', $arrRes)."...";
 		}
 		return $str;
 	}
@@ -71,7 +80,7 @@ class Library{
 	* param: chuỗi
 	* return: chuỗi mới
 	*/
-	function cleanup_text($str){
+	public function cleanup_text($str){
             
         if(ini_get('magic_quotes_gpc'))
         {
@@ -111,6 +120,14 @@ class Library{
     	
     }
 
+    public function ghi_file($filename,$text){
+    	
+        $fh = fopen($filename, "a") or die("Could not open log file.");
+        fwrite($fh, $text) or die("Could not write file!");
+        fclose($fh);
+    	
+    }
+
     /*
 	
     */
@@ -123,10 +140,10 @@ class Library{
 	    		$number = rtrim(sprintf('%.2f', $number),"0");  
 	    	}
 	        
-	    } 
+	    }  
 	    else{
 	    	$number = round($number);
-	    }  
+	    } 
 	    while (true) {  
 	        $replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $number);  
 	        if ($replaced != $number) {  
@@ -136,6 +153,63 @@ class Library{
 	        }  
 	    }  
 	    return $number;  
+	}
+
+	/*
+	4 months, 2 weeks, 3 days, 1 hour, 49 minutes, 15 seconds ago
+    */
+	public function time_elapsed_string($datetime, $full = 1, $lang = "en") {
+		$now = new DateTime;
+	    $ago = new DateTime($datetime);
+	    $diff = $now->diff($ago);
+
+	    $diff->w = floor($diff->d / 7);
+	    $diff->d -= $diff->w * 7;
+
+		if ($lang == "vi") {
+			$string = array(
+		        'y' => 'năm',
+		        'm' => 'tháng',
+		        'w' => 'tuần',
+		        'd' => 'ngày',
+		        'h' => 'giờ',
+		        'i' => 'phút',
+		        's' => 'giây',
+		    );
+		    foreach ($string as $k => &$v) {
+		        if ($diff->$k) {
+		            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? '' : '');
+		        } else {
+		            unset($string[$k]);
+		        }
+		    }
+
+		    $string = array_slice($string, 0, $full);
+		    return $string ? implode(', ', $string) . ' trước' : 'Vừa xong';
+		}
+		else{
+			$string = array(
+		        'y' => 'year',
+		        'm' => 'month',
+		        'w' => 'week',
+		        'd' => 'day',
+		        'h' => 'hour',
+		        'i' => 'minute',
+		        's' => 'second',
+		    );
+		    foreach ($string as $k => &$v) {
+		        if ($diff->$k) {
+		            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+		        } else {
+		            unset($string[$k]);
+		        }
+		    }
+
+		    $string = array_slice($string, 0, $full);
+		    return $string ? implode(', ', $string) . ' ago' : 'just now';
+		}
+
+	    
 	}
 
 	/*
@@ -174,7 +248,6 @@ class Library{
 	   );
 	foreach($unicode as $nonUnicode=>$uni) $str = preg_replace("/($uni)/i",$nonUnicode,$str);
 	$str = str_replace( ' - ', ' ', $str );
-	$str = str_replace( ' ', '-', $str );
 	$str = str_replace( ';', '', $str );
 	$str = str_replace( ':', '', $str );
 	$str = str_replace( '(', '', $str );
@@ -184,7 +257,6 @@ class Library{
 	$str = str_replace( '_', '', $str );
 	return $str;
 	}
-
 	/*
 	** Chuyển số sang chữ
 	*/
@@ -305,9 +377,14 @@ class Library{
 			$string .= $decimal;
 			$words = array();
 			foreach (str_split((string) $fraction) as $number) {
-				$words[] = $dictionary[$number];
+				$words[] = mb_strtolower($dictionary[$number], 'UTF-8');
 			}
-			$string .= implode(' ', $words);
+			if ($words[0]=="không") {
+				$string .= implode(' ', $words);
+			}
+			else{
+				$string .= mb_strtolower($this->convert_number_to_words($fraction), 'UTF-8');
+			}
 		}
 		 
 		return $string;

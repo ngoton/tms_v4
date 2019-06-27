@@ -11,13 +11,13 @@ Class contactpersonModel Extends baseModel {
     public function createCustomer($data) 
     {    
         /*$data = array(
-        	'Customer_id' => $data['Customer_id'],
-        	'Customer_name' => $data['Customer_name'],
-        	'Customer_birth' => $data['Customer_birth'],
-        	'Customer_gender' => $data['Customer_gender'],
-            'Customer_address' => $data['Customer_address'],
-            'Customer_phone' => $data['Customer_phone'],
-            'Customer_email' => $data['Customer_email'],
+        	'staff_id' => $data['staff_id'],
+        	'staff_name' => $data['staff_name'],
+        	'staff_birth' => $data['staff_birth'],
+        	'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
             'cmnd' => $data['cmnd'],
             'bank' => $data['bank'],
             'account' => $data['account'],
@@ -29,13 +29,13 @@ Class contactpersonModel Extends baseModel {
     {    
         if ($this->getCustomerByWhere($where)) {
         	/*$data = array(
-            'Customer_id' => $data['Customer_id'],
-            'Customer_name' => $data['Customer_name'],
-            'Customer_birth' => $data['Customer_birth'],
-            'Customer_gender' => $data['Customer_gender'],
-            'Customer_address' => $data['Customer_address'],
-            'Customer_phone' => $data['Customer_phone'],
-            'Customer_email' => $data['Customer_email'],
+            'staff_id' => $data['staff_id'],
+            'staff_name' => $data['staff_name'],
+            'staff_birth' => $data['staff_birth'],
+            'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
             'cmnd' => $data['cmnd'],
             'bank' => $data['bank'],
             'account' => $data['account'],
@@ -58,11 +58,11 @@ Class contactpersonModel Extends baseModel {
     public function getAllCustomerByWhere($id){
         return $this->query('SELECT * FROM contact_person WHERE contact_person_id != '.$id);
     }
-    public function getLastCustomer(){
-        return $this->getLast($this->table);
-    }
     public function queryCustomer($sql){
         return $this->query($sql);
+    }
+    public function getLastCustomer(){
+        return $this->getLast($this->table);
     }
 }
 ?>

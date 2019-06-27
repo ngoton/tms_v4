@@ -245,7 +245,7 @@ $(document).ready(function(){
         <div class="col-md-4 col-xs-6">
           <label for="import_stock_date">Ngày</label>
           <div class="input-group">
-            <input class="input-mask-date" type="text" id="import_stock_date" name="import_stock_date" tabindex="1" required="required" value="<?php echo date('d/m/Y') ?>">
+            <input class="input-mask-date" type="text" id="import_stock_date" name="import_stock_date" tabindex="1" required="required">
           </div>
           <label for="import_stock_house">Kho nhập <a title="Thêm kho mới"><i class="ace-icon fa fa-chevron-right blue" onclick="add_click_other('<?php echo $this->url("house/add") ?>','Thêm kho mới','import_stock_house','<?php echo $this->url("house/gethouse") ?>','add_house')"></i></a></label>
           <div class="input-group">

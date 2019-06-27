@@ -3,56 +3,66 @@
 Class driverModel Extends baseModel {
 	protected $table = "driver";
 
-	public function getAllDriver($data = null,$join = null) 
+	public function getAllVehicle($data = null,$join = null) 
     {
         return $this->fetchAll($this->table,$data,$join);
     }
 
-    public function createDriver($data) 
+    public function createVehicle($data) 
     {    
         /*$data = array(
-        	'Drivername' => $data['Drivername'],
-        	'password' => $data['password'],
-        	'create_time' => $data['create_time'],
-        	'role' => $data['role'],
+        	'staff_id' => $data['staff_id'],
+        	'staff_name' => $data['staff_name'],
+        	'staff_birth' => $data['staff_birth'],
+        	'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
         	);*/
+
         return $this->insert($this->table,$data);
     }
-    public function updateDriver($data,$id) 
+    public function updateVehicle($data,$where) 
     {    
-        if ($this->getDriverByWhere($id)) {
+        if ($this->getVehicleByWhere($where)) {
         	/*$data = array(
-	        	'Drivername' => $data['Drivername'],
-	        	'password' => $data['password'],
-	        	'create_time' => $data['create_time'],
-	        	'role' => $data['role'],
-	        	);*/
-	        return $this->update($this->table,$data,$id);
+            'staff_id' => $data['staff_id'],
+            'staff_name' => $data['staff_name'],
+            'staff_birth' => $data['staff_birth'],
+            'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
+            );*/
+	        return $this->update($this->table,$data,$where);
         }
         
     }
-    public function deleteDriver($id){
-    	if ($this->getDriver($id)) {
+    public function deleteVehicle($id){
+    	if ($this->getVehicle($id)) {
     		return $this->delete($this->table,array('driver_id'=>$id));
     	}
     }
-    public function getDriver($id){
-    	return $this->getByID($this->table,$id);
+    public function getVehicle($id){
+        return $this->getByID($this->table,$id);
     }
-    public function getDriverByWhere($where){
-        return $this->getByWhere($this->table,$where);
+    public function getVehicleByWhere($where){
+    	return $this->getByWhere($this->table,$where);
     }
-    public function getAllDriverByWhere($id){
+    public function getAllVehicleByWhere($id){
         return $this->query('SELECT * FROM driver WHERE driver_id != '.$id);
     }
-    public function getLastDriver(){
-        return $this->getLast($this->table);
-    }
-    public function checkDriver($id,$driver,$vehicle){
-        return $this->query('SELECT * FROM driver WHERE driver_id != '.$id.' AND vehicle = '.$vehicle.' AND steersman = '.$driver);
-    }
-    public function queryDriver($sql){
+    public function queryVehicle($sql){
         return $this->query($sql);
+    }
+    public function getLastVehicle(){
+        return $this->getLast($this->table);
     }
 }
 ?>

@@ -5,9 +5,6 @@ Class infoController Extends baseController {
         if (!isset($_SESSION['userid_logined'])) {
             return $this->view->redirect('user/login');
         }
-        if (!isset(json_decode($_SESSION['user_permission_action'])->info) || json_decode($_SESSION['user_permission_action'])->info != "info") {
-            $this->view->data['disable_control'] = 1;
-        }
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Thông tin doanh nghiệp';
 
@@ -21,11 +18,21 @@ Class infoController Extends baseController {
         if (!isset($_SESSION['userid_logined'])) {
             return $this->view->redirect('user/login');
         }
-        if (!isset(json_decode($_SESSION['user_permission_action'])->info) || json_decode($_SESSION['user_permission_action'])->info != "info") {
-            return $this->view->redirect('user/login');
+        if (!isset(json_decode($_SESSION['user_permission_action'])->permission) && $_SESSION['user_permission_action'] != '["all"]') {
+
+            $mess = array(
+                'msg' => 'Bạn không có quyền thực hiện thao tác này',
+                'id' => $_POST['yes'],
+            );
+
+            echo json_encode($mess);
+            return false;
+
         }
+        
         if (isset($_POST['yes'])) {
             $info_model = $this->model->get('infoModel');
+            $user_log_model = $this->model->get('userlogModel');
             $data = array(
                         
                         'info_company' => trim($_POST['info_company']),
@@ -33,6 +40,9 @@ Class infoController Extends baseController {
                         'info_address' => trim($_POST['info_address']),
                         'info_phone' => trim($_POST['info_phone']),
                         'info_email' => trim($_POST['info_email']),
+                        'info_director' => trim($_POST['info_director']),
+                        'info_general_accountant' => trim($_POST['info_general_accountant']),
+                        'info_accountant' => trim($_POST['info_accountant']),
                         );
 
 
@@ -49,16 +59,19 @@ Class infoController Extends baseController {
 
                     echo json_encode($mess);
 
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
-                        $filename = "action_logs.txt";
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|info|".implode("-",$data)."\n"."\r\n";
-                        
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-                        fwrite($fh, $text) or die("Could not write file!");
-                        fclose($fh);
                     
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|info|".implode("-",$data)."\n"."\r\n";
+                        $this->lib->ghi_file("action_logs.txt",$text);
                 
-                
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'info',
+                    'user_log_table_name' => 'Công ty',
+                    'user_log_action' => 'Cập nhật thông tin',
+                    'user_log_data' => json_encode($data),
+                );
+                $user_log_model->createUser($data_log);
             }
             else{
 
@@ -74,13 +87,19 @@ Class infoController Extends baseController {
 
                     echo json_encode($mess);
 
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
-                        $filename = "action_logs.txt";
+                    
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$info_model->getLastInfo()->info_id."|place|".implode("-",$data)."\n"."\r\n";
-                        
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-                        fwrite($fh, $text) or die("Could not write file!");
-                        fclose($fh);
+                        $this->lib->ghi_file("action_logs.txt",$text);
+                
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'info',
+                    'user_log_table_name' => 'Công ty',
+                    'user_log_action' => 'Cập nhật thông tin',
+                    'user_log_data' => json_encode($data),
+                );
+                $user_log_model->createUser($data_log);
                     
                 
                 

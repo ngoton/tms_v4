@@ -11,9 +11,12 @@ Class vehicleController Extends baseController {
             return $this->view->redirect('user/login');
 
         }
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) || json_decode($_SESSION['user_permission_action'])->vehicle != "vehicle") {
-            $this->view->data['disable_control'] = 1;
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            return $this->view->redirect('admin');
+
         }
+
 
         $this->view->data['lib'] = $this->lib;
 
@@ -45,36 +48,10 @@ Class vehicleController Extends baseController {
 
             $keyword = "";
 
-            $limit = 50;
+            $limit = 100;
 
         }
 
-        $id = $this->registry->router->param_id;
-
-        $driver_model = $this->model->get('driverModel');
-
-        $d_data = array(
-
-            'where'=> 'end_work > '.strtotime(date('d-m-Y')),
-
-        );
-        $d_join = array('table'=>'steersman','where'=>'steersman = steersman_id');
-
-        $drivers = $driver_model->getAllDriver($d_data,$d_join);
-
-        $driver_data = array();
-
-        foreach ($drivers as $driver) {
-
-            $driver_data[$driver->vehicle]['driver_name'] = $driver->steersman_name;
-
-            $driver_data[$driver->vehicle]['driver_phone'] = $driver->steersman_phone;
-
-        }
-
-
-
-        $this->view->data['driver_data'] = $driver_data;
 
 
 
@@ -87,14 +64,31 @@ Class vehicleController Extends baseController {
         $pagination_stages = 2;
 
         $data = array(
-            'where' => '1=1',
+            'where'=>'1=1',
         );
 
-        if (isset($id) && $id > 0) {
-            $data['where'] .= ' AND vehicle_id = '.$id;
+        $join = array('table'=>'brand, country','where'=>'vehicle_brand=brand_id AND vehicle_country=country_id');
+
+        if (isset($_POST['filter'])) {
+            if (isset($_POST['vehicle_brand'])) {
+                $data['where'] .= ' AND vehicle_brand IN ('.implode(',',$_POST['vehicle_brand']).')';
+            }
+            if (isset($_POST['vehicle_country'])) {
+                $data['where'] .= ' AND vehicle_country IN ('.implode(',',$_POST['vehicle_country']).')';
+            }
+            if (isset($_POST['vehicle_owner'])) {
+                if ($_POST['vehicle_owner']==0) {
+                    $data['where'] .= ' AND (vehicle_owner IS NULL OR vehicle_owner=0)';
+                }
+                else{
+                    $data['where'] .= ' AND vehicle_owner IN ('.implode(',',$_POST['vehicle_owner']).')';
+                }
+                
+            }
+            $this->view->data['filter'] = 1;
         }
 
-        $tongsodong = count($vehicle_model->getAllVehicle($data));
+        $tongsodong = count($vehicle_model->getAllVehicle($data,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -121,6 +115,7 @@ Class vehicleController Extends baseController {
 
 
         $data = array(
+            'where'=>'1=1',
 
             'order_by'=>$order_by,
 
@@ -128,262 +123,373 @@ Class vehicleController Extends baseController {
 
             'limit'=>$x.','.$sonews,
 
-            'where'=>'1=1',
-
             );
 
-        if (isset($id) && $id > 0) {
-            $data['where'] .= ' AND vehicle_id = '.$id;
+        if (isset($_POST['filter'])) {
+            if (isset($_POST['vehicle_brand'])) {
+                $data['where'] .= ' AND vehicle_brand IN ('.implode(',',$_POST['vehicle_brand']).')';
+            }
+            if (isset($_POST['vehicle_country'])) {
+                $data['where'] .= ' AND vehicle_country IN ('.implode(',',$_POST['vehicle_country']).')';
+            }
+            if (isset($_POST['vehicle_owner'])) {
+                if ($_POST['vehicle_owner']==0) {
+                    $data['where'] .= ' AND (vehicle_owner IS NULL OR vehicle_owner=0)';
+                }
+                else{
+                    $data['where'] .= ' AND vehicle_owner IN ('.implode(',',$_POST['vehicle_owner']).')';
+                }
+                
+            }
         }
-        
 
         if ($keyword != '') {
 
-            $search = '( vehicle_number LIKE "%'.$keyword.'%" OR cont_number LIKE "%'.$keyword.'%")';
+            $search = '( vehicle_number LIKE "%'.$keyword.'%" OR vehicle_model  LIKE "%'.$keyword.'%" OR country_name LIKE "%'.$keyword.'%" OR brand_name LIKE "%'.$keyword.'%" OR vehicle_year LIKE "%'.$keyword.'%" )';
 
             $data['where'] = $search;
 
         }
 
-        
 
-        
 
-        
-
-        $this->view->data['vehicles'] = $vehicle_model->getAllVehicle($data);
+        $this->view->data['vehicles'] = $vehicle_model->getAllVehicle($data,$join);
 
 
 
-        $this->view->data['lastID'] = isset($vehicle_model->getLastVehicle()->vehicle_id)?$vehicle_model->getLastVehicle()->vehicle_id:0;
-
-        
-
-        $this->view->show('vehicle/index');
+        return $this->view->show('vehicle/index');
 
     }
 
 
+    public function addvehicle(){
+        $vehicle_model = $this->model->get('vehicleModel');
 
-    
+        if (isset($_POST['vehicle_number'])) {
+            if($vehicle_model->getVehicleByWhere(array('vehicle_number'=>trim($_POST['vehicle_number'])))){
+                echo 'Số xe đã tồn tại';
+                return false;
+            }
+
+            $data = array(
+                'vehicle_brand' => trim($_POST['vehicle_brand']),
+                'vehicle_model' => trim($_POST['vehicle_model']),
+                'vehicle_year' => trim($_POST['vehicle_year']),
+                'vehicle_country' => trim($_POST['vehicle_country']),
+                'vehicle_owner' => isset($_POST['vehicle_owner'])?$_POST['vehicle_owner']:null,
+                'vehicle_number' => trim($_POST['vehicle_number']),
+                'vehicle_oil' => str_replace(',', '', $_POST['vehicle_oil']),
+                'vehicle_volume' => str_replace(',', '', $_POST['vehicle_volume']),
+            );
+            $vehicle_model->createVehicle($data);
+
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicle_model->getLastVehicle()->vehicle_id."|vehicle|".implode("-",$data)."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
 
 
+            $user_log_model = $this->model->get('userlogModel');
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'vehicle',
+                'user_log_table_name' => 'Xe',
+                'user_log_action' => 'Thêm mới',
+                'user_log_data' => json_encode($data),
+            );
+            $user_log_model->createUser($data_log);
+
+
+            echo "Thêm thành công";
+        }
+
+    }
 
     public function add(){
 
-        $this->view->setLayout('admin');
+        $this->view->disableLayout();
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) || json_decode($_SESSION['user_permission_action'])->vehicle != "vehicle") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) && $_SESSION['user_permission_action'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (isset($_POST['yes'])) {
+        $this->view->data['title'] = 'Thêm mới xe';
 
-            $vehicle = $this->model->get('vehicleModel');
-            $vehicle_temp = $this->model->get('vehicletempModel');
+        $brand = $this->model->get('brandModel');
+
+        $this->view->data['brands'] = $brand->getAllBrand();
+
+        $country = $this->model->get('countryModel');
+
+        $this->view->data['countrys'] = $country->getAllCountry();
+
+        return $this->view->show('vehicle/add');
+    }
+
+    public function editvehicle(){
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        if (isset($_POST['vehicle_id'])) {
+            $id = $_POST['vehicle_id'];
+            if($vehicle_model->getAllVehicleByWhere($id.' AND vehicle_number = "'.trim($_POST['vehicle_number']))){
+                echo 'Số xe đã tồn tại';
+                return false;
+            }
 
             $data = array(
+                'vehicle_brand' => trim($_POST['vehicle_brand']),
+                'vehicle_model' => trim($_POST['vehicle_model']),
+                'vehicle_year' => trim($_POST['vehicle_year']),
+                'vehicle_country' => trim($_POST['vehicle_country']),
+                'vehicle_owner' => isset($_POST['vehicle_owner'])?$_POST['vehicle_owner']:null,
+                'vehicle_number' => trim($_POST['vehicle_number']),
+                'vehicle_oil' => str_replace(',', '', $_POST['vehicle_oil']),
+                'vehicle_volume' => str_replace(',', '', $_POST['vehicle_volume']),
+            );
+            $vehicle_model->updateVehicle($data,array('vehicle_id'=>$id));
 
-                        'vehicle_number' => trim($_POST['vehicle_number']),
-
-                        'cont_number' => trim($_POST['cont_number']),
-
-                        'vehicle_type' => trim($_POST['vehicle_type']),
-
-                        );
-
-            if ($_POST['yes'] != "") {
-
-                //$data['vehicle_update_user'] = $_SESSION['userid_logined'];
-
-                //$data['vehicle_update_time'] = time();
-
-                //var_dump($data);
-
-                if ($vehicle->checkVehicle($_POST['yes'],trim($_POST['vehicle_number']))) {
-
-                    echo "Thông tin này đã tồn tại";
-
-                    return false;
-
-                }
-
-                else{
-
-                    $vehicle->updateVehicle($data,array('vehicle_id' => $_POST['yes']));
-
-                    echo "Cập nhật thành công";
-
-                    $data2 = array('vehicle_id'=>$_POST['yes'],'vehicle_temp_date'=>strtotime(date('d-m-Y')),'vehicle_temp_action'=>2,'vehicle_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS xe');
-                    $data_temp = array_merge($data, $data2);
-                    $vehicle_temp->createVehicle($data_temp);
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|vehicle|".implode("-",$data)."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
 
 
+            $user_log_model = $this->model->get('userlogModel');
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'vehicle',
+                'user_log_table_name' => 'Xe',
+                'user_log_action' => 'Cập nhật',
+                'user_log_data' => json_encode($data),
+            );
+            $user_log_model->createUser($data_log);
 
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
 
-                        $filename = "action_logs.txt";
+            echo "Cập nhật thành công";
+        }
+    }
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|vehicle|".implode("-",$data)."\n"."\r\n";
+    public function edit($id){
 
-                        
+        $this->view->disableLayout();
 
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
+        if (!isset($_SESSION['userid_logined'])) {
 
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
-
-                    }
-
-            }
-
-            else{
-
-                //$data['vehicle_create_user'] = $_SESSION['userid_logined'];
-
-                //$data['staff'] = $_POST['staff'];
-
-                //var_dump($data);
-
-                if ($vehicle->getVehicleByWhere(array('vehicle_number'=>trim($_POST['vehicle_number'])))) {
-
-                    echo "Thông tin này đã tồn tại";
-
-                    return false;
-
-                }
-
-                else{
-
-                    $vehicle->createVehicle($data);
-
-                    echo "Thêm thành công";
-
-                    $data2 = array('vehicle_id'=>$vehicle->getLastVehicle()->vehicle_id,'vehicle_temp_date'=>strtotime(date('d-m-Y')),'vehicle_temp_action'=>1,'vehicle_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS xe');
-                    $data_temp = array_merge($data, $data2);
-                    $vehicle_temp->createVehicle($data_temp);
-
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
-
-                        $filename = "action_logs.txt";
-
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicle->getLastVehicle()->vehicle_id."|vehicle|".implode("-",$data)."\n"."\r\n";
-
-                        
-
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
-
-                }
-
-                
-
-            }
-
-                    
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) && $_SESSION['user_permission_action'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('vehicle');
+
+        }
+
+        $this->view->data['title'] = 'Cập nhật xe';
+        $this->view->data['lib'] = $this->lib;
+
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicle_data = $vehicle_model->getVehicle($id);
+
+        $this->view->data['vehicle_data'] = $vehicle_data;
+
+        if (!$vehicle_data) {
+
+            $this->view->redirect('vehicle');
+
+        }
+
+        $brand = $this->model->get('brandModel');
+
+        $this->view->data['brands'] = $brand->getAllbrand();
+
+        $country = $this->model->get('countryModel');
+
+        $this->view->data['countrys'] = $country->getAllCountry();
+
+        return $this->view->show('vehicle/edit');
 
     }
 
+    public function view($id){
 
-
-    
-
-    
-
-
-
-    public function delete(){
-
-        $this->view->setLayout('admin');
+        $this->view->disableLayout();
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) || json_decode($_SESSION['user_permission_action'])->vehicle != "vehicle") {
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('vehicle');
+
+        }
+
+        $this->view->data['title'] = 'Cập nhật xe';
+        $this->view->data['lib'] = $this->lib;
+
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicle_data = $vehicle_model->getVehicle($id);
+
+        $this->view->data['vehicle_data'] = $vehicle_data;
+
+        if (!$vehicle_data) {
+
+            $this->view->redirect('vehicle');
+
+        }
+
+        $brand = $this->model->get('brandModel');
+
+        $this->view->data['brands'] = $brand->getAllbrand();
+
+        $country = $this->model->get('countryModel');
+
+        $this->view->data['countrys'] = $country->getAllCountry();
+
+        return $this->view->show('vehicle/view');
+
+    }
+
+    public function filter(){
+        $this->view->disableLayout();
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Lọc dữ liệu';
+
+        $brand_model = $this->model->get('brandModel');
+        $country_model = $this->model->get('countryModel');
+
+        $brands = $brand_model->getAllBrand();
+        $countrys = $country_model->getAllCountry();
+
+        $this->view->data['brands'] = $brands;
+        $this->view->data['countrys'] = $countrys;
+
+        $this->view->data['page'] = $_GET['page'];
+        $this->view->data['order_by'] = $_GET['order_by'];
+        $this->view->data['order'] = $_GET['order'];
+        $this->view->data['limit'] = $_GET['limit'];
+        $this->view->data['keyword'] = $_GET['keyword'];
+
+        return $this->view->show('vehicle/filter');
+    }
+
+    public function getvehicle(){
+        $vehicle_model = $this->model->get('vehicleModel');
+
+        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+        $result = array();
+        $i = 0;
+        foreach ($vehicles as $vehicle) {
+            $result[$i]['id'] = $vehicle->vehicle_id;
+            $result[$i]['text'] = $vehicle->vehicle_number;
+            $i++;
+        }
+        echo json_encode($result);
+    }
+
+    public function delete(){
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->vehicle) || json_decode($_SESSION['user_permission_action'])->vehicle != "vehicle") && $_SESSION['user_permission_action'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $vehicle = $this->model->get('vehicleModel');
-            $vehicle_temp = $this->model->get('vehicletempModel');
+            $vehicle_model = $this->model->get('vehicleModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
 
-                $data = explode(',', $_POST['xoa']);
+                $datas = explode(',', $_POST['xoa']);
 
-                foreach ($data as $data) {
+                foreach ($datas as $data) {
 
-                    $vehicle_data = (array)$vehicle->getVehicle($data);
-                    $vehicle->deleteVehicle($data);
+                    $vehicle_model->deleteVehicle($data);
 
-                    $data2 = array('vehicle_id'=>$data,'vehicle_temp_date'=>strtotime(date('d-m-Y')),'vehicle_temp_action'=>3,'vehicle_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS xe');
-                    $data_temp = array_merge($vehicle_data, $data2);
-                    $vehicle_temp->createVehicle($data_temp);
-
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
-
-                        $filename = "action_logs.txt";
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|vehicle|"."\n"."\r\n";
 
-                        
+                        $this->lib->ghi_file("action_logs.txt",$text);
 
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
 
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
 
                 }
 
+
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'vehicle',
+                    'user_log_table_name' => 'Xe',
+                    'user_log_action' => 'Xóa',
+                    'user_log_data' => json_encode($datas),
+                );
+                $user_log_model->createUser($data_log);
+
+
+                echo "Xóa thành công";
                 return true;
 
             }
 
             else{
 
-                $vehicle_data = (array)$vehicle->getVehicle($_POST['data']);
-                $data2 = array('vehicle_id'=>$_POST['data'],'vehicle_temp_date'=>strtotime(date('d-m-Y')),'vehicle_temp_action'=>3,'vehicle_temp_user'=>$_SESSION['userid_logined'],'name'=>'DS xe');
-                    $data_temp = array_merge($vehicle_data, $data2);
-                    $vehicle_temp->createVehicle($data_temp);
+                $vehicle_model->deleteVehicle($_POST['data']);
 
-                date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|vehicle|"."\n"."\r\n";
 
-                        $filename = "action_logs.txt";
+                $this->lib->ghi_file("action_logs.txt",$text);
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|vehicle|"."\n"."\r\n";
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'vehicle',
+                    'user_log_table_name' => 'Xe',
+                    'user_log_action' => 'Xóa',
+                    'user_log_data' => json_encode($_POST['data']),
+                );
+                $user_log_model->createUser($data_log);
 
-                        
-
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
-
-
-
-                return $vehicle->deleteVehicle($_POST['data']);
+                echo "Xóa thành công";
+                return true;
 
             }
 
@@ -393,438 +499,39 @@ Class vehicleController Extends baseController {
 
     }
 
-
-
-    function export(){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            return $this->view->redirect('user/login');
-
+    public function importvehicle(){
+        if (isset($_FILES['import']['name'])) {
+            $total = count($_FILES['import']['name']);
+            for( $i=0 ; $i < $total ; $i++ ) {
+              $tmpFilePath = $_FILES['import']['name'][$i];
+              echo $tmpFilePath;
+            }
         }
-
-
-
-        $driver_model = $this->model->get('driverModel');
-
-        $d_data = array(
-
-            'where'=> 'end_work > '.strtotime(date('d-m-Y')),
-
-        );
-
-        $drivers = $driver_model->getAllDriver($d_data);
-
-        $driver_data = array();
-
-        foreach ($drivers as $driver) {
-
-            $driver_data[$driver->vehicle]['driver_name'] = $driver->driver_name;
-
-            $driver_data[$driver->vehicle]['driver_phone'] = $driver->driver_phone;
-
-        }
-
-
-
-        $vehicle_model = $this->model->get('vehicleModel');
-
-
-
-        $vehicles = $vehicle_model->getAllVehicle();
-
-
-
-            require("lib/Classes/PHPExcel/IOFactory.php");
-
-            require("lib/Classes/PHPExcel.php");
-
-
-
-            $objPHPExcel = new PHPExcel();
-
-
-
-            
-
-
-
-            $index_worksheet = 0; //(worksheet mặc định là 0, nếu tạo nhiều worksheet $index_worksheet += 1)
-
-            $objPHPExcel->setActiveSheetIndex($index_worksheet)
-
-                ->setCellValue('A1', 'DANH SÁCH XE')
-
-                ->setCellValue('A3', 'STT')
-
-               ->setCellValue('B3', 'Số xe')
-
-               ->setCellValue('C3', 'Tài xế')
-
-               ->setCellValue('D3', 'SĐT tài xế')
-
-               ->setCellValue('E3', 'Số cont');
-
-               
-
-
-
-            if ($vehicles) {
-
-
-
-                $hang = 4;
-
-                $i=1;
-
-
-
-                foreach ($vehicles as $row) {
-
-                    
-
-                    //$objPHPExcel->setActiveSheetIndex(0)->getStyle('B'.$hang)->getNumberFormat()->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-
-                     $objPHPExcel->setActiveSheetIndex(0)
-
-                        ->setCellValue('A' . $hang, $i++)
-
-                        ->setCellValue('B' . $hang, $row->vehicle_number)
-
-                        ->setCellValue('C' . $hang, isset($driver_data[$row->vehicle_id]['driver_name'])?$driver_data[$row->vehicle_id]['driver_name']:null)
-
-                        ->setCellValue('D' . $hang, isset($driver_data[$row->vehicle_id]['driver_phone'])?$driver_data[$row->vehicle_id]['driver_phone']:null)
-
-                        ->setCellValue('E' . $hang, $row->cont_number);
-
-                     $hang++;
-
-
-
-
-
-                  }
-
-
-
-          }
-
-
-
-            $highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
-
-
-
-            $highestRow ++;
-
-
-
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle("A1")->getFont()->setSize(18);
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray(
-
-                array(
-
-                    
-
-                    'font' => array(
-
-                        'bold'  => true,
-
-                        'color' => array('rgb' => 'FF0000')
-
-                    )
-
-                )
-
-            );
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle('H4:E'.$highestRow)->getNumberFormat()->setFormatCode("#,##0_);[Black](#,##0)");
-
-            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->getFont()->setBold(true);
-
-            $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(26);
-
-            $objPHPExcel->getActiveSheet()->getDefaultColumnDimension()->setWidth(28);
-
-
-
-            // Set properties
-
-            $objPHPExcel->getProperties()->setCreator("TCMT")
-
-                            ->setLastModifiedBy($_SESSION['user_logined'])
-
-                            ->setTitle("Vehicle Report")
-
-                            ->setSubject("Vehicle Report")
-
-                            ->setDescription("Vehicle Report.")
-
-                            ->setKeywords("Vehicle Report")
-
-                            ->setCategory("Vehicle Report");
-
-            $objPHPExcel->getActiveSheet()->setTitle("Danh sach xe");
-
-
-
-            $objPHPExcel->getActiveSheet()->freezePane('A4');
-
-            $objPHPExcel->setActiveSheetIndex(0);
-
-
-
-
-
-
-
-            
-
-
-
-            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-
-
-
-            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
-            header("Content-Disposition: attachment; filename= DANH SACH XE.xlsx");
-
-            header("Cache-Control: max-age=0");
-
-            ob_clean();
-
-            $objWriter->save("php://output");
-
-        
-
     }
-
-
-
-    
-
     public function import(){
 
         $this->view->disableLayout();
 
-        header('Content-Type: text/html; charset=utf-8');
-
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) || json_decode($_SESSION['user_permission_action'])->vehicle != "vehicle") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicle) && $_SESSION['user_permission_action'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_FILES['import']['name'] != null) {
+        $this->view->data['title'] = 'Nhập dữ liệu';
 
-
-
-            require("lib/Classes/PHPExcel/IOFactory.php");
-
-            require("lib/Classes/PHPExcel.php");
-
-
-
-            $vehicle = $this->model->get('vehicleModel');
-
-
-
-            $objPHPExcel = new PHPExcel();
-
-            // Set properties
-
-            if (pathinfo($_FILES['import']['name'], PATHINFO_EXTENSION) == "xls") {
-
-                $objReader = PHPExcel_IOFactory::createReader('Excel5');
-
-            }
-
-            else if (pathinfo($_FILES['import']['name'], PATHINFO_EXTENSION) == "xlsx") {
-
-                $objReader = PHPExcel_IOFactory::createReader('Excel2007');
-
-            }
-
-            
-
-            $objReader->setReadDataOnly(false);
-
-
-
-            $objPHPExcel = $objReader->load($_FILES['import']['tmp_name']);
-
-            $objWorksheet = $objPHPExcel->getActiveSheet();
-
-
-
-            
-
-
-
-            $highestRow = $objWorksheet->getHighestRow(); // e.g. 10
-
-            $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
-
-
-
-            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
-
-
-
-            //var_dump($objWorksheet->getMergeCells());die();
-
-            
-
-             
-
-
-
-                for ($row = 2; $row <= $highestRow; ++ $row) {
-
-                    $val = array();
-
-                    for ($col = 0; $col < $highestColumnIndex; ++ $col) {
-
-                        $cell = $objWorksheet->getCellByColumnAndRow($col, $row);
-
-                        // Check if cell is merged
-
-                        foreach ($objWorksheet->getMergeCells() as $cells) {
-
-                            if ($cell->isInRange($cells)) {
-
-                                $currMergedCellsArray = PHPExcel_Cell::splitRange($cells);
-
-                                $cell = $objWorksheet->getCell($currMergedCellsArray[0][0]);
-
-                                break;
-
-                                
-
-                            }
-
-                        }
-
-                        //$val[] = $cell->getValue();
-
-                        $val[] = is_numeric($cell->getCalculatedValue()) ? round($cell->getCalculatedValue()) : $cell->getCalculatedValue();
-
-                        //here's my prob..
-
-                        //echo $val;
-
-                    }
-
-                    if ($val[1] != null && $val[2] != null) {
-
-
-
-                            if(!$vehicle->getVehicleByWhere(array('vehicle_number'=>trim($val[1])))) {
-
-                                $vehicle_data = array(
-
-                                'vehicle_number' => trim($val[1]),
-
-                                'driver_name' => trim($val[2]),
-
-                                'driver_phone' => trim($val[3]),
-
-                                );
-
-                                $vehicle->createVehicle($vehicle_data);
-
-                            }
-
-                            else if($vehicle->getVehicleByWhere(array('vehicle_number'=>trim($val[1])))){
-
-                                $id_vehicle = $vehicle->getVehicleByWhere(array('vehicle_number'=>trim($val[1])))->vehicle_id;
-
-                                $vehicle_data = array(
-
-                                'driver_name' => trim($val[2]),
-
-                                'driver_phone' => trim($val[3]),
-
-                                );
-
-                                $vehicle->updateVehicle($vehicle_data,array('vehicle_id' => $id_vehicle));
-
-                            }
-
-
-
-
-
-                        
-
-                    }
-
-                    
-
-                    //var_dump($this->getNameDistrict($this->lib->stripUnicode($val[1])));
-
-                    // insert
-
-
-
-
-
-                }
-
-                //return $this->view->redirect('transport');
-
-            
-
-            return $this->view->redirect('vehicle');
-
-        }
-
-        $this->view->show('vehicle/import');
-
-
+       
+        return $this->view->show('vehicle/import');
 
     }
-
-    
-
-
-
-    public function view() {
-
-        
-
-        $this->view->show('handling/view');
-
-    }
-
 
 
 }

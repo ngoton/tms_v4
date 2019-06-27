@@ -2,7 +2,7 @@
 
 Class vehicleromoocController Extends baseController {
 
-    public function vehicle() {
+    public function index() {
 
         $this->view->setLayout('admin');
 
@@ -11,14 +11,16 @@ Class vehicleromoocController Extends baseController {
             return $this->view->redirect('user/login');
 
         }
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") {
-            $this->view->data['disable_control'] = 1;
+            return $this->view->redirect('admin');
+
         }
+
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý bảng thay đổi mooc';
+        $this->view->data['title'] = 'Quản lý thay lắp mooc';
 
 
 
@@ -38,31 +40,22 @@ Class vehicleromoocController Extends baseController {
 
         else{
 
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'vehicle_number ASC, start_time';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'vehicle_number,start_time';
 
-            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
+            $order = $this->registry->router->order ? $this->registry->router->order : 'DESC';
 
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
 
             $keyword = "";
 
-            $limit = 50;
+            $limit = 100;
 
         }
 
 
-        $vehicle_model = $this->model->get('vehicleModel');
-        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-        $this->view->data['vehicles'] = $vehicles;
-
-        $romooc_model = $this->model->get('romoocModel');
-        $romoocs = $romooc_model->getAllVehicle(array('order_by'=>'romooc_number','order'=>'ASC'));
-        $this->view->data['romoocs'] = $romoocs;
-        
-        $join = array('table'=>'vehicle,romooc','where'=>'vehicle=vehicle_id AND romooc=romooc_id');
 
 
-        $vehicleromooc_model = $this->model->get('vehicleromoocModel');
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
 
         $sonews = $limit;
 
@@ -70,9 +63,23 @@ Class vehicleromoocController Extends baseController {
 
         $pagination_stages = 2;
 
-        
+        $data = array(
+            'where'=>'1=1',
+        );
 
-        $tongsodong = count($vehicleromooc_model->getAllVehicle(null,$join));
+        $join = array('table'=>'vehicle,romooc', 'where'=>'vehicle=vehicle_id AND romooc=romooc_id');
+
+        if (isset($_POST['filter'])) {
+            if (isset($_POST['vehicle'])) {
+                $data['where'] .= ' AND vehicle IN ('.implode(',',$_POST['vehicle']).')';
+            }
+            if (isset($_POST['romooc'])) {
+                $data['where'] .= ' AND romooc IN ('.implode(',',$_POST['romooc']).')';
+            }
+            $this->view->data['filter'] = 1;
+        }
+
+        $tongsodong = count($vehicle_romooc_model->getAllVehicle($data,$join));
 
         $tongsotrang = ceil($tongsodong / $sonews);
 
@@ -99,6 +106,7 @@ Class vehicleromoocController Extends baseController {
 
 
         $data = array(
+            'where'=>'1=1',
 
             'order_by'=>$order_by,
 
@@ -108,7 +116,15 @@ Class vehicleromoocController Extends baseController {
 
             );
 
-        
+        if (isset($_POST['filter'])) {
+            if (isset($_POST['vehicle'])) {
+                $data['where'] .= ' AND vehicle IN ('.implode(',',$_POST['vehicle']).')';
+            }
+            if (isset($_POST['romooc'])) {
+                $data['where'] .= ' AND romooc IN ('.implode(',',$_POST['romooc']).')';
+            }
+            $this->view->data['filter'] = 1;
+        }
 
         if ($keyword != '') {
 
@@ -118,359 +134,463 @@ Class vehicleromoocController Extends baseController {
 
         }
 
-        
 
-        
 
-        
-
-        $this->view->data['vehicle_romoocs'] = $vehicleromooc_model->getAllVehicle($data,$join);
+        $this->view->data['vehicles'] = $vehicle_romooc_model->getAllVehicle($data,$join);
 
 
 
-        $this->view->data['lastID'] = isset($vehicleromooc_model->getLastVehicle()->vehicle_romooc_id)?$vehicleromooc_model->getLastVehicle()->vehicle_romooc_id:0;
-
-        
-
-        $this->view->show('vehicleromooc/vehicle');
-
-    }
-
-    public function index() {
-
-        $this->view->setLayout('admin');
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            return $this->view->redirect('user/login');
-
-        }
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") {
-            $this->view->data['disable_control'] = 1;
-        }
-
-        $this->view->data['lib'] = $this->lib;
-
-        $this->view->data['title'] = 'Quản lý xe';
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $vehicle = isset($_POST['vehicle']) ? $_POST['vehicle'] : null;
-
-            $romooc = isset($_POST['romooc']) ? $_POST['romooc'] : null;
-
-        }
-
-        else{
-
-            $vehicle = 0;
-
-            $romooc = 0;
-
-        }
-
-        $this->view->data['xe'] = $vehicle;
-        $this->view->data['mooc'] = $romooc;
-
-
-        $vehicle_model = $this->model->get('vehicleModel');
-        $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
-        $this->view->data['vehicle_lists'] = $vehicles;
-
-        $data = array('order_by'=>'vehicle_number','order'=>'ASC');
-        if ($vehicle > 0) {
-            $data = array('where'=>'vehicle_id = '.$vehicle);
-        }
-        $vehicles = $vehicle_model->getAllVehicle($data);
-        $this->view->data['vehicles'] = $vehicles;
-
-        $romooc_model = $this->model->get('romoocModel');
-        $romoocs = $romooc_model->getAllVehicle(array('order_by'=>'romooc_number','order'=>'ASC'));
-        $this->view->data['romooc_lists'] = $romoocs;
-
-        $data = array('order_by'=>'romooc_number','order'=>'ASC');
-        if ($romooc > 0) {
-            $data = array('where'=>'romooc_id = '.$romooc);
-        }
-        $romoocs = $romooc_model->getAllVehicle($data);
-        $this->view->data['romoocs'] = $romoocs;
-
-        
-
-        $vehicleromooc_model = $this->model->get('vehicleromoocModel');
-        $join = array('table'=>'vehicle, romooc','where'=>'vehicle = vehicle_id AND romooc = romooc_id');
-        $data = array(
-            'where' => '((end_time IS NULL OR end_time = 0) OR end_time >= '.strtotime(date('d-m-Y')).')',
-        );
-        $vehicle_romoocs = $vehicleromooc_model->getAllVehicle($data,$join);
-        $this->view->data['vehicle_romoocs'] = $vehicle_romoocs;
-
-        $this->view->show('vehicleromooc/index');
+        return $this->view->show('vehicleromooc/index');
 
     }
 
 
+    public function addvehicleromooc(){
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
 
-    public function exchange(){
-        $this->view->setLayout('admin');
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            return $this->view->redirect('user/login');
-
-        }
-
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") {
-
-            return $this->view->redirect('user/login');
-
-        }
-        if (isset($_POST['yes'])) {
-
-            $vehicleromooc = $this->model->get('vehicleromoocModel');
+        if (isset($_POST['start_time'])) {
+            if($vehicle_romooc_model->getVehicleByWhere(array('vehicle'=>$_POST['vehicle'],'start_time'=>strtotime(str_replace('/', '-', $_POST['start_time']))))){
+                echo 'Thông tin đã tồn tại';
+                return false;
+            }
 
             $data = array(
-
+                'start_time' => strtotime(str_replace('/', '-', $_POST['start_time'])),
+                'end_time' => $_POST['end_time']!=""?strtotime(str_replace('/', '-', $_POST['end_time'])):null,
                 'vehicle' => trim($_POST['vehicle']),
                 'romooc' => trim($_POST['romooc']),
-                'start_time' => strtotime($_POST['start_time']),
-
             );
 
-            $dm1 = $vehicleromooc->queryVehicle('SELECT * FROM vehicle_romooc WHERE romooc='.$data['romooc'].' AND start_time <= '.$data['start_time'].' AND (end_time IS NULL OR end_time > '.$data['start_time'].') ORDER BY start_time DESC LIMIT 1');
-            $dm2 = $vehicleromooc->queryVehicle('SELECT * FROM vehicle_romooc WHERE romooc='.$data['romooc'].' AND start_time > '.$data['start_time'].' AND (end_time IS NULL OR end_time > '.$data['start_time'].') ORDER BY start_time ASC LIMIT 1');
-            $dm3 = $vehicleromooc->queryVehicle('SELECT * FROM vehicle_romooc WHERE vehicle='.$data['vehicle'].' AND start_time <= '.$data['start_time'].' AND (end_time IS NULL OR end_time > '.$data['start_time'].') ORDER BY start_time DESC LIMIT 1');
-            $dm4 = $vehicleromooc->queryVehicle('SELECT * FROM vehicle_romooc WHERE vehicle='.$data['vehicle'].' AND start_time > '.$data['start_time'].' AND (end_time IS NULL OR end_time > '.$data['start_time'].') ORDER BY start_time ASC LIMIT 1');
+            $ngaytruoc = strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['start_time']).' -1 day')));
 
-            if ($dm1 || $dm2 || $dm3 || $dm4) {
-                if($dm1){
-                    foreach ($dm1 as $row) {
-                        $d = array(
-                            'end_time' => strtotime(date('d-m-Y',strtotime($_POST['start_time'].' -1 day'))),
-                            );
-                        $vehicleromooc->updateVehicle($d,array('vehicle_romooc_id'=>$row->vehicle_romooc_id));
-                    }
-                }
-                else if ($dm2) {
-                    foreach ($dm2 as $row) {
-                        $data['end_time'] = strtotime(date('d-m-Y',strtotime(date('d-m-Y',$row->start_time).' -1 day')));
-                    }
-                }
+            if ($data['end_time'] == null) {
+                $vehicle_romooc_model->queryVehicle('UPDATE vehicleromooc SET end_time = '.$ngaytruoc.' WHERE vehicle='.$data['vehicle'].' AND (end_time IS NULL OR end_time = 0)');
+                $vehicle_romooc_model->createVehicle($data);
+            }
+            else{
+                $dm1 = $vehicle_romooc_model->queryVehicle('SELECT * FROM vehicleromooc WHERE vehicle='.$data['vehicle'].' AND start_time <= '.$data['start_time'].' AND end_time <= '.$data['end_time'].' AND end_time >= '.$data['start_time'].' ORDER BY end_time ASC LIMIT 1');
+                $dm2 = $vehicle_romooc_model->queryVehicle('SELECT * FROM vehicleromooc WHERE vehicle='.$data['vehicle'].' AND end_time >= '.$data['end_time'].' AND start_time >= '.$data['start_time'].' AND start_time <= '.$data['end_time'].' ORDER BY end_time ASC LIMIT 1');
+                $dm3 = $vehicle_romooc_model->queryVehicle('SELECT * FROM vehicleromooc WHERE vehicle='.$data['vehicle'].' AND start_time <= '.$data['start_time'].' AND end_time >= '.$data['end_time'].' ORDER BY end_time ASC LIMIT 1');
 
-                
-                if($dm3){
+                if ($dm3) {
                     foreach ($dm3 as $row) {
                         $d = array(
-                            'end_time' => strtotime(date('d-m-Y',strtotime($_POST['start_time'].' -1 day'))),
+                            'end_time' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['start_time']).' -1 day'))),
                             );
-                        $vehicleromooc->updateVehicle($d,array('vehicle_romooc_id'=>$row->vehicle_romooc_id));
-                    }
-                }
-                else if ($dm4) {
-                    foreach ($dm4 as $row) {
-                        $data['end_time'] = strtotime(date('d-m-Y',strtotime(date('d-m-Y',$row->start_time).' -1 day')));
-                    }
-                }
+                        $vehicle_romooc_model->updateVehicle($d,array('vehicle_romooc_id'=>$row->vehicle_romooc_id));
 
+                        $c = array(
+                            'vehicle' => $row->vehicle,
+                            'romooc' => $row->romooc,
+                            'start_time' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['end_time']).' +1 day'))),
+                            'end_time' => $row->end_time,
+                            );
+                        $vehicle_romooc_model->createVehicle($c);
+
+                    }
+                    $vehicle_romooc_model->createVehicle($data);
+
+                }
+                else if ($dm1 || $dm2) {
+                    if($dm1){
+                        foreach ($dm1 as $row) {
+                            $d = array(
+                                'end_time' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['start_time']).' -1 day'))),
+                                );
+                            $vehicle_romooc_model->updateVehicle($d,array('vehicle_romooc_id'=>$row->vehicle_romooc_id));
+                        }
+                    }
+                    if($dm2){
+                        foreach ($dm2 as $row) {
+                            $d = array(
+                                'start_time' => strtotime(date('d-m-Y',strtotime(str_replace('/', '-', $_POST['end_time']).' +1 day'))),
+                                );
+                            $vehicle_romooc_model->updateVehicle($d,array('vehicle_romooc_id'=>$row->vehicle_romooc_id));
+                        }
+                    }
+                    $vehicle_romooc_model->createVehicle($data);
+                }
+                else{
+                    $vehicle_romooc_model->createVehicle($data);
+                }
             }
             
-            $vehicleromooc->createVehicle($data);
-            
-            
 
-            echo "Thay thế thành công";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicle_romooc_model->getLastVehicle()->vehicle_romooc_id."|vehicle_romooc|".implode("-",$data)."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
 
-            date_default_timezone_set("Asia/Ho_Chi_Minh"); 
 
-                        $filename = "action_logs.txt";
+            $user_log_model = $this->model->get('userlogModel');
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'vehicle_romooc',
+                'user_log_table_name' => 'Thay lắp mooc',
+                'user_log_action' => 'Thêm mới',
+                'user_log_data' => json_encode($data),
+            );
+            $user_log_model->createUser($data_log);
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicleromooc->getLastVehicle()->vehicle_romooc_id."|vehicleromooc|".implode("-",$data)."\n"."\r\n";
 
-                        
-
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
-
+            echo "Thêm thành công";
         }
+
     }
-
-
 
     public function add(){
 
-        $this->view->setLayout('admin');
+        $this->view->disableLayout();
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) && $_SESSION['user_permission_action'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (isset($_POST['yes'])) {
+        $this->view->data['title'] = 'Thêm mới thay lắp mooc';
 
-            $vehicleromooc = $this->model->get('vehicleromoocModel');
+        $vehicle = $this->model->get('vehicleModel');
 
-            $shipment = $this->model->get('shipmentModel');
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
 
+        $romooc = $this->model->get('romoocModel');
+
+        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+
+        return $this->view->show('vehicleromooc/add');
+    }
+
+    public function editvehicleromooc(){
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        if (isset($_POST['vehicle_romooc_id'])) {
+            $id = $_POST['vehicle_romooc_id'];
+            
             $data = array(
-
+                'start_time' => strtotime(str_replace('/', '-', $_POST['start_time'])),
+                'end_time' => $_POST['end_time']!=""?strtotime(str_replace('/', '-', $_POST['end_time'])):null,
                 'vehicle' => trim($_POST['vehicle']),
                 'romooc' => trim($_POST['romooc']),
-                'start_time' => strtotime($_POST['start_time']),
-                'end_time' => strtotime($_POST['end_time']),
-
             );
 
-            if ($_POST['yes'] != "") {
+            $vehicle_romooc_model->updateVehicle($data,array('vehicle_romooc_id'=>$id));
+            
 
-                $vehicleromooc->updateVehicle($data,array('vehicle_romooc_id' => trim($_POST['yes'])));
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$id."|vehicle_romooc|".implode("-",$data)."\n"."\r\n";
+            $this->lib->ghi_file("action_logs.txt",$text);
 
-                echo "Cập nhật thành công";
 
-                date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+            $user_log_model = $this->model->get('userlogModel');
+            $data_log = array(
+                'user_log' => $_SESSION['userid_logined'],
+                'user_log_date' => time(),
+                'user_log_table' => 'vehicle_romooc',
+                'user_log_table_name' => 'Thay lắp mooc',
+                'user_log_action' => 'Cập nhật',
+                'user_log_data' => json_encode($data),
+            );
+            $user_log_model->createUser($data_log);
 
-                        $filename = "action_logs.txt";
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|vehicleromooc|".implode("-",$data)."\n"."\r\n";
+            echo "Cập nhật thành công";
+        }
+    }
 
-                        
+    public function edit($id){
 
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
+        $this->view->disableLayout();
 
-                        fwrite($fh, $text) or die("Could not write file!");
+        if (!isset($_SESSION['userid_logined'])) {
 
-                        fclose($fh);
-            }
-            else{
-                
-                $vehicleromooc->createVehicle($data);
-
-                
-
-                echo "Thêm thành công";
-
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
-
-                        $filename = "action_logs.txt";
-
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$vehicleromooc->getLastVehicle()->vehicle_romooc_id."|vehicleromooc|".implode("-",$data)."\n"."\r\n";
-
-                        
-
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
-
-            }
-
-            $shipments = $shipment->getAllShipment(array('where'=>'vehicle = '.$data['vehicle'].' AND shipment_date >= '.$data['start_time'].' AND shipment_date <= '.$data['end_time']));
-
-            if($shipments){
-                foreach ($shipments as $ship) {
-
-                    $data_edit = array(
-
-                        'romooc' => $data['romooc'],
-
-                        );
-
-                    $shipment->updateShipment($data_edit,array('shipment_id' => $ship->shipment_id));
-
-                }
-            }
-
-                
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
+
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) && $_SESSION['user_permission_action'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('vehicleromooc');
+
+        }
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Cập nhật thay lắp mooc';
+
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        $vehicle_romooc_data = $vehicle_romooc_model->getVehicle($id);
+
+        $this->view->data['vehicle_romooc_data'] = $vehicle_romooc_data;
+
+        if (!$vehicle_romooc_data) {
+
+            $this->view->redirect('vehicleromooc');
+
+        }
+
+        $vehicle = $this->model->get('vehicleModel');
+
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $romooc = $this->model->get('romoocModel');
+
+        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+
+        return $this->view->show('vehicleromooc/edit');
 
     }
 
+    public function view($id){
 
-
-    
-
-    
-
-
-
-    public function delete(){
-
-        $this->view->setLayout('admin');
+        $this->view->disableLayout();
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") {
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        if (!$id) {
+
+            $this->view->redirect('vehicleromooc');
+
+        }
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Thông tin thay lắp mooc';
+
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        $vehicle_romooc_data = $vehicle_romooc_model->getVehicle($id);
+
+        $this->view->data['vehicle_romooc_data'] = $vehicle_romooc_data;
+
+        if (!$vehicle_romooc_data) {
+
+            $this->view->redirect('vehicleromooc');
+
+        }
+
+        $vehicle = $this->model->get('vehicleModel');
+
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $romooc = $this->model->get('romoocModel');
+
+        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+
+        return $this->view->show('vehicleromooc/view');
+
+    }
+    public function viewromooc(){
+
+        $this->view->disableLayout();
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+        
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Thông tin thay lắp mooc';
+
+        $id = $_GET['id'];
+
+        $info = explode('~', $id);
+
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        $data = array(
+            'where'=>'vehicle = '.$info[0].' AND start_time <= '.strtotime(str_replace('/', '-', $info[1])).' AND (end_time IS NULL OR end_time=0 OR end_time >= '.strtotime(str_replace('/', '-', $info[1])).')',
+            'order_by'=>'start_time',
+            'order'=>'DESC',
+            'limit'=>1
+        );
+
+        $vehicle_romoocs = $vehicle_romooc_model->getAllVehicle($data);
+        foreach ($vehicle_romoocs as $vehicle_romooc) {
+            $vehicle_romooc_data = $vehicle_romooc;
+        }
+
+        $this->view->data['vehicle_romooc_data'] = $vehicle_romooc_data;
+
+        if (!$vehicle_romooc_data) {
+
+            $this->view->redirect('vehicleromooc');
+
+        }
+
+        $vehicle = $this->model->get('vehicleModel');
+
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $romooc = $this->model->get('romoocModel');
+
+        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+
+        return $this->view->show('vehicleromooc/view');
+
+    }
+
+    public function getromooc(){
+
+        $vehicle = $_GET['vehicle'];
+
+        $date = $_GET['date'];
+
+        $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+
+        $data = array(
+            'where'=>'vehicle = '.$vehicle.' AND start_time <= '.strtotime(str_replace('/', '-', $date)).' AND (end_time IS NULL OR end_time=0 OR end_time >= '.strtotime(str_replace('/', '-', $date)).')',
+            'order_by'=>'start_time',
+            'order'=>'DESC',
+            'limit'=>1
+        );
+        $join = array('table'=>'romooc','where'=>'romooc=romooc_id');
+
+        $vehicle_romoocs = $vehicle_romooc_model->getAllVehicle($data,$join);
+        $vehicle_romooc_data = array(
+            'romooc_id'=>null,
+            'romooc_number'=>null,
+        );
+        foreach ($vehicle_romoocs as $vehicle_romooc) {
+            $vehicle_romooc_data['romooc_id'] = $vehicle_romooc->romooc_id;
+            $vehicle_romooc_data['romooc_number'] = $vehicle_romooc->romooc_number;
+        }
+
+        echo json_encode($vehicle_romooc_data);
+
+    }
+
+    public function filter(){
+        $this->view->disableLayout();
+
+        $this->view->data['lib'] = $this->lib;
+        $this->view->data['title'] = 'Lọc dữ liệu';
+
+        $vehicle = $this->model->get('vehicleModel');
+
+        $this->view->data['vehicles'] = $vehicle->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
+
+        $romooc = $this->model->get('romoocModel');
+
+        $this->view->data['romoocs'] = $romooc->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
+
+        $this->view->data['page'] = $_GET['page'];
+        $this->view->data['order_by'] = $_GET['order_by'];
+        $this->view->data['order'] = $_GET['order'];
+        $this->view->data['limit'] = $_GET['limit'];
+        $this->view->data['keyword'] = $_GET['keyword'];
+
+        return $this->view->show('vehicleromooc/filter');
+    }
+
+    public function delete(){
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
+
+        }
+
+        if ((!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") && $_SESSION['user_permission_action'] != '["all"]') {
+
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $vehicleromooc = $this->model->get('vehicleromoocModel');
+            $vehicle_romooc_model = $this->model->get('vehicleromoocModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             if (isset($_POST['xoa'])) {
 
-                $data = explode(',', $_POST['xoa']);
+                $datas = explode(',', $_POST['xoa']);
 
-                foreach ($data as $data) {
+                foreach ($datas as $data) {
 
-                    $vehicleromooc->deleteVehicle($data);
+                    $vehicle_romooc_model->deleteVehicle($data);
 
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
 
-                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|vehicle_romooc|"."\n"."\r\n";
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$data."|vehicleromooc|"."\n"."\r\n";
+                        $this->lib->ghi_file("action_logs.txt",$text);
 
-                        
 
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
 
                 }
 
+
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'vehicle_romooc',
+                    'user_log_table_name' => 'Thay lắp mooc',
+                    'user_log_action' => 'Xóa',
+                    'user_log_data' => json_encode($datas),
+                );
+                $user_log_model->createUser($data_log);
+
+
+                echo "Xóa thành công";
                 return true;
 
             }
 
             else{
 
-                    date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                $vehicle_romooc_model->deleteVehicle($_POST['data']);
 
-                        $filename = "action_logs.txt";
+                $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|vehicle_romooc|"."\n"."\r\n";
 
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|vehicleromooc|"."\n"."\r\n";
+                $this->lib->ghi_file("action_logs.txt",$text);
 
-                        
+                $data_log = array(
+                    'user_log' => $_SESSION['userid_logined'],
+                    'user_log_date' => time(),
+                    'user_log_table' => 'vehicle_romooc',
+                    'user_log_table_name' => 'Thay lắp mooc',
+                    'user_log_action' => 'Xóa',
+                    'user_log_data' => json_encode($_POST['data']),
+                );
+                $user_log_model->createUser($data_log);
 
-                        $fh = fopen($filename, "a") or die("Could not open log file.");
-
-                        fwrite($fh, $text) or die("Could not write file!");
-
-                        fclose($fh);
-
-
-
-                return $vehicleromooc->deleteVehicle($_POST['data']);
+                echo "Xóa thành công";
+                return true;
 
             }
 
@@ -480,438 +600,39 @@ Class vehicleromoocController Extends baseController {
 
     }
 
-
-
-    function export(){
-
-        $this->view->disableLayout();
-
-        if (!isset($_SESSION['userid_logined'])) {
-
-            return $this->view->redirect('user/login');
-
+    public function importvehicleromooc(){
+        if (isset($_FILES['import']['name'])) {
+            $total = count($_FILES['import']['name']);
+            for( $i=0 ; $i < $total ; $i++ ) {
+              $tmpFilePath = $_FILES['import']['name'][$i];
+              echo $tmpFilePath;
+            }
         }
-
-
-
-        $driver_model = $this->model->get('driverModel');
-
-        $d_data = array(
-
-            'where'=> 'end_work > '.strtotime(date('d-m-Y')),
-
-        );
-
-        $drivers = $driver_model->getAllDriver($d_data);
-
-        $driver_data = array();
-
-        foreach ($drivers as $driver) {
-
-            $driver_data[$driver->vehicle]['driver_name'] = $driver->driver_name;
-
-            $driver_data[$driver->vehicle]['driver_phone'] = $driver->driver_phone;
-
-        }
-
-
-
-        $romooc_model = $this->model->get('romoocModel');
-
-
-
-        $vehicles = $romooc_model->getAllVehicle();
-
-
-
-            require("lib/Classes/PHPExcel/IOFactory.php");
-
-            require("lib/Classes/PHPExcel.php");
-
-
-
-            $objPHPExcel = new PHPExcel();
-
-
-
-            
-
-
-
-            $index_worksheet = 0; //(worksheet mặc định là 0, nếu tạo nhiều worksheet $index_worksheet += 1)
-
-            $objPHPExcel->setActiveSheetIndex($index_worksheet)
-
-                ->setCellValue('A1', 'DANH SÁCH XE')
-
-                ->setCellValue('A3', 'STT')
-
-               ->setCellValue('B3', 'Số xe')
-
-               ->setCellValue('C3', 'Tài xế')
-
-               ->setCellValue('D3', 'SĐT tài xế')
-
-               ->setCellValue('E3', 'Số cont');
-
-               
-
-
-
-            if ($vehicles) {
-
-
-
-                $hang = 4;
-
-                $i=1;
-
-
-
-                foreach ($vehicles as $row) {
-
-                    
-
-                    //$objPHPExcel->setActiveSheetIndex(0)->getStyle('B'.$hang)->getNumberFormat()->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-
-                     $objPHPExcel->setActiveSheetIndex(0)
-
-                        ->setCellValue('A' . $hang, $i++)
-
-                        ->setCellValue('B' . $hang, $row->romooc_number)
-
-                        ->setCellValue('C' . $hang, isset($driver_data[$row->romooc_id]['driver_name'])?$driver_data[$row->romooc_id]['driver_name']:null)
-
-                        ->setCellValue('D' . $hang, isset($driver_data[$row->romooc_id]['driver_phone'])?$driver_data[$row->romooc_id]['driver_phone']:null)
-
-                        ->setCellValue('E' . $hang, $row->cont_number);
-
-                     $hang++;
-
-
-
-
-
-                  }
-
-
-
-          }
-
-
-
-            $highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
-
-
-
-            $highestRow ++;
-
-
-
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle("A1")->getFont()->setSize(18);
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray(
-
-                array(
-
-                    
-
-                    'font' => array(
-
-                        'bold'  => true,
-
-                        'color' => array('rgb' => 'FF0000')
-
-                    )
-
-                )
-
-            );
-
-
-
-            $objPHPExcel->getActiveSheet()->getStyle('H4:E'.$highestRow)->getNumberFormat()->setFormatCode("#,##0_);[Black](#,##0)");
-
-            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->getFont()->setBold(true);
-
-            $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(26);
-
-            $objPHPExcel->getActiveSheet()->getDefaultColumnDimension()->setWidth(28);
-
-
-
-            // Set properties
-
-            $objPHPExcel->getProperties()->setCreator("TCMT")
-
-                            ->setLastModifiedBy($_SESSION['user_logined'])
-
-                            ->setTitle("Vehicle Report")
-
-                            ->setSubject("Vehicle Report")
-
-                            ->setDescription("Vehicle Report.")
-
-                            ->setKeywords("Vehicle Report")
-
-                            ->setCategory("Vehicle Report");
-
-            $objPHPExcel->getActiveSheet()->setTitle("Danh sach xe");
-
-
-
-            $objPHPExcel->getActiveSheet()->freezePane('A4');
-
-            $objPHPExcel->setActiveSheetIndex(0);
-
-
-
-
-
-
-
-            
-
-
-
-            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-
-
-
-            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
-            header("Content-Disposition: attachment; filename= DANH SACH XE.xlsx");
-
-            header("Cache-Control: max-age=0");
-
-            ob_clean();
-
-            $objWriter->save("php://output");
-
-        
-
     }
-
-
-
-    
-
     public function import(){
 
         $this->view->disableLayout();
 
-        header('Content-Type: text/html; charset=utf-8');
-
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) || json_decode($_SESSION['user_permission_action'])->vehicleromooc != "vehicleromooc") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->vehicleromooc) && $_SESSION['user_permission_action'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_FILES['import']['name'] != null) {
+        $this->view->data['title'] = 'Nhập dữ liệu';
 
-
-
-            require("lib/Classes/PHPExcel/IOFactory.php");
-
-            require("lib/Classes/PHPExcel.php");
-
-
-
-            $vehicle = $this->model->get('romoocModel');
-
-
-
-            $objPHPExcel = new PHPExcel();
-
-            // Set properties
-
-            if (pathinfo($_FILES['import']['name'], PATHINFO_EXTENSION) == "xls") {
-
-                $objReader = PHPExcel_IOFactory::createReader('Excel5');
-
-            }
-
-            else if (pathinfo($_FILES['import']['name'], PATHINFO_EXTENSION) == "xlsx") {
-
-                $objReader = PHPExcel_IOFactory::createReader('Excel2007');
-
-            }
-
-            
-
-            $objReader->setReadDataOnly(false);
-
-
-
-            $objPHPExcel = $objReader->load($_FILES['import']['tmp_name']);
-
-            $objWorksheet = $objPHPExcel->getActiveSheet();
-
-
-
-            
-
-
-
-            $highestRow = $objWorksheet->getHighestRow(); // e.g. 10
-
-            $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
-
-
-
-            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
-
-
-
-            //var_dump($objWorksheet->getMergeCells());die();
-
-            
-
-             
-
-
-
-                for ($row = 2; $row <= $highestRow; ++ $row) {
-
-                    $val = array();
-
-                    for ($col = 0; $col < $highestColumnIndex; ++ $col) {
-
-                        $cell = $objWorksheet->getCellByColumnAndRow($col, $row);
-
-                        // Check if cell is merged
-
-                        foreach ($objWorksheet->getMergeCells() as $cells) {
-
-                            if ($cell->isInRange($cells)) {
-
-                                $currMergedCellsArray = PHPExcel_Cell::splitRange($cells);
-
-                                $cell = $objWorksheet->getCell($currMergedCellsArray[0][0]);
-
-                                break;
-
-                                
-
-                            }
-
-                        }
-
-                        //$val[] = $cell->getValue();
-
-                        $val[] = is_numeric($cell->getCalculatedValue()) ? round($cell->getCalculatedValue()) : $cell->getCalculatedValue();
-
-                        //here's my prob..
-
-                        //echo $val;
-
-                    }
-
-                    if ($val[1] != null && $val[2] != null) {
-
-
-
-                            if(!$vehicle->getVehicleByWhere(array('romooc_number'=>trim($val[1])))) {
-
-                                $romooc_data = array(
-
-                                'romooc_number' => trim($val[1]),
-
-                                'driver_name' => trim($val[2]),
-
-                                'driver_phone' => trim($val[3]),
-
-                                );
-
-                                $vehicle->createVehicle($romooc_data);
-
-                            }
-
-                            else if($vehicle->getVehicleByWhere(array('romooc_number'=>trim($val[1])))){
-
-                                $id_vehicle = $vehicle->getVehicleByWhere(array('romooc_number'=>trim($val[1])))->romooc_id;
-
-                                $romooc_data = array(
-
-                                'driver_name' => trim($val[2]),
-
-                                'driver_phone' => trim($val[3]),
-
-                                );
-
-                                $vehicle->updateVehicle($romooc_data,array('romooc_id' => $id_vehicle));
-
-                            }
-
-
-
-
-
-                        
-
-                    }
-
-                    
-
-                    //var_dump($this->getNameDistrict($this->lib->stripUnicode($val[1])));
-
-                    // insert
-
-
-
-
-
-                }
-
-                //return $this->view->redirect('transport');
-
-            
-
-            return $this->view->redirect('vehicle');
-
-        }
-
-        $this->view->show('vehicle/import');
-
-
+       
+        return $this->view->show('vehicleromooc/import');
 
     }
-
-    
-
-
-
-    public function view() {
-
-        
-
-        $this->view->show('handling/view');
-
-    }
-
 
 
 }

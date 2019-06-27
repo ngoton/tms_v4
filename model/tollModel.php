@@ -11,23 +11,36 @@ Class tollModel Extends baseModel {
     public function createToll($data) 
     {    
         /*$data = array(
-        	'Tollname' => $data['Tollname'],
-        	'password' => $data['password'],
-        	'create_time' => $data['create_time'],
-        	'role' => $data['role'],
+        	'staff_id' => $data['staff_id'],
+        	'staff_name' => $data['staff_name'],
+        	'staff_birth' => $data['staff_birth'],
+        	'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
         	);*/
+
         return $this->insert($this->table,$data);
     }
-    public function updateToll($data,$id) 
+    public function updateToll($data,$where) 
     {    
-        if ($this->getTollByWhere($id)) {
+        if ($this->getTollByWhere($where)) {
         	/*$data = array(
-	        	'Tollname' => $data['Tollname'],
-	        	'password' => $data['password'],
-	        	'create_time' => $data['create_time'],
-	        	'role' => $data['role'],
-	        	);*/
-	        return $this->update($this->table,$data,$id);
+            'staff_id' => $data['staff_id'],
+            'staff_name' => $data['staff_name'],
+            'staff_birth' => $data['staff_birth'],
+            'staff_gender' => $data['staff_gender'],
+            'staff_address' => $data['staff_address'],
+            'staff_phone' => $data['staff_phone'],
+            'staff_email' => $data['staff_email'],
+            'cmnd' => $data['cmnd'],
+            'bank' => $data['bank'],
+            'account' => $data['account'],
+            );*/
+	        return $this->update($this->table,$data,$where);
         }
         
     }
@@ -37,22 +50,19 @@ Class tollModel Extends baseModel {
     	}
     }
     public function getToll($id){
-    	return $this->getByID($this->table,$id);
+        return $this->getByID($this->table,$id);
     }
     public function getTollByWhere($where){
-        return $this->getByWhere($this->table,$where);
+    	return $this->getByWhere($this->table,$where);
     }
     public function getAllTollByWhere($id){
         return $this->query('SELECT * FROM toll WHERE toll_id != '.$id);
     }
-    public function getLastToll(){
-        return $this->getLast($this->table);
-    }
-    public function checkToll($id,$toll_name){
-        return $this->query('SELECT * FROM toll WHERE toll_id != '.$id.' AND toll_name = '.$toll_name);
-    }
     public function queryToll($sql){
         return $this->query($sql);
+    }
+    public function getLastToll(){
+        return $this->getLast($this->table);
     }
 }
 ?>

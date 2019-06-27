@@ -61,8 +61,8 @@ Class staffModel Extends baseModel {
     public function getLastStaff(){
         return $this->getLast($this->table);
     }
-    public function getStaffByAccount($id){
-        return $this->getByWhere($this->table,array('account'=>$id));
+    public function queryStaff($sql){
+        return $this->query($sql);
     }
 }
 ?>

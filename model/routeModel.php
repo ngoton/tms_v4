@@ -3,12 +3,12 @@
 Class routeModel Extends baseModel {
 	protected $table = "route";
 
-	public function getAllPlace($data = null,$join = null) 
+	public function getAllRoute($data = null,$join = null) 
     {
         return $this->fetchAll($this->table,$data,$join);
     }
 
-    public function createPlace($data) 
+    public function createRoute($data) 
     {    
         /*$data = array(
         	'staff_id' => $data['staff_id'],
@@ -25,9 +25,9 @@ Class routeModel Extends baseModel {
 
         return $this->insert($this->table,$data);
     }
-    public function updatePlace($data,$where) 
+    public function updateRoute($data,$where) 
     {    
-        if ($this->getPlaceByWhere($where)) {
+        if ($this->getRouteByWhere($where)) {
         	/*$data = array(
             'staff_id' => $data['staff_id'],
             'staff_name' => $data['staff_name'],
@@ -44,27 +44,24 @@ Class routeModel Extends baseModel {
         }
         
     }
-    public function deletePlace($id){
-    	if ($this->getPlace($id)) {
+    public function deleteRoute($id){
+    	if ($this->getRoute($id)) {
     		return $this->delete($this->table,array('route_id'=>$id));
     	}
     }
-    public function getPlace($id){
+    public function getRoute($id){
         return $this->getByID($this->table,$id);
     }
-    public function getPlaceByWhere($where){
+    public function getRouteByWhere($where){
     	return $this->getByWhere($this->table,$where);
     }
-    public function getAllPlaceByWhere($id){
+    public function getAllRouteByWhere($id){
         return $this->query('SELECT * FROM route WHERE route_id != '.$id);
     }
-    public function queryPlace($sql){
+    public function queryRoute($sql){
         return $this->query($sql);
     }
-    public function checkPlace($id,$name){
-        return $this->query('SELECT * FROM route WHERE route_id != '.$id.' AND route_name = "'.$name.'"');
-    }
-    public function getLastPlace(){
+    public function getLastRoute(){
         return $this->getLast($this->table);
     }
 }

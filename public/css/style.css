@@ -574,25 +574,25 @@ background-image: -webkit-linear-gradient(bottom,#eff8ff,#f7fcfe);
 background-image: -moz-linear-gradient(bottom,#eff8ff,#f7fcfe);
 background-image: -o-linear-gradient(bottom,#eff8ff,#f7fcfe);
 background-image: linear-gradient(to top,#eff8ff,#f7fcfe);
-padding: 7px 7px 8px;
+padding: 2px;
 color: #21759b;
-text-align: left;
+text-align: center;
+border:1px solid;
 cursor: pointer;
 }
 .table_data td {
 border-top: 1px solid #80C8E5;
-padding: 4px 7px 2px;
-vertical-align: top;
+padding: 3px;
+vertical-align: middle;
 line-height: inherit;
 overflow: hidden;
 }
 .edit_tr:hover{
-	background:#80C8E5;
+	background:#96d7f170;
 	-webkit-transition: 500ms;
 	-moz-transition: 500ms;
 	-o-transition: 500ms;
 	transition: 500ms;
-	color:white;
 	cursor: pointer;
 }
 .post-thumbnail {
@@ -963,7 +963,6 @@ height: 0px;
 }
 .error {
 color: #DB2E66;
-margin-left: 10px;
 }
 .goback{
 	width: 30px;
@@ -1011,19 +1010,20 @@ padding:3px;
 	width: 200px;
 	border: 1px solid #eaeaea;
 	position: absolute;
-	z-index: 9;
+	z-index: 9999;
 	background: white;
 	list-style: none;
 	margin:-8px 0px;
-    	height: 10em;
-    	line-height: 10em;
-    	overflow:hidden; 
-    	overflow-y:scroll!important;
+	height: 10em;
+	overflow:hidden; 
+	overflow-y:scroll!important;
 }
 .table_data tbody tr td.fix {
 	border-right: 1px dotted #21759b;
 }
-
+.table_data tbody tr td {
+	border-right: 1px dotted #21759b;
+}
 /*ul.nav>li {position: relative;}
 ul.nav>li>ul{list-style:none}
 ul.nav>li>ul{ display: none; position: absolute; background: #528BF3;top: 41px;width: 200px; left: 0px;}
@@ -1084,21 +1084,7 @@ ul.nav>li>ul>li>ul{ display: none; position: absolute; background: #528BF3;top: 
     }
  
     /*----- Content of Tabs -----*/
-    .tab-content {
-        padding:15px;
-        border-radius:3px;
-        box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
-        background:#fff;
-	border: 1px solid #a7cce5;
-    }
  
-        .tab {
-            display:none;
-        }
- 
-        .tab.active {
-            display:block;
-        }
 .warning{
 	color: #d54e21;
 }
@@ -1286,4 +1272,13 @@ border-radius: 3px;
 -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 -o-border-radius: 3px;
+}
+
+.numbers{text-align: right;}
+.modal-footer button {
+  float:right;
+  margin-left: 5px;
+}
+#content{
+	overflow-x: auto;
 }

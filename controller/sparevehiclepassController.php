@@ -12,13 +12,15 @@ Class sparevehiclepassController Extends baseController {
             return $this->view->redirect('user/login');
 
         }
-        if (!isset(json_decode($_SESSION['user_permission_action'])->sparevehiclepass) || json_decode($_SESSION['user_permission_action'])->sparevehiclepass != "sparevehiclepass") {
-            $this->view->data['disable_control'] = 1;
+        if (!in_array($this->registry->router->controller, json_decode($_SESSION['user_permission'])) && $_SESSION['user_permission'] != '["all"]') {
+
+            return $this->view->redirect('admin');
+
         }
 
         $this->view->data['lib'] = $this->lib;
 
-        $this->view->data['title'] = 'Quản lý vật tư thiết bị';
+        $this->view->data['title'] = 'Chuyển đổi phụ tùng';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $xe = $_POST['vehicle'];
@@ -31,13 +33,12 @@ Class sparevehiclepassController Extends baseController {
 
         $vehicle_model = $this->model->get('vehicleModel');
         $romooc_model = $this->model->get('romoocModel');
-        $spare_stock_model = $this->model->get('sparestockModel');
         $sparevehicle_model = $this->model->get('sparevehicleModel');
         
         $vehicles = $vehicle_model->getAllVehicle(array('order_by'=>'vehicle_number','order'=>'ASC'));
         $this->view->data['vehicles'] = $vehicles;
         
-        $romoocs = $romooc_model->getAllVehicle(array('order_by'=>'romooc_number','order'=>'ASC'));
+        $romoocs = $romooc_model->getAllRomooc(array('order_by'=>'romooc_number','order'=>'ASC'));
         $this->view->data['romoocs'] = $romoocs;
 
         $join = array('table'=>'vehicle,spare_part','where'=>'vehicle = vehicle_id AND spare_part=spare_part_id');
@@ -90,18 +91,21 @@ Class sparevehiclepassController Extends baseController {
 
         if (!isset($_SESSION['userid_logined'])) {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
 
-        if (!isset(json_decode($_SESSION['user_permission_action'])->sparevehiclepass) || json_decode($_SESSION['user_permission_action'])->sparevehiclepass != "sparevehiclepass") {
+        if (!isset(json_decode($_SESSION['user_permission_action'])->sparevehiclepass) && $_SESSION['user_permission_action'] != '["all"]') {
 
-            return $this->view->redirect('user/login');
+            echo "Bạn không có quyền thực hiện thao tác này";
+            return false;
 
         }
         if (isset($_POST['yes'])) {
 
             $sparevehicle = $this->model->get('sparevehicleModel');
+            $user_log_model = $this->model->get('userlogModel');
 
             $vehicle_in = $_POST['vehicle_in'];
             $vehicle_out = $_POST['vehicle_out'];
@@ -116,46 +120,98 @@ Class sparevehiclepassController Extends baseController {
                     $data = array(
 
                         'vehicle' => $vehicle_out,
-                        'end_time' => strtotime($start_time),
+                        'end_time' => strtotime(str_replace('/', '-', $start_time)),
                         'spare_part' => $v['spare'],
                         'spare_part_number' => $v['num'],
 
                     );
                     $sparevehicle->createStock($data);
+
+                    $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$sparevehicle->getLastStock()->spare_vehicle_id."|spare_vehicle|".implode("-",$data)."\n"."\r\n";
+                    $this->lib->ghi_file("action_logs.txt",$text);
+
+                    $data_log = array(
+                        'user_log' => $_SESSION['userid_logined'],
+                        'user_log_date' => time(),
+                        'user_log_table' => 'spare_vehicle',
+                        'user_log_table_name' => 'Chuyển đổi phụ tùng',
+                        'user_log_action' => 'Thay ra',
+                        'user_log_data' => json_encode($data),
+                    );
+                    $user_log_model->createUser($data_log);
                 }
                 else if ($romooc_out > 0) {
                     $data = array(
 
                         'romooc' => $romooc_out,
-                        'end_time' => strtotime($start_time),
+                        'end_time' => strtotime(str_replace('/', '-', $start_time)),
                         'spare_part' => $v['spare'],
                         'spare_part_number' => $v['num'],
 
                     );
                     $sparevehicle->createStock($data);
+
+                    $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$sparevehicle->getLastStock()->spare_vehicle_id."|spare_vehicle|".implode("-",$data)."\n"."\r\n";
+                    $this->lib->ghi_file("action_logs.txt",$text);
+
+                    $data_log = array(
+                        'user_log' => $_SESSION['userid_logined'],
+                        'user_log_date' => time(),
+                        'user_log_table' => 'spare_vehicle',
+                        'user_log_table_name' => 'Chuyển đổi phụ tùng',
+                        'user_log_action' => 'Thay ra',
+                        'user_log_data' => json_encode($data),
+                    );
+                    $user_log_model->createUser($data_log);
                 }
 
                 if ($vehicle_in > 0) {
                     $data = array(
 
                         'vehicle' => $vehicle_in,
-                        'start_time' => strtotime($start_time),
+                        'start_time' => strtotime(str_replace('/', '-', $start_time)),
                         'spare_part' => $v['spare'],
                         'spare_part_number' => $v['num'],
 
                     );
                     $sparevehicle->createStock($data);
+
+                    $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$sparevehicle->getLastStock()->spare_vehicle_id."|spare_vehicle|".implode("-",$data)."\n"."\r\n";
+                    $this->lib->ghi_file("action_logs.txt",$text);
+
+                    $data_log = array(
+                        'user_log' => $_SESSION['userid_logined'],
+                        'user_log_date' => time(),
+                        'user_log_table' => 'spare_vehicle',
+                        'user_log_table_name' => 'Chuyển đổi phụ tùng',
+                        'user_log_action' => 'Lắp vào',
+                        'user_log_data' => json_encode($data),
+                    );
+                    $user_log_model->createUser($data_log);
                 }
                 else if ($romooc_in > 0) {
                     $data = array(
 
                         'romooc' => $romooc_in,
-                        'start_time' => strtotime($start_time),
+                        'start_time' => strtotime(str_replace('/', '-', $start_time)),
                         'spare_part' => $v['spare'],
                         'spare_part_number' => $v['num'],
 
                     );
                     $sparevehicle->createStock($data);
+
+                    $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."add"."|".$sparevehicle->getLastStock()->spare_vehicle_id."|spare_vehicle|".implode("-",$data)."\n"."\r\n";
+                    $this->lib->ghi_file("action_logs.txt",$text);
+
+                    $data_log = array(
+                        'user_log' => $_SESSION['userid_logined'],
+                        'user_log_date' => time(),
+                        'user_log_table' => 'spare_vehicle',
+                        'user_log_table_name' => 'Chuyển đổi phụ tùng',
+                        'user_log_action' => 'Lắp vào',
+                        'user_log_data' => json_encode($data),
+                    );
+                    $user_log_model->createUser($data_log);
                 }
             }
 
