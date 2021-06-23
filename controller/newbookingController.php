@@ -69,7 +69,7 @@ Class newbookingController Extends baseController {
 
         $data = array(
 
-            'where' => '(booking_sum_receive IS NULL OR booking_sum>booking_sum_receive) AND booking_end_date >= '.strtotime(date('d-m-Y')),
+            'where' => '(booking_sum_receive IS NULL OR booking_sum>booking_sum_receive)',
 
         );
 
@@ -109,7 +109,7 @@ Class newbookingController Extends baseController {
 
             'limit'=>$x.','.$sonews,
 
-            'where' => '(booking_sum_receive IS NULL OR booking_sum>booking_sum_receive) AND booking_end_date >= '.strtotime(date('d-m-Y')),
+            'where' => '(booking_sum_receive IS NULL OR booking_sum>booking_sum_receive)',
 
             );
 
