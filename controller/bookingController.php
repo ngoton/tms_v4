@@ -468,6 +468,73 @@ Class bookingController Extends baseController {
         echo json_encode($booking_data);
 
     }
+
+    public function getbookingdetail(){
+
+        $booking = $_GET['booking'];
+
+        $booking_model = $this->model->get('bookingModel');
+        $customer_model = $this->model->get('customerModel');
+        $booking_detail_model = $this->model->get('bookingdetailModel');
+
+        $books = $booking_model->getBooking($booking);
+        $customers = $customer_model->getCustomer($books->booking_customer);
+
+        $data = array(
+            'where'=>'booking = '.$booking,
+        );
+
+        $bookings = $booking_detail_model->getAllBooking($data);
+
+        $str = "";
+        foreach ($bookings as $booking) {
+            $str .= '<option value="'.$booking->booking_detail_id.'">'.$booking->booking_detail_container.'</option>';
+        }
+
+        $booking_data = array(
+            'container'=>$str,
+            'customer'=>$customers->customer_id,
+            'type'=>$books->booking_type,
+            'from'=>$books->booking_place_from,
+            'to'=>$books->booking_place_to,
+            'start'=>$this->lib->hien_thi_ngay_thang($books->booking_start_date),
+            'end'=>$this->lib->hien_thi_ngay_thang($books->booking_end_date),
+        );
+
+        echo json_encode($booking_data);
+
+    }
+
+    public function getbookingcont(){
+
+        if (!isset($_GET['detail'])) {
+            $booking_data = array(
+                'number'=>null,
+                'unit'=>null,
+                'price'=>null
+            );
+
+            echo json_encode($booking_data);
+            return;
+        }
+        
+        $detail = $_GET['detail'];
+
+        $booking_detail_model = $this->model->get('bookingdetailModel');
+        $unit_model = $this->model->get('unitModel');
+
+        $bookings = $booking_detail_model->getBooking($detail);
+        $units = $unit_model->getUnit($bookings->booking_detail_unit);
+
+        $booking_data = array(
+            'number'=>$bookings->booking_detail_number,
+            'unit'=>$units->unit_id,
+            'price'=>$bookings->booking_detail_price,
+        );
+
+        echo json_encode($booking_data);
+
+    }
    
     public function filter(){
         $this->view->disableLayout();
